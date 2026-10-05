@@ -2,14 +2,14 @@
 
 namespace SportLab.Controllers
 {
-    public class AccountController : Controller
+    public class ProfileController : Controller
     {
-        public IActionResult Login()
+        public IActionResult Client()
         {
             return View();
         }
 
-        public IActionResult Register()
+        public IActionResult Trainer()
         {
             return View();
         }
