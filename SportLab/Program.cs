@@ -1,4 +1,10 @@
+
+using Microsoft.EntityFrameworkCore;
+using SportLab.Data;
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<GymContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("GymContext")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
