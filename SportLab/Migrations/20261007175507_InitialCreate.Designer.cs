@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SportLab.Data;
 
@@ -11,17 +12,19 @@ using SportLab.Data;
 namespace SportLab.Migrations
 {
     [DbContext(typeof(SportLabContext))]
-    partial class SportLabContextModelSnapshot : ModelSnapshot
+    [Migration("20261007175507_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
+#pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "9.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("SportLab.Models.Tariff", b =>
             modelBuilder.Entity("SportLab.Models.FAQ", b =>
                 {
                     b.Property<int>("Id")
@@ -47,7 +50,7 @@ namespace SportLab.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("FAQs");
-                }));
+                });
 
             modelBuilder.Entity("SportLab.Models.Message", b =>
                 {
@@ -181,7 +184,7 @@ namespace SportLab.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-                    b.ToTable("Tariffs");
+
                     b.ToTable("Plans");
                 });
 
@@ -453,9 +456,8 @@ namespace SportLab.Migrations
             modelBuilder.Entity("SportLab.Models.Order", b =>
                 {
                     b.Navigation("OrderDetails");
-
                 });
-
+#pragma warning restore 612, 618
         }
     }
 }
