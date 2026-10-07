@@ -1,14 +1,9 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace SportLab.Controllers
 {
     public class ProfileController : Controller
     {
-        public IActionResult Index()
-        {
-            return View("Client");
-        }
-
         public IActionResult Client()
         {
             return View();

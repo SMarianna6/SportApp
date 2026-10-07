@@ -1,4 +1,4 @@
-namespace SportLab.Models
+﻿namespace SportLab.Models
 {
     public class Tariff
     {

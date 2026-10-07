@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SportLab.Models;
 
 namespace SportLab.Data
@@ -25,9 +25,6 @@ namespace SportLab.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<Tariff>().ToTable("Tariffs");
-            modelBuilder.Entity<Tariff>().Property(t => t.Duration).HasColumnName("Duration");
 
             modelBuilder.Entity<Message>()
                 .HasOne(m => m.Sender)
