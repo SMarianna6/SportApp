@@ -27,7 +27,7 @@ namespace SportLab.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Tariff>().ToTable("Tariffs");
-            modelBuilder.Entity<Tariff>().Property(t => t.Duration).HasColumnName("DurationDays");
+            modelBuilder.Entity<Tariff>().Property(t => t.Duration).HasColumnName("Duration");
 
             modelBuilder.Entity<Message>()
                 .HasOne(m => m.Sender)
