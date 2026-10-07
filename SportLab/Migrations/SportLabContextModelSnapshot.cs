@@ -15,13 +15,13 @@ namespace SportLab.Migrations
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
-#pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "9.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("SportLab.Models.Tariff", b =>
             modelBuilder.Entity("SportLab.Models.FAQ", b =>
                 {
                     b.Property<int>("Id")
@@ -47,7 +47,7 @@ namespace SportLab.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("FAQs");
-                });
+                }));
 
             modelBuilder.Entity("SportLab.Models.Message", b =>
                 {
@@ -181,7 +181,7 @@ namespace SportLab.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
+                    b.ToTable("Tariffs");
                     b.ToTable("Plans");
                 });
 
@@ -453,8 +453,9 @@ namespace SportLab.Migrations
             modelBuilder.Entity("SportLab.Models.Order", b =>
                 {
                     b.Navigation("OrderDetails");
+
                 });
-#pragma warning restore 612, 618
+
         }
     }
 }
