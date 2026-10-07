@@ -1,6 +1,6 @@
 ﻿namespace SportLab.Models
 {
-    public class Plan
+    public class Tariff
     {
         public int Id { get; set; }
         public required string Name { get; set; }

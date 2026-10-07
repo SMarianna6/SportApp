@@ -8,7 +8,7 @@
         public User? User { get; set; }
 
         public int PlanId { get; set; }
-        public Plan? Plan { get; set; }
+        public Tariff? Plan { get; set; }
 
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SportLab.Data;
 
@@ -10,9 +11,11 @@ using SportLab.Data;
 namespace SportLab.Migrations
 {
     [DbContext(typeof(SportLabContext))]
-    partial class SportLabContextModelSnapshot : ModelSnapshot
+    [Migration("20261007183639_AddTariffsTable")]
+    partial class AddTariffsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

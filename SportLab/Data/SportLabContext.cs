@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SportLab.Models;
 
 namespace SportLab.Data
 {
@@ -8,5 +9,6 @@ namespace SportLab.Data
             : base(options)
         {
         }
+        public DbSet<Tariff> Tariffs { get; set; }
     }
 }
