@@ -1,3 +1,198 @@
-﻿@{
-    ViewData["Title"] = "Shop";
+@model IEnumerable<SportLab.Models.Product>
+
+@{
+    ViewData["Title"] = "SportLab Pro Shop";
 }
+
+<div class="py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+        <div>
+            <span class="badge bg-primary-subtle text-primary fw-semibold px-3 py-2 rounded-pill mb-2">Club Store</span>
+            <h1 class="display-5 fw-bold mb-1">Nutrition & Training Gear</h1>
+            <p class="text-muted">High-potency sports supplements, official club apparel, and heavy-duty gym accessories.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-controller="Cart" asp-action="Index" class="btn btn-outline-dark rounded-pill px-4 position-relative">
+                <i class="bi bi-cart3 me-1"></i> View Cart
+                <span id="shopCartCounter" class="badge bg-danger rounded-pill ms-1" style="display:none">0</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Banner -->
+    <div class="card border-0 rounded-4 bg-dark text-white p-4 p-md-5 mb-5 shadow overflow-hidden position-relative">
+        <div class="row align-items-center position-relative" style="z-index: 2;">
+            <div class="col-lg-8">
+                <span class="badge bg-warning text-dark fw-bold px-3 py-1 rounded-pill mb-3">Member Exclusive</span>
+                <h2 class="display-6 fw-bold mb-2">15% OFF All Supplements & Gear</h2>
+                <p class="text-white-50 mb-0">Active SportLab members receive an automatic discount at checkout. Free pickup at front desk.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                <a href="#productGrid" class="btn btn-light rounded-pill px-4 py-2 fw-semibold">Browse Deals</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Category Filters -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+        <div class="d-flex flex-wrap gap-2">
+            <button class="btn btn-sm btn-dark rounded-pill px-3 shop-filter active" data-filter="all">All Products</button>
+            <button class="btn btn-sm btn-outline-dark rounded-pill px-3 shop-filter" data-filter="supplements">Supplements & Protein</button>
+            <button class="btn btn-sm btn-outline-dark rounded-pill px-3 shop-filter" data-filter="gear">Gear & Accessories</button>
+            <button class="btn btn-sm btn-outline-dark rounded-pill px-3 shop-filter" data-filter="apparel">Apparel</button>
+        </div>
+        <div>
+            <div class="input-group input-group-sm" style="max-width: 250px;">
+                <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                <input type="text" id="shopSearch" class="form-control border-start-0" placeholder="Search product..." onkeyup="filterProducts()">
+            </div>
+        </div>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="row g-4" id="productGrid">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                var category = "gear";
+                var img = "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=400&auto=format&fit=crop&q=80";
+
+                if (item.Name.Contains("Protein", StringComparison.OrdinalIgnoreCase) || item.Name.Contains("Creatine", StringComparison.OrdinalIgnoreCase))
+                {
+                    category = "supplements";
+                    img = "https://images.unsplash.com/photo-1579722821273-0f6c7d44362f?w=400&auto=format&fit=crop&q=80";
+                }
+                else if (item.Name.Contains("Shirt", StringComparison.OrdinalIgnoreCase) || item.Name.Contains("Apparel", StringComparison.OrdinalIgnoreCase))
+                {
+                    category = "apparel";
+                    img = "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=400&auto=format&fit=crop&q=80";
+                }
+                else if (item.Name.Contains("Shaker", StringComparison.OrdinalIgnoreCase))
+                {
+                    img = "https://images.unsplash.com/photo-1544816155-12df9643f363?w=400&auto=format&fit=crop&q=80";
+                }
+
+                <div class="col-lg-3 col-md-6 product-card-col" data-category="@category" data-name="@item.Name.ToLower()">
+                    <div class="card h-100 border-0 rounded-4 shadow-sm overflow-hidden d-flex flex-column">
+                        <div class="position-relative bg-light text-center p-3">
+                            <img src="@img" class="img-fluid rounded-3 object-fit-cover" style="height: 180px; width: 100%;" alt="@item.Name">
+                            <span class="position-absolute top-0 start-0 m-3 badge bg-dark">Stock: @item.StockQuantity</span>
+                        </div>
+                        <div class="card-body p-4 d-flex flex-column">
+                            <div class="mb-2">
+                                <span class="badge bg-light text-secondary border small text-capitalize">@category</span>
+                                <h5 class="fw-bold mt-2 mb-1">@item.Name</h5>
+                                <p class="text-muted small">@(item.Description ?? "Premium gym equipment tested for rigorous everyday training.")</p>
+                            </div>
+                            
+                            <div class="mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="fs-5 fw-bold text-dark">$@item.Price.ToString("0.##")</span>
+                                </div>
+                                <button class="btn btn-primary btn-sm rounded-pill px-3" onclick="addToCart(@item.Id, '@item.Name', @item.Price, '@img')">
+                                    <i class="bi bi-cart-plus me-1"></i> Add
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center py-5">
+                <p class="text-muted lead">No products available at this moment.</p>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1100">
+    <div id="cartToast" class="toast align-items-center text-white bg-dark border-0 rounded-4 shadow" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body d-flex align-items-center gap-2">
+                <i class="bi bi-check2-circle text-success fs-5"></i>
+                <span id="toastMsg">Added to cart!</span>
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let activeCategory = 'all';
+
+    function filterProducts() {
+        const query = document.getElementById('shopSearch').value.toLowerCase();
+        const cards = document.querySelectorAll('.product-card-col');
+
+        cards.forEach(card => {
+            const cat = card.getAttribute('data-category');
+            const name = card.getAttribute('data-name');
+            const matchCat = (activeCategory === 'all' || cat === activeCategory);
+            const matchQuery = name.includes(query);
+
+            if (matchCat && matchQuery) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    document.querySelectorAll('.shop-filter').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.shop-filter').forEach(b => {
+                b.classList.remove('active', 'btn-dark');
+                b.classList.add('btn-outline-dark');
+            });
+            btn.classList.add('active', 'btn-dark');
+            btn.classList.remove('btn-outline-dark');
+            activeCategory = btn.getAttribute('data-filter');
+            filterProducts();
+        });
+    });
+
+    function addToCart(id, name, price, img) {
+        let cart = JSON.parse(localStorage.getItem('sportlab_cart') || '[]');
+        const existing = cart.find(x => x.id === id);
+        if (existing) {
+            existing.qty += 1;
+        } else {
+            cart.push({ id, name, price, img, qty: 1 });
+        }
+        localStorage.setItem('sportlab_cart', JSON.stringify(cart));
+        updateCartBadge();
+
+        document.getElementById('toastMsg').innerText = `Added "${name}" to cart!`;
+        const toast = new bootstrap.Toast(document.getElementById('cartToast'));
+        toast.show();
+    }
+
+    function updateCartBadge() {
+        let cart = JSON.parse(localStorage.getItem('sportlab_cart') || '[]');
+        let total = cart.reduce((acc, item) => acc + item.qty, 0);
+        const shopCounter = document.getElementById('shopCartCounter');
+        const navBadge = document.getElementById('navCartBadge');
+
+        if (shopCounter) {
+            if (total > 0) {
+                shopCounter.innerText = total;
+                shopCounter.style.display = 'inline-block';
+            } else {
+                shopCounter.style.display = 'none';
+            }
+        }
+        if (navBadge) {
+            if (total > 0) {
+                navBadge.innerText = total;
+                navBadge.style.display = 'inline-block';
+            } else {
+                navBadge.style.display = 'none';
+            }
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', updateCartBadge);
+</script>

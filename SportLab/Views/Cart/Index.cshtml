@@ -1,3 +1,290 @@
-﻿@{
-
+@{
+    ViewData["Title"] = "Shopping Cart";
 }
+
+<div class="py-4">
+    <div class="mb-4">
+        <span class="badge bg-primary-subtle text-primary fw-semibold px-3 py-2 rounded-pill mb-2">Checkout & Order</span>
+        <h1 class="display-5 fw-bold mb-1">Your Shopping Cart</h1>
+        <p class="text-muted">Review your fitness nutrition and training merchandise before pickup or delivery.</p>
+    </div>
+
+    <div class="row g-4" id="cartContainer">
+        <!-- Items Table Column -->
+        <div class="col-lg-8">
+            <div class="card border-0 rounded-4 shadow-sm p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0">Cart Items (<span id="cartCountHeader">0</span>)</h5>
+                    <button class="btn btn-outline-danger btn-sm rounded-pill" onclick="clearCart()">
+                        <i class="bi bi-trash me-1"></i> Clear Cart
+                    </button>
+                </div>
+
+                <div id="emptyCartNotice" class="text-center py-5" style="display: none;">
+                    <div class="display-3 text-muted mb-3"><i class="bi bi-cart-x"></i></div>
+                    <h4>Your Cart is Currently Empty</h4>
+                    <p class="text-muted">Explore our club store for high-performance protein, equipment and apparel.</p>
+                    <a asp-controller="Shop" asp-action="Index" class="btn btn-primary rounded-pill px-4 mt-2">
+                        Browse Shop
+                    </a>
+                </div>
+
+                <div class="table-responsive" id="cartTableWrapper">
+                    <table class="table align-middle">
+                        <thead class="text-muted small">
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th class="text-center">Qty</th>
+                                <th class="text-end">Subtotal</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="cartTableBody">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Column -->
+        <div class="col-lg-4">
+            <div class="card border-0 rounded-4 shadow-sm p-4 bg-light">
+                <h5 class="fw-bold mb-3">Order Summary</h5>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Cart Subtotal</span>
+                    <span class="fw-semibold" id="sumSubtotal">$0.00</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2 text-success">
+                    <span>Member Discount (10%)</span>
+                    <span class="fw-semibold" id="sumDiscount">-$0.00</span>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                    <span class="text-muted">Estimated Tax (5%)</span>
+                    <span class="fw-semibold" id="sumTax">$0.00</span>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between mb-4">
+                    <span class="fs-5 fw-bold">Total Amount</span>
+                    <span class="fs-5 fw-bold text-primary" id="sumTotal">$0.00</span>
+                </div>
+
+                <!-- Promo Code -->
+                <div class="input-group mb-4">
+                    <input type="text" class="form-control rounded-start-pill" placeholder="Promo code (SPORT10)" id="promoInput">
+                    <button class="btn btn-dark rounded-end-pill px-3" type="button" onclick="applyPromo()">Apply</button>
+                </div>
+
+                <button class="btn btn-primary w-100 rounded-pill py-3 fw-bold shadow-sm" id="checkoutBtn" onclick="openCheckoutModal()">
+                    Proceed to Checkout
+                </button>
+                <div class="text-center mt-3">
+                    <span class="text-muted small"><i class="bi bi-shield-lock me-1"></i>Secure 256-bit SSL Checkout</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Checkout Modal -->
+<div class="modal fade" id="checkoutModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold">Complete Your Order</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold">Pickup / Delivery Method</label>
+                    <select class="form-select rounded-3">
+                        <option>Front Desk Pickup (SportLab Main Hall) - Free</option>
+                        <option>Courier Express Delivery ($4.99)</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold">Full Name</label>
+                    <input type="text" class="form-control rounded-3" value="Alex Smith">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold">Phone Number</label>
+                    <input type="tel" class="form-control rounded-3" value="+380 (50) 123-45-67">
+                </div>
+                <div class="mb-4">
+                    <label class="form-label small fw-semibold">Payment Option</label>
+                    <div class="d-flex gap-2">
+                        <div class="form-check border rounded-3 p-2 px-3 flex-fill">
+                            <input class="form-check-input" type="radio" name="payRadio" id="payClubCard" checked>
+                            <label class="form-check-label small" for="payClubCard">Credit / Debit Card</label>
+                        </div>
+                        <div class="form-check border rounded-3 p-2 px-3 flex-fill">
+                            <input class="form-check-input" type="radio" name="payRadio" id="payDesk">
+                            <label class="form-check-label small" for="payDesk">Pay at Reception</label>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary w-100 rounded-pill py-2 fw-semibold" onclick="finishCheckout()">
+                    Pay <span id="modalCheckoutTotal"></span> & Place Order
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function getCart() {
+        return JSON.parse(localStorage.getItem('sportlab_cart') || '[]');
+    }
+
+    function saveCart(cart) {
+        localStorage.setItem('sportlab_cart', JSON.stringify(cart));
+        renderCart();
+        updateNavBadge();
+    }
+
+    function renderCart() {
+        const cart = getCart();
+        const tbody = document.getElementById('cartTableBody');
+        const emptyNotice = document.getElementById('emptyCartNotice');
+        const tableWrapper = document.getElementById('cartTableWrapper');
+        const headerCount = document.getElementById('cartCountHeader');
+        const checkoutBtn = document.getElementById('checkoutBtn');
+
+        tbody.innerHTML = '';
+        const totalItems = cart.reduce((acc, x) => acc + x.qty, 0);
+        headerCount.innerText = totalItems;
+
+        if (cart.length === 0) {
+            emptyNotice.style.display = 'block';
+            tableWrapper.style.display = 'none';
+            checkoutBtn.disabled = true;
+            updateSummary(0);
+            return;
+        }
+
+        emptyNotice.style.display = 'none';
+        tableWrapper.style.display = 'block';
+        checkoutBtn.disabled = false;
+
+        let subtotal = 0;
+
+        cart.forEach(item => {
+            const itemSubtotal = item.price * item.qty;
+            subtotal += itemSubtotal;
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>
+                    <div class="d-flex align-items-center gap-3">
+                        <img src="${item.img || 'https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=100'}" 
+                             class="rounded-3 object-fit-cover shadow-sm" width="55" height="55" alt="${item.name}">
+                        <div>
+                            <div class="fw-bold">${item.name}</div>
+                            <div class="text-muted small">ID: #PROD-${item.id}</div>
+                        </div>
+                    </div>
+                </td>
+                <td class="fw-semibold">$${item.price.toFixed(2)}</td>
+                <td class="text-center">
+                    <div class="input-group input-group-sm justify-content-center" style="max-width: 110px; margin: auto;">
+                        <button class="btn btn-outline-secondary" onclick="changeQty(${item.id}, -1)">-</button>
+                        <span class="input-group-text bg-white px-3">${item.qty}</span>
+                        <button class="btn btn-outline-secondary" onclick="changeQty(${item.id}, 1)">+</button>
+                    </div>
+                </td>
+                <td class="text-end fw-bold">$${itemSubtotal.toFixed(2)}</td>
+                <td class="text-end">
+                    <button class="btn btn-link text-danger p-0" onclick="removeItem(${item.id})">
+                        <i class="bi bi-x-circle fs-5"></i>
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        updateSummary(subtotal);
+    }
+
+    function updateSummary(subtotal) {
+        const discount = subtotal * 0.10;
+        const tax = (subtotal - discount) * 0.05;
+        const total = (subtotal - discount) + tax;
+
+        document.getElementById('sumSubtotal').innerText = '$' + subtotal.toFixed(2);
+        document.getElementById('sumDiscount').innerText = '-$' + discount.toFixed(2);
+        document.getElementById('sumTax').innerText = '$' + tax.toFixed(2);
+        document.getElementById('sumTotal').innerText = '$' + total.toFixed(2);
+        document.getElementById('modalCheckoutTotal').innerText = '$' + total.toFixed(2);
+    }
+
+    function changeQty(id, delta) {
+        let cart = getCart();
+        const item = cart.find(x => x.id === id);
+        if (item) {
+            item.qty += delta;
+            if (item.qty <= 0) {
+                cart = cart.filter(x => x.id !== id);
+            }
+            saveCart(cart);
+        }
+    }
+
+    function removeItem(id) {
+        let cart = getCart().filter(x => x.id !== id);
+        saveCart(cart);
+    }
+
+    function clearCart() {
+        if (confirm('Clear all items from your cart?')) {
+            saveCart([]);
+        }
+    }
+
+    function applyPromo() {
+        const val = document.getElementById('promoInput').value.trim();
+        if (val.toUpperCase() === 'SPORT10') {
+            alert('🎉 Coupon applied! Extra 10% discount added to order.');
+        } else {
+            alert('Coupon code invalid or expired.');
+        }
+    }
+
+    function openCheckoutModal() {
+        const modal = new bootstrap.Modal(document.getElementById('checkoutModal'));
+        modal.show();
+    }
+
+    function finishCheckout() {
+        alert('🎉 Order successfully placed! An SMS confirmation has been sent.');
+        saveCart([]);
+        const modalEl = document.getElementById('checkoutModal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        modal.hide();
+        window.location.href = '/Profile/Client';
+    }
+
+    function updateNavBadge() {
+        const cart = getCart();
+        const total = cart.reduce((acc, x) => acc + x.qty, 0);
+        const navBadge = document.getElementById('navCartBadge');
+        if (navBadge) {
+            if (total > 0) {
+                navBadge.innerText = total;
+                navBadge.style.display = 'inline-block';
+            } else {
+                navBadge.style.display = 'none';
+            }
+        }
+    }
+
+    // Default sample item if empty on initial visit so the cart is lively
+    if (getCart().length === 0) {
+        saveCart([
+            { id: 1, name: "100% Whey Protein Isolate", price: 45.00, qty: 1, img: "https://images.unsplash.com/photo-1579722821273-0f6c7d44362f?w=100&auto=format&fit=crop&q=80" },
+            { id: 3, name: "SportLab Pro Stainless Shaker", price: 18.50, qty: 2, img: "https://images.unsplash.com/photo-1544816155-12df9643f363?w=100&auto=format&fit=crop&q=80" }
+        ]);
+    } else {
+        renderCart();
+    }
+</script>

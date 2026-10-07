@@ -1,3 +1,229 @@
-﻿@{
-
+@{
+    ViewData["Title"] = "Direct Coach & Support Chat";
 }
+
+<div class="py-4">
+    <div class="mb-4">
+        <span class="badge bg-primary-subtle text-primary fw-semibold px-3 py-2 rounded-pill mb-2">Instant Messenger</span>
+        <h1 class="display-5 fw-bold mb-1">Coach & Gym Support Chat</h1>
+        <p class="text-muted">Direct messaging with your assigned fitness coaches and SportLab reception staff.</p>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden" style="height: 680px;">
+        <div class="row g-0 h-100">
+            <!-- Sidebar Contacts -->
+            <div class="col-md-4 border-end bg-light d-flex flex-column h-100">
+                <div class="p-3 border-bottom bg-white">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>
+                        <input type="text" class="form-control bg-light border-0" placeholder="Search conversations...">
+                    </div>
+                </div>
+
+                <div class="overflow-y-auto flex-grow-1 p-2">
+                    <!-- Contact 1 -->
+                    <div class="p-3 rounded-3 bg-white shadow-sm mb-2 d-flex align-items-center gap-3 cursor-pointer contact-card active border-start border-4 border-primary" onclick="switchContact('Alex Mercer', 'Head Strength Coach', 'online')">
+                        <div class="position-relative">
+                            <img src="https://images.unsplash.com/photo-1567013127542-490d757e51fc?w=100&auto=format&fit=crop&q=80" class="rounded-circle object-fit-cover" width="48" height="48" alt="Alex Mercer">
+                            <span class="position-absolute bottom-0 end-0 p-1 bg-success border border-white rounded-circle"></span>
+                        </div>
+                        <div class="flex-grow-1 text-truncate">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="fw-bold mb-0 text-truncate">Alex Mercer</h6>
+                                <small class="text-muted" style="font-size: 0.7rem;">10:42 AM</small>
+                            </div>
+                            <small class="text-muted text-truncate d-block">Great form on those squats today!</small>
+                        </div>
+                    </div>
+
+                    <!-- Contact 2 -->
+                    <div class="p-3 rounded-3 mb-2 d-flex align-items-center gap-3 cursor-pointer contact-card" onclick="switchContact('SportLab Front Desk', 'Customer Support & Passes', 'online')">
+                        <div class="position-relative">
+                            <div class="rounded-circle bg-dark text-white d-flex align-items-center justify-content-center fw-bold" style="width: 48px; height: 48px;">
+                                <i class="bi bi-building"></i>
+                            </div>
+                            <span class="position-absolute bottom-0 end-0 p-1 bg-success border border-white rounded-circle"></span>
+                        </div>
+                        <div class="flex-grow-1 text-truncate">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="fw-bold mb-0 text-truncate">Front Desk & Locker</h6>
+                                <small class="text-muted" style="font-size: 0.7rem;">Yesterday</small>
+                            </div>
+                            <small class="text-muted text-truncate d-block">Your locker #42 has been assigned.</small>
+                        </div>
+                    </div>
+
+                    <!-- Contact 3 -->
+                    <div class="p-3 rounded-3 mb-2 d-flex align-items-center gap-3 cursor-pointer contact-card" onclick="switchContact('Sarah Jenkins', 'CrossFit Lead Coach', 'away')">
+                        <div class="position-relative">
+                            <img src="https://images.unsplash.com/photo-1548690312-e3b507d8c110?w=100&auto=format&fit=crop&q=80" class="rounded-circle object-fit-cover" width="48" height="48" alt="Sarah Jenkins">
+                            <span class="position-absolute bottom-0 end-0 p-1 bg-warning border border-white rounded-circle"></span>
+                        </div>
+                        <div class="flex-grow-1 text-truncate">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="fw-bold mb-0 text-truncate">Sarah Jenkins</h6>
+                                <small class="text-muted" style="font-size: 0.7rem;">Tue</small>
+                            </div>
+                            <small class="text-muted text-truncate d-block">Don't forget to hydrate before WOD!</small>
+                        </div>
+                    </div>
+
+                    <!-- Contact 4 -->
+                    <div class="p-3 rounded-3 mb-2 d-flex align-items-center gap-3 cursor-pointer contact-card" onclick="switchContact('Elena Rostova', 'Yoga & Nutrition Specialist', 'offline')">
+                        <div class="position-relative">
+                            <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=100&auto=format&fit=crop&q=80" class="rounded-circle object-fit-cover" width="48" height="48" alt="Elena Rostova">
+                            <span class="position-absolute bottom-0 end-0 p-1 bg-secondary border border-white rounded-circle"></span>
+                        </div>
+                        <div class="flex-grow-1 text-truncate">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="fw-bold mb-0 text-truncate">Elena Rostova</h6>
+                                <small class="text-muted" style="font-size: 0.7rem;">Oct 4</small>
+                            </div>
+                            <small class="text-muted text-truncate d-block">Meal plan updated in your profile.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Chat Area -->
+            <div class="col-md-8 d-flex flex-column h-100 bg-white">
+                <!-- Chat Header -->
+                <div class="p-3 border-bottom d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="position-relative">
+                            <div id="chatAvatar" class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold" style="width: 44px; height: 44px;">
+                                AM
+                            </div>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-0" id="chatTitle">Alex Mercer</h6>
+                            <small class="text-success" id="chatStatus"><i class="bi bi-circle-fill me-1" style="font-size: 0.5rem;"></i>Active Now</small>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-light text-dark btn-sm rounded-circle p-2" title="Voice Call"><i class="bi bi-telephone"></i></button>
+                        <button class="btn btn-outline-light text-dark btn-sm rounded-circle p-2" title="Schedule Session"><i class="bi bi-calendar-plus"></i></button>
+                    </div>
+                </div>
+
+                <!-- Messages Body -->
+                <div class="flex-grow-1 overflow-y-auto p-4 d-flex flex-column gap-3" id="messagesContainer">
+                    <!-- Received -->
+                    <div class="d-flex align-items-end gap-2" style="max-width: 75%;">
+                        <div class="bg-light p-3 rounded-4 shadow-sm text-dark">
+                            <p class="mb-1 small">Hey Alex! Welcome back to the gym. How are your hamstrings feeling after Monday's deadlift session?</p>
+                            <span class="text-muted" style="font-size: 0.65rem;">10:38 AM</span>
+                        </div>
+                    </div>
+
+                    <!-- Sent -->
+                    <div class="d-flex align-items-end gap-2 justify-content-end align-self-end" style="max-width: 75%;">
+                        <div class="bg-primary text-white p-3 rounded-4 shadow-sm">
+                            <p class="mb-1 small">Feeling good coach! Slight soreness but ready for today. What should I warm up with before the 6 PM powerlifting block?</p>
+                            <span class="text-white-50" style="font-size: 0.65rem;">10:40 AM &bull; Read</span>
+                        </div>
+                    </div>
+
+                    <!-- Received -->
+                    <div class="d-flex align-items-end gap-2" style="max-width: 75%;">
+                        <div class="bg-light p-3 rounded-4 shadow-sm text-dark">
+                            <p class="mb-1 small">Awesome! Do 8 mins on the assault bike, dynamic hip openers with the green band, and 3 sets of empty barbell good mornings. See you on the platform!</p>
+                            <span class="text-muted" style="font-size: 0.65rem;">10:42 AM</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Footer -->
+                <div class="p-3 border-top bg-light">
+                    <form id="chatForm" onsubmit="sendMessage(event)" class="d-flex gap-2 align-items-center">
+                        <button type="button" class="btn btn-light rounded-circle text-muted p-2" title="Attach workout log"><i class="bi bi-paperclip"></i></button>
+                        <input type="text" id="chatInput" class="form-control rounded-pill border-0 shadow-sm px-4" placeholder="Type a message to your coach..." required autocomplete="off">
+                        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm">
+                            <i class="bi bi-send-fill me-1"></i> Send
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function sendMessage(e) {
+        e.preventDefault();
+        const input = document.getElementById('chatInput');
+        const text = input.value.trim();
+        if (!text) return;
+
+        const container = document.getElementById('messagesContainer');
+        const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        // Append sent message
+        const sentBubble = document.createElement('div');
+        sentBubble.className = 'd-flex align-items-end gap-2 justify-content-end align-self-end';
+        sentBubble.style.maxWidth = '75%';
+        sentBubble.innerHTML = `
+            <div class="bg-primary text-white p-3 rounded-4 shadow-sm">
+                <p class="mb-1 small">${escapeHtml(text)}</p>
+                <span class="text-white-50" style="font-size: 0.65rem;">${now} &bull; Delivered</span>
+            </div>
+        `;
+        container.appendChild(sentBubble);
+        input.value = '';
+        container.scrollTop = container.scrollHeight;
+
+        // Simulate coach response after 1.2 seconds
+        setTimeout(() => {
+            const replies = [
+                "Got it! Let's incorporate that into today's workout.",
+                "Make sure to drink at least 500ml water and bring your lifting belt.",
+                "Noted! I'll reserve the squat rack for you at 18:00.",
+                "Great work keeping up the consistency! See you at the gym."
+            ];
+            const randomReply = replies[Math.floor(Math.random() * replies.length)];
+
+            const recvBubble = document.createElement('div');
+            recvBubble.className = 'd-flex align-items-end gap-2';
+            recvBubble.style.maxWidth = '75%';
+            recvBubble.innerHTML = `
+                <div class="bg-light p-3 rounded-4 shadow-sm text-dark">
+                    <p class="mb-1 small">${randomReply}</p>
+                    <span class="text-muted" style="font-size: 0.65rem;">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                </div>
+            `;
+            container.appendChild(recvBubble);
+            container.scrollTop = container.scrollHeight;
+        }, 1200);
+    }
+
+    function switchContact(name, role, status) {
+        document.getElementById('chatTitle').innerText = name;
+        const statusEl = document.getElementById('chatStatus');
+        const avatarEl = document.getElementById('chatAvatar');
+
+        const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2);
+        avatarEl.innerText = initials;
+
+        if (status === 'online') {
+            statusEl.innerHTML = '<i class="bi bi-circle-fill me-1" style="font-size: 0.5rem;"></i>Active Now';
+            statusEl.className = 'text-success';
+        } else if (status === 'away') {
+            statusEl.innerHTML = '<i class="bi bi-clock-fill me-1" style="font-size: 0.5rem;"></i>Away (In class)';
+            statusEl.className = 'text-warning';
+        } else {
+            statusEl.innerHTML = '<i class="bi bi-circle me-1" style="font-size: 0.5rem;"></i>Offline (Responds in ~1 hr)';
+            statusEl.className = 'text-muted';
+        }
+
+        document.querySelectorAll('.contact-card').forEach(c => {
+            c.classList.remove('active', 'border-start', 'border-4', 'border-primary', 'bg-white', 'shadow-sm');
+        });
+        event.currentTarget.classList.add('active', 'border-start', 'border-4', 'border-primary', 'bg-white', 'shadow-sm');
+    }
+
+    function escapeHtml(string) {
+        const div = document.createElement('div');
+        div.innerText = string;
+        return div.innerHTML;
+    }
+</script>

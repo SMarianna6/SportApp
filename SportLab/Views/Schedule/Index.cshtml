@@ -1,3 +1,358 @@
-﻿@{
-    ViewData["Title"] = "Schedule";
+@{
+    ViewData["Title"] = "Class & Workout Schedule";
 }
+
+<div class="py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+        <div>
+            <span class="badge bg-primary-subtle text-primary fw-semibold px-3 py-2 rounded-pill mb-2">Club Timetable</span>
+            <h1 class="display-5 fw-bold mb-1">Group Classes & Open Slots</h1>
+            <p class="text-muted">Reserve your spot in high-energy group workouts or open gym coaching sessions.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-controller="Profile" asp-action="Client" class="btn btn-outline-dark rounded-pill px-3">
+                <i class="bi bi-calendar-check me-1"></i> My Bookings
+            </a>
+        </div>
+    </div>
+
+    <!-- Day Navigation Tabs -->
+    <div class="card border-0 shadow-sm rounded-4 p-2 mb-4 bg-light">
+        <ul class="nav nav-pills nav-fill gap-2" id="dayTabs">
+            <li class="nav-item">
+                <button class="nav-link active rounded-pill fw-semibold py-2 day-tab" data-day="Mon">Mon <span class="d-none d-md-inline">Oct 12</span></button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link rounded-pill fw-semibold py-2 day-tab" data-day="Tue">Tue <span class="d-none d-md-inline">Oct 13</span></button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link rounded-pill fw-semibold py-2 day-tab" data-day="Wed">Wed <span class="d-none d-md-inline">Oct 14</span></button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link rounded-pill fw-semibold py-2 day-tab" data-day="Thu">Thu <span class="d-none d-md-inline">Oct 15</span></button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link rounded-pill fw-semibold py-2 day-tab" data-day="Fri">Fri <span class="d-none d-md-inline">Oct 16</span></button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link rounded-pill fw-semibold py-2 day-tab" data-day="Sat">Sat <span class="d-none d-md-inline">Oct 17</span></button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link rounded-pill fw-semibold py-2 day-tab" data-day="Sun">Sun <span class="d-none d-md-inline">Oct 18</span></button>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Category Filters -->
+    <div class="d-flex flex-wrap gap-2 mb-4 align-items-center">
+        <span class="text-muted small fw-semibold me-2"><i class="bi bi-funnel me-1"></i>Filter by:</span>
+        <button class="btn btn-sm btn-dark rounded-pill px-3 cat-filter active" data-cat="all">All Classes</button>
+        <button class="btn btn-sm btn-outline-dark rounded-pill px-3 cat-filter" data-cat="crossfit">CrossFit & HIIT</button>
+        <button class="btn btn-sm btn-outline-dark rounded-pill px-3 cat-filter" data-cat="strength">Strength & Power</button>
+        <button class="btn btn-sm btn-outline-dark rounded-pill px-3 cat-filter" data-cat="yoga">Yoga & Mobility</button>
+        <button class="btn btn-sm btn-outline-dark rounded-pill px-3 cat-filter" data-cat="combat">Boxing & Combat</button>
+    </div>
+
+    <!-- Class Grid -->
+    <div class="row g-4" id="scheduleList">
+        <!-- Item 1 -->
+        <div class="col-lg-4 col-md-6 schedule-item" data-day="Mon Wed Fri" data-cat="crossfit">
+            <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header bg-primary text-white p-3 d-flex justify-content-between align-items-center">
+                    <span class="fw-bold"><i class="bi bi-clock me-1"></i> 08:00 - 09:00</span>
+                    <span class="badge bg-white text-primary">CrossFit Zone</span>
+                </div>
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="fw-bold mb-0">Morning Metabolic Blast</h5>
+                        <span class="badge bg-danger-subtle text-danger">Intense</span>
+                    </div>
+                    <p class="text-muted small mb-3">High-tempo circuit combining barbell complexes, kettlebells, and rowing intervals.</p>
+                    
+                    <div class="d-flex align-items-center gap-3 py-2 border-top border-bottom my-3">
+                        <img src="https://images.unsplash.com/photo-1548690312-e3b507d8c110?w=100&auto=format&fit=crop&q=80" class="rounded-circle object-fit-cover" width="40" height="40" alt="Sarah Jenkins">
+                        <div>
+                            <div class="small fw-bold">Sarah Jenkins</div>
+                            <div class="text-muted" style="font-size: 0.75rem;">CrossFit L2 Coach</div>
+                        </div>
+                        <div class="ms-auto text-end">
+                            <span class="badge bg-success-subtle text-success">4 spots left</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-auto">
+                        <button class="btn btn-dark w-100 rounded-pill py-2" onclick="bookSession('Morning Metabolic Blast', '08:00 - 09:00', 'Sarah Jenkins', 'CrossFit Zone')">
+                            Book Workout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="col-lg-4 col-md-6 schedule-item" data-day="Mon Tue Thu" data-cat="strength">
+            <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header bg-dark text-white p-3 d-flex justify-content-between align-items-center">
+                    <span class="fw-bold"><i class="bi bi-clock me-1"></i> 10:30 - 11:45</span>
+                    <span class="badge bg-light text-dark">Iron Zone</span>
+                </div>
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="fw-bold mb-0">Powerlifting Biomechanics</h5>
+                        <span class="badge bg-warning-subtle text-dark">Advanced</span>
+                    </div>
+                    <p class="text-muted small mb-3">Heavy bar mastery: squat positioning, bench arch mechanics, and explosive deadlift cues.</p>
+                    
+                    <div class="d-flex align-items-center gap-3 py-2 border-top border-bottom my-3">
+                        <img src="https://images.unsplash.com/photo-1567013127542-490d757e51fc?w=100&auto=format&fit=crop&q=80" class="rounded-circle object-fit-cover" width="40" height="40" alt="Alex Mercer">
+                        <div>
+                            <div class="small fw-bold">Alex Mercer</div>
+                            <div class="text-muted" style="font-size: 0.75rem;">Strength Specialist</div>
+                        </div>
+                        <div class="ms-auto text-end">
+                            <span class="badge bg-danger-subtle text-danger">Only 2 spots!</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-auto">
+                        <button class="btn btn-dark w-100 rounded-pill py-2" onclick="bookSession('Powerlifting Biomechanics', '10:30 - 11:45', 'Alex Mercer', 'Iron Zone')">
+                            Book Workout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="col-lg-4 col-md-6 schedule-item" data-day="Mon Wed Fri Sat" data-cat="yoga">
+            <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header bg-success text-white p-3 d-flex justify-content-between align-items-center">
+                    <span class="fw-bold"><i class="bi bi-clock me-1"></i> 12:00 - 13:00</span>
+                    <span class="badge bg-white text-success">Zen Studio</span>
+                </div>
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="fw-bold mb-0">Athletic Flow & Mobility</h5>
+                        <span class="badge bg-info-subtle text-info">All Levels</span>
+                    </div>
+                    <p class="text-muted small mb-3">Spinal decompression, hip mobility drills, and restorative deep breathing routines.</p>
+                    
+                    <div class="d-flex align-items-center gap-3 py-2 border-top border-bottom my-3">
+                        <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=100&auto=format&fit=crop&q=80" class="rounded-circle object-fit-cover" width="40" height="40" alt="Elena Rostova">
+                        <div>
+                            <div class="small fw-bold">Elena Rostova</div>
+                            <div class="text-muted" style="font-size: 0.75rem;">FRC® & Yoga Lead</div>
+                        </div>
+                        <div class="ms-auto text-end">
+                            <span class="badge bg-success-subtle text-success">8 spots left</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-auto">
+                        <button class="btn btn-dark w-100 rounded-pill py-2" onclick="bookSession('Athletic Flow & Mobility', '12:00 - 13:00', 'Elena Rostova', 'Zen Studio')">
+                            Book Workout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Item 4 -->
+        <div class="col-lg-4 col-md-6 schedule-item" data-day="Tue Thu Sat" data-cat="combat">
+            <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header bg-danger text-white p-3 d-flex justify-content-between align-items-center">
+                    <span class="fw-bold"><i class="bi bi-clock me-1"></i> 17:30 - 18:45</span>
+                    <span class="badge bg-white text-danger">Combat Arena</span>
+                </div>
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="fw-bold mb-0">Boxing Conditioning & Sparring</h5>
+                        <span class="badge bg-danger-subtle text-danger">High Intensity</span>
+                    </div>
+                    <p class="text-muted small mb-3">Bag combinations, footwork defense, reaction drills, and high-cadence cardio conditioning.</p>
+                    
+                    <div class="d-flex align-items-center gap-3 py-2 border-top border-bottom my-3">
+                        <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=100&auto=format&fit=crop&q=80" class="rounded-circle object-fit-cover" width="40" height="40" alt="Marcus Thorne">
+                        <div>
+                            <div class="small fw-bold">Marcus Thorne</div>
+                            <div class="text-muted" style="font-size: 0.75rem;">Combat Coach</div>
+                        </div>
+                        <div class="ms-auto text-end">
+                            <span class="badge bg-success-subtle text-success">5 spots left</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-auto">
+                        <button class="btn btn-dark w-100 rounded-pill py-2" onclick="bookSession('Boxing Conditioning', '17:30 - 18:45', 'Marcus Thorne', 'Combat Arena')">
+                            Book Workout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Item 5 -->
+        <div class="col-lg-4 col-md-6 schedule-item" data-day="Mon Wed Fri" data-cat="crossfit">
+            <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header bg-primary text-white p-3 d-flex justify-content-between align-items-center">
+                    <span class="fw-bold"><i class="bi bi-clock me-1"></i> 19:00 - 20:00</span>
+                    <span class="badge bg-white text-primary">CrossFit Zone</span>
+                </div>
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="fw-bold mb-0">SportLab Team WOD</h5>
+                        <span class="badge bg-warning-subtle text-dark">Intermediate</span>
+                    </div>
+                    <p class="text-muted small mb-3">Competitive partner workout of the day. Sync burpees, thrusters, and assault bike sprints.</p>
+                    
+                    <div class="d-flex align-items-center gap-3 py-2 border-top border-bottom my-3">
+                        <img src="https://images.unsplash.com/photo-1548690312-e3b507d8c110?w=100&auto=format&fit=crop&q=80" class="rounded-circle object-fit-cover" width="40" height="40" alt="Sarah Jenkins">
+                        <div>
+                            <div class="small fw-bold">Sarah Jenkins</div>
+                            <div class="text-muted" style="font-size: 0.75rem;">CrossFit L2 Coach</div>
+                        </div>
+                        <div class="ms-auto text-end">
+                            <span class="badge bg-warning-subtle text-dark">Almost Full (1 spot)</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-auto">
+                        <button class="btn btn-dark w-100 rounded-pill py-2" onclick="bookSession('SportLab Team WOD', '19:00 - 20:00', 'Sarah Jenkins', 'CrossFit Zone')">
+                            Book Workout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Item 6 -->
+        <div class="col-lg-4 col-md-6 schedule-item" data-day="Tue Thu Sun" data-cat="strength">
+            <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header bg-dark text-white p-3 d-flex justify-content-between align-items-center">
+                    <span class="fw-bold"><i class="bi bi-clock me-1"></i> 20:15 - 21:15</span>
+                    <span class="badge bg-light text-dark">Hypertrophy Lab</span>
+                </div>
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="fw-bold mb-0">Upper Body Sculpt & Pump</h5>
+                        <span class="badge bg-success-subtle text-success">Open to All</span>
+                    </div>
+                    <p class="text-muted small mb-3">Targeted chest, back, and arm supersets utilizing precision cables and dumbbells.</p>
+                    
+                    <div class="d-flex align-items-center gap-3 py-2 border-top border-bottom my-3">
+                        <img src="https://images.unsplash.com/photo-1567013127542-490d757e51fc?w=100&auto=format&fit=crop&q=80" class="rounded-circle object-fit-cover" width="40" height="40" alt="Alex Mercer">
+                        <div>
+                            <div class="small fw-bold">Alex Mercer</div>
+                            <div class="text-muted" style="font-size: 0.75rem;">Strength Specialist</div>
+                        </div>
+                        <div class="ms-auto text-end">
+                            <span class="badge bg-success-subtle text-success">6 spots left</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-auto">
+                        <button class="btn btn-dark w-100 rounded-pill py-2" onclick="bookSession('Upper Body Sculpt & Pump', '20:15 - 21:15', 'Alex Mercer', 'Hypertrophy Lab')">
+                            Book Workout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Booking Confirmation Modal -->
+<div class="modal fade" id="bookingModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold">Confirm Workout Reservation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="p-3 bg-light rounded-3 mb-3">
+                    <h5 id="bookClassTitle" class="fw-bold mb-1 text-primary"></h5>
+                    <div class="text-muted small mb-1"><i class="bi bi-clock me-1"></i> <span id="bookClassTime"></span></div>
+                    <div class="text-muted small mb-1"><i class="bi bi-person me-1"></i> Coach: <span id="bookClassCoach"></span></div>
+                    <div class="text-muted small"><i class="bi bi-geo-alt me-1"></i> Location: <span id="bookClassRoom"></span></div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold">Member Name</label>
+                    <input type="text" class="form-control" value="Member #10842 (Alex Smith)" readonly />
+                </div>
+                <div class="form-check mb-4">
+                    <input class="form-check-input" type="checkbox" id="smsReminder" checked>
+                    <label class="form-check-label small text-muted" for="smsReminder">
+                        Send SMS & calendar reminder 2 hours prior
+                    </label>
+                </div>
+                <button type="button" class="btn btn-primary w-100 rounded-pill py-2" onclick="confirmBooking()">
+                    Confirm Reservation
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentDay = 'Mon';
+    let currentCat = 'all';
+
+    function filterClasses() {
+        const items = document.querySelectorAll('.schedule-item');
+        items.forEach(item => {
+            const days = item.getAttribute('data-day');
+            const cat = item.getAttribute('data-cat');
+
+            const matchDay = days.includes(currentDay);
+            const matchCat = (currentCat === 'all' || cat === currentCat);
+
+            if (matchDay && matchCat) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    document.querySelectorAll('.day-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            currentDay = tab.getAttribute('data-day');
+            filterClasses();
+        });
+    });
+
+    document.querySelectorAll('.cat-filter').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.cat-filter').forEach(b => {
+                b.classList.remove('active', 'btn-dark');
+                b.classList.add('btn-outline-dark');
+            });
+            btn.classList.add('active', 'btn-dark');
+            btn.classList.remove('btn-outline-dark');
+            currentCat = btn.getAttribute('data-cat');
+            filterClasses();
+        });
+    });
+
+    function bookSession(title, time, coach, room) {
+        document.getElementById('bookClassTitle').innerText = title;
+        document.getElementById('bookClassTime').innerText = time;
+        document.getElementById('bookClassCoach').innerText = coach;
+        document.getElementById('bookClassRoom').innerText = room;
+        const modal = new bootstrap.Modal(document.getElementById('bookingModal'));
+        modal.show();
+    }
+
+    function confirmBooking() {
+        alert('✅ Workout spot confirmed! Added to your schedule in Profile.');
+        const modalEl = document.getElementById('bookingModal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        modal.hide();
+    }
+
+    // initial run
+    filterClasses();
+</script>
