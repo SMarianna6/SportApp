@@ -1,80 +1,229 @@
-﻿@{
+@{
     ViewData["Title"] = "Our Trainers";
 }
 
 <div class="container mt-4">
-    <h2 class="mb-4">Meet Our Trainers</h2>
-    <p class="text-muted mb-5">Choose a specialist who perfectly matches your fitness goals and start your journey today.</p>
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2 class="fw-bold mb-1">Meet Our Trainers</h2>
+            <p class="text-muted mb-0">Certified fitness coaches ready to guide you toward your personal goals.</p>
+        </div>
+        <div>
+            <a asp-controller="Schedule" asp-action="Index" class="btn btn-outline-primary">
+                View Schedule
+            </a>
+        </div>
+    </div>
 
-    <div class="row g-4">
-        <div class="col-md-4">
+    <!-- Filter Buttons -->
+    <div class="mb-4 d-flex gap-2 flex-wrap">
+        <button class="btn btn-sm btn-dark filter-btn active" onclick="filterTrainers('all', this)">All Specialties</button>
+        <button class="btn btn-sm btn-outline-dark filter-btn" onclick="filterTrainers('strength', this)">Strength & Bodybuilding</button>
+        <button class="btn btn-sm btn-outline-dark filter-btn" onclick="filterTrainers('functional', this)">CrossFit & Functional</button>
+        <button class="btn btn-sm btn-outline-dark filter-btn" onclick="filterTrainers('yoga', this)">Yoga & Mobility</button>
+        <button class="btn btn-sm btn-outline-dark filter-btn" onclick="filterTrainers('combat', this)">Combat & Boxing</button>
+    </div>
+
+    <div class="row g-4" id="trainersList">
+        <!-- Trainer 1 -->
+        <div class="col-md-4 trainer-item" data-specialty="functional">
             <div class="card h-100 shadow-sm border-0">
-                <img src="https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=500&auto=format&fit=crop&q=80" class="card-img-top" alt="Iryna Boyko" style="height: 300px; object-fit: cover; object-position: top;">
+                <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600&auto=format&fit=crop&q=80" 
+                     class="card-img-top object-fit-cover" 
+                     alt="Andrii Melnyk" 
+                     style="height: 280px;">
                 <div class="card-body d-flex flex-column">
-                    <h5 class="card-title fw-bold">Iryna Boyko</h5>
-                    <h6 class="card-subtitle mb-3 text-primary">Powerlifting & Bodybuilding</h6>
-                    <p class="card-text text-muted">A true powerhouse. Iryna specializes in heavy lifting, muscle hypertrophy, and competitive powerlifting. She destroys stereotypes and builds real strength.</p>
-                    <div class="mt-auto">
-                        <a asp-controller="Schedule" asp-action="Index" class="btn btn-outline-dark w-100">View Schedule</a>
+                    <div class="d-flex justify-content-between align-items-start mb-1">
+                        <h5 class="card-title fw-bold mb-0">Andrii Melnyk</h5>
+                        <span class="badge bg-primary">CrossFit</span>
+                    </div>
+                    <h6 class="card-subtitle text-muted mb-3 small">Functional & High-Intensity Training</h6>
+                    <p class="card-text text-muted small">Specializes in functional hypertrophy, speed, stamina, and barbell circuits. Certified CrossFit L2 coach with 6+ years of coaching experience.</p>
+                    <div class="mt-auto pt-3 border-top d-flex gap-2">
+                        <a asp-controller="Schedule" asp-action="Index" class="btn btn-outline-dark btn-sm flex-fill">Schedule</a>
+                        <button class="btn btn-primary btn-sm flex-fill" onclick="openContactModal('Andrii Melnyk', 'CrossFit & Functional')">Book Session</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4">
+        <!-- Trainer 2 -->
+        <div class="col-md-4 trainer-item" data-specialty="strength">
             <div class="card h-100 shadow-sm border-0">
-                <img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=500&auto=format&fit=crop&q=80" class="card-img-top" alt="Maksym Kovalchuk" style="height: 300px; object-fit: cover;">
+                <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&auto=format&fit=crop&q=80" 
+                     class="card-img-top object-fit-cover" 
+                     alt="Denys Kravchenko" 
+                     style="height: 280px;">
                 <div class="card-body d-flex flex-column">
-                    <h5 class="card-title fw-bold">Maksym Kovalchuk</h5>
-                    <h6 class="card-subtitle mb-3 text-primary">CrossFit & Weightlifting</h6>
-                    <p class="card-text text-muted">Expert in high-intensity functional training and powerlifting. Ready to push your limits and build real strength.</p>
-                    <div class="mt-auto">
-                        <a asp-controller="Schedule" asp-action="Index" class="btn btn-outline-dark w-100">View Schedule</a>
+                    <div class="d-flex justify-content-between align-items-start mb-1">
+                        <h5 class="card-title fw-bold mb-0">Denys Kravchenko</h5>
+                        <span class="badge bg-dark">Strength</span>
+                    </div>
+                    <h6 class="card-subtitle text-muted mb-3 small">Powerlifting & Bodybuilding</h6>
+                    <p class="card-text text-muted small">Focuses on biomechanics, muscle mass growth, and powerlifting fundamentals. Helps clients build safe lifting habits and peak strength.</p>
+                    <div class="mt-auto pt-3 border-top d-flex gap-2">
+                        <a asp-controller="Schedule" asp-action="Index" class="btn btn-outline-dark btn-sm flex-fill">Schedule</a>
+                        <button class="btn btn-primary btn-sm flex-fill" onclick="openContactModal('Denys Kravchenko', 'Powerlifting & Bodybuilding')">Book Session</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4">
+        <!-- Trainer 3 -->
+        <div class="col-md-4 trainer-item" data-specialty="yoga">
             <div class="card h-100 shadow-sm border-0">
-                <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=500&auto=format&fit=crop&q=80" class="card-img-top" alt="Oksana Melnyk" style="height: 300px; object-fit: cover;">
+                <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&auto=format&fit=crop&q=80" 
+                     class="card-img-top object-fit-cover" 
+                     alt="Tetiana Shevchenko" 
+                     style="height: 280px;">
                 <div class="card-body d-flex flex-column">
-                    <h5 class="card-title fw-bold">Oksana Melnyk</h5>
-                    <h6 class="card-subtitle mb-3 text-primary">Yoga & Stretching</h6>
-                    <p class="card-text text-muted">Focuses on flexibility, mindfulness, and core stability. Helps you find balance between mind and body.</p>
-                    <div class="mt-auto">
-                        <a asp-controller="Schedule" asp-action="Index" class="btn btn-outline-dark w-100">View Schedule</a>
+                    <div class="d-flex justify-content-between align-items-start mb-1">
+                        <h5 class="card-title fw-bold mb-0">Tetiana Shevchenko</h5>
+                        <span class="badge bg-success">Yoga</span>
+                    </div>
+                    <h6 class="card-subtitle text-muted mb-3 small">Yoga, Pilates & Mobility</h6>
+                    <p class="card-text text-muted small">Promotes joint longevity, posture alignment, spine health, and breathing techniques. Great for stress relief and deep muscle stretching.</p>
+                    <div class="mt-auto pt-3 border-top d-flex gap-2">
+                        <a asp-controller="Schedule" asp-action="Index" class="btn btn-outline-dark btn-sm flex-fill">Schedule</a>
+                        <button class="btn btn-primary btn-sm flex-fill" onclick="openContactModal('Tetiana Shevchenko', 'Yoga, Pilates & Mobility')">Book Session</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4">
+        <!-- Trainer 4 -->
+        <div class="col-md-4 trainer-item" data-specialty="combat">
             <div class="card h-100 shadow-sm border-0">
-                <img src="https://images.unsplash.com/photo-1579758629938-03607ccdbaba?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="card-img-top" alt="Oleksandr Shevchenko" style="height: 300px; object-fit: cover;">
+                <img src="https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=600&auto=format&fit=crop&q=80" 
+                     class="card-img-top object-fit-cover" 
+                     alt="Roman Koval" 
+                     style="height: 280px;">
                 <div class="card-body d-flex flex-column">
-                    <h5 class="card-title fw-bold">Oleksandr Shevchenko</h5>
-                    <h6 class="card-subtitle mb-3 text-primary">Strength & Conditioning</h6>
-                    <p class="card-text text-muted">Develops personalized strength routines. Perfect for muscle gain, toning, and athletic conditioning.</p>
-                    <div class="mt-auto">
-                        <a asp-controller="Schedule" asp-action="Index" class="btn btn-outline-dark w-100">View Schedule</a>
+                    <div class="d-flex justify-content-between align-items-start mb-1">
+                        <h5 class="card-title fw-bold mb-0">Roman Koval</h5>
+                        <span class="badge bg-danger">Combat</span>
+                    </div>
+                    <h6 class="card-subtitle text-muted mb-3 small">Boxing & Kickboxing Lead</h6>
+                    <p class="card-text text-muted small">Former regional boxing medalist. Teaches punching combinations, reaction speed, endurance, and defensive footwork for all skill levels.</p>
+                    <div class="mt-auto pt-3 border-top d-flex gap-2">
+                        <a asp-controller="Schedule" asp-action="Index" class="btn btn-outline-dark btn-sm flex-fill">Schedule</a>
+                        <button class="btn btn-primary btn-sm flex-fill" onclick="openContactModal('Roman Koval', 'Boxing & Combat')">Book Session</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4">
+        <!-- Trainer 5 -->
+        <div class="col-md-4 trainer-item" data-specialty="functional">
             <div class="card h-100 shadow-sm border-0">
-                <img src="https://images.unsplash.com/photo-1548690312-e3b507d8c110?w=500&auto=format&fit=crop&q=80" class="card-img-top" alt="Mariia Tkachenko" style="height: 300px; object-fit: cover;">
+                <img src="https://images.unsplash.com/photo-1518310383802-640c2de311b2?w=600&auto=format&fit=crop&q=80" 
+                     class="card-img-top object-fit-cover" 
+                     alt="Yuliia Bondarenko" 
+                     style="height: 280px;">
                 <div class="card-body d-flex flex-column">
-                    <h5 class="card-title fw-bold">Mariia Tkachenko</h5>
-                    <h6 class="card-subtitle mb-3 text-primary">Cardio & Group Classes</h6>
-                    <p class="card-text text-muted">Energetic and motivating. Leads dynamic group sessions designed to burn calories and boost endurance.</p>
-                    <div class="mt-auto">
-                        <a asp-controller="Schedule" asp-action="Index" class="btn btn-outline-dark w-100">View Schedule</a>
+                    <div class="d-flex justify-content-between align-items-start mb-1">
+                        <h5 class="card-title fw-bold mb-0">Yuliia Bondarenko</h5>
+                        <span class="badge bg-warning text-dark">TRX & Cardio</span>
+                    </div>
+                    <h6 class="card-subtitle text-muted mb-3 small">Cardio & Weight Loss Programs</h6>
+                    <p class="card-text text-muted small">Passionate about motivating clients to reach healthy weight reduction, toning up with suspension trainers, and boosting daily energy levels.</p>
+                    <div class="mt-auto pt-3 border-top d-flex gap-2">
+                        <a asp-controller="Schedule" asp-action="Index" class="btn btn-outline-dark btn-sm flex-fill">Schedule</a>
+                        <button class="btn btn-primary btn-sm flex-fill" onclick="openContactModal('Yuliia Bondarenko', 'TRX & Cardio')">Book Session</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trainer 6 -->
+        <div class="col-md-4 trainer-item" data-specialty="strength">
+            <div class="card h-100 shadow-sm border-0">
+                <img src="https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=600&auto=format&fit=crop&q=80" 
+                     class="card-img-top object-fit-cover" 
+                     alt="Olena Sydorenko" 
+                     style="height: 280px;">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-1">
+                        <h5 class="card-title fw-bold mb-0">Olena Sydorenko</h5>
+                        <span class="badge bg-info text-dark">Recovery</span>
+                    </div>
+                    <h6 class="card-subtitle text-muted mb-3 small">Rehabilitation & Safe Strength</h6>
+                    <p class="card-text text-muted small">Specialist in post-injury athletic recovery, core stabilization, and personalized low-impact training programs for all age groups.</p>
+                    <div class="mt-auto pt-3 border-top d-flex gap-2">
+                        <a asp-controller="Schedule" asp-action="Index" class="btn btn-outline-dark btn-sm flex-fill">Schedule</a>
+                        <button class="btn btn-primary btn-sm flex-fill" onclick="openContactModal('Olena Sydorenko', 'Rehabilitation & Safe Strength')">Book Session</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Modal for Booking with Trainer -->
+<div class="modal fade" id="trainerBookingModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold">Book a Personal Session</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="p-3 bg-light rounded mb-3">
+                    <h6 class="fw-bold mb-1" id="modalTrainerName"></h6>
+                    <small class="text-muted" id="modalTrainerSpecialty"></small>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small">Your Name</label>
+                    <input type="text" class="form-control" placeholder="Enter your full name" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small">Phone Number</label>
+                    <input type="tel" class="form-control" placeholder="+380 (__) ___-__-__" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small">Preferred Time</label>
+                    <select class="form-select">
+                        <option>Morning (08:00 - 12:00)</option>
+                        <option>Afternoon (12:00 - 16:00)</option>
+                        <option>Evening (16:00 - 21:00)</option>
+                    </select>
+                </div>
+                <button type="button" class="btn btn-primary w-100" onclick="submitTrainerBooking()">Confirm Booking Request</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function filterTrainers(specialty, btn) {
+        document.querySelectorAll('.filter-btn').forEach(b => {
+            b.classList.remove('active', 'btn-dark');
+            b.classList.add('btn-outline-dark');
+        });
+        btn.classList.add('active', 'btn-dark');
+        btn.classList.remove('btn-outline-dark');
+
+        const items = document.querySelectorAll('.trainer-item');
+        items.forEach(item => {
+            if (specialty === 'all' || item.getAttribute('data-specialty') === specialty) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    function openContactModal(name, specialty) {
+        document.getElementById('modalTrainerName').innerText = name;
+        document.getElementById('modalTrainerSpecialty').innerText = specialty;
+        const modal = new bootstrap.Modal(document.getElementById('trainerBookingModal'));
+        modal.show();
+    }
+
+    function submitTrainerBooking() {
+        alert('Thank you! The coach will contact you within 2 hours to confirm your session.');
+        const modalEl = document.getElementById('trainerBookingModal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        if (modal) modal.hide();
+    }
+</script>
