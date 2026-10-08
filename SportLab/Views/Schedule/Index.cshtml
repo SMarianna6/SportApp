@@ -1,83 +1,254 @@
-﻿@{
-    ViewData["Title"] = "Interactive Schedule";
+@{
+    ViewData["Title"] = "Workout Schedule";
 }
 
 <div class="container mt-4">
-    <h2 class="mb-4">Workout Schedule</h2>
-
-    <div class="row mb-4">
-        <div class="col-md-4">
-            <select class="form-select">
-                <option selected>All Trainers</option>
-                <option value="1">Oleksandr (Strength)</option>
-                <option value="2">Mariia (Yoga)</option>
-            </select>
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2 class="fw-bold mb-1">Workout Schedule</h2>
+            <p class="text-muted mb-0">Browse weekly group classes, check available spots, and reserve your training.</p>
         </div>
-        <div class="col-md-4">
-            <select class="form-select">
-                <option selected>All Workout Types</option>
-                <option value="1">Cardio</option>
-                <option value="2">CrossFit</option>
-                <option value="3">Stretching</option>
-            </select>
-        </div>
-        <div class="col-md-4">
-            <button class="btn btn-outline-primary w-100">Apply Filter</button>
+        <div>
+            <a asp-controller="Trainer" asp-action="Index" class="btn btn-outline-secondary">
+                Meet Our Coaches
+            </a>
         </div>
     </div>
 
-    <div class="mb-3">
-        <span class="badge bg-success p-2 me-2">Available slots</span>
-        <span class="badge bg-danger p-2 me-2">Fully booked</span>
-        <span class="badge bg-secondary p-2">Time passed</span>
+    <!-- Filters Row -->
+    <div class="card p-3 mb-4 shadow-sm border-0 bg-light">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-4">
+                <label class="form-label small text-muted mb-1">Select Coach</label>
+                <select class="form-select form-select-sm" id="trainerSelect" onchange="applyFilters()">
+                    <option value="all" selected>All Coaches</option>
+                    <option value="Andrii Melnyk">Andrii Melnyk (CrossFit)</option>
+                    <option value="Denys Kravchenko">Denys Kravchenko (Strength)</option>
+                    <option value="Tetiana Shevchenko">Tetiana Shevchenko (Yoga)</option>
+                    <option value="Roman Koval">Roman Koval (Combat)</option>
+                    <option value="Yuliia Bondarenko">Yuliia Bondarenko (TRX)</option>
+                    <option value="Olena Sydorenko">Olena Sydorenko (Recovery)</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label small text-muted mb-1">Workout Type</label>
+                <select class="form-select form-select-sm" id="typeSelect" onchange="applyFilters()">
+                    <option value="all" selected>All Categories</option>
+                    <option value="CrossFit">CrossFit & Functional</option>
+                    <option value="Strength">Strength & Powerlifting</option>
+                    <option value="Yoga">Yoga & Mobility</option>
+                    <option value="Boxing">Boxing & Combat</option>
+                    <option value="TRX">TRX & Cardio</option>
+                </select>
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button class="btn btn-sm btn-dark w-100" onclick="resetFilters()">Reset Filters</button>
+            </div>
+        </div>
     </div>
 
+    <!-- Weekday Tabs -->
+    <ul class="nav nav-pills mb-4 gap-2" id="dayPills">
+        <li class="nav-item">
+            <button class="nav-link active btn-sm day-tab" onclick="switchDay('mon', this)">Monday</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link btn-sm day-tab" onclick="switchDay('tue', this)">Tuesday</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link btn-sm day-tab" onclick="switchDay('wed', this)">Wednesday</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link btn-sm day-tab" onclick="switchDay('thu', this)">Thursday</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link btn-sm day-tab" onclick="switchDay('fri', this)">Friday</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link btn-sm day-tab" onclick="switchDay('sat', this)">Saturday</button>
+        </li>
+    </ul>
+
+    <!-- Legend -->
+    <div class="d-flex gap-3 mb-3 small flex-wrap">
+        <span class="d-flex align-items-center gap-1"><span class="badge bg-success">&nbsp;</span> Available spots</span>
+        <span class="d-flex align-items-center gap-1"><span class="badge bg-warning text-dark">&nbsp;</span> Limited spots (< 3)</span>
+        <span class="d-flex align-items-center gap-1"><span class="badge bg-secondary">&nbsp;</span> Group full</span>
+    </div>
+
+    <!-- Schedule Table -->
     <div class="table-responsive">
-        <table class="table table-bordered text-center align-middle">
+        <table class="table table-hover table-bordered align-middle text-center bg-white shadow-sm mb-4">
             <thead class="table-dark">
                 <tr>
-                    <th>Time</th>
-                    <th>Monday</th>
-                    <th>Tuesday</th>
-                    <th>Wednesday</th>
+                    <th style="width: 140px;">Time</th>
+                    <th>Class Title</th>
+                    <th>Coach</th>
+                    <th>Zone</th>
+                    <th>Availability</th>
+                    <th style="width: 150px;">Action</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td class="fw-bold">10:00 - 11:00</td>
-                    <td class="bg-success text-white p-3">
-                        <strong>Yoga</strong><br />
-                        <small>Trainer: Mariia</small><br />
-                        <button class="btn btn-sm btn-light mt-2" onclick="alert('Booking simulation successful!')">Book now</button>
-                    </td>
-                    <td class="bg-danger text-white p-3">
-                        <strong>CrossFit</strong><br />
-                        <small>Trainer: Oleksandr</small><br />
-                        <span class="badge bg-light text-danger mt-2">Group full</span>
-                    </td>
-                    <td class="bg-success text-white p-3">
-                        <strong>Stretching</strong><br />
-                        <small>Trainer: Mariia</small><br />
-                        <button class="btn btn-sm btn-light mt-2" onclick="alert('Booking simulation successful!')">Book now</button>
+            <tbody id="scheduleTableBody">
+                <!-- Row 1 -->
+                <tr class="schedule-row" data-days="mon wed fri" data-trainer="Tetiana Shevchenko" data-type="Yoga">
+                    <td class="fw-bold">08:30 - 09:30</td>
+                    <td class="fw-semibold text-start ps-3">Morning Hatha Yoga</td>
+                    <td>Tetiana Shevchenko</td>
+                    <td><span class="badge bg-light text-dark border">Zen Studio</span></td>
+                    <td><span class="badge bg-success">8 spots left</span></td>
+                    <td>
+                        <button class="btn btn-outline-primary btn-sm px-3" onclick="openClassBooking('Morning Hatha Yoga', '08:30 - 09:30', 'Tetiana Shevchenko', 'Zen Studio')">Book Now</button>
                     </td>
                 </tr>
-                <tr>
-                    <td class="fw-bold">11:30 - 12:30</td>
-                    <td class="bg-secondary text-white p-3">
-                        <strong>Strength Training</strong><br />
-                        <small>Trainer: Oleksandr</small><br />
-                        <span class="badge bg-light text-secondary mt-2">Completed</span>
+
+                <!-- Row 2 -->
+                <tr class="schedule-row" data-days="mon tue wed thu fri" data-trainer="Andrii Melnyk" data-type="CrossFit">
+                    <td class="fw-bold">10:00 - 11:15</td>
+                    <td class="fw-semibold text-start ps-3">CrossFit WOD & Barbell Prep</td>
+                    <td>Andrii Melnyk</td>
+                    <td><span class="badge bg-light text-dark border">CrossFit Arena</span></td>
+                    <td><span class="badge bg-warning text-dark">2 spots left</span></td>
+                    <td>
+                        <button class="btn btn-outline-primary btn-sm px-3" onclick="openClassBooking('CrossFit WOD & Barbell Prep', '10:00 - 11:15', 'Andrii Melnyk', 'CrossFit Arena')">Book Now</button>
                     </td>
-                    <td class="bg-success text-white p-3">
-                        <strong>Cardio</strong><br />
-                        <small>Trainer: Mariia</small><br />
-                        <button class="btn btn-sm btn-light mt-2" onclick="alert('Booking simulation successful!')">Book now</button>
+                </tr>
+
+                <!-- Row 3 -->
+                <tr class="schedule-row" data-days="mon wed fri sat" data-trainer="Denys Kravchenko" data-type="Strength">
+                    <td class="fw-bold">12:30 - 13:45</td>
+                    <td class="fw-semibold text-start ps-3">Powerlifting: Squat & Bench Mechanics</td>
+                    <td>Denys Kravchenko</td>
+                    <td><span class="badge bg-light text-dark border">Iron Platform</span></td>
+                    <td><span class="badge bg-success">5 spots left</span></td>
+                    <td>
+                        <button class="btn btn-outline-primary btn-sm px-3" onclick="openClassBooking('Powerlifting Mechanics', '12:30 - 13:45', 'Denys Kravchenko', 'Iron Platform')">Book Now</button>
                     </td>
-                    <td class="bg-light text-muted p-3">
-                        <em>No slots</em>
+                </tr>
+
+                <!-- Row 4 -->
+                <tr class="schedule-row" data-days="tue thu sat" data-trainer="Yuliia Bondarenko" data-type="TRX">
+                    <td class="fw-bold">16:30 - 17:30</td>
+                    <td class="fw-semibold text-start ps-3">TRX Suspension Core & Tone</td>
+                    <td>Yuliia Bondarenko</td>
+                    <td><span class="badge bg-light text-dark border">Functional Studio</span></td>
+                    <td><span class="badge bg-success">7 spots left</span></td>
+                    <td>
+                        <button class="btn btn-outline-primary btn-sm px-3" onclick="openClassBooking('TRX Suspension Core', '16:30 - 17:30', 'Yuliia Bondarenko', 'Functional Studio')">Book Now</button>
+                    </td>
+                </tr>
+
+                <!-- Row 5 -->
+                <tr class="schedule-row" data-days="mon tue thu fri" data-trainer="Roman Koval" data-type="Boxing">
+                    <td class="fw-bold">18:00 - 19:15</td>
+                    <td class="fw-semibold text-start ps-3">Boxing Combinations & Conditioning</td>
+                    <td>Roman Koval</td>
+                    <td><span class="badge bg-light text-dark border">Fight Ring</span></td>
+                    <td><span class="badge bg-secondary">Class Full</span></td>
+                    <td>
+                        <button class="btn btn-secondary btn-sm px-3" disabled>Full</button>
+                    </td>
+                </tr>
+
+                <!-- Row 6 -->
+                <tr class="schedule-row" data-days="mon wed fri" data-trainer="Olena Sydorenko" data-type="Yoga">
+                    <td class="fw-bold">19:30 - 20:30</td>
+                    <td class="fw-semibold text-start ps-3">Deep Spine Mobility & Foam Rolling</td>
+                    <td>Olena Sydorenko</td>
+                    <td><span class="badge bg-light text-dark border">Zen Studio</span></td>
+                    <td><span class="badge bg-success">6 spots left</span></td>
+                    <td>
+                        <button class="btn btn-outline-primary btn-sm px-3" onclick="openClassBooking('Deep Spine Mobility', '19:30 - 20:30', 'Olena Sydorenko', 'Zen Studio')">Book Now</button>
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
 </div>
+
+<!-- Modal for Booking Class -->
+<div class="modal fade" id="scheduleBookingModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold">Reserve Workout Spot</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="p-3 bg-light rounded mb-3">
+                    <h5 class="fw-bold mb-1 text-primary" id="modalClassName"></h5>
+                    <div class="small text-muted mb-1"><strong class="text-dark">Time:</strong> <span id="modalClassTime"></span></div>
+                    <div class="small text-muted mb-1"><strong class="text-dark">Coach:</strong> <span id="modalClassCoach"></span></div>
+                    <div class="small text-muted"><strong class="text-dark">Location:</strong> <span id="modalClassZone"></span></div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small">Your Name</label>
+                    <input type="text" class="form-control" placeholder="Enter your full name" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small">Phone / Email</label>
+                    <input type="text" class="form-control" placeholder="Your phone number or email" required>
+                </div>
+                <button type="button" class="btn btn-primary w-100" onclick="submitClassReservation()">Confirm Reservation</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentDay = 'mon';
+
+    function switchDay(day, btn) {
+        currentDay = day;
+        document.querySelectorAll('.day-tab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        applyFilters();
+    }
+
+    function applyFilters() {
+        const trainer = document.getElementById('trainerSelect').value;
+        const type = document.getElementById('typeSelect').value;
+        const rows = document.querySelectorAll('.schedule-row');
+
+        rows.forEach(row => {
+            const days = row.getAttribute('data-days');
+            const rowTrainer = row.getAttribute('data-trainer');
+            const rowType = row.getAttribute('data-type');
+
+            const dayMatch = days.includes(currentDay);
+            const trainerMatch = (trainer === 'all' || rowTrainer === trainer);
+            const typeMatch = (type === 'all' || rowType === type);
+
+            if (dayMatch && trainerMatch && typeMatch) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+
+    function resetFilters() {
+        document.getElementById('trainerSelect').value = 'all';
+        document.getElementById('typeSelect').value = 'all';
+        applyFilters();
+    }
+
+    function openClassBooking(title, time, coach, zone) {
+        document.getElementById('modalClassName').innerText = title;
+        document.getElementById('modalClassTime').innerText = time;
+        document.getElementById('modalClassCoach').innerText = coach;
+        document.getElementById('modalClassZone').innerText = zone;
+        const modal = new bootstrap.Modal(document.getElementById('scheduleBookingModal'));
+        modal.show();
+    }
+
+    function submitClassReservation() {
+        alert('Spot confirmed! We sent a reservation reminder to your contact.');
+        const modalEl = document.getElementById('scheduleBookingModal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        if (modal) modal.hide();
+    }
+
+    // initial filter
+    applyFilters();
+</script>
