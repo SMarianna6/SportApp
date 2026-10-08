@@ -1,3 +1,73 @@
 ﻿@{
     ViewData["Title"] = "Trainer Profile";
 }
+
+<div class="container mt-4">
+    <div class="row g-4">
+        
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm text-center p-3">
+                <img src="https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=200&h=200&fit=crop" 
+                     class="rounded-circle mx-auto mb-3" alt="Avatar" style="width: 120px; height: 120px; object-fit: cover; object-position: top;">
+                
+                <h5 class="fw-bold mb-1">Iryna Boyko</h5>
+                <p class="text-muted small mb-2">Powerlifting Coach</p>
+                <span class="badge bg-dark mb-3">Staff Account</span>
+                
+                <ul class="nav flex-column text-start border-top pt-3">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark fw-bold px-0" href="#">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-muted px-0" href="#">My Clients</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-danger px-0" href="#">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <h3 class="mb-4">Trainer Dashboard</h3>
+            
+            <div class="row g-4 mb-4">
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm bg-dark text-white p-3 h-100">
+                        <h6 class="mb-0 text-white-50">Today's Sessions</h6>
+                        <h2 class="fw-bold mt-2 mb-0">5</h2>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm border-start border-4 border-primary p-3 h-100">
+                        <h6 class="mb-0 text-muted">Active Clients</h6>
+                        <h2 class="fw-bold mt-2 mb-0 text-primary">12</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white pt-3">
+                    <h5 class="fw-bold my-0">Upcoming Schedule</h5>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                            <div>
+                                <strong>10:00 - 11:30</strong> <span class="ms-2 text-muted">Heavy Lifting (Group)</span>
+                            </div>
+                            <span class="badge bg-primary rounded-pill">8 Attendees</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                            <div>
+                                <strong>12:00 - 13:00</strong> <span class="ms-2 text-muted">Personal Session: Viktoria K.</span>
+                            </div>
+                            <button class="btn btn-sm btn-outline-dark">View Details</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>

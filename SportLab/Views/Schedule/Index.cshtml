@@ -1,3 +1,83 @@
 ﻿@{
-    ViewData["Title"] = "Schedule";
+    ViewData["Title"] = "Interactive Schedule";
 }
+
+<div class="container mt-4">
+    <h2 class="mb-4">Workout Schedule</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <select class="form-select">
+                <option selected>All Trainers</option>
+                <option value="1">Oleksandr (Strength)</option>
+                <option value="2">Mariia (Yoga)</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <select class="form-select">
+                <option selected>All Workout Types</option>
+                <option value="1">Cardio</option>
+                <option value="2">CrossFit</option>
+                <option value="3">Stretching</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <button class="btn btn-outline-primary w-100">Apply Filter</button>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <span class="badge bg-success p-2 me-2">Available slots</span>
+        <span class="badge bg-danger p-2 me-2">Fully booked</span>
+        <span class="badge bg-secondary p-2">Time passed</span>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered text-center align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Time</th>
+                    <th>Monday</th>
+                    <th>Tuesday</th>
+                    <th>Wednesday</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="fw-bold">10:00 - 11:00</td>
+                    <td class="bg-success text-white p-3">
+                        <strong>Yoga</strong><br />
+                        <small>Trainer: Mariia</small><br />
+                        <button class="btn btn-sm btn-light mt-2" onclick="alert('Booking simulation successful!')">Book now</button>
+                    </td>
+                    <td class="bg-danger text-white p-3">
+                        <strong>CrossFit</strong><br />
+                        <small>Trainer: Oleksandr</small><br />
+                        <span class="badge bg-light text-danger mt-2">Group full</span>
+                    </td>
+                    <td class="bg-success text-white p-3">
+                        <strong>Stretching</strong><br />
+                        <small>Trainer: Mariia</small><br />
+                        <button class="btn btn-sm btn-light mt-2" onclick="alert('Booking simulation successful!')">Book now</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">11:30 - 12:30</td>
+                    <td class="bg-secondary text-white p-3">
+                        <strong>Strength Training</strong><br />
+                        <small>Trainer: Oleksandr</small><br />
+                        <span class="badge bg-light text-secondary mt-2">Completed</span>
+                    </td>
+                    <td class="bg-success text-white p-3">
+                        <strong>Cardio</strong><br />
+                        <small>Trainer: Mariia</small><br />
+                        <button class="btn btn-sm btn-light mt-2" onclick="alert('Booking simulation successful!')">Book now</button>
+                    </td>
+                    <td class="bg-light text-muted p-3">
+                        <em>No slots</em>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

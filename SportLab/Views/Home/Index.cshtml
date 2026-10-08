@@ -1,114 +1,86 @@
 ﻿@{
-    ViewData["Title"] = "Gym Home";
+    ViewData["Title"] = "Home - SportLab";
+}
 
-    <div class="text-center my-4">
-        <h1 class="display-4">Welcome to Sport Lab!</h1>
-        <p class="lead">Small steps, strong habits. Ready when you are.</p>
+<div class="container mt-4">
+    <div class="text-center bg-light p-5 rounded-3 mb-5 border">
+        <h1 class="display-4 fw-bold">Welcome to SportLab</h1>
+        <p class="lead text-muted">Small steps, strong habits. Ready when you are.</p>
+        <hr class="my-4">
+        <a asp-controller="Schedule" asp-action="Index" class="btn btn-primary btn-lg me-2">Schedule</a>
+        <a asp-controller="Tariff" asp-action="Index" class="btn btn-outline-dark btn-lg">Tariffs</a>
     </div>
 
-    <div class="my-5">
-        <h2 class="fw-bold">Your Space. Your Rules. Your Results.</h2>
-        <p class="lead text-muted">
-            Step into a facility designed for every kind of workout. We’ve combined massive open spaces, top-tier equipment, and total comfort – because this is where you find your pace, your people, and your absolute best.
-        </p>
-    
-        <ul class="list-unstyled mt-4">
-            <li class="mb-2">• <strong>2,500 m² of pure fitness space:</strong> A spacious, fully climate-controlled environment that never feels overcrowded.</li>
-            <li class="mb-2">• <strong>150+ premium machines:</strong> A massive selection of state-of-the-art cardio and strength equipment from industry-leading brands.</li>
-            <li class="mb-2">• <strong>Endless free weights:</strong> Fully stocked functional and weight zones so you never have to wait for a bench, rack, or dumbbells.</li>
-            <li class="mb-2">• <strong>100% blackout-proof:</strong> Our independent power supply ensures the lights, music, and treadmills stay on no matter what.</li>
-            <li class="mb-2">• <strong>Seamless experience:</strong> Free reserved parking right at the entrance and smart lockers to make your visit effortless.</li>
-            <li class="mb-2">• <strong>Dedicated recovery zones:</strong> Specially designed areas for stretching, mobility, and post-workout relaxation.</li>
-        </ul>
-    </div>
-
-    <div class="my-5">
-        <h2 class="fw-bold mb-4 text-center">Popular Memberships</h2>
-    
-        <div class="row text-center">
+    <div class="mb-5 text-center">
+        <h3 class="fw-bold mb-4">Why Choose Us?</h3>
+        <div class="row">
             <div class="col-md-4 mb-3">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-header py-3">
+                <h4 class="text-primary">2,500 m²</h4>
+                <p class="text-muted">Massive climate-controlled space.</p>
+            </div>
+            <div class="col-md-4 mb-3">
+                <h4 class="text-primary">150+ Machines</h4>
+                <p class="text-muted">Top-tier cardio and strength equipment.</p>
+            </div>
+            <div class="col-md-4 mb-3">
+                <h4 class="text-primary">24/7 Access</h4>
+                <p class="text-muted">Train anytime with our Pro & Elite plans.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-5">
+        <h3 class="fw-bold mb-4 text-center">Popular Tariffs</h3>
+        <div class="row text-center">
+            
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-white">
                         <h4 class="my-0 fw-normal">Basic</h4>
                     </div>
                     <div class="card-body">
-                        <h1 class="card-title pricing-card-title">$30<small class="text-muted fw-light">/mo</small></h1>
-                        <ul class="list-unstyled mt-3 mb-4">
-                            <li>Gym access (8 AM - 10 PM)</li>
-                            <li>Free locker</li>
-                            <li>1 introductory workout</li>
-                        </ul>
-                        <button type="button" class="w-100 btn btn-lg btn-outline-dark">Choose Basic</button>
+                        <h2 class="card-title">$30 <small class="text-muted fs-6">/ mo</small></h2>
+                        <p class="mt-3 mb-4">
+                            Gym access (8 AM - 10 PM)<br>
+                            Free locker
+                        </p>
+                        <a asp-controller="Tariff" asp-action="Index" class="btn btn-outline-primary w-100">Choose</a>
                     </div>
                 </div>
             </div>
-        
+
             <div class="col-md-4 mb-3">
-                <div class="card h-100 shadow-sm border-dark">
-                    <div class="card-header py-3 text-white bg-dark border-dark">
+                <div class="card shadow-sm h-100 border-primary">
+                    <div class="card-header bg-primary text-white">
                         <h4 class="my-0 fw-normal">Pro</h4>
                     </div>
                     <div class="card-body">
-                        <h1 class="card-title pricing-card-title">$80<small class="text-muted fw-light">/3 mo</small></h1>
-                        <ul class="list-unstyled mt-3 mb-4">
-                            <li>24/7 Gym access</li>
-                            <li>Group classes included</li>
-                            <li>Personalized diet plan</li>
-                        </ul>
-                        <button type="button" class="w-100 btn btn-lg btn-dark">Get Pro</button>
+                        <h2 class="card-title">$80 <small class="text-muted fs-6">/ 3 mo</small></h2>
+                        <p class="mt-3 mb-4 text-dark fw-bold">
+                            24/7 Gym access<br>
+                            Group classes included
+                        </p>
+                        <a asp-controller="Tariff" asp-action="Index" class="btn btn-primary w-100">Get Pro</a>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-4 mb-3">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-header py-3">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-white">
                         <h4 class="my-0 fw-normal">Elite</h4>
                     </div>
                     <div class="card-body">
-                        <h1 class="card-title pricing-card-title">$250<small class="text-muted fw-light">/yr</small></h1>
-                        <ul class="list-unstyled mt-3 mb-4">
-                            <li>24/7 Gym & Spa access</li>
-                            <li>10 personal training sessions</li>
-                            <li>Free parking & guest passes</li>
-                        </ul>
-                        <button type="button" class="w-100 btn btn-lg btn-outline-dark">Go Elite</button>
+                        <h2 class="card-title">$250 <small class="text-muted fs-6">/ yr</small></h2>
+                        <p class="mt-3 mb-4">
+                            24/7 access + Spa<br>
+                            10 personal sessions
+                        </p>
+                        <a asp-controller="Tariff" asp-action="Index" class="btn btn-outline-dark w-100">Go Elite</a>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
-
-    <hr class="my-5" />
-        <div class="my-5">
-        <h2 class="fw-bold mb-4 text-center">Meet Our Trainers</h2>
-    
-        <div class="row">
-            <div class="col-md-4 mb-4 text-center">
-                <img src="https://dummyimage.com/150x150/dee2e6/6c757d.jpg&text=Photo" class="rounded-circle mb-3 shadow-sm" alt="Trainer" width="150" height="150">
-                <h4 class="fw-normal">Alex Mercer</h4>
-                <p class="text-muted mb-1">Strength & Conditioning</p>
-                <p class="small">Specializes in powerlifting and functional training to help you build raw strength.</p>
-                <a class="btn btn-sm btn-outline-secondary" href="#">View Profile &raquo;</a>
-            </div>
-
-            <div class="col-md-4 mb-4 text-center">
-                <img src="https://dummyimage.com/150x150/dee2e6/6c757d.jpg&text=Photo" class="rounded-circle mb-3 shadow-sm" alt="Trainer" width="150" height="150">
-                <h4 class="fw-normal">Sarah Jenkins</h4>
-                <p class="text-muted mb-1">CrossFit & HIIT</p>
-                <p class="small">High-energy workouts designed to push your cardiovascular limits and burn fat.</p>
-                <a class="btn btn-sm btn-outline-secondary" href="#">View Profile &raquo;</a>
-            </div>
-        
-            <div class="col-md-4 mb-4 text-center">
-                <img src="https://dummyimage.com/150x150/dee2e6/6c757d.jpg&text=Photo" class="rounded-circle mb-3 shadow-sm" alt="Trainer" width="150" height="150">
-                <h4 class="fw-normal">Marcus Thorne</h4>
-                <p class="text-muted mb-1">Bodybuilding</p>
-                <p class="small">Focused on muscle hypertrophy, perfect aesthetics, and precise nutrition planning.</p>
-                <a class="btn btn-sm btn-outline-secondary" href="#">View Profile &raquo;</a>
-            </div>
-        </div>
-    </div>
-}
-
-
+</div>
