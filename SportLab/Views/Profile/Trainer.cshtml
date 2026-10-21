@@ -1,73 +1,286 @@
 ﻿@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
     ViewData["Title"] = "Trainer Profile";
 }
 
-<div class="container mt-4">
-    <div class="row g-4">
-        
-        <div class="col-md-3">
-            <div class="card border-0 shadow-sm text-center p-3">
-                <img src="https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=200&h=200&fit=crop" 
-                     class="rounded-circle mx-auto mb-3" alt="Avatar" style="width: 120px; height: 120px; object-fit: cover; object-position: top;">
-                
-                <h5 class="fw-bold mb-1">Iryna Boyko</h5>
-                <p class="text-muted small mb-2">Powerlifting Coach</p>
-                <span class="badge bg-dark mb-3">Staff Account</span>
-                
-                <ul class="nav flex-column text-start border-top pt-3">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark fw-bold px-0" href="#">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-muted px-0" href="#">My Clients</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-danger px-0" href="#">Logout</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="col-md-9">
-            <h3 class="mb-4">Trainer Dashboard</h3>
-            
-            <div class="row g-4 mb-4">
-                <div class="col-md-6">
-                    <div class="card border-0 shadow-sm bg-dark text-white p-3 h-100">
-                        <h6 class="mb-0 text-white-50">Today's Sessions</h6>
-                        <h2 class="fw-bold mt-2 mb-0">5</h2>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card border-0 shadow-sm border-start border-4 border-primary p-3 h-100">
-                        <h6 class="mb-0 text-muted">Active Clients</h6>
-                        <h2 class="fw-bold mt-2 mb-0 text-primary">12</h2>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white pt-3">
-                    <h5 class="fw-bold my-0">Upcoming Schedule</h5>
-                </div>
-                <div class="card-body p-0">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                            <div>
-                                <strong>10:00 - 11:30</strong> <span class="ms-2 text-muted">Heavy Lifting (Group)</span>
-                            </div>
-                            <span class="badge bg-primary rounded-pill">8 Attendees</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                            <div>
-                                <strong>12:00 - 13:00</strong> <span class="ms-2 text-muted">Personal Session: Viktoria K.</span>
-                            </div>
-                            <button class="btn btn-sm btn-outline-dark">View Details</button>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        
-    </div>
+<div class="mb-6">
+    <h2 class="text-3xl font-black uppercase tracking-tighter sm:text-4xl">Welcome back, <span class="text-neon">Alex</span></h2>
+    <p class="mt-1 text-sm text-mono/60">Manage your profile, clients and sessions.</p>
 </div>
+
+<div class="grid grid-cols-1 gap-5 xl:grid-cols-3">
+    <!-- Professional information -->
+    <section class="rounded-lg bg-card p-5 xl:col-span-1" aria-labelledby="pro-title">
+        <h3 id="pro-title" class="mb-4 text-lg font-extrabold uppercase tracking-tight">Professional Information</h3>
+        <div class="space-y-4">
+            <div class="editable" data-multiline="false" data-field="name">
+                <p class="mb-1 text-[11px] font-semibold uppercase tracking-widest text-mono/50">Full name</p>
+                <div class="flex items-start justify-between gap-2">
+                    <p class="editable-text text-sm font-semibold">Alex Morgan</p>
+                    <button type="button" class="edit-btn shrink-0 rounded-md p-1.5 text-mono/60 transition-colors hover:text-neon" aria-label="Edit full name">
+                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="editable" data-multiline="false" data-field="exp">
+                <p class="mb-1 text-[11px] font-semibold uppercase tracking-widest text-mono/50">Experience</p>
+                <div class="flex items-start justify-between gap-2">
+                    <p class="editable-text text-sm font-semibold">8 years, NASM certified</p>
+                    <button type="button" class="edit-btn shrink-0 rounded-md p-1.5 text-mono/60 transition-colors hover:text-neon" aria-label="Edit experience">
+                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="editable" data-multiline="true" data-field="about">
+                <p class="mb-1 text-[11px] font-semibold uppercase tracking-widest text-mono/50">About me</p>
+                <div class="flex items-start justify-between gap-2">
+                    <p class="editable-text text-sm leading-relaxed text-mono">I help busy people build strength and confidence with short, focused programs. My sessions blend functional training with mobility work.</p>
+                    <button type="button" class="edit-btn shrink-0 rounded-md p-1.5 text-mono/60 transition-colors hover:text-neon" aria-label="Edit about me">
+                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Specializations -->
+            <div>
+                <p id="spec-label" class="mb-1 text-[11px] font-semibold uppercase tracking-widest text-mono/50">Specializations</p>
+                <div class="relative" id="spec-wrap">
+                    <button id="spec-trigger" type="button" class="flex w-full items-center justify-between rounded-md bg-shell px-3 py-2.5 text-left text-sm font-semibold text-mono transition-colors hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon" aria-haspopup="true" aria-expanded="false" aria-controls="spec-menu" aria-labelledby="spec-label">
+                        <span>Select specializations</span>
+                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                    </button>
+                    <ul id="spec-menu" class="absolute left-0 right-0 z-10 mt-1 hidden max-h-60 overflow-y-auto rounded-md bg-shell p-1 shadow-xl" role="group" aria-label="Specializations"></ul>
+                </div>
+                <ul id="spec-pills" class="mt-3 flex flex-wrap gap-2" aria-live="polite"></ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Work schedule -->
+    <section class="rounded-lg bg-card p-5 xl:order-last xl:col-span-1" aria-labelledby="sched-title">
+        <div class="mb-4 flex items-center justify-between gap-3">
+            <h3 id="sched-title" class="text-lg font-extrabold uppercase tracking-tight">Work Schedule</h3>
+            <div class="flex rounded-md bg-shell p-1" role="tablist" aria-label="Day">
+                <button type="button" role="tab" data-day="today" aria-selected="true" class="day-tab rounded px-3 py-1.5 text-xs font-bold uppercase tracking-wider">Today</button>
+                <button type="button" role="tab" data-day="tomorrow" aria-selected="false" class="day-tab rounded px-3 py-1.5 text-xs font-bold uppercase tracking-wider">Tomorrow</button>
+            </div>
+        </div>
+        <ol id="timeline" class="relative space-y-3"></ol>
+        <div id="empty-schedule" class="hidden flex-col items-center rounded-lg bg-shell px-6 py-10 text-center">
+            <span class="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-card text-neon">
+                <svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M12 14v4M10 16h4"/></svg>
+            </span>
+            <p class="text-base font-extrabold uppercase tracking-tight">No workouts booked</p>
+            <p class="mt-1 max-w-xs text-sm text-mono/60">Your calendar is open. Add availability so clients can book you.</p>
+            <button type="button" class="mt-5 rounded-md bg-neon px-5 py-3 text-xs font-extrabold uppercase tracking-widest text-shell transition-transform hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">Create available slot</button>
+        </div>
+    </section>
+
+    <!-- Clients -->
+    <section class="rounded-lg bg-card p-5 xl:col-span-3 xl:row-start-2" aria-labelledby="clients-title">
+        <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <h3 id="clients-title" class="text-lg font-extrabold uppercase tracking-tight">My Clients <span id="clients-count" class="ml-1 text-sm font-semibold text-mono/50"></span></h3>
+            <div class="flex flex-col gap-2 sm:flex-row">
+                <label class="relative block">
+                    <span class="sr-only">Search clients</span>
+                    <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-mono/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                    <input id="client-search" type="search" placeholder="Search clients" class="w-full rounded-md bg-shell py-2.5 pl-9 pr-3 text-sm text-white placeholder:text-mono/40 focus:outline-none focus:ring-2 focus:ring-neon sm:w-56" />
+                </label>
+                <label class="block">
+                    <span class="sr-only">Sort clients</span>
+                    <select id="client-sort" class="w-full rounded-md bg-shell px-3 py-2.5 text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-neon sm:w-36">
+                        <option value="recent">Recent</option>
+                        <option value="az">A-Z</option>
+                        <option value="workouts">Most workouts</option>
+                    </select>
+                </label>
+            </div>
+        </div>
+        <div id="clients-grid" class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"></div>
+        <p id="clients-empty" class="hidden rounded-lg bg-shell p-8 text-center text-sm text-mono/60">No clients match your search.</p>
+    </section>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            'use strict';
+            var $ = function (id) { return document.getElementById(id); };
+
+            /* ---------- Inline editing ---------- */
+            var penSvg = '<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>';
+            document.querySelectorAll('.editable').forEach(function (box) {
+                var textEl = box.querySelector('.editable-text');
+                var btn = box.querySelector('.edit-btn');
+                var multi = box.dataset.multiline === 'true';
+                btn.addEventListener('click', function () {
+                    if (box.querySelector('.editor')) return;
+                    var input = document.createElement(multi ? 'textarea' : 'input');
+                    input.className = 'editor w-full rounded-md bg-shell px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-neon';
+                    if (multi) input.rows = 4; else input.type = 'text';
+                    input.value = textEl.textContent;
+                    input.setAttribute('aria-label', 'Edit value');
+                    textEl.classList.add('hidden');
+                    textEl.parentNode.insertBefore(input, textEl);
+                    btn.innerHTML = '<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+                    btn.classList.add('text-neon');
+                    input.focus();
+                    var done = false;
+                    function save() {
+                        if (done) return; done = true;
+                        var v = input.value.trim();
+                        if (v) textEl.textContent = v;
+                        input.remove();
+                        textEl.classList.remove('hidden');
+                        btn.innerHTML = penSvg;
+                        btn.classList.remove('text-neon');
+                    }
+                    btn.addEventListener('click', save, { once: true });
+                    input.addEventListener('keydown', function (e) {
+                        if (e.key === 'Escape') { input.value = textEl.textContent; save(); }
+                        if (e.key === 'Enter' && (!multi || e.ctrlKey || e.metaKey)) { e.preventDefault(); save(); }
+                    });
+                });
+            });
+
+            /* ---------- Specializations ---------- */
+            var SPECS = ['CrossFit', 'Pilates', 'Yoga', 'Strength', 'HIIT', 'Boxing', 'Mobility', 'Nutrition'];
+            var selected = { CrossFit: true, Strength: true };
+            var trigger = $('spec-trigger'), menu = $('spec-menu'), pills = $('spec-pills');
+
+            menu.innerHTML = SPECS.map(function (s, i) {
+                return '<li><label class="flex cursor-pointer items-center gap-3 rounded px-3 py-2 text-sm font-medium text-mono hover:bg-card">' +
+                    '<input type="checkbox" value="' + s + '" id="spec-' + i + '" class="h-4 w-4 shrink-0 cursor-pointer accent-[#AAFF00]"' + (selected[s] ? ' checked' : '') + ' />' + s + '</label></li>';
+            }).join('');
+
+            function renderPills() {
+                var keys = SPECS.filter(function (s) { return selected[s]; });
+                pills.innerHTML = keys.length ? keys.map(function (s) {
+                    return '<li class="inline-flex items-center gap-1.5 rounded-full border border-neon bg-shell py-1 pl-3 pr-1.5 text-xs font-bold uppercase tracking-wider text-neon">' + s +
+                        '<button type="button" data-remove="' + s + '" class="flex h-4 w-4 items-center justify-center rounded-full hover:bg-neon hover:text-shell" aria-label="Remove ' + s + '">' +
+                        '<svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></li>';
+                }).join('') : '<li class="text-xs text-mono/50">None selected</li>';
+                trigger.firstElementChild.textContent = keys.length ? keys.length + ' selected' : 'Select specializations';
+            }
+            function setMenu(open) {
+                menu.classList.toggle('hidden', !open);
+                trigger.setAttribute('aria-expanded', String(open));
+            }
+            trigger.addEventListener('click', function () { setMenu(menu.classList.contains('hidden')); });
+            menu.addEventListener('change', function (e) {
+                if (e.target.type === 'checkbox') { selected[e.target.value] = e.target.checked; renderPills(); }
+            });
+            pills.addEventListener('click', function (e) {
+                var b = e.target.closest('[data-remove]');
+                if (!b) return;
+                selected[b.dataset.remove] = false;
+                var cb = menu.querySelector('input[value="' + b.dataset.remove + '"]');
+                if (cb) cb.checked = false;
+                renderPills();
+            });
+            document.addEventListener('click', function (e) { if (!$('spec-wrap').contains(e.target)) setMenu(false); });
+            document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
+            renderPills();
+
+            /* ---------- Clients ---------- */
+            var CLIENTS = [
+                { name: 'Emma Wilson', workouts: 12, recent: 1, data: [82, 81, 80.5, 79.8, 79, 78.4, 77.9] },
+                { name: 'Liam Carter', workouts: 24, recent: 2, data: [92, 92.5, 93, 93.4, 94, 94.2, 95] },
+                { name: 'Sofia Rossi', workouts: 8, recent: 3, data: [64, 63.5, 63.8, 63, 62.6, 62.4, 62] },
+                { name: 'Noah Kim', workouts: 17, recent: 4, data: [78, 77, 77.5, 76, 75.4, 75, 74.2] },
+                { name: 'Ava Johnson', workouts: 5, recent: 5, data: [70, 70.2, 69.8, 69.5, 69.6, 69, 68.7] },
+                { name: 'Lucas Meyer', workouts: 31, recent: 6, data: [88, 87, 86.2, 85.5, 85, 84.1, 83.6] }
+            ];
+            var colors = ['#7D51FE', '#AAFF00', '#7D51FE', '#AAFF00', '#7D51FE', '#AAFF00'];
+
+            function spark(data) {
+                var w = 200, h = 56, p = 4;
+                var min = Math.min.apply(null, data), max = Math.max.apply(null, data);
+                var range = (max - min) || 1;
+                var pts = data.map(function (v, i) {
+                    return (p + i * (w - 2 * p) / (data.length - 1)).toFixed(1) + ',' + (h - p - ((v - min) / range) * (h - 2 * p)).toFixed(1);
+                });
+                var last = pts[pts.length - 1].split(',');
+                return '<svg viewBox="0 0 ' + w + ' ' + h + '" class="h-14 w-full" preserveAspectRatio="none" role="img" aria-label="Weight progress chart">' +
+                    '<polyline points="' + pts.join(' ') + '" fill="none" stroke="#AAFF00" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>' +
+                    '<circle cx="' + last[0] + '" cy="' + last[1] + '" r="3.5" fill="#AAFF00"/></svg>';
+            }
+            function initials(n) { return n.split(' ').map(function (x) { return x[0]; }).join('').slice(0, 2); }
+
+            function renderClients() {
+                var q = $('client-search').value.trim().toLowerCase();
+                var sort = $('client-sort').value;
+                var list = CLIENTS.filter(function (c) { return c.name.toLowerCase().indexOf(q) !== -1; });
+                list.sort(function (a, b) {
+                    if (sort === 'az') return a.name.localeCompare(b.name);
+                    if (sort === 'workouts') return b.workouts - a.workouts;
+                    return a.recent - b.recent;
+                });
+                $('clients-count').textContent = '(' + list.length + ')';
+                $('clients-empty').classList.toggle('hidden', list.length > 0);
+                $('clients-grid').innerHTML = list.map(function (c) {
+                    var idx = CLIENTS.indexOf(c);
+                    var delta = (c.data[c.data.length - 1] - c.data[0]).toFixed(1);
+                    return '<article class="flex flex-col gap-4 rounded-lg bg-shell p-4 transition-transform duration-200 hover:-translate-y-0.5">' +
+                        '<div class="flex items-center gap-3">' +
+                            '<div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-sm font-extrabold ' + (colors[idx] === '#AAFF00' ? 'bg-neon text-shell' : 'bg-violet text-white') + '" aria-hidden="true">' + initials(c.name) + '</div>' +
+                            '<div class="min-w-0"><h4 class="truncate text-base font-extrabold tracking-tight">' + c.name + '</h4>' +
+                            '<p class="text-xs text-mono/50">Weight ' + (delta > 0 ? '+' : '') + delta + ' kg / 7 wks</p></div>' +
+                        '</div>' +
+                        '<div class="rounded-md bg-card px-3 py-2">' + spark(c.data) + '</div>' +
+                        '<div class="flex items-center justify-between">' +
+                            '<p class="text-sm text-mono">Workouts: <span class="font-extrabold text-neon">' + c.workouts + '</span></p>' +
+                            '<button type="button" class="flex h-10 w-10 items-center justify-center rounded-md bg-card text-white transition-colors hover:bg-violet focus:outline-none focus-visible:ring-2 focus-visible:ring-neon" aria-label="Message ' + c.name + '">' +
+                                '<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg>' +
+                            '</button>' +
+                        '</div>' +
+                    '</article>';
+                }).join('');
+            }
+            $('client-search').addEventListener('input', renderClients);
+            $('client-sort').addEventListener('change', renderClients);
+            renderClients();
+
+            /* ---------- Schedule ---------- */
+            var icons = {
+                strength: '<path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/>',
+                yoga: '<circle cx="12" cy="5" r="2"/><path d="M12 7v6m-6 2 6-2 6 2M8 21l4-8 4 8"/>',
+                cardio: '<path d="M3 12h4l3-8 4 16 3-8h4"/>',
+                boxing: '<path d="M7 11V7a3 3 0 0 1 6 0v1h3a3 3 0 0 1 3 3v4a6 6 0 0 1-6 6h-2a6 6 0 0 1-6-6v-2a2 2 0 0 1 2-2Z"/>'
+            };
+            var SCHEDULE = {
+                today: [
+                    { time: '09:00 AM', client: 'Emma Wilson', type: 'Strength', icon: 'strength' },
+                    { time: '11:30 AM', client: 'Liam Carter', type: 'Boxing', icon: 'boxing' },
+                    { time: '02:00 PM', client: 'Sofia Rossi', type: 'Yoga', icon: 'yoga' },
+                    { time: '05:30 PM', client: 'Noah Kim', type: 'Cardio', icon: 'cardio' }
+                ],
+                tomorrow: []
+            };
+            function renderSchedule(day) {
+                var items = SCHEDULE[day];
+                var tl = $('timeline'), empty = $('empty-schedule');
+                tl.classList.toggle('hidden', !items.length);
+                empty.classList.toggle('hidden', !!items.length);
+                empty.classList.toggle('flex', !items.length);
+                tl.innerHTML = items.map(function (s, i) {
+                    return '<li class="flex gap-3">' +
+                        '<div class="flex w-20 shrink-0 flex-col items-end pt-3"><span class="text-xs font-extrabold text-neon">' + s.time + '</span></div>' +
+                        '<div class="relative flex flex-1 items-center gap-3 rounded-lg bg-shell p-3 pl-4" style="box-shadow: inset 3px 0 0 ' + (i % 2 ? '#7D51FE' : '#AAFF00') + '">' +
+                            '<span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-card text-neon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + icons[s.icon] + '</svg></span>' +
+                            '<div class="min-w-0"><p class="truncate text-sm font-extrabold">' + s.client + '</p><p class="text-xs text-mono/60">' + s.type + ' session</p></div>' +
+                        '</div></li>';
+                }).join('');
+                document.querySelectorAll('.day-tab').forEach(function (t) {
+                    var on = t.dataset.day === day;
+                    t.setAttribute('aria-selected', String(on));
+                    t.className = 'day-tab rounded px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-colors ' + (on ? 'bg-neon text-shell' : 'text-mono hover:text-neon');
+                });
+            }
+            document.querySelectorAll('.day-tab').forEach(function (t) {
+                t.addEventListener('click', function () { renderSchedule(t.dataset.day); });
+            });
+            renderSchedule('today');
+        })();
+    </script>
+}
