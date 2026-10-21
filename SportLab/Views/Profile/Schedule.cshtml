@@ -1,0 +1,307 @@
+﻿@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Schedule";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Training Schedule | SportHUB</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: { fontFamily: { sans: ['Archivo', 'ui-sans-serif', 'system-ui', 'sans-serif'] } } } };
+  </script>
+  <style>
+    .slot .capacity-label { opacity: 0; transform: translateY(4px); transition: all .3s ease; }
+    .slot:hover .capacity-label, .slot:focus-visible .capacity-label { opacity: 1; transform: translateY(0); }
+    .slot.is-full { filter: grayscale(1); cursor: not-allowed; }
+    body.touch .slot .capacity-label { opacity: 1; transform: none; }
+    body.modal-open { overflow: hidden; }
+    select option { background: #141414; color: #fff; }
+  </style>
+</head>
+<body class="bg-[#1a1a1a] font-sans text-white antialiased">
+  <main class="mx-auto max-w-7xl px-4 py-8 sm:px-6">
+    <!-- Filters -->
+    <section aria-label="Filters" class="mb-6 flex flex-col gap-3 rounded-lg bg-[#333333] p-4 sm:flex-row sm:items-end">
+      <div class="flex-1">
+        <label for="filter-trainer" class="mb-1 block text-xs font-semibold uppercase tracking-wider text-[#F2F2F4]/70">Trainer</label>
+        <select id="filter-trainer" class="w-full rounded-md border border-white/10 bg-[#141414] px-3 py-2.5 text-sm font-medium text-white focus:border-[#AAFF00] focus:outline-none focus:ring-2 focus:ring-[#AAFF00]/30"></select>
+      </div>
+      <div class="flex-1">
+        <label for="filter-category" class="mb-1 block text-xs font-semibold uppercase tracking-wider text-[#F2F2F4]/70">Category</label>
+        <select id="filter-category" class="w-full rounded-md border border-white/10 bg-[#141414] px-3 py-2.5 text-sm font-medium text-white focus:border-[#AAFF00] focus:outline-none focus:ring-2 focus:ring-[#AAFF00]/30"></select>
+      </div>
+      <button id="reset-filters" type="button" class="rounded-md bg-[#AAFF00] px-5 py-2.5 text-sm font-extrabold uppercase tracking-wider text-[#141414] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#AAFF00]/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">
+        Reset filters
+      </button>
+    </section>
+
+    <!-- Legend -->
+    <ul id="legend" class="mb-6 flex flex-wrap gap-x-4 gap-y-2 text-xs font-medium text-white/70" aria-label="Category legend"></ul>
+
+    <!-- Desktop grid -->
+    <section id="schedule-grid" class="hidden overflow-x-auto rounded-lg bg-[#141414] p-3 md:block" aria-label="Weekly schedule"></section>
+
+    <!-- Mobile list -->
+    <section id="schedule-list" class="space-y-8 md:hidden" aria-label="Weekly schedule by day"></section>
+
+    <p id="empty-state" class="hidden rounded-lg bg-[#333333] p-10 text-center text-sm font-medium text-white/70">No classes match your filters.</p>
+  </main>
+
+  <!-- Booking modal -->
+  <div id="modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div id="modal-backdrop" class="absolute inset-0 bg-black/80"></div>
+    <div class="relative w-full max-w-md overflow-hidden rounded-lg bg-[#333333] shadow-2xl ring-1 ring-white/10">
+      <div id="modal-accent" class="h-2 w-full bg-[#AAFF00]"></div>
+      <button id="modal-close" type="button" aria-label="Close" class="absolute right-3 top-5 rounded-md p-2 text-white/70 transition-colors hover:text-[#AAFF00] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#AAFF00]">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+      <div class="p-6 sm:p-8">
+        <p id="modal-category-chip" class="mb-3 inline-block rounded-md px-2.5 py-1 text-xs font-bold uppercase tracking-widest"></p>
+        <h2 id="modal-title" class="text-4xl font-black uppercase tracking-tighter"></h2>
+        <dl class="mt-6 grid grid-cols-2 gap-3 text-sm">
+          <div class="rounded-md bg-[#141414] p-3"><dt class="text-xs font-semibold uppercase tracking-wider text-[#F2F2F4]/50">Day</dt><dd id="modal-day" class="mt-0.5 font-bold"></dd></div>
+          <div class="rounded-md bg-[#141414] p-3"><dt class="text-xs font-semibold uppercase tracking-wider text-[#F2F2F4]/50">Time</dt><dd id="modal-time" class="mt-0.5 font-bold"></dd></div>
+          <div class="rounded-md bg-[#141414] p-3"><dt class="text-xs font-semibold uppercase tracking-wider text-[#F2F2F4]/50">Trainer</dt><dd id="modal-trainer" class="mt-0.5 font-bold"></dd></div>
+          <div class="rounded-md bg-[#141414] p-3"><dt class="text-xs font-semibold uppercase tracking-wider text-[#F2F2F4]/50">Intensity</dt><dd id="modal-difficulty" class="mt-0.5 flex items-center gap-0.5 font-bold"></dd></div>
+        </dl>
+        <div class="mt-5">
+          <div class="mb-1.5 flex justify-between text-xs font-semibold text-[#F2F2F4]/70"><span>Availability</span><span id="modal-spots"></span></div>
+          <div class="h-2 overflow-hidden rounded-full bg-black/40"><div id="modal-bar" class="h-full rounded-full transition-all duration-500"></div></div>
+        </div>
+        <button id="confirm-booking" type="button" class="mt-7 w-full rounded-md bg-[#AAFF00] py-4 text-lg font-black uppercase tracking-wider text-[#141414] shadow-lg shadow-[#AAFF00]/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white active:translate-y-0 disabled:opacity-70">
+          Confirm Booking
+        </button>
+        <p id="modal-success" class="mt-4 hidden rounded-md bg-[#AAFF00]/15 px-3 py-2 text-center text-sm font-semibold text-[#AAFF00]" role="status"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+(function () {
+  'use strict';
+
+  var DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  var HOURS = [];
+  for (var h = 8; h <= 20; h++) HOURS.push(h);
+
+  var CATEGORIES = {
+    HIIT:     { color: '#7D51FE' },
+    Pilates:  { color: '#22D3EE' },
+    Yoga:     { color: '#AAFF00' },
+    Strength: { color: '#FF8A1F' },
+    Cycling:  { color: '#FFD23F' },
+    Boxing:   { color: '#FF3D8B' }
+  };
+
+  var TRAINERS = ['Alex Rivera', 'Mia Chen', 'Jonas Weber', 'Sara Okafor', 'Leo Martins'];
+
+  // Replace with JSON from an MVC endpoint, e.g. fetch('/Schedule/Slots')
+  // [day (0=Mon), hour, category, trainerIndex, difficulty (1-3), capacity, booked]
+  var SLOTS = [
+    [0, 8, 'HIIT', 1, 3, 15, 4], [0, 10, 'Yoga', 2, 1, 20, 9], [0, 12, 'Strength', 0, 2, 12, 12],
+    [0, 17, 'Cycling', 4, 2, 18, 15], [0, 19, 'Boxing', 2, 3, 14, 6],
+    [1, 9, 'Pilates', 1, 1, 16, 5], [1, 12, 'HIIT', 4, 3, 15, 14], [1, 18, 'Strength', 0, 2, 12, 7], [1, 20, 'Yoga', 3, 1, 20, 3],
+    [2, 8, 'Cycling', 4, 2, 18, 8], [2, 11, 'Boxing', 2, 2, 14, 14], [2, 13, 'Pilates', 1, 1, 16, 10],
+    [2, 17, 'HIIT', 0, 3, 15, 13], [2, 19, 'Yoga', 3, 1, 20, 12],
+    [3, 9, 'Strength', 0, 3, 12, 3], [3, 12, 'Cycling', 4, 1, 18, 17], [3, 18, 'Boxing', 2, 3, 14, 9], [3, 20, 'Pilates', 1, 2, 16, 4],
+    [4, 8, 'Yoga', 3, 1, 20, 6], [4, 10, 'HIIT', 0, 2, 15, 15], [4, 16, 'Strength', 0, 2, 12, 5], [4, 18, 'Cycling', 4, 3, 18, 11],
+    [5, 9, 'HIIT', 4, 3, 15, 8], [5, 11, 'Pilates', 1, 1, 16, 16], [5, 13, 'Boxing', 2, 2, 14, 5], [5, 15, 'Yoga', 3, 1, 20, 7],
+    [6, 10, 'Yoga', 3, 1, 20, 4], [6, 12, 'Strength', 0, 2, 12, 9], [6, 16, 'Cycling', 4, 2, 18, 12]
+  ].map(function (s, i) {
+    return { id: i + 1, day: s[0], hour: s[1], category: s[2], trainer: TRAINERS[s[3]], difficulty: s[4], capacity: s[5], booked: s[6] };
+  });
+
+  var $ = function (id) { return document.getElementById(id); };
+  var els = {
+    trainer: $('filter-trainer'), category: $('filter-category'), reset: $('reset-filters'),
+    grid: $('schedule-grid'), list: $('schedule-list'), empty: $('empty-state'), legend: $('legend'),
+    modal: $('modal'), backdrop: $('modal-backdrop'), close: $('modal-close'), confirm: $('confirm-booking'),
+    success: $('modal-success')
+  };
+
+  var activeSlot = null;
+  var lastFocus = null;
+
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function timeLabel(h) { return pad(h) + ':00'; }
+  function left(s) { return s.capacity - s.booked; }
+  function isFull(s) { return left(s) <= 0; }
+  function ratio(s) { return s.booked / s.capacity; }
+  function barColor(s) {
+    var r = ratio(s);
+    if (r >= 0.85) return '#FF4D4D';
+    if (r >= 0.6) return '#FFD23F';
+    return '#AAFF00';
+  }
+
+  function fireIcons(level, size) {
+    var out = '';
+    for (var i = 1; i <= 3; i++) {
+      out += '<svg class="' + size + '" viewBox="0 0 24 24" fill="' + (i <= level ? 'currentColor' : 'none') +
+        '" stroke="currentColor" stroke-width="2" stroke-linejoin="round" style="opacity:' + (i <= level ? 1 : 0.3) +
+        '" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/></svg>';
+    }
+    return '<span class="inline-flex" role="img" aria-label="Intensity ' + level + ' of 3">' + out + '</span>';
+  }
+
+  function slotCard(s, showTime) {
+    var color = CATEGORIES[s.category].color;
+    var full = isFull(s);
+    var el = document.createElement('button');
+    el.type = 'button';
+    el.className = 'slot group relative flex w-full flex-col justify-between gap-2 overflow-hidden rounded-md border-l-4 bg-[#333333] p-2.5 text-left transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white ' +
+      (full ? 'is-full opacity-50' : 'cursor-pointer hover:-translate-y-1 hover:bg-[#3a3a3a] hover:shadow-lg hover:shadow-black/40');
+    el.style.borderLeftColor = color;
+    el.setAttribute('aria-disabled', full ? 'true' : 'false');
+    el.setAttribute('aria-label', s.category + ' with ' + s.trainer + ', ' + DAYS[s.day] + ' ' + timeLabel(s.hour) + ', ' + (full ? 'full' : left(s) + ' spots left'));
+    el.innerHTML =
+      '<div>' +
+        '<div class="flex items-start justify-between gap-1">' +
+          '<span class="text-sm font-extrabold uppercase leading-tight tracking-tight" style="color:' + color + '">' + s.category + '</span>' +
+          '<span style="color:' + color + '">' + fireIcons(s.difficulty, 'h-3 w-3') + '</span>' +
+        '</div>' +
+        (showTime ? '<p class="mt-0.5 text-xs font-bold text-white">' + timeLabel(s.hour) + '</p>' : '') +
+        '<p class="mt-0.5 text-xs font-medium text-[#F2F2F4]/70">' + s.trainer + '</p>' +
+      '</div>' +
+      '<div>' +
+        '<p class="capacity-label mb-1 text-[11px] font-bold text-white">' + (full ? 'Fully booked' : left(s) + '/' + s.capacity + ' spots left') + '</p>' +
+        '<div class="h-1.5 w-full overflow-hidden rounded-full bg-black/40">' +
+          '<div class="h-full rounded-full transition-all duration-500" style="width:' + Math.min(100, ratio(s) * 100) + '%;background:' + barColor(s) + '"></div>' +
+        '</div>' +
+      '</div>';
+    if (!full) el.addEventListener('click', function () { openModal(s, el); });
+    return el;
+  }
+
+  function filtered() {
+    var t = els.trainer.value, c = els.category.value;
+    return SLOTS.filter(function (s) {
+      return (!t || s.trainer === t) && (!c || s.category === c);
+    });
+  }
+
+  function render() {
+    var slots = filtered();
+    els.empty.classList.toggle('hidden', slots.length > 0);
+
+    var grid = document.createElement('div');
+    grid.className = 'grid min-w-[880px] gap-1.5';
+    grid.style.gridTemplateColumns = '64px repeat(7, minmax(0, 1fr))';
+    grid.appendChild(document.createElement('div'));
+    DAYS.forEach(function (d) {
+      var head = document.createElement('div');
+      head.className = 'rounded-md border border-white/10 bg-[#333333] px-2 py-2.5 text-center text-xs font-extrabold uppercase tracking-widest text-white';
+      head.textContent = d.slice(0, 3);
+      grid.appendChild(head);
+    });
+    HOURS.forEach(function (h) {
+      var label = document.createElement('div');
+      label.className = 'pr-2 pt-2 text-right text-xs font-bold text-[#F2F2F4]/50';
+      label.textContent = timeLabel(h);
+      grid.appendChild(label);
+      DAYS.forEach(function (_, di) {
+        var cell = document.createElement('div');
+        cell.className = 'min-h-[92px] rounded-md border border-white/5 bg-[#141414]';
+        var s = slots.filter(function (x) { return x.day === di && x.hour === h; })[0];
+        if (s) {
+          cell.className = 'flex min-h-[92px]';
+          cell.appendChild(slotCard(s, false));
+          cell.firstChild.classList.add('flex-1');
+        }
+        grid.appendChild(cell);
+      });
+    });
+    els.grid.innerHTML = '';
+    els.grid.appendChild(grid);
+
+    els.list.innerHTML = '';
+    DAYS.forEach(function (d, di) {
+      var daySlots = slots.filter(function (s) { return s.day === di; }).sort(function (a, b) { return a.hour - b.hour; });
+      if (!daySlots.length) return;
+      var wrap = document.createElement('div');
+      wrap.innerHTML = '<h2 class="mb-3 flex items-center gap-3 text-2xl font-black uppercase tracking-tighter text-white"><span class="h-2.5 w-2.5 rounded-sm bg-[#AAFF00]"></span>' + d + '</h2>';
+      var stack = document.createElement('div');
+      stack.className = 'grid gap-2.5 sm:grid-cols-2';
+      daySlots.forEach(function (s) { stack.appendChild(slotCard(s, true)); });
+      wrap.appendChild(stack);
+      els.list.appendChild(wrap);
+    });
+  }
+
+  function initFilters() {
+    els.trainer.innerHTML = '<option value="">All trainers</option>' + TRAINERS.map(function (t) { return '<option>' + t + '</option>'; }).join('');
+    els.category.innerHTML = '<option value="">All categories</option>' + Object.keys(CATEGORIES).map(function (c) { return '<option>' + c + '</option>'; }).join('');
+    els.legend.innerHTML = Object.keys(CATEGORIES).map(function (c) {
+      return '<li class="inline-flex items-center gap-1.5"><span class="h-3 w-3 rounded-sm" style="background:' + CATEGORIES[c].color + '"></span>' + c + '</li>';
+    }).join('') +
+      '<li class="ml-auto hidden items-center gap-3 sm:inline-flex"><span class="inline-flex items-center gap-1"><i class="h-2 w-4 rounded-full" style="background:#AAFF00"></i>Open</span><span class="inline-flex items-center gap-1"><i class="h-2 w-4 rounded-full" style="background:#FFD23F"></i>Filling</span><span class="inline-flex items-center gap-1"><i class="h-2 w-4 rounded-full" style="background:#FF4D4D"></i>Almost full</span></li>';
+    els.trainer.addEventListener('change', render);
+    els.category.addEventListener('change', render);
+    els.reset.addEventListener('click', function () {
+      els.trainer.value = ''; els.category.value = ''; render();
+    });
+  }
+
+  function openModal(s, trigger) {
+    activeSlot = s; lastFocus = trigger;
+    var color = CATEGORIES[s.category].color;
+    $('modal-title').textContent = s.category;
+    $('modal-title').style.color = color;
+    $('modal-accent').style.background = color;
+    var chip = $('modal-category-chip');
+    chip.textContent = 'Group class';
+    chip.style.background = color + '26'; chip.style.color = color;
+    $('modal-day').textContent = DAYS[s.day];
+    $('modal-time').textContent = timeLabel(s.hour) + ' - ' + timeLabel(s.hour + 1);
+    $('modal-trainer').textContent = s.trainer;
+    $('modal-difficulty').innerHTML = fireIcons(s.difficulty, 'h-4 w-4');
+    $('modal-spots').textContent = left(s) + '/' + s.capacity + ' spots left';
+    var bar = $('modal-bar');
+    bar.style.width = '0%'; bar.style.background = barColor(s);
+    requestAnimationFrame(function () { bar.style.width = Math.min(100, ratio(s) * 100) + '%'; });
+    els.success.classList.add('hidden');
+    els.confirm.disabled = false;
+    els.confirm.textContent = 'Confirm Booking';
+    els.modal.classList.remove('hidden'); els.modal.classList.add('flex');
+    document.body.classList.add('modal-open');
+    els.confirm.focus();
+  }
+
+  function closeModal() {
+    els.modal.classList.add('hidden'); els.modal.classList.remove('flex');
+    document.body.classList.remove('modal-open');
+    if (lastFocus) lastFocus.focus();
+    activeSlot = null;
+  }
+
+  els.confirm.addEventListener('click', function () {
+    if (!activeSlot) return;
+    activeSlot.booked = Math.min(activeSlot.capacity, activeSlot.booked + 1);
+    // Replace with a POST to your MVC controller, e.g. fetch('/Schedule/Book', { method: 'POST', ... })
+    els.confirm.disabled = true;
+    els.confirm.textContent = 'Booked';
+    els.success.textContent = "You're in! See you on " + DAYS[activeSlot.day] + ' at ' + timeLabel(activeSlot.hour) + '.';
+    els.success.classList.remove('hidden');
+    render();
+    setTimeout(closeModal, 1400);
+  });
+  els.close.addEventListener('click', closeModal);
+  els.backdrop.addEventListener('click', closeModal);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !els.modal.classList.contains('hidden')) closeModal();
+  });
+
+  if (window.matchMedia('(hover: none)').matches) document.body.classList.add('touch');
+  initFilters();
+  render();
+})();
+  </script>
+</body>
+</html>
