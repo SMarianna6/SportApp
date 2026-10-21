@@ -1,14 +1,14 @@
-﻿using System;
-
-namespace SportLab.Models
+﻿namespace SportLab.Models
 {
     public class Subscription
     {
         public int Id { get; set; }
 
         public int UserId { get; set; }
+        public User? User { get; set; }
 
         public int TariffId { get; set; }
+        public Tariff? Tariff { get; set; }
 
         public DateTime StartDate { get; set; }
 

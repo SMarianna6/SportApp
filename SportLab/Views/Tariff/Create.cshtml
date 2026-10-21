@@ -1,0 +1,34 @@
+﻿@model SportLab.Models.Tariff
+
+@{
+    ViewData["Title"] = "Create Tariff";
+}
+
+<div class="container mt-4">
+    <h2>Create Tariff</h2>
+    <hr />
+    <form asp-action="Create">
+        <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input asp-for="Name" class="form-control" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Price</label>
+            <input asp-for="Price" class="form-control" type="number" step="0.01" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Duration</label>
+            <input asp-for="Duration" class="form-control" type="number" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Type</label>
+            <input asp-for="Type" class="form-control" required />
+        </div>
+        <button type="submit" class="btn btn-primary">Create</button>
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </form>
+</div>

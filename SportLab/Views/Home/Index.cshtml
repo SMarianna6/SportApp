@@ -1,18 +1,86 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home - SportLab";
 }
 
-<!DOCTYPE html>
-    <html>
-    <head>
-        <title></title>
-    </head>
-    <body>
-        <h1>Developers:</h1>
-        <p>Sydorenko Marianna, Makovska Anastasia, Kitaeva Kateryna </p>
-        <h2>University and group:</h2>
-        <p>Khmelnytskyi National University, SE-24-1</p>
-        <h3>Topic:</h3>
-        <p>Web application for gym automation</p>
-    </body>
-    </html>
+<div class="container mt-4">
+    <div class="text-center bg-light p-5 rounded-3 mb-5 border">
+        <h1 class="display-4 fw-bold">Welcome to SportLab</h1>
+        <p class="lead text-muted">Small steps, strong habits. Ready when you are.</p>
+        <hr class="my-4">
+        <a asp-controller="Schedule" asp-action="Index" class="btn btn-primary btn-lg me-2">Schedule</a>
+        <a asp-controller="Tariff" asp-action="Index" class="btn btn-outline-dark btn-lg">Tariffs</a>
+    </div>
+
+    <div class="mb-5 text-center">
+        <h3 class="fw-bold mb-4">Why Choose Us?</h3>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <h4 class="text-primary">2,500 m²</h4>
+                <p class="text-muted">Massive climate-controlled space.</p>
+            </div>
+            <div class="col-md-4 mb-3">
+                <h4 class="text-primary">150+ Machines</h4>
+                <p class="text-muted">Top-tier cardio and strength equipment.</p>
+            </div>
+            <div class="col-md-4 mb-3">
+                <h4 class="text-primary">24/7 Access</h4>
+                <p class="text-muted">Train anytime with our Pro & Elite plans.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-5">
+        <h3 class="fw-bold mb-4 text-center">Popular Tariffs</h3>
+        <div class="row text-center">
+            
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-white">
+                        <h4 class="my-0 fw-normal">Basic</h4>
+                    </div>
+                    <div class="card-body">
+                        <h2 class="card-title">$30 <small class="text-muted fs-6">/ mo</small></h2>
+                        <p class="mt-3 mb-4">
+                            Gym access (8 AM - 10 PM)<br>
+                            Free locker
+                        </p>
+                        <a asp-controller="Tariff" asp-action="Index" class="btn btn-outline-primary w-100">Choose</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm h-100 border-primary">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="my-0 fw-normal">Pro</h4>
+                    </div>
+                    <div class="card-body">
+                        <h2 class="card-title">$80 <small class="text-muted fs-6">/ 3 mo</small></h2>
+                        <p class="mt-3 mb-4 text-dark fw-bold">
+                            24/7 Gym access<br>
+                            Group classes included
+                        </p>
+                        <a asp-controller="Tariff" asp-action="Index" class="btn btn-primary w-100">Get Pro</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-white">
+                        <h4 class="my-0 fw-normal">Elite</h4>
+                    </div>
+                    <div class="card-body">
+                        <h2 class="card-title">$250 <small class="text-muted fs-6">/ yr</small></h2>
+                        <p class="mt-3 mb-4">
+                            24/7 access + Spa<br>
+                            10 personal sessions
+                        </p>
+                        <a asp-controller="Tariff" asp-action="Index" class="btn btn-outline-dark w-100">Go Elite</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
