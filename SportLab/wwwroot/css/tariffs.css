@@ -1,0 +1,478 @@
+/* ==========================================================================
+   SportLab - Modern Tariffs & Membership Design System
+   Developer 1: E-Commerce & Public Portal
+   ========================================================================== */
+
+:root {
+    --sl-primary: #0d6efd;
+    --sl-primary-dark: #0a58ca;
+    --sl-accent: #ff4757;
+    --sl-accent-hover: #ee3848;
+    --sl-success: #10b981;
+    --sl-dark-slate: #0f172a;
+    --sl-card-bg: #ffffff;
+    --sl-card-border: #e2e8f0;
+    --sl-text-main: #1e293b;
+    --sl-text-muted: #64748b;
+    --sl-bg-subtle: #f8fafc;
+    --sl-radius-lg: 1.25rem;
+    --sl-radius-md: 0.75rem;
+    --sl-radius-pill: 50rem;
+    --sl-shadow-sm: 0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
+    --sl-shadow-md: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+    --sl-shadow-hover: 0 25px 30px -5px rgba(15, 23, 42, 0.12), 0 12px 16px -6px rgba(15, 23, 42, 0.08);
+}
+
+/* Page Header Hero */
+.tariffs-hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    color: #ffffff;
+    border-radius: var(--sl-radius-lg);
+    padding: 3rem 2rem;
+    margin-bottom: 2.5rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 30px -10px rgba(15, 23, 42, 0.35);
+}
+
+.tariffs-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(13, 110, 253, 0.25) 0%, rgba(255, 71, 87, 0.15) 60%, transparent 80%);
+    filter: blur(40px);
+    pointer-events: none;
+}
+
+.tariffs-hero .badge-hero {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    color: #e2e8f0;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    padding: 0.45rem 1rem;
+    border-radius: var(--sl-radius-pill);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Category Filter Tabs */
+.tariffs-filter-container {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 2.5rem;
+}
+
+.filter-pill {
+    background: #ffffff;
+    color: var(--sl-text-muted);
+    border: 1px solid var(--sl-card-border);
+    padding: 0.55rem 1.4rem;
+    border-radius: var(--sl-radius-pill);
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: var(--sl-shadow-sm);
+}
+
+.filter-pill:hover {
+    color: var(--sl-primary);
+    border-color: var(--sl-primary);
+    transform: translateY(-2px);
+}
+
+.filter-pill.active {
+    background: var(--sl-primary);
+    color: #ffffff;
+    border-color: var(--sl-primary);
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.35);
+}
+
+/* Tariff Cards */
+.tariff-card-col {
+    transition: all 0.3s ease;
+}
+
+.tariff-card {
+    background: var(--sl-card-bg);
+    border-radius: var(--sl-radius-lg);
+    border: 1px solid var(--sl-card-border);
+    box-shadow: var(--sl-shadow-md);
+    transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+.tariff-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--sl-shadow-hover);
+    border-color: #cbd5e1;
+}
+
+/* Featured / Popular Card Styling */
+.tariff-card.featured {
+    border: 2px solid var(--sl-primary);
+    box-shadow: 0 15px 30px -5px rgba(13, 110, 253, 0.18), 0 8px 12px -4px rgba(13, 110, 253, 0.1);
+}
+
+.tariff-card.featured::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, #0d6efd, #ff4757);
+}
+
+.ribbon-featured {
+    position: absolute;
+    top: 18px;
+    right: -32px;
+    background: linear-gradient(135deg, #ff4757, #ff6b81);
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 4px 38px;
+    transform: rotate(45deg);
+    box-shadow: 0 4px 10px rgba(255, 71, 87, 0.3);
+    z-index: 2;
+}
+
+.tariff-card-header {
+    padding: 2rem 1.75rem 1.25rem 1.75rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.tariff-icon-wrapper {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1.25rem;
+    background: #eef2ff;
+    color: var(--sl-primary);
+    transition: transform 0.25s ease;
+}
+
+.tariff-card:hover .tariff-icon-wrapper {
+    transform: scale(1.08);
+}
+
+.tariff-card.featured .tariff-icon-wrapper {
+    background: #e0e7ff;
+    color: #4338ca;
+}
+
+.tariff-card.vip .tariff-icon-wrapper {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.tariff-card.student .tariff-icon-wrapper {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.tariff-card.student .tariff-badge-type {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.tariff-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--sl-text-main);
+    margin-bottom: 0.35rem;
+}
+
+.tariff-badge-type {
+    display: inline-block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--sl-radius-pill);
+    background: #f1f5f9;
+    color: var(--sl-text-muted);
+}
+
+.tariff-card.featured .tariff-badge-type {
+    background: #e0f2fe;
+    color: #0284c7;
+}
+
+.tariff-price-block {
+    margin-top: 1.25rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.35rem;
+}
+
+.tariff-currency {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--sl-text-main);
+}
+
+.tariff-amount {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--sl-text-main);
+    letter-spacing: -0.02em;
+}
+
+.tariff-period {
+    color: var(--sl-text-muted);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.tariff-duration-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #475569;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--sl-radius-md);
+    margin-top: 0.65rem;
+}
+
+/* Card Body & Features List */
+.tariff-card-body {
+    padding: 1.5rem 1.75rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.tariff-features-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--sl-text-muted);
+    margin-bottom: 1rem;
+}
+
+.tariff-features-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem 0;
+    flex-grow: 1;
+}
+
+.tariff-feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.92rem;
+    color: #334155;
+    line-height: 1.45;
+}
+
+.tariff-feature-item i,
+.tariff-feature-item .check-icon {
+    color: var(--sl-success);
+    font-size: 1.1rem;
+    margin-top: 1px;
+    flex-shrink: 0;
+}
+
+/* Card Actions */
+.tariff-card-footer {
+    padding: 1.25rem 1.75rem;
+    border-top: 1px solid #f1f5f9;
+    background: #fbfcfd;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.btn-buy-tariff {
+    background: var(--sl-primary);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 1rem;
+    border-radius: var(--sl-radius-md);
+    padding: 0.75rem 1.25rem;
+    border: none;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(13, 110, 253, 0.25);
+}
+
+.btn-buy-tariff:hover {
+    background: var(--sl-primary-dark);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(13, 110, 253, 0.35);
+}
+
+.tariff-card.featured .btn-buy-tariff {
+    background: linear-gradient(135deg, #0d6efd, #2563eb);
+}
+
+.btn-detail-tariff {
+    background: transparent;
+    color: #475569;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    padding: 0.4rem;
+    border-radius: var(--sl-radius-md);
+    transition: all 0.2s ease;
+}
+
+.btn-detail-tariff:hover {
+    color: var(--sl-primary);
+    background: #f1f5f9;
+}
+
+.admin-tariff-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+    padding-top: 0.5rem;
+    border-top: 1px dashed #e2e8f0;
+}
+
+.admin-tariff-actions a {
+    font-size: 0.78rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+/* Modal Styling */
+.modal-tariff-header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: #ffffff;
+    border-bottom: none;
+    border-top-left-radius: var(--sl-radius-lg);
+    border-top-right-radius: var(--sl-radius-lg);
+    padding: 1.5rem 2rem;
+}
+
+.modal-tariff-header .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+.modal-tariff-summary {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--sl-radius-md);
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.modal-content {
+    border-radius: var(--sl-radius-lg);
+    border: none;
+    box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+}
+
+.payment-method-selector {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.payment-method-card {
+    border: 1.5px solid #e2e8f0;
+    border-radius: var(--sl-radius-md);
+    padding: 0.85rem 0.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #ffffff;
+}
+
+.payment-method-card:hover {
+    border-color: var(--sl-primary);
+    background: #f8fafc;
+}
+
+.payment-method-card.active {
+    border-color: var(--sl-primary);
+    background: #eff6ff;
+    color: var(--sl-primary);
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(13, 110, 253, 0.15);
+}
+
+.payment-method-card i {
+    font-size: 1.5rem;
+    display: block;
+    margin-bottom: 0.35rem;
+}
+
+/* Digital Pass / Success Card */
+.digital-membership-pass {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 70%, #334155 100%);
+    color: #ffffff;
+    border-radius: var(--sl-radius-lg);
+    padding: 2.25rem;
+    box-shadow: 0 20px 35px -10px rgba(15, 23, 42, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.digital-membership-pass::after {
+    content: 'SPORTLAB';
+    position: absolute;
+    bottom: -20px;
+    right: -20px;
+    font-size: 5rem;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.04);
+    pointer-events: none;
+}
+
+.pass-chip {
+    width: 48px;
+    height: 36px;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4);
+}
+
+.pass-qr-box {
+    background: #ffffff;
+    padding: 10px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
