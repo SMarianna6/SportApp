@@ -1,0 +1,294 @@
+@model SportLab.Models.Product
+
+@{
+    ViewData["Title"] = Model.Name + " - SportLab Store";
+    var related = (ViewBag.RelatedProducts as IEnumerable<SportLab.Models.Product>) ?? Enumerable.Empty<SportLab.Models.Product>();
+    var isLowStock = Model.StockQuantity > 0 && Model.StockQuantity <= 10;
+    var isOutOfStock = Model.StockQuantity <= 0;
+    var photo = string.IsNullOrWhiteSpace(Model.PhotoUrl)
+        ? "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&h=600&fit=crop"
+        : Model.PhotoUrl;
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="~/css/shop.css" asp-append-version="true" />
+
+<div class="container my-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-decoration-none">Home</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Shop" asp-action="Index" class="text-decoration-none">Shop</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Shop" asp-action="Index" asp-route-category="@Model.Category" class="text-decoration-none">@Model.Category</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+        </ol>
+    </nav>
+
+    <!-- Main Product Section -->
+    <div class="row g-5">
+        <!-- Left: Image Gallery -->
+        <div class="col-lg-6">
+            <div class="product-details-img mb-3">
+                <img src="@photo" alt="@Model.Name" class="w-100 h-auto object-fit-cover" style="max-height: 480px; width: 100%; display: block;" />
+            </div>
+
+            <div class="row g-2 text-center text-muted small">
+                <div class="col-4">
+                    <div class="p-3 bg-light rounded-3 border">
+                        <i class="bi bi-shield-check text-success fs-4 d-block mb-1"></i>
+                        <span>100% Authentic Quality</span>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="p-3 bg-light rounded-3 border">
+                        <i class="bi bi-truck text-primary fs-4 d-block mb-1"></i>
+                        <span>Fast Delivery & Pickup</span>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="p-3 bg-light rounded-3 border">
+                        <i class="bi bi-arrow-repeat text-warning fs-4 d-block mb-1"></i>
+                        <span>Easy 14-Day Returns</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Product Info & Purchase Actions -->
+        <div class="col-lg-6">
+            <span class="badge bg-primary-subtle text-primary fw-bold text-uppercase px-3 py-1 rounded-pill mb-2">
+                @Model.Category
+            </span>
+
+            <h1 class="h2 fw-bold text-dark mb-2">@Model.Name</h1>
+
+            <!-- Rating & Reviews -->
+            <div class="d-flex align-items-center gap-2 mb-3">
+                <div class="text-warning">
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-half"></i>
+                </div>
+                <span class="fw-bold small">4.9</span>
+                <span class="text-muted small">• 28 verified customer reviews</span>
+            </div>
+
+            <!-- Price & Stock -->
+            <div class="d-flex align-items-baseline gap-3 p-3 bg-light rounded-3 mb-4 border">
+                <div class="fs-2 fw-extrabold text-dark">
+                    @Model.Price.ToString("N0") <span class="fs-4 text-primary">₴</span>
+                </div>
+                <div class="ms-auto">
+                    @if (isOutOfStock)
+                    {
+                        <span class="badge bg-danger fs-6 px-3 py-2 rounded-pill"><i class="bi bi-x-circle me-1"></i> Out of Stock</span>
+                    }
+                    else if (isLowStock)
+                    {
+                        <span class="badge bg-warning text-dark fs-6 px-3 py-2 rounded-pill"><i class="bi bi-exclamation-triangle me-1"></i> Only @Model.StockQuantity left</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-success fs-6 px-3 py-2 rounded-pill"><i class="bi bi-check-circle me-1"></i> In Stock (@Model.StockQuantity available)</span>
+                    }
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-4">
+                <h5 class="fw-bold text-dark mb-2">Product Description</h5>
+                <p class="text-muted" style="line-height: 1.6;">
+                    @Model.Description
+                </p>
+            </div>
+
+            <!-- Highlights -->
+            <div class="mb-4">
+                <h6 class="fw-bold text-uppercase small text-muted mb-2">Key Highlights:</h6>
+                <ul class="list-unstyled text-muted small">
+                    <li class="mb-1"><i class="bi bi-check2-circle text-success me-2"></i>Lab-tested and athlete-approved formula & materials</li>
+                    <li class="mb-1"><i class="bi bi-check2-circle text-success me-2"></i>Free in-person pickup available at SportLab fitness desk</li>
+                    <li><i class="bi bi-check2-circle text-success me-2"></i>Eligible for club loyalty reward points on every order</li>
+                </ul>
+            </div>
+
+            <hr class="my-4">
+
+            <!-- Quantity & Actions Form -->
+            @if (!isOutOfStock)
+            {
+                <div class="d-flex flex-column flex-sm-row gap-3 align-items-sm-center mb-4">
+                    <div class="quantity-stepper">
+                        <button type="button" id="btnQtyMinus"><i class="bi bi-dash"></i></button>
+                        <input type="number" id="inputQuantity" value="1" min="1" max="@Model.StockQuantity" readonly />
+                        <button type="button" id="btnQtyPlus"><i class="bi bi-plus"></i></button>
+                    </div>
+
+                    <button type="button" class="btn btn-primary btn-lg rounded-pill px-4 fw-bold flex-grow-1 shadow-sm" id="btnAddToCart">
+                        <i class="bi bi-cart-plus me-1"></i> Add to Cart
+                    </button>
+
+                    <button type="button" class="btn btn-dark btn-lg rounded-pill px-4 fw-bold shadow-sm" id="btnBuyNow">
+                        Buy Now
+                    </button>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-secondary">
+                    <i class="bi bi-bell me-2"></i> This product is currently out of stock. Contact the reception desk for restock inquiries.
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Related Products -->
+    @if (related.Any())
+    {
+        <div class="mt-5 pt-4 border-top">
+            <h3 class="fw-bold mb-4">You May Also Like</h3>
+            <div class="row g-4">
+                @foreach (var rel in related)
+                {
+                    <div class="col-lg-3 col-md-6">
+                        <div class="product-card">
+                            <div class="product-img-wrapper">
+                                <img src="@(string.IsNullOrEmpty(rel.PhotoUrl) ? photo : rel.PhotoUrl)" alt="@rel.Name" loading="lazy" />
+                                <span class="product-category-chip">@rel.Category</span>
+                            </div>
+                            <div class="product-card-body">
+                                <a asp-action="Details" asp-route-id="@rel.Id" class="product-title" title="@rel.Name">
+                                    @rel.Name
+                                </a>
+                                <div class="product-price-row">
+                                    <div>
+                                        <span class="product-price">@rel.Price.ToString("N0")</span>
+                                        <span class="product-currency">₴</span>
+                                    </div>
+                                    <a asp-action="Details" asp-route-id="@rel.Id" class="btn btn-outline-primary btn-sm">
+                                        View
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Cart Toast Alert -->
+<div class="toast-container cart-toast">
+    <div id="cartToast" class="toast align-items-center text-bg-dark border-0 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body d-flex align-items-center gap-2">
+                <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                <div>
+                    <strong>@Model.Name</strong> added to cart!
+                </div>
+            </div>
+            <a asp-controller="Cart" asp-action="Index" class="btn btn-primary btn-sm my-auto me-2 px-3 py-1 text-nowrap">
+                View Cart
+            </a>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const qtyInput = document.getElementById("inputQuantity");
+        const btnMinus = document.getElementById("btnQtyMinus");
+        const btnPlus = document.getElementById("btnQtyPlus");
+        const maxStock = @Model.StockQuantity;
+
+        if (btnMinus && btnPlus) {
+            btnMinus.addEventListener("click", function () {
+                let val = parseInt(qtyInput.value) || 1;
+                if (val > 1) {
+                    qtyInput.value = val - 1;
+                }
+            });
+
+            btnPlus.addEventListener("click", function () {
+                let val = parseInt(qtyInput.value) || 1;
+                if (val < maxStock) {
+                    qtyInput.value = val + 1;
+                }
+            });
+        }
+
+        const toastEl = document.getElementById('cartToast');
+        const toast = new bootstrap.Toast(toastEl, { delay: 3500 });
+        const btnAdd = document.getElementById("btnAddToCart");
+        const btnBuyNow = document.getElementById("btnBuyNow");
+
+        async function addToCart(qty) {
+            const response = await fetch('/Cart/AddToCart', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({
+                    'productId': @Model.Id,
+                    'quantity': qty
+                })
+            });
+            return await response.json();
+        }
+
+        if (btnAdd) {
+            btnAdd.addEventListener("click", async function () {
+                const qty = parseInt(qtyInput.value) || 1;
+                const originalHtml = this.innerHTML;
+                this.disabled = true;
+                this.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Adding...';
+
+                try {
+                    const data = await addToCart(qty);
+                    if (data.success) {
+                        toast.show();
+                        const badge = document.getElementById("navCartBadge");
+                        if (badge) {
+                            badge.textContent = data.totalCount;
+                            badge.classList.remove("d-none");
+                        }
+                    } else {
+                        alert(data.message || "Could not add to cart");
+                    }
+                } catch (e) {
+                    alert("Network error.");
+                } finally {
+                    this.disabled = false;
+                    this.innerHTML = originalHtml;
+                }
+            });
+        }
+
+        if (btnBuyNow) {
+            btnBuyNow.addEventListener("click", async function () {
+                const qty = parseInt(qtyInput.value) || 1;
+                this.disabled = true;
+                this.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Redirecting...';
+
+                try {
+                    const data = await addToCart(qty);
+                    if (data.success) {
+                        window.location.href = '/Cart/Checkout';
+                    } else {
+                        alert(data.message || "Failed to proceed to checkout");
+                        this.disabled = false;
+                        this.innerHTML = 'Buy Now';
+                    }
+                } catch (e) {
+                    alert("Network error.");
+                    this.disabled = false;
+                    this.innerHTML = 'Buy Now';
+                }
+            });
+        }
+    });
+</script>
+}

@@ -1,3 +1,292 @@
-﻿@{
+@model List<SportLab.Controllers.CartItem>
 
+@{
+    ViewData["Title"] = "Shopping Cart - SportLab";
+    var subtotal = Model.Sum(i => i.Subtotal);
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="~/css/shop.css" asp-append-version="true" />
+
+<div class="container my-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-decoration-none">Home</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Shop" asp-action="Index" class="text-decoration-none">Shop</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Shopping Cart</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 fw-bold mb-0">Your Shopping Cart</h1>
+        <span class="text-muted"><span id="cartItemsCount">@Model.Sum(i => i.Quantity)</span> items</span>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <!-- Empty Cart State -->
+        <div class="text-center py-5 bg-white rounded-4 border shadow-sm my-4" id="emptyCartBlock">
+            <div class="display-3 text-muted mb-3">
+                <i class="bi bi-cart-x"></i>
+            </div>
+            <h3 class="fw-bold mb-2">Your cart is currently empty</h3>
+            <p class="text-muted mb-4">Looks like you haven't added any fitness gear or nutrition yet.</p>
+            <a asp-controller="Shop" asp-action="Index" class="btn btn-primary rounded-pill px-5 py-2 fw-semibold">
+                <i class="bi bi-bag-plus me-1"></i> Start Shopping
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4" id="cartContentRow">
+            <!-- Left: Cart Items Table -->
+            <div class="col-lg-8">
+                <div class="bg-white rounded-4 border shadow-sm overflow-hidden mb-3">
+                    <div class="table-responsive">
+                        <table class="table cart-table align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th style="width: 45%;">Product</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Subtotal</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    var photo = string.IsNullOrWhiteSpace(item.PhotoUrl)
+                                        ? "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=200&h=200&fit=crop"
+                                        : item.PhotoUrl;
+
+                                    <tr id="cartRow-@item.ProductId">
+                                        <td>
+                                            <div class="d-flex align-items-center gap-3">
+                                                <img src="@photo" alt="@item.ProductName" class="cart-img-thumb" />
+                                                <div>
+                                                    <span class="badge bg-light text-muted small mb-1">@item.Category</span>
+                                                    <h6 class="mb-0 fw-bold">
+                                                        <a asp-controller="Shop" asp-action="Details" asp-route-id="@item.ProductId" class="text-dark text-decoration-none">
+                                                            @item.ProductName
+                                                        </a>
+                                                    </h6>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="fw-semibold">@item.UnitPrice.ToString("N0") ₴</span>
+                                        </td>
+                                        <td>
+                                            <div class="quantity-stepper">
+                                                <button type="button" class="btn-cart-delta" data-product-id="@item.ProductId" data-delta="-1">
+                                                    <i class="bi bi-dash"></i>
+                                                </button>
+                                                <input type="text" id="qty-@item.ProductId" value="@item.Quantity" readonly />
+                                                <button type="button" class="btn-cart-delta" data-product-id="@item.ProductId" data-delta="1">
+                                                    <i class="bi bi-plus"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="fw-bold text-primary" id="subtotal-@item.ProductId">@item.Subtotal.ToString("N0") ₴</span>
+                                        </td>
+                                        <td class="text-end">
+                                            <button type="button" class="btn btn-outline-danger btn-sm border-0 btn-remove-item" data-product-id="@item.ProductId" title="Remove">
+                                                <i class="bi bi-trash3"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="p-3 bg-light border-top d-flex justify-content-between align-items-center">
+                        <a asp-controller="Shop" asp-action="Index" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+                            <i class="bi bi-arrow-left me-1"></i> Continue Shopping
+                        </a>
+                        <form asp-action="ClearCart" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-link text-danger btn-sm text-decoration-none" onclick="return confirm('Clear all items from your cart?')">
+                                Clear Cart
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Order Summary Card -->
+            <div class="col-lg-4">
+                <div class="cart-summary-card">
+                    <h5 class="fw-bold mb-3">Order Summary</h5>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Items Subtotal:</span>
+                        <span class="fw-bold" id="summarySubtotal">@subtotal.ToString("N0") ₴</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Shipping:</span>
+                        <span class="text-success fw-semibold">Free (Pickup)</span>
+                    </div>
+
+                    <!-- Promo Code Box -->
+                    <div class="my-3 pt-2">
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control" id="promoCodeInput" placeholder="Promo code (e.g. SPORT10)" />
+                            <button class="btn btn-outline-dark" type="button" id="btnApplyPromo">Apply</button>
+                        </div>
+                        <span class="form-text text-success small d-none" id="promoSuccessText">10% discount applied!</span>
+                    </div>
+
+                    <hr class="my-3">
+
+                    <div class="d-flex justify-content-between align-items-baseline mb-4">
+                        <span class="fs-5 fw-bold">Total:</span>
+                        <span class="fs-3 fw-extrabold text-primary" id="summaryTotal">@subtotal.ToString("N0") ₴</span>
+                    </div>
+
+                    <a asp-action="Checkout" class="btn btn-primary w-100 py-3 rounded-pill fw-bold shadow-sm mb-3">
+                        Proceed to Checkout <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+
+                    <div class="text-center text-muted small">
+                        <i class="bi bi-shield-check text-success me-1"></i> 100% Encrypted & Safe Payments
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let discountMultiplier = 1.0;
+
+        // Apply Promo Code
+        const promoInput = document.getElementById("promoCodeInput");
+        const btnPromo = document.getElementById("btnApplyPromo");
+        const promoSuccess = document.getElementById("promoSuccessText");
+
+        if (btnPromo) {
+            btnPromo.addEventListener("click", function () {
+                const code = (promoInput.value || "").trim().toUpperCase();
+                if (code === "SPORT10") {
+                    discountMultiplier = 0.9;
+                    promoSuccess.classList.remove("d-none");
+                    updateTotalDisplay();
+                } else {
+                    alert("Invalid promo code. Try SPORT10 for 10% off.");
+                }
+            });
+        }
+
+        function updateTotalDisplay(rawTotal) {
+            const summarySubtotal = document.getElementById("summarySubtotal");
+            const summaryTotal = document.getElementById("summaryTotal");
+            if (!summarySubtotal || !summaryTotal) return;
+
+            let base = rawTotal !== undefined 
+                ? rawTotal 
+                : parseFloat(summarySubtotal.textContent.replace(/[^\d.]/g, '')) || 0;
+
+            let finalTotal = base * discountMultiplier;
+            summaryTotal.textContent = Math.round(finalTotal).toLocaleString('uk-UA') + " ₴";
+        }
+
+        // AJAX update quantity
+        document.querySelectorAll(".btn-cart-delta").forEach(btn => {
+            btn.addEventListener("click", async function () {
+                const productId = this.getAttribute("data-product-id");
+                const delta = parseInt(this.getAttribute("data-delta"));
+
+                try {
+                    const response = await fetch('/Cart/UpdateQuantity', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: new URLSearchParams({
+                            'productId': productId,
+                            'delta': delta
+                        })
+                    });
+
+                    const data = await response.json();
+                    if (data.success) {
+                        if (data.removed) {
+                            const row = document.getElementById(`cartRow-${productId}`);
+                            if (row) row.remove();
+                        } else {
+                            const qtyInput = document.getElementById(`qty-${productId}`);
+                            const subtotalSpan = document.getElementById(`subtotal-${productId}`);
+                            if (qtyInput) qtyInput.value = data.quantity;
+                            if (subtotalSpan) subtotalSpan.textContent = data.itemSubtotal.toLocaleString('uk-UA') + " ₴";
+                        }
+
+                        // Update summary and badge
+                        const summarySubtotal = document.getElementById("summarySubtotal");
+                        if (summarySubtotal) summarySubtotal.textContent = data.cartTotal.toLocaleString('uk-UA') + " ₴";
+                        updateTotalDisplay(data.cartTotal);
+
+                        const countSpan = document.getElementById("cartItemsCount");
+                        if (countSpan) countSpan.textContent = data.totalCount;
+
+                        const badge = document.getElementById("navCartBadge");
+                        if (badge) {
+                            badge.textContent = data.totalCount;
+                            if (data.totalCount === 0) badge.classList.add("d-none");
+                        }
+
+                        if (data.totalCount === 0) {
+                            window.location.reload();
+                        }
+                    }
+                } catch (e) {
+                    alert("Network error.");
+                }
+            });
+        });
+
+        // AJAX remove item
+        document.querySelectorAll(".btn-remove-item").forEach(btn => {
+            btn.addEventListener("click", async function () {
+                const productId = this.getAttribute("data-product-id");
+
+                try {
+                    const response = await fetch('/Cart/RemoveFromCart', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: new URLSearchParams({ 'productId': productId })
+                    });
+
+                    const data = await response.json();
+                    if (data.success) {
+                        const row = document.getElementById(`cartRow-${productId}`);
+                        if (row) row.remove();
+
+                        const summarySubtotal = document.getElementById("summarySubtotal");
+                        if (summarySubtotal) summarySubtotal.textContent = data.cartTotal.toLocaleString('uk-UA') + " ₴";
+                        updateTotalDisplay(data.cartTotal);
+
+                        const countSpan = document.getElementById("cartItemsCount");
+                        if (countSpan) countSpan.textContent = data.totalCount;
+
+                        const badge = document.getElementById("navCartBadge");
+                        if (badge) {
+                            badge.textContent = data.totalCount;
+                            if (data.totalCount === 0) badge.classList.add("d-none");
+                        }
+
+                        if (data.totalCount === 0) {
+                            window.location.reload();
+                        }
+                    }
+                } catch (e) {
+                    alert("Network error.");
+                }
+            });
+        });
+    });
+</script>
 }

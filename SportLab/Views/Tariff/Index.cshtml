@@ -1,7 +1,7 @@
 @model IEnumerable<SportLab.Models.Tariff>
 
 @{
-    ViewData["Title"] = "Тарифи та Абонементи";
+    ViewData["Title"] = "Memberships & Plans";
 }
 
 <<<<<<< HEAD
@@ -14,16 +14,16 @@
         <div class="row align-items-center">
             <div class="col-lg-8">
                 <span class="badge-hero mb-3">
-                    <i class="bi bi-lightning-charge-fill text-warning"></i> Преміум фітнес-простір
+                    <i class="bi bi-lightning-charge-fill text-warning"></i> Premium Fitness Experience
                 </span>
-                <h1 class="display-5 fw-bold mb-3 text-white">Тарифи та Клубні Картки</h1>
+                <h1 class="display-5 fw-bold mb-3 text-white">Memberships & Club Passes</h1>
                 <p class="lead text-light mb-0" style="opacity: 0.9;">
-                    Оберіть комфортний формат занять для досягнення ваших спортивних цілей. Сучасне обладнання, професійні тренери та бездоганний сервіс.
+                    Choose the perfect workout plan tailored to your fitness goals. Top-tier equipment, certified trainers, and world-class service.
                 </p>
             </div>
             <div class="col-lg-4 text-center text-md-end mt-4 mt-lg-0">
                 <a asp-action="Create" class="btn btn-outline-light btn-sm px-3 py-2 rounded-pill shadow-sm">
-                    <i class="bi bi-plus-circle me-1"></i> Додати новий тариф
+                    <i class="bi bi-plus-circle me-1"></i> Add New Plan
                 </a>
             </div>
         </div>
@@ -32,19 +32,19 @@
     <!-- Category Filter Tabs -->
     <div class="tariffs-filter-container">
         <button type="button" class="filter-pill active" data-filter="all">
-            <i class="bi bi-grid-fill me-1"></i> Всі абонементи
+            <i class="bi bi-grid-fill me-1"></i> All Plans
         </button>
         <button type="button" class="filter-pill" data-filter="popular">
-            <i class="bi bi-star-fill text-warning me-1"></i> Популярні
+            <i class="bi bi-star-fill text-warning me-1"></i> Popular
         </button>
         <button type="button" class="filter-pill" data-filter="basic">
-            <i class="bi bi-check2-circle me-1"></i> Базові
+            <i class="bi bi-check2-circle me-1"></i> Basic
         </button>
         <button type="button" class="filter-pill" data-filter="premium">
-            <i class="bi bi-gem me-1"></i> Преміум / Річні
+            <i class="bi bi-gem me-1"></i> Premium / Annual
         </button>
         <button type="button" class="filter-pill" data-filter="student">
-            <i class="bi bi-mortarboard-fill me-1"></i> Студентські
+            <i class="bi bi-mortarboard-fill me-1"></i> Student
         </button>
     </div>
 
@@ -55,9 +55,9 @@
             <div class="col-12 text-center py-5">
                 <div class="p-5 bg-light rounded-4 border">
                     <i class="bi bi-inbox display-4 text-muted mb-3 d-block"></i>
-                    <h4 class="fw-bold">Наразі немає доданих тарифів</h4>
-                    <p class="text-muted">Створіть перший тариф або перезавантажте сторінку для автозаповнення.</p>
-                    <a asp-action="Create" class="btn btn-primary rounded-pill px-4">Створити тариф</a>
+                    <h4 class="fw-bold">No Membership Plans Found</h4>
+                    <p class="text-muted">Create a new plan or reload the page to load default options.</p>
+                    <a asp-action="Create" class="btn btn-primary rounded-pill px-4">Create Plan</a>
                 </div>
             </div>
         }
@@ -110,11 +110,13 @@
                 string cardModifier = isFeatured ? "featured" : (isVip ? "vip" : (isStudent ? "student" : ""));
                 string categoriesAttr = string.Join(" ", cardCategories);
 
+                string badgeLabel = isStudent ? "Student" : (isVip ? "Premium" : (isFeatured ? "Best Seller" : (item.Type ?? "Plan")));
+
                 <div class="col-lg-4 col-md-6 tariff-card-col" data-categories="@categoriesAttr">
                     <div class="tariff-card @cardModifier">
                         @if (isFeatured)
                         {
-                            <div class="ribbon-featured">Хіт продажу</div>
+                            <div class="ribbon-featured">Best Seller</div>
                         }
 
                         <!-- Card Header -->
@@ -123,7 +125,7 @@
                                 <div class="tariff-icon-wrapper">
                                     <i class="bi @iconClass"></i>
                                 </div>
-                                <span class="tariff-badge-type">@(isStudent ? "Студентський" : (isVip ? "Преміум" : (isFeatured ? "Популярний" : item.Type)))</span>
+                                <span class="tariff-badge-type">@badgeLabel</span>
                             </div>
 
                             <h3 class="tariff-title">@item.Name</h3>
@@ -131,18 +133,18 @@
                             <div class="tariff-price-block">
                                 <span class="tariff-currency">₴</span>
                                 <span class="tariff-amount">@item.Price.ToString("N0")</span>
-                                <span class="tariff-period">/ @(item.Duration >= 365 ? "рік" : $"{item.Duration} дн.")</span>
+                                <span class="tariff-period">/ @(item.Duration >= 365 ? "year" : $"{item.Duration} days")</span>
                             </div>
 
                             <div class="tariff-duration-chip">
                                 <i class="bi bi-calendar3 text-primary"></i>
-                                <span>Термін дії: <strong>@item.Duration днів</strong></span>
+                                <span>Duration: <strong>@item.Duration days</strong></span>
                             </div>
                         </div>
 
                         <!-- Card Body (Included Services) -->
                         <div class="tariff-card-body">
-                            <div class="tariff-features-title">У вартість включено:</div>
+                            <div class="tariff-features-title">Included in this plan:</div>
                             <ul class="tariff-features-list">
                                 @{
                                     var features = (item.Description ?? "")
@@ -154,11 +156,11 @@
                                     {
                                         <li class="tariff-feature-item">
                                             <i class="bi bi-check-circle-fill"></i>
-                                            <span>Повний доступ до кардіо та силової зони</span>
+                                            <span>Full gym & cardio area access</span>
                                         </li>
                                         <li class="tariff-feature-item">
                                             <i class="bi bi-check-circle-fill"></i>
-                                            <span>Комфортні роздягальні та душові</span>
+                                            <span>Locker rooms & shower facilities</span>
                                         </li>
                                     }
                                     else
@@ -183,67 +185,67 @@
                                     data-tariff-name="@item.Name"
                                     data-tariff-price="@item.Price.ToString("N0")"
                                     data-tariff-duration="@item.Duration"
-                                    data-tariff-type="@item.Type">
-                                <i class="bi bi-bag-check-fill"></i> Швидке придбання
+                                    data-tariff-type="@badgeLabel">
+                                <i class="bi bi-bag-check-fill"></i> Quick Purchase
                             </button>
 
                             <a asp-action="ConfirmPurchase" asp-route-id="@item.Id" class="btn-detail-tariff">
-                                <i class="bi bi-shield-check me-1"></i> Оформити з гарантією
+                                <i class="bi bi-shield-check me-1"></i> Order with Guarantee
                             </a>
 
                             <!-- Admin Controls -->
                             <div class="admin-tariff-actions">
-                                <span class="text-muted small me-auto align-self-center"><i class="bi bi-gear"></i> Управління:</span>
-                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-secondary btn-sm">Редагувати</a>
-                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger btn-sm" onclick="return confirm('Ви впевнені, що бажаєте видалити цей тариф?')">Видалити</a>
+                                <span class="text-muted small me-auto align-self-center"><i class="bi bi-gear"></i> Manage:</span>
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-secondary btn-sm">Edit</a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you sure you want to delete this membership?')">Delete</a>
                             </div>
                         </div>
                     </div>
                 </div>
             }
 
-            <!-- Empty Filter State (displayed if no cards match a chosen filter) -->
+            <!-- Empty Filter State -->
             <div class="col-12 text-center py-4 d-none" id="filterEmptyState">
                 <div class="p-4 bg-white rounded-4 border shadow-sm">
                     <i class="bi bi-funnel text-primary fs-1 mb-2 d-block"></i>
-                    <h5 class="fw-bold text-dark">У цій категорії поки що немає тарифів</h5>
-                    <p class="text-muted small mb-3">Спробуйте обрати іншу категорію або переглянути всі доступні абонементи.</p>
+                    <h5 class="fw-bold text-dark">No plans found in this category</h5>
+                    <p class="text-muted small mb-3">Try choosing another category or view all available memberships.</p>
                     <button type="button" class="btn btn-primary btn-sm rounded-pill px-4 py-2 fw-semibold" onclick="document.querySelector('[data-filter=all]').click();">
-                        <i class="bi bi-grid-fill me-1"></i> Показати всі абонементи
+                        <i class="bi bi-grid-fill me-1"></i> View All Plans
                     </button>
                 </div>
             </div>
         }
     </div>
 
-    <!-- Additional Trust Banner -->
+    <!-- Trust Badges -->
     <div class="row mt-5 g-4">
         <div class="col-md-4">
             <div class="p-4 bg-white rounded-4 border shadow-sm text-center h-100">
                 <div class="text-primary fs-1 mb-2"><i class="bi bi-shield-fill-check"></i></div>
-                <h5 class="fw-bold">100% Безпечна оплата</h5>
-                <p class="text-muted small mb-0">Миттєва активація абонемента після підтвердження замовлення.</p>
+                <h5 class="fw-bold">100% Secure Checkout</h5>
+                <p class="text-muted small mb-0">Instant digital pass activation right after payment confirmation.</p>
             </div>
         </div>
         <div class="col-md-4">
             <div class="p-4 bg-white rounded-4 border shadow-sm text-center h-100">
                 <div class="text-success fs-1 mb-2"><i class="bi bi-snow2"></i></div>
-                <h5 class="fw-bold">Безкоштовна заморозка</h5>
-                <p class="text-muted small mb-0">Можливість призупинити дію картки на час відпустки або хвороби.</p>
+                <h5 class="fw-bold">Complimentary Freeze</h5>
+                <p class="text-muted small mb-0">Pause your membership anytime during vacation or illness.</p>
             </div>
         </div>
         <div class="col-md-4">
             <div class="p-4 bg-white rounded-4 border shadow-sm text-center h-100">
                 <div class="text-danger fs-1 mb-2"><i class="bi bi-person-check-fill"></i></div>
-                <h5 class="fw-bold">Ввідний інструктаж</h5>
-                <p class="text-muted small mb-0">Перше тренування з тренером та біоімпедансний аналіз тіла у подарунок.</p>
+                <h5 class="fw-bold">Introductory Session</h5>
+                <p class="text-muted small mb-0">Complimentary first training session and body composition analysis included.</p>
             </div>
         </div>
     </div>
 </div>
 
 <!-- ==========================================================================
-     Modal: Quick Purchase Confirmation (Модальне вікно придбання абонемента)
+     Modal: Quick Purchase Confirmation (English)
      ========================================================================== -->
 <div class="modal fade" id="quickPurchaseModal" tabindex="-1" aria-labelledby="quickPurchaseModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -251,8 +253,8 @@
             <!-- Modal Header -->
             <div class="modal-header modal-tariff-header">
                 <div>
-                    <span class="badge bg-primary-subtle text-primary fw-bold text-uppercase mb-1" id="modalTariffBadge">Абонемент</span>
-                    <h4 class="modal-title fw-bold text-white mb-0" id="quickPurchaseModalLabel">Оформлення абонемента</h4>
+                    <span class="badge bg-primary-subtle text-primary fw-bold text-uppercase mb-1" id="modalTariffBadge">Membership</span>
+                    <h4 class="modal-title fw-bold text-white mb-0" id="quickPurchaseModalLabel">Membership Checkout</h4>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -263,16 +265,16 @@
                 <div class="modal-tariff-summary">
                     <div class="row align-items-center">
                         <div class="col-md-7">
-                            <span class="text-muted small d-block">Обраний план:</span>
+                            <span class="text-muted small d-block">Selected Plan:</span>
                             <h4 class="fw-bold text-dark mb-1" id="modalTariffName">-</h4>
                             <div class="text-muted small">
-                                <i class="bi bi-clock-history text-primary me-1"></i> Термін: <strong id="modalTariffDuration">-</strong> днів
+                                <i class="bi bi-clock-history text-primary me-1"></i> Duration: <strong id="modalTariffDuration">-</strong> days
                                 <span class="mx-2">•</span>
-                                <i class="bi bi-calendar-check text-success me-1"></i> Діятиме до: <strong id="modalCalculatedEndDate">-</strong>
+                                <i class="bi bi-calendar-check text-success me-1"></i> Valid until: <strong id="modalCalculatedEndDate">-</strong>
                             </div>
                         </div>
                         <div class="col-md-5 text-md-end mt-3 mt-md-0">
-                            <span class="text-muted small d-block">До сплати:</span>
+                            <span class="text-muted small d-block">Total to Pay:</span>
                             <div class="fs-2 fw-bold text-primary">
                                 <span id="modalTariffPrice">-</span> <span class="fs-4">₴</span>
                             </div>
@@ -287,15 +289,15 @@
 
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label for="customerFullName" class="form-label fw-semibold small">Прізвище та Ім'я клієнта <span class="text-danger">*</span></label>
+                            <label for="customerFullName" class="form-label fw-semibold small">Full Name <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <span class="input-group-text bg-white"><i class="bi bi-person text-muted"></i></span>
-                                <input type="text" class="form-control" id="customerFullName" placeholder="Олександр Петренко" required />
+                                <input type="text" class="form-control" id="customerFullName" placeholder="Alexander Smith" required />
                             </div>
                         </div>
 
                         <div class="col-md-6">
-                            <label for="customerPhone" class="form-label fw-semibold small">Номер телефону <span class="text-danger">*</span></label>
+                            <label for="customerPhone" class="form-label fw-semibold small">Phone Number <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <span class="input-group-text bg-white"><i class="bi bi-telephone text-muted"></i></span>
                                 <input type="tel" class="form-control" id="customerPhone" placeholder="+380 (97) 123-45-67" required />
@@ -303,7 +305,7 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label for="customerEmail" class="form-label fw-semibold small">Email (для отримання картки) <span class="text-danger">*</span></label>
+                            <label for="customerEmail" class="form-label fw-semibold small">Email Address <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <span class="input-group-text bg-white"><i class="bi bi-envelope text-muted"></i></span>
                                 <input type="email" class="form-control" id="customerEmail" placeholder="client@example.com" required />
@@ -311,7 +313,7 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label for="subscriptionStartDate" class="form-label fw-semibold small">Дата початку дії <span class="text-danger">*</span></label>
+                            <label for="subscriptionStartDate" class="form-label fw-semibold small">Activation Date <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <span class="input-group-text bg-white"><i class="bi bi-calendar-event text-muted"></i></span>
                                 <input type="date" class="form-control" id="subscriptionStartDate" required />
@@ -320,11 +322,11 @@
 
                         <!-- Payment Method Options -->
                         <div class="col-12 mt-3">
-                            <label class="form-label fw-semibold small">Оберіть спосіб оплати</label>
+                            <label class="form-label fw-semibold small">Select Payment Method</label>
                             <div class="payment-method-selector">
                                 <div class="payment-method-card active" data-method="card">
                                     <i class="bi bi-credit-card-2-front text-primary"></i>
-                                    <span>Банківська картка</span>
+                                    <span>Credit / Debit Card</span>
                                 </div>
                                 <div class="payment-method-card" data-method="applepay">
                                     <i class="bi bi-apple text-dark"></i>
@@ -332,7 +334,7 @@
                                 </div>
                                 <div class="payment-method-card" data-method="desk">
                                     <i class="bi bi-cash-stack text-success"></i>
-                                    <span>На рецепції</span>
+                                    <span>At Club Reception</span>
                                 </div>
                             </div>
                             <input type="hidden" id="selectedPaymentMethod" value="card" />
@@ -343,7 +345,7 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="agreeTerms" checked required />
                                 <label class="form-check-label small text-muted" for="agreeTerms">
-                                    Я погоджуюсь із правилами відвідування фітнес-клубу та публічною офертою SportLab
+                                    I agree to the SportLab club visit rules and terms of service.
                                 </label>
                             </div>
                         </div>
@@ -352,10 +354,10 @@
                     <div id="modalAlert" class="alert alert-danger d-none mt-3" role="alert"></div>
 
                     <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
-                        <button type="button" class="btn btn-outline-secondary px-4 rounded-pill" data-bs-dismiss="modal">Скасувати</button>
+                        <button type="button" class="btn btn-outline-secondary px-4 rounded-pill" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary px-5 py-2 rounded-pill fw-bold shadow-sm" id="btnSubmitPurchase">
                             <span class="spinner-border spinner-border-sm d-none me-2" id="submitSpinner" role="status" aria-hidden="true"></span>
-                            <span id="submitBtnText"><i class="bi bi-check2-circle me-1"></i> Підтвердити та активувати</span>
+                            <span id="submitBtnText"><i class="bi bi-check2-circle me-1"></i> Confirm & Activate</span>
                         </button>
                     </div>
                 </form>
@@ -367,23 +369,23 @@
                     <div class="display-3 text-success mb-3">
                         <i class="bi bi-patch-check-fill"></i>
                     </div>
-                    <h3 class="fw-bold text-dark mb-2">Вітаємо у команді SportLab!</h3>
-                    <p class="text-muted mb-4" id="successMessageText">Ваш абонемент успішно активовано.</p>
+                    <h3 class="fw-bold text-dark mb-2">Welcome to the SportLab Community!</h3>
+                    <p class="text-muted mb-4" id="successMessageText">Your membership pass has been successfully activated.</p>
 
                     <!-- Digital Pass Card Preview -->
                     <div class="digital-membership-pass text-start mx-auto mb-4" style="max-width: 460px;">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <div>
-                                <span class="badge bg-warning text-dark fw-bold text-uppercase px-2 py-1">Клубна Картка</span>
-                                <h4 class="fw-bold mb-0 mt-1" id="passTariffName">Безліміт Про</h4>
+                                <span class="badge bg-warning text-dark fw-bold text-uppercase px-2 py-1">Member Pass</span>
+                                <h4 class="fw-bold mb-0 mt-1" id="passTariffName">Unlimited Pro</h4>
                             </div>
                             <div class="pass-chip"></div>
                         </div>
                         <div class="row align-items-end mt-4">
                             <div class="col-8">
-                                <span class="text-white-50 small d-block">Власник картки:</span>
-                                <h5 class="fw-bold mb-2 text-white" id="passUserName">Олександр Петренко</h5>
-                                <span class="text-white-50 small d-block">Період дії:</span>
+                                <span class="text-white-50 small d-block">Pass Holder:</span>
+                                <h5 class="fw-bold mb-2 text-white" id="passUserName">Alexander Smith</h5>
+                                <span class="text-white-50 small d-block">Validity Period:</span>
                                 <span class="small fw-semibold text-white" id="passDates">21.10.2026 — 20.11.2026</span>
                             </div>
                             <div class="col-4 text-end">
@@ -396,10 +398,10 @@
 
                     <div class="d-flex justify-content-center gap-3">
                         <a asp-controller="Profile" asp-action="Client" class="btn btn-primary rounded-pill px-4">
-                            <i class="bi bi-person-circle me-1"></i> В особистий кабінет
+                            <i class="bi bi-person-circle me-1"></i> Go to Profile
                         </a>
                         <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
-                            Закрити
+                            Close
                         </button>
                     </div>
                 </div>
@@ -411,9 +413,7 @@
 @section Scripts {
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // ----------------------------------------------------
         // 1. Category Filtering
-        // ----------------------------------------------------
         const filterPills = document.querySelectorAll(".filter-pill");
         const cards = document.querySelectorAll(".tariff-card-col");
         const emptyState = document.getElementById("filterEmptyState");
@@ -448,9 +448,7 @@
             });
         });
 
-        // ----------------------------------------------------
         // 2. Date Calculation Helper
-        // ----------------------------------------------------
         const startDateInput = document.getElementById("subscriptionStartDate");
         const calculatedEndDateSpan = document.getElementById("modalCalculatedEndDate");
         const durationInput = document.getElementById("formDurationDays");
@@ -469,15 +467,12 @@
             calculatedEndDateSpan.textContent = `${day}.${month}.${year}`;
         }
 
-        // Set default start date to today
         const todayStr = new Date().toISOString().split('T')[0];
         startDateInput.value = todayStr;
         startDateInput.min = todayStr;
         startDateInput.addEventListener("change", updateEndDate);
 
-        // ----------------------------------------------------
         // 3. Open Modal & Populate Data
-        // ----------------------------------------------------
         const purchaseModalElement = document.getElementById('quickPurchaseModal');
         const purchaseModal = new bootstrap.Modal(purchaseModalElement);
         const modalFormContainer = document.getElementById("modalFormContainer");
@@ -497,9 +492,8 @@
                 document.getElementById("modalTariffName").textContent = name;
                 document.getElementById("modalTariffPrice").textContent = price;
                 document.getElementById("modalTariffDuration").textContent = duration;
-                document.getElementById("modalTariffBadge").textContent = type || "Абонемент";
+                document.getElementById("modalTariffBadge").textContent = type || "Membership";
 
-                // Reset view states
                 modalFormContainer.classList.remove("d-none");
                 modalSuccessContainer.classList.add("d-none");
                 modalAlert.classList.add("d-none");
@@ -509,9 +503,7 @@
             });
         });
 
-        // ----------------------------------------------------
         // 4. Payment Method Card Selection
-        // ----------------------------------------------------
         const paymentCards = document.querySelectorAll(".payment-method-card");
         const selectedPaymentMethodInput = document.getElementById("selectedPaymentMethod");
 
@@ -523,13 +515,10 @@
             });
         });
 
-        // ----------------------------------------------------
         // 5. AJAX Quick Purchase Form Submission
-        // ----------------------------------------------------
         const quickForm = document.getElementById("quickPurchaseForm");
         const submitBtn = document.getElementById("btnSubmitPurchase");
         const submitSpinner = document.getElementById("submitSpinner");
-        const submitBtnText = document.getElementById("submitBtnText");
 
         quickForm.addEventListener("submit", async function (e) {
             e.preventDefault();
@@ -559,7 +548,6 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    // Populate success card
                     document.getElementById("passTariffName").textContent = data.tariffName;
                     document.getElementById("passUserName").textContent = data.userName;
                     document.getElementById("passDates").textContent = `${data.startDate} — ${data.endDate}`;
@@ -568,11 +556,11 @@
                     modalFormContainer.classList.add("d-none");
                     modalSuccessContainer.classList.remove("d-none");
                 } else {
-                    modalAlert.textContent = data.message || "Помилка при оформленні абонемента.";
+                    modalAlert.textContent = data.message || "Failed to complete purchase.";
                     modalAlert.classList.remove("d-none");
                 }
             } catch (err) {
-                modalAlert.textContent = "Не вдалося з'єднатися із сервером. Спробуйте пізніше.";
+                modalAlert.textContent = "Unable to connect to the server. Please try again.";
                 modalAlert.classList.remove("d-none");
             } finally {
                 submitBtn.disabled = false;

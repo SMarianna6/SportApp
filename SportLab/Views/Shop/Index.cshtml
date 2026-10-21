@@ -1,72 +1,248 @@
-﻿@{
-    ViewData["Title"] = "SportLab Shop";
+@model IEnumerable<SportLab.Models.Product>
+
+@{
+    ViewData["Title"] = "SportLab Store";
+    var currentCat = (ViewBag.CurrentCategory as string) ?? "all";
+    var currentSort = (ViewBag.CurrentSort as string) ?? "default";
+    var currentSearch = (ViewBag.CurrentSearch as string) ?? "";
 }
 
-<div class="container mt-4">
-    <div class="mb-4">
-        <h2>SportLab Shop</h2>
-        <p class="text-muted">Premium nutrition, gear, and accessories.</p>
-        <span class="badge bg-warning text-dark">Promo: SPORT10 for 10% off</span>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="~/css/shop.css" asp-append-version="true" />
+
+<div class="container my-4">
+    <!-- Hero Banner -->
+    <div class="shop-hero text-center text-md-start">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <span class="badge bg-warning text-dark fw-bold text-uppercase px-3 py-2 rounded-pill mb-3">
+                    <i class="bi bi-tag-fill me-1"></i> Promo Code: <strong>SPORT10</strong> for 10% OFF
+                </span>
+                <h1 class="display-5 fw-bold mb-2 text-white">SportLab Fitness Shop</h1>
+                <p class="lead text-light mb-0" style="opacity: 0.9;">
+                    Official athletic store: sports nutrition, professional workout gear, recovery accessories, and club apparel.
+                </p>
+            </div>
+            <div class="col-lg-4 text-center text-md-end mt-4 mt-lg-0">
+                <a asp-controller="Cart" asp-action="Index" class="btn btn-outline-light px-4 py-2 rounded-pill shadow-sm">
+                    <i class="bi bi-cart3 me-1"></i> View Cart
+                </a>
+            </div>
+        </div>
     </div>
 
-    <div class="mb-4">
-        <button class="btn btn-dark">All Products</button>
-        <button class="btn btn-outline-dark">Nutrition</button>
-        <button class="btn btn-outline-dark">Accessories</button>
-        <button class="btn btn-outline-dark">Apparel</button>
+    <!-- Filter & Controls Bar -->
+    <div class="shop-filter-bar">
+        <form method="get" asp-action="Index" id="shopFilterForm">
+            <div class="row g-3 align-items-center">
+                <!-- Category Pills -->
+                <div class="col-lg-6">
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button type="button" class="btn btn-sm rounded-pill px-3 @(currentCat == "all" ? "btn-dark fw-bold" : "btn-outline-secondary") filter-cat-btn" data-cat="all">
+                            All
+                        </button>
+                        <button type="button" class="btn btn-sm rounded-pill px-3 @(currentCat == "nutrition" ? "btn-dark fw-bold" : "btn-outline-secondary") filter-cat-btn" data-cat="nutrition">
+                            <i class="bi bi-cup-hot me-1"></i> Nutrition
+                        </button>
+                        <button type="button" class="btn btn-sm rounded-pill px-3 @(currentCat == "accessories" ? "btn-dark fw-bold" : "btn-outline-secondary") filter-cat-btn" data-cat="accessories">
+                            <i class="bi bi-droplet me-1"></i> Accessories
+                        </button>
+                        <button type="button" class="btn btn-sm rounded-pill px-3 @(currentCat == "apparel" ? "btn-dark fw-bold" : "btn-outline-secondary") filter-cat-btn" data-cat="apparel">
+                            <i class="bi bi-bag me-1"></i> Apparel
+                        </button>
+                        <button type="button" class="btn btn-sm rounded-pill px-3 @(currentCat == "equipment" ? "btn-dark fw-bold" : "btn-outline-secondary") filter-cat-btn" data-cat="equipment">
+                            <i class="bi bi-activity me-1"></i> Equipment
+                        </button>
+                    </div>
+                    <input type="hidden" name="category" id="hiddenCategory" value="@currentCat" />
+                </div>
+
+                <!-- Search Input -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
+                        <input type="text" name="search" class="form-control" placeholder="Search products..." value="@currentSearch" id="searchInput" />
+                        @if (!string.IsNullOrEmpty(currentSearch))
+                        {
+                            <a asp-action="Index" asp-route-category="@currentCat" class="btn btn-outline-secondary"><i class="bi bi-x-lg"></i></a>
+                        }
+                    </div>
+                </div>
+
+                <!-- Sorting Select -->
+                <div class="col-lg-3 col-md-6 text-end">
+                    <div class="d-flex align-items-center justify-content-lg-end gap-2">
+                        <label for="sortSelect" class="small text-muted mb-0 text-nowrap"><i class="bi bi-arrow-down-up"></i> Sort:</label>
+                        <select name="sort" id="sortSelect" class="form-select form-select-sm" style="max-width: 190px;" onchange="this.form.submit()">
+                            <option value="default" selected="@(currentSort == "default")">Popular / Newest</option>
+                            <option value="price_asc" selected="@(currentSort == "price_asc")">Price: Low to High</option>
+                            <option value="price_desc" selected="@(currentSort == "price_desc")">Price: High to Low</option>
+                            <option value="name" selected="@(currentSort == "name")">Name: A to Z</option>
+                            <option value="stock" selected="@(currentSort == "stock")">Availability</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 
-    <div class="row">
-        <div class="col-md-3 mb-4">
-            <div class="card">
-                <img src="https://images.unsplash.com/photo-1579722821273-0f6c7d44362f?w=400&h=300&fit=crop" class="card-img-top" alt="Protein">
-                <div class="card-body text-center">
-                    <p class="text-muted small mb-1">Nutrition</p>
-                    <h5 class="card-title">Whey Protein Isolate</h5>
-                    <p class="card-text small">Vanilla flavor, 30 servings.</p>
-                    <h4 class="fw-bold">$45.00</h4>
-                    <button class="btn btn-primary w-100" onclick="alert('Added!')">Add to Cart</button>
+    <!-- Products Grid -->
+    <div class="row g-4">
+        @if (!Model.Any())
+        {
+            <div class="col-12 text-center py-5">
+                <div class="p-5 bg-light rounded-4 border">
+                    <i class="bi bi-bag-x display-3 text-muted mb-3 d-block"></i>
+                    <h4 class="fw-bold">No products match your criteria</h4>
+                    <p class="text-muted">Try clearing search filters or browse other categories.</p>
+                    <a asp-action="Index" class="btn btn-primary rounded-pill px-4">Show All Products</a>
                 </div>
             </div>
-        </div>
+        }
+        else
+        {
+            @foreach (var item in Model)
+            {
+                var isLowStock = item.StockQuantity > 0 && item.StockQuantity <= 10;
+                var isOutOfStock = item.StockQuantity <= 0;
+                var photo = string.IsNullOrWhiteSpace(item.PhotoUrl) 
+                    ? "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&h=450&fit=crop" 
+                    : item.PhotoUrl;
 
-        <div class="col-md-3 mb-4">
-            <div class="card">
-                <img src="https://images.unsplash.com/photo-1693996045838-980674653385?w=400&h=300&fit=crop" class="card-img-top" alt="Classic Shaker">
-                <div class="card-body text-center">
-                    <p class="text-muted small mb-1">Accessories</p>
-                    <h5 class="card-title">SportLab Classic Shaker</h5>
-                    <p class="card-text small">BPA-free shaker with a leak-proof lid.</p>
-                    <h4 class="fw-bold">$12.50</h4>
-                    <button class="btn btn-primary w-100" onclick="alert('Added!')">Add to Cart</button>
-                </div>
-            </div>
-        </div>
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <div class="product-card">
+                        <!-- Image & Badges -->
+                        <div class="product-img-wrapper">
+                            <img src="@photo" alt="@item.Name" loading="lazy" />
+                            <span class="product-category-chip">@item.Category</span>
 
-        <div class="col-md-3 mb-4">
-            <div class="card">
-                <img src="https://images.unsplash.com/photo-1593095948071-474c5cc2989d?w=400&h=300&fit=crop" class="card-img-top" alt="BCAA">
-                <div class="card-body text-center">
-                    <p class="text-muted small mb-1">Nutrition</p>
-                    <h5 class="card-title">Essential BCAA Aminos</h5>
-                    <p class="card-text small">Berry blast flavor hydration.</p>
-                    <h4 class="fw-bold">$29.99</h4>
-                    <button class="btn btn-primary w-100" onclick="alert('Added!')">Add to Cart</button>
-                </div>
-            </div>
-        </div>
+                            @if (isOutOfStock)
+                            {
+                                <span class="badge bg-danger product-stock-badge">Out of Stock</span>
+                            }
+                            else if (isLowStock)
+                            {
+                                <span class="badge bg-warning text-dark product-stock-badge">Only @item.StockQuantity left</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success product-stock-badge">In Stock</span>
+                            }
+                        </div>
 
-        <div class="col-md-3 mb-4">
-            <div class="card">
-                <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=300&fit=crop" class="card-img-top" alt="Gym Bag">
-                <div class="card-body text-center">
-                    <p class="text-muted small mb-1">Apparel</p>
-                    <h5 class="card-title">Elite Duffel Gym Bag</h5>
-                    <p class="card-text small">Water-resistant bag for gear.</p>
-                    <h4 class="fw-bold">$42.00</h4>
-                    <button class="btn btn-primary w-100" onclick="alert('Added!')">Add to Cart</button>
+                        <!-- Card Body -->
+                        <div class="product-card-body">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="product-title" title="@item.Name">
+                                @item.Name
+                            </a>
+                            <p class="product-desc">@item.Description</p>
+
+                            <!-- Price & CTA -->
+                            <div class="product-price-row">
+                                <div>
+                                    <span class="product-price">@item.Price.ToString("N0")</span>
+                                    <span class="product-currency">₴</span>
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-secondary btn-sm" title="View details">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <button type="button" 
+                                            class="btn-add-cart btn-ajax-add-cart" 
+                                            data-product-id="@item.Id" 
+                                            data-product-name="@item.Name"
+                                            @(isOutOfStock ? "disabled" : "")>
+                                        <i class="bi bi-cart-plus"></i> Add
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<!-- Cart Toast Alert -->
+<div class="toast-container cart-toast">
+    <div id="cartToast" class="toast align-items-center text-bg-dark border-0 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body d-flex align-items-center gap-2">
+                <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                <div>
+                    <strong id="toastProductName">Item</strong> added to cart!
                 </div>
             </div>
+            <a asp-controller="Cart" asp-action="Index" class="btn btn-primary btn-sm my-auto me-2 px-3 py-1 text-nowrap">
+                View Cart
+            </a>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
     </div>
 </div>
+
+@section Scripts {
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Category pill click handler
+        const filterForm = document.getElementById("shopFilterForm");
+        const hiddenCategory = document.getElementById("hiddenCategory");
+        document.querySelectorAll(".filter-cat-btn").forEach(btn => {
+            btn.addEventListener("click", function () {
+                hiddenCategory.value = this.getAttribute("data-cat");
+                filterForm.submit();
+            });
+        });
+
+        // AJAX Add to Cart
+        const toastEl = document.getElementById('cartToast');
+        const toast = new bootstrap.Toast(toastEl, { delay: 3500 });
+
+        document.querySelectorAll(".btn-ajax-add-cart").forEach(btn => {
+            btn.addEventListener("click", async function () {
+                const productId = this.getAttribute("data-product-id");
+                const productName = this.getAttribute("data-product-name");
+                const originalHtml = this.innerHTML;
+
+                this.disabled = true;
+                this.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+
+                try {
+                    const response = await fetch('/Cart/AddToCart', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: new URLSearchParams({
+                            'productId': productId,
+                            'quantity': 1
+                        })
+                    });
+
+                    const data = await response.json();
+                    if (data.success) {
+                        document.getElementById("toastProductName").textContent = productName;
+                        toast.show();
+
+                        // Update global cart badge if present
+                        const badge = document.getElementById("navCartBadge");
+                        if (badge) {
+                            badge.textContent = data.totalCount;
+                            badge.classList.remove("d-none");
+                        }
+                    } else {
+                        alert(data.message || "Failed to add product to cart.");
+                    }
+                } catch (err) {
+                    alert("Network error. Please try again.");
+                } finally {
+                    this.disabled = false;
+                    this.innerHTML = originalHtml;
+                }
+            });
+        });
+    });
+</script>
+}
