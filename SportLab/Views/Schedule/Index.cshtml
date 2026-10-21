@@ -2,253 +2,444 @@
     ViewData["Title"] = "Workout Schedule";
 }
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-        <div>
-            <h2 class="fw-bold mb-1">Workout Schedule</h2>
-            <p class="text-muted mb-0">Browse weekly group classes, check available spots, and reserve your training.</p>
-        </div>
-        <div>
-            <a asp-controller="Trainer" asp-action="Index" class="btn btn-outline-secondary">
-                Meet Our Coaches
-            </a>
-        </div>
-    </div>
-
-    <!-- Filters Row -->
-    <div class="card p-3 mb-4 shadow-sm border-0 bg-light">
-        <div class="row g-3 align-items-center">
-            <div class="col-md-4">
-                <label class="form-label small text-muted mb-1">Select Coach</label>
-                <select class="form-select form-select-sm" id="trainerSelect" onchange="applyFilters()">
-                    <option value="all" selected>All Coaches</option>
-                    <option value="Andrii Melnyk">Andrii Melnyk (CrossFit)</option>
-                    <option value="Denys Kravchenko">Denys Kravchenko (Strength)</option>
-                    <option value="Tetiana Shevchenko">Tetiana Shevchenko (Yoga)</option>
-                    <option value="Roman Koval">Roman Koval (Combat)</option>
-                    <option value="Yuliia Bondarenko">Yuliia Bondarenko (TRX)</option>
-                    <option value="Olena Sydorenko">Olena Sydorenko (Recovery)</option>
-                </select>
-            </div>
-            <div class="col-md-4">
-                <label class="form-label small text-muted mb-1">Workout Type</label>
-                <select class="form-select form-select-sm" id="typeSelect" onchange="applyFilters()">
-                    <option value="all" selected>All Categories</option>
-                    <option value="CrossFit">CrossFit & Functional</option>
-                    <option value="Strength">Strength & Powerlifting</option>
-                    <option value="Yoga">Yoga & Mobility</option>
-                    <option value="Boxing">Boxing & Combat</option>
-                    <option value="TRX">TRX & Cardio</option>
-                </select>
-            </div>
-            <div class="col-md-4 d-flex align-items-end">
-                <button class="btn btn-sm btn-dark w-100" onclick="resetFilters()">Reset Filters</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Weekday Tabs -->
-    <ul class="nav nav-pills mb-4 gap-2" id="dayPills">
-        <li class="nav-item">
-            <button class="nav-link active btn-sm day-tab" onclick="switchDay('mon', this)">Monday</button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link btn-sm day-tab" onclick="switchDay('tue', this)">Tuesday</button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link btn-sm day-tab" onclick="switchDay('wed', this)">Wednesday</button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link btn-sm day-tab" onclick="switchDay('thu', this)">Thursday</button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link btn-sm day-tab" onclick="switchDay('fri', this)">Friday</button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link btn-sm day-tab" onclick="switchDay('sat', this)">Saturday</button>
-        </li>
-    </ul>
-
-    <!-- Legend -->
-    <div class="d-flex gap-3 mb-3 small flex-wrap">
-        <span class="d-flex align-items-center gap-1"><span class="badge bg-success">&nbsp;</span> Available spots</span>
-        <span class="d-flex align-items-center gap-1"><span class="badge bg-warning text-dark">&nbsp;</span> Limited spots (< 3)</span>
-        <span class="d-flex align-items-center gap-1"><span class="badge bg-secondary">&nbsp;</span> Group full</span>
-    </div>
-
-    <!-- Schedule Table -->
-    <div class="table-responsive">
-        <table class="table table-hover table-bordered align-middle text-center bg-white shadow-sm mb-4">
-            <thead class="table-dark">
-                <tr>
-                    <th style="width: 140px;">Time</th>
-                    <th>Class Title</th>
-                    <th>Coach</th>
-                    <th>Zone</th>
-                    <th>Availability</th>
-                    <th style="width: 150px;">Action</th>
-                </tr>
-            </thead>
-            <tbody id="scheduleTableBody">
-                <!-- Row 1 -->
-                <tr class="schedule-row" data-days="mon wed fri" data-trainer="Tetiana Shevchenko" data-type="Yoga">
-                    <td class="fw-bold">08:30 - 09:30</td>
-                    <td class="fw-semibold text-start ps-3">Morning Hatha Yoga</td>
-                    <td>Tetiana Shevchenko</td>
-                    <td><span class="badge bg-light text-dark border">Zen Studio</span></td>
-                    <td><span class="badge bg-success">8 spots left</span></td>
-                    <td>
-                        <button class="btn btn-outline-primary btn-sm px-3" onclick="openClassBooking('Morning Hatha Yoga', '08:30 - 09:30', 'Tetiana Shevchenko', 'Zen Studio')">Book Now</button>
-                    </td>
-                </tr>
-
-                <!-- Row 2 -->
-                <tr class="schedule-row" data-days="mon tue wed thu fri" data-trainer="Andrii Melnyk" data-type="CrossFit">
-                    <td class="fw-bold">10:00 - 11:15</td>
-                    <td class="fw-semibold text-start ps-3">CrossFit WOD & Barbell Prep</td>
-                    <td>Andrii Melnyk</td>
-                    <td><span class="badge bg-light text-dark border">CrossFit Arena</span></td>
-                    <td><span class="badge bg-warning text-dark">2 spots left</span></td>
-                    <td>
-                        <button class="btn btn-outline-primary btn-sm px-3" onclick="openClassBooking('CrossFit WOD & Barbell Prep', '10:00 - 11:15', 'Andrii Melnyk', 'CrossFit Arena')">Book Now</button>
-                    </td>
-                </tr>
-
-                <!-- Row 3 -->
-                <tr class="schedule-row" data-days="mon wed fri sat" data-trainer="Denys Kravchenko" data-type="Strength">
-                    <td class="fw-bold">12:30 - 13:45</td>
-                    <td class="fw-semibold text-start ps-3">Powerlifting: Squat & Bench Mechanics</td>
-                    <td>Denys Kravchenko</td>
-                    <td><span class="badge bg-light text-dark border">Iron Platform</span></td>
-                    <td><span class="badge bg-success">5 spots left</span></td>
-                    <td>
-                        <button class="btn btn-outline-primary btn-sm px-3" onclick="openClassBooking('Powerlifting Mechanics', '12:30 - 13:45', 'Denys Kravchenko', 'Iron Platform')">Book Now</button>
-                    </td>
-                </tr>
-
-                <!-- Row 4 -->
-                <tr class="schedule-row" data-days="tue thu sat" data-trainer="Yuliia Bondarenko" data-type="TRX">
-                    <td class="fw-bold">16:30 - 17:30</td>
-                    <td class="fw-semibold text-start ps-3">TRX Suspension Core & Tone</td>
-                    <td>Yuliia Bondarenko</td>
-                    <td><span class="badge bg-light text-dark border">Functional Studio</span></td>
-                    <td><span class="badge bg-success">7 spots left</span></td>
-                    <td>
-                        <button class="btn btn-outline-primary btn-sm px-3" onclick="openClassBooking('TRX Suspension Core', '16:30 - 17:30', 'Yuliia Bondarenko', 'Functional Studio')">Book Now</button>
-                    </td>
-                </tr>
-
-                <!-- Row 5 -->
-                <tr class="schedule-row" data-days="mon tue thu fri" data-trainer="Roman Koval" data-type="Boxing">
-                    <td class="fw-bold">18:00 - 19:15</td>
-                    <td class="fw-semibold text-start ps-3">Boxing Combinations & Conditioning</td>
-                    <td>Roman Koval</td>
-                    <td><span class="badge bg-light text-dark border">Fight Ring</span></td>
-                    <td><span class="badge bg-secondary">Class Full</span></td>
-                    <td>
-                        <button class="btn btn-secondary btn-sm px-3" disabled>Full</button>
-                    </td>
-                </tr>
-
-                <!-- Row 6 -->
-                <tr class="schedule-row" data-days="mon wed fri" data-trainer="Olena Sydorenko" data-type="Yoga">
-                    <td class="fw-bold">19:30 - 20:30</td>
-                    <td class="fw-semibold text-start ps-3">Deep Spine Mobility & Foam Rolling</td>
-                    <td>Olena Sydorenko</td>
-                    <td><span class="badge bg-light text-dark border">Zen Studio</span></td>
-                    <td><span class="badge bg-success">6 spots left</span></td>
-                    <td>
-                        <button class="btn btn-outline-primary btn-sm px-3" onclick="openClassBooking('Deep Spine Mobility', '19:30 - 20:30', 'Olena Sydorenko', 'Zen Studio')">Book Now</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<!-- Modal for Booking Class -->
-<div class="modal fade" id="scheduleBookingModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title fw-bold">Reserve Workout Spot</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <div class="p-3 bg-light rounded mb-3">
-                    <h5 class="fw-bold mb-1 text-primary" id="modalClassName"></h5>
-                    <div class="small text-muted mb-1"><strong class="text-dark">Time:</strong> <span id="modalClassTime"></span></div>
-                    <div class="small text-muted mb-1"><strong class="text-dark">Coach:</strong> <span id="modalClassCoach"></span></div>
-                    <div class="small text-muted"><strong class="text-dark">Location:</strong> <span id="modalClassZone"></span></div>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label small">Your Name</label>
-                    <input type="text" class="form-control" placeholder="Enter your full name" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label small">Phone / Email</label>
-                    <input type="text" class="form-control" placeholder="Your phone number or email" required>
-                </div>
-                <button type="button" class="btn btn-primary w-100" onclick="submitClassReservation()">Confirm Reservation</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    let currentDay = 'mon';
-
-    function switchDay(day, btn) {
-        currentDay = day;
-        document.querySelectorAll('.day-tab').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        applyFilters();
-    }
-
-    function applyFilters() {
-        const trainer = document.getElementById('trainerSelect').value;
-        const type = document.getElementById('typeSelect').value;
-        const rows = document.querySelectorAll('.schedule-row');
-
-        rows.forEach(row => {
-            const days = row.getAttribute('data-days');
-            const rowTrainer = row.getAttribute('data-trainer');
-            const rowType = row.getAttribute('data-type');
-
-            const dayMatch = days.includes(currentDay);
-            const trainerMatch = (trainer === 'all' || rowTrainer === trainer);
-            const typeMatch = (type === 'all' || rowType === type);
-
-            if (dayMatch && trainerMatch && typeMatch) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Training Schedule | Sport HUB</title>
+    <meta name="description" content="Browse and book weekly gym classes by trainer and category." />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;800;900&display=swap" rel="stylesheet" />
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Archivo', 'ui-sans-serif', 'system-ui', 'sans-serif']
+                    },
+                    colors: {
+                        mono: {
+                            100: '#F2F2F4',
+                            200: '#FFFFFF'
+                        },
+                        ink: {
+                            900: '#141414',
+                            700: '#333333'
+                        },
+                        neon: '#AAFF00',
+                        deep: '#7AB800',
+                        violet: '#7D51FE'
+                    }
+                }
             }
-        });
-    }
+        };
+    </script>
+    
+    <style>
+        .slot .capacity-label {
+            opacity: 0;
+            transform: translateY(4px);
+            transition: all .3s ease;
+        }
+        
+        .slot:hover .capacity-label, 
+        .slot:focus-visible .capacity-label {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .slot.is-full {
+            filter: grayscale(1);
+            cursor: not-allowed;
+        }
+        
+        body.touch .slot .capacity-label {
+            opacity: 1;
+            transform: none;
+        }
+        
+        body.modal-open {
+            overflow: hidden;
+        }
+    </style>
+</head>
 
-    function resetFilters() {
-        document.getElementById('trainerSelect').value = 'all';
-        document.getElementById('typeSelect').value = 'all';
-        applyFilters();
-    }
-
-    function openClassBooking(title, time, coach, zone) {
-        document.getElementById('modalClassName').innerText = title;
-        document.getElementById('modalClassTime').innerText = time;
-        document.getElementById('modalClassCoach').innerText = coach;
-        document.getElementById('modalClassZone').innerText = zone;
-        const modal = new bootstrap.Modal(document.getElementById('scheduleBookingModal'));
-        modal.show();
-    }
-
-    function submitClassReservation() {
-        alert('Spot confirmed! We sent a reservation reminder to your contact.');
-        const modalEl = document.getElementById('scheduleBookingModal');
-        const modal = bootstrap.Modal.getInstance(modalEl);
-        if (modal) modal.hide();
-    }
-
-    // initial filter
-    applyFilters();
-</script>
+<body class="bg-mono-100 font-sans text-ink-900 antialiased">
+    <header class="bg-ink-900 text-white">
+        <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 md:py-14">
+            <p class="mb-3 inline-flex items-center gap-2 rounded-md bg-neon px-2.5 py-1 text-xs font-bold uppercase tracking-widest text-ink-900">
+                <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" />
+                </svg>
+                Week schedule
+            </p>
+            <h1 class="text-5xl font-black uppercase leading-[0.9] tracking-tighter sm:text-7xl md:text-8xl">
+                Train <span class="text-neon">Harder.</span><br />Book Faster.
+            </h1>
+            <p class="mt-4 max-w-xl text-base font-normal text-white/60">
+                Pick a class, check the room, lock in your spot.
+            </p>
+        </div>
+    </header>
+    
+    <main class="mx-auto max-w-7xl px-4 py-8 sm:px-6">
+        <!-- Filters -->
+        <section aria-label="Filters" class="mb-6 flex flex-col gap-3 rounded-lg bg-mono-200 p-4 shadow-sm sm:flex-row sm:items-end">
+            <div class="flex-1">
+                <label for="filter-trainer" class="mb-1 block text-xs font-semibold uppercase tracking-wider text-ink-700">Trainer</label>
+                <select id="filter-trainer" class="w-full rounded-md border border-ink-900/15 bg-mono-100 px-3 py-2.5 text-sm font-medium focus:border-violet focus:outline-none focus:ring-2 focus:ring-violet/30"></select>
+            </div>
+            <div class="flex-1">
+                <label for="filter-category" class="mb-1 block text-xs font-semibold uppercase tracking-wider text-ink-700">Category</label>
+                <select id="filter-category" class="w-full rounded-md border border-ink-900/15 bg-mono-100 px-3 py-2.5 text-sm font-medium focus:border-violet focus:outline-none focus:ring-2 focus:ring-violet/30"></select>
+            </div>
+            <button id="reset-filters" type="button" class="rounded-md bg-ink-900 px-5 py-2.5 text-sm font-bold uppercase tracking-wider text-white transition-colors hover:bg-violet focus:outline-none focus:ring-2 focus:ring-violet focus:ring-offset-2">
+                Reset filters
+            </button>
+        </section>
+        
+        <!-- Legend -->
+        <ul id="legend" class="mb-6 flex flex-wrap gap-x-4 gap-y-2 text-xs font-medium text-ink-700" aria-label="Category legend"></ul>
+        
+        <!-- Desktop grid -->
+        <section id="schedule-grid" class="hidden overflow-x-auto rounded-lg bg-mono-200 p-3 shadow-sm md:block" aria-label="Weekly schedule"></section>
+        
+        <!-- Mobile list -->
+        <section id="schedule-list" class="space-y-8 md:hidden" aria-label="Weekly schedule by day"></section>
+        
+        <p id="empty-state" class="hidden rounded-lg bg-mono-200 p-10 text-center text-sm font-medium text-ink-700">No classes match your filters.</p>
+    </main>
+    
+    <!-- Booking modal -->
+    <div id="modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div id="modal-backdrop" class="absolute inset-0 bg-ink-900/60 backdrop-blur-sm"></div>
+        <div class="relative w-full max-w-md overflow-hidden rounded-lg bg-mono-200 shadow-2xl">
+            <div id="modal-accent" class="h-2 w-full bg-neon"></div>
+            <button id="modal-close" type="button" aria-label="Close" class="absolute right-3 top-5 rounded-md p-2 text-ink-700 transition-colors hover:bg-mono-100 focus:outline-none focus:ring-2 focus:ring-violet">
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+                    <path d="M6 6l12 12M18 6 6 18" />
+                </svg>
+            </button>
+            <div class="p-6 sm:p-8">
+                <p id="modal-category-chip" class="mb-3 inline-block rounded-md px-2.5 py-1 text-xs font-bold uppercase tracking-widest"></p>
+                <h2 id="modal-title" class="text-4xl font-black uppercase tracking-tighter"></h2>
+                <dl class="mt-6 grid grid-cols-2 gap-3 text-sm">
+                    <div class="rounded-md bg-mono-100 p-3">
+                        <dt class="text-xs font-semibold uppercase tracking-wider text-ink-700/70">Day</dt>
+                        <dd id="modal-day" class="mt-0.5 font-bold"></dd>
+                    </div>
+                    <div class="rounded-md bg-mono-100 p-3">
+                        <dt class="text-xs font-semibold uppercase tracking-wider text-ink-700/70">Time</dt>
+                        <dd id="modal-time" class="mt-0.5 font-bold"></dd>
+                    </div>
+                    <div class="rounded-md bg-mono-100 p-3">
+                        <dt class="text-xs font-semibold uppercase tracking-wider text-ink-700/70">Trainer</dt>
+                        <dd id="modal-trainer" class="mt-0.5 font-bold"></dd>
+                    </div>
+                    <div class="rounded-md bg-mono-100 p-3">
+                        <dt class="text-xs font-semibold uppercase tracking-wider text-ink-700/70">Intensity</dt>
+                        <dd id="modal-difficulty" class="mt-0.5 flex items-center gap-0.5 font-bold"></dd>
+                    </div>
+                </dl>
+                <div class="mt-5">
+                    <div class="mb-1.5 flex justify-between text-xs font-semibold text-ink-700">
+                        <span>Availability</span>
+                        <span id="modal-spots"></span>
+                    </div>
+                    <div class="h-2 overflow-hidden rounded-full bg-mono-100">
+                        <div id="modal-bar" class="h-full rounded-full transition-all duration-500"></div>
+                    </div>
+                </div>
+                <button id="confirm-booking" type="button" class="mt-7 w-full rounded-md bg-neon py-4 text-lg font-black uppercase tracking-wider text-ink-900 shadow-lg shadow-neon/30 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-ink-900 focus:ring-offset-2 active:translate-y-0">
+                    Confirm Booking
+                </button>
+                <p id="modal-success" class="mt-4 hidden rounded-md bg-deep/15 px-3 py-2 text-center text-sm font-semibold text-ink-900" role="status"></p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        (function () {
+            'use strict';
+            var DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            var HOURS = [];
+            for (var h = 8; h <= 20; h++) HOURS.push(h);
+            
+            var CATEGORIES = {
+                HIIT: { bg: '#FBEFE6', fg: '#8A4B1E' },
+                Pilates: { bg: '#F6EAF2', fg: '#7A3A64' },
+                Yoga: { bg: '#E8F3EC', fg: '#2F6B45' },
+                Strength: { bg: '#E9EEF8', fg: '#33508A' },
+                Cycling: { bg: '#FAF4DC', fg: '#7A6410' },
+                Boxing: { bg: '#F7E7E7', fg: '#8A3333' }
+            };
+            
+            var TRAINERS = ['Andrii Melnyk', 'Olena Sydorenko', 'Denys Kravchenko', 'Tetiana Shevchenko', 'Roman Koval'];
+            
+            // Replace with JSON from an MVC endpoint, e.g. fetch('/Schedule/Slots')
+            // [day (0=Mon), hour, category, trainerIndex, difficulty (1-3), capacity, booked]
+            var SLOTS = [
+                [0, 8, 'HIIT', 1, 3, 15, 4],
+                [0, 10, 'Yoga', 2, 1, 20, 9],
+                [0, 12, 'Strength', 0, 2, 12, 12],
+                [0, 17, 'Cycling', 4, 2, 18, 15],
+                [0, 19, 'Boxing', 2, 3, 14, 6],
+                [1, 9, 'Pilates', 1, 1, 16, 5],
+                [1, 12, 'HIIT', 4, 3, 15, 14],
+                [1, 18, 'Strength', 0, 2, 12, 7],
+                [1, 20, 'Yoga', 3, 1, 20, 3],
+                [2, 8, 'Cycling', 4, 2, 18, 8],
+                [2, 11, 'Boxing', 2, 2, 14, 14],
+                [2, 13, 'Pilates', 1, 1, 16, 10],
+                [2, 17, 'HIIT', 0, 3, 15, 13],
+                [2, 19, 'Yoga', 3, 1, 20, 12],
+                [3, 9, 'Strength', 0, 3, 12, 3],
+                [3, 12, 'Cycling', 4, 1, 18, 17],
+                [3, 18, 'Boxing', 2, 3, 14, 9],
+                [3, 20, 'Pilates', 1, 2, 16, 4],
+                [4, 8, 'Yoga', 3, 1, 20, 6],
+                [4, 10, 'HIIT', 0, 2, 15, 15],
+                [4, 16, 'Strength', 0, 2, 12, 5],
+                [4, 18, 'Cycling', 4, 3, 18, 11],
+                [5, 9, 'HIIT', 4, 3, 15, 8],
+                [5, 11, 'Pilates', 1, 1, 16, 16],
+                [5, 13, 'Boxing', 2, 2, 14, 5],
+                [5, 15, 'Yoga', 3, 1, 20, 7],
+                [6, 10, 'Yoga', 3, 1, 20, 4],
+                [6, 12, 'Strength', 0, 2, 12, 9],
+                [6, 16, 'Cycling', 4, 2, 18, 12]
+            ].map(function (s, i) {
+                return {
+                    id: i + 1,
+                    day: s[0],
+                    hour: s[1],
+                    category: s[2],
+                    trainer: TRAINERS[s[3]],
+                    difficulty: s[4],
+                    capacity: s[5],
+                    booked: s[6]
+                };
+            });
+            
+            var $ = function (id) { return document.getElementById(id); };
+            
+            var els = {
+                trainer: $('filter-trainer'),
+                category: $('filter-category'),
+                reset: $('reset-filters'),
+                grid: $('schedule-grid'),
+                list: $('schedule-list'),
+                empty: $('empty-state'),
+                legend: $('legend'),
+                modal: $('modal'),
+                backdrop: $('modal-backdrop'),
+                close: $('modal-close'),
+                confirm: $('confirm-booking'),
+                success: $('modal-success')
+            };
+            
+            var activeSlot = null;
+            var lastFocus = null;
+            
+            function pad(n) { return (n < 10 ? '0' : '') + n; }
+            function timeLabel(h) { return pad(h) + ':00'; }
+            function left(s) { return s.capacity - s.booked; }
+            function isFull(s) { return left(s) <= 0; }
+            function ratio(s) { return s.booked / s.capacity; }
+            
+            function barColor(s) {
+                var r = ratio(s);
+                if (r >= 1) return '#E57373';
+                if (r >= 0.85) return '#EF9A9A';
+                if (r >= 0.6) return '#F2C94C';
+                return '#7AB800';
+            }
+            
+            function fireIcons(level, size) {
+                var out = '';
+                for (var i = 1; i <= 3; i++) {
+                    out += '<svg class="' + size + '" viewBox="0 0 24 24" fill="' + (i <= level ? 'currentColor' : 'none') + '" stroke="currentColor" stroke-width="2" stroke-linejoin="round" style="opacity:' + (i <= level ? 1 : 0.25) + '" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/></svg>';
+                }
+                return '<span class="inline-flex" role="img" aria-label="Intensity ' + level + ' of 3">' + out + '</span>';
+            }
+            
+            function slotCard(s, showTime) {
+                var c = CATEGORIES[s.category];
+                var full = isFull(s);
+                var el = document.createElement('button');
+                el.type = 'button';
+                el.className = 'slot group relative flex w-full flex-col justify-between gap-2 overflow-hidden rounded-md p-2.5 text-left transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet ' + (full ? 'is-full opacity-40' : 'cursor-pointer hover:-translate-y-1 hover:shadow-lg');
+                el.style.backgroundColor = c.bg;
+                el.style.color = c.fg;
+                el.setAttribute('aria-disabled', full ? 'true' : 'false');
+                el.setAttribute('aria-label', s.category + ' with ' + s.trainer + ', ' + DAYS[s.day] + ' ' + timeLabel(s.hour) + ', ' + (full ? 'full' : left(s) + ' spots left'));
+                el.innerHTML = '<div>' + 
+                    '<div class="flex items-start justify-between gap-1">' + 
+                    '<span class="text-sm font-extrabold uppercase leading-tight tracking-tight">' + s.category + '</span>' + 
+                    fireIcons(s.difficulty, 'h-3 w-3') + 
+                    '</div>' + 
+                    (showTime ? '<p class="mt-0.5 text-xs font-bold opacity-70">' + timeLabel(s.hour) + '</p>' : '') + 
+                    '<p class="mt-0.5 text-xs font-medium opacity-75">' + s.trainer + '</p>' + 
+                    '</div>' + 
+                    '<div>' + 
+                    '<p class="capacity-label mb-1 text-[11px] font-bold">' + (full ? 'Fully booked' : left(s) + '/' + s.capacity + ' spots left') + '</p>' + 
+                    '<div class="h-1.5 w-full overflow-hidden rounded-full bg-black/10">' + 
+                    '<div class="h-full rounded-full transition-all duration-500" style="width:' + Math.min(100, ratio(s) * 100) + '%;background:' + barColor(s) + '"></div>' + 
+                    '</div>' + 
+                    '</div>';
+                
+                if (!full) {
+                    el.addEventListener('click', function () { openModal(s, el); });
+                }
+                return el;
+            }
+            
+            function filtered() {
+                var t = els.trainer.value, c = els.category.value;
+                return SLOTS.filter(function (s) {
+                    return (!t || s.trainer === t) && (!c || s.category === c);
+                });
+            }
+            
+            function render() {
+                var slots = filtered();
+                els.empty.classList.toggle('hidden', slots.length > 0);
+                
+                // Desktop grid
+                var grid = document.createElement('div');
+                grid.className = 'grid min-w-[880px] gap-1.5';
+                grid.style.gridTemplateColumns = '64px repeat(7, minmax(0, 1fr))';
+                grid.appendChild(document.createElement('div'));
+                
+                DAYS.forEach(function (d) {
+                    var head = document.createElement('div');
+                    head.className = 'rounded-md bg-ink-900 px-2 py-2.5 text-center text-xs font-extrabold uppercase tracking-widest text-white';
+                    head.textContent = d.slice(0, 3);
+                    grid.appendChild(head);
+                });
+                
+                HOURS.forEach(function (h) {
+                    var label = document.createElement('div');
+                    label.className = 'pt-2 text-right text-xs font-bold text-ink-700/70 pr-2';
+                    label.textContent = timeLabel(h);
+                    grid.appendChild(label);
+                    
+                    DAYS.forEach(function (_, di) {
+                        var cell = document.createElement('div');
+                        cell.className = 'min-h-[92px] rounded-md bg-mono-100/70';
+                        var s = slots.filter(function (x) { return x.day === di && x.hour === h; })[0];
+                        if (s) {
+                            cell.className = 'min-h-[92px] flex';
+                            cell.appendChild(slotCard(s, false));
+                            cell.firstChild.classList.add('flex-1');
+                        }
+                        grid.appendChild(cell);
+                    });
+                });
+                
+                els.grid.innerHTML = '';
+                els.grid.appendChild(grid);
+                
+                // Mobile list
+                els.list.innerHTML = '';
+                DAYS.forEach(function (d, di) {
+                    var daySlots = slots.filter(function (s) { return s.day === di; }).sort(function (a, b) { return a.hour - b.hour; });
+                    if (!daySlots.length) return;
+                    
+                    var wrap = document.createElement('div');
+                    wrap.innerHTML = '<h2 class="mb-3 flex items-center gap-3 text-2xl font-black uppercase tracking-tighter"><span class="h-2.5 w-2.5 rounded-sm bg-neon ring-2 ring-ink-900"></span>' + d + '</h2>';
+                    var stack = document.createElement('div');
+                    stack.className = 'grid gap-2.5 sm:grid-cols-2';
+                    
+                    daySlots.forEach(function (s) {
+                        stack.appendChild(slotCard(s, true));
+                    });
+                    
+                    wrap.appendChild(stack);
+                    els.list.appendChild(wrap);
+                });
+            }
+            
+            function initFilters() {
+                els.trainer.innerHTML = '<option value="">All trainers</option>' + TRAINERS.map(function (t) { return '<option>' + t + '</option>'; }).join('');
+                els.category.innerHTML = '<option value="">All categories</option>' + Object.keys(CATEGORIES).map(function (c) { return '<option>' + c + '</option>'; }).join('');
+                els.legend.innerHTML = Object.keys(CATEGORIES).map(function (c) {
+                    return '<li class="inline-flex items-center gap-1.5"><span class="h-3 w-3 rounded-sm" style="background:' + CATEGORIES[c].bg + ';box-shadow:inset 0 0 0 1.5px ' + CATEGORIES[c].fg + '55"></span>' + c + '</li>';
+                }).join('') + '<li class="ml-auto hidden items-center gap-3 sm:inline-flex"><span class="inline-flex items-center gap-1"><i class="h-2 w-4 rounded-full" style="background:#7AB800"></i>Open</span><span class="inline-flex items-center gap-1"><i class="h-2 w-4 rounded-full" style="background:#F2C94C"></i>Filling</span><span class="inline-flex items-center gap-1"><i class="h-2 w-4 rounded-full" style="background:#E57373"></i>Almost full</span></li>';
+                
+                els.trainer.addEventListener('change', render);
+                els.category.addEventListener('change', render);
+                els.reset.addEventListener('click', function () {
+                    els.trainer.value = '';
+                    els.category.value = '';
+                    render();
+                });
+            }
+            
+            function openModal(s, trigger) {
+                activeSlot = s;
+                lastFocus = trigger;
+                var c = CATEGORIES[s.category];
+                $('modal-title').textContent = s.category;
+                var chip = $('modal-category-chip');
+                chip.textContent = 'Group class';
+                chip.style.background = c.bg;
+                chip.style.color = c.fg;
+                $('modal-day').textContent = DAYS[s.day];
+                $('modal-time').textContent = timeLabel(s.hour) + ' – ' + timeLabel(s.hour + 1);
+                $('modal-trainer').textContent = s.trainer;
+                $('modal-difficulty').innerHTML = fireIcons(s.difficulty, 'h-4 w-4');
+                $('modal-spots').textContent = left(s) + '/' + s.capacity + ' spots left';
+                
+                var bar = $('modal-bar');
+                bar.style.width = '0%';
+                bar.style.background = barColor(s);
+                requestAnimationFrame(function () {
+                    bar.style.width = Math.min(100, ratio(s) * 100) + '%';
+                });
+                
+                els.success.classList.add('hidden');
+                els.confirm.disabled = false;
+                els.confirm.textContent = 'Confirm Booking';
+                els.modal.classList.remove('hidden');
+                els.modal.classList.add('flex');
+                document.body.classList.add('modal-open');
+                els.confirm.focus();
+            }
+            
+            function closeModal() {
+                els.modal.classList.add('hidden');
+                els.modal.classList.remove('flex');
+                document.body.classList.remove('modal-open');
+                if (lastFocus) lastFocus.focus();
+                activeSlot = null;
+            }
+            
+            els.confirm.addEventListener('click', function () {
+                if (!activeSlot) return;
+                activeSlot.booked = Math.min(activeSlot.capacity, activeSlot.booked + 1);
+                // Replace with a POST to MVC controller, fetch('/Schedule/Book', { method: 'POST', ... })
+                els.confirm.disabled = true;
+                els.confirm.textContent = 'Booked';
+                els.success.textContent = "You're in! See you on " + DAYS[activeSlot.day] + ' at ' + timeLabel(activeSlot.hour) + '.';
+                els.success.classList.remove('hidden');
+                render();
+                setTimeout(closeModal, 1400);
+            });
+            
+            els.close.addEventListener('click', closeModal);
+            els.backdrop.addEventListener('click', closeModal);
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && !els.modal.classList.contains('hidden')) closeModal();
+            });
+            
+            if (window.matchMedia('(hover: none)').matches) document.body.classList.add('touch');
+            
+            initFilters();
+            render();
+        })();
+    </script>
+</body>
