@@ -2,7 +2,7 @@
     'use strict';
 
     var TOAST_MS = 3000;
-    var TRAINERS = ['Alex Rivera', 'Mia Chen', 'Jonas Weber', 'Sara Okafor', 'Leo Martins'];
+    var TRAINERS = ['Oleksandr Tkachenko', 'Anastasiia Kravchenko', 'Andrii Polishchuk', 'Mariia Bondarenko', 'Dmytro Boyko'];
     var SUBSCRIPTIONS = {
         valid: { active: true, left: 5, total: 12 },
         none: { active: false, left: 0, total: 0 }
@@ -63,7 +63,6 @@
 
         el.toasts.appendChild(toast);
 
-        // Запуск анімації появи (зсув і прозорість)
         requestAnimationFrame(function () {
             requestAnimationFrame(function () {
                 toast.classList.remove('translate-x-[120%]', 'opacity-0');
@@ -77,7 +76,6 @@
         function dismiss() {
             if (removed) return;
             removed = true;
-            // Анімація зникнення
             toast.classList.remove('translate-x-0', 'opacity-100');
             toast.classList.add('translate-x-[120%]', 'opacity-0');
             setTimeout(function () { toast.remove(); }, 500);
