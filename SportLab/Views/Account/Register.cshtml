@@ -1,23 +1,53 @@
 ﻿@{
     ViewData["Title"] = "Sign up Page";
+    var codeSent = TempData["GeneratedCode"] != null;
+    if (codeSent)
+    {
+        TempData.Keep("GeneratedCode");
+    }
 }
 
-<div class="container">
-    <h3>Log in</h3>
-    <form method="post">
-        <div class="mb-3">
-            <label>Email</label>
-            <input type="email" class="form-control" required>
+<link rel="stylesheet" href="~/css/page.css" asp-append-version="true" />
+
+@if (TempData["GeneratedCode"] != null)
+{
+    <script>
+        window.onload = function() {
+            alert("Verification code: @TempData["GeneratedCode"]");
+        };
+    </script>
+}
+
+<div class="login-page-wrapper">
+    <div class="login-card">
+        <h3 class="mb-3 text-center">SIGN UP</h3>
+
+        <form method="post" autocomplete="off">
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" value="@ViewBag.Email" required autocomplete="off">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" value="@ViewBag.Password" required autocomplete="new-password">
+            </div>
+
+            @if (codeSent)
+            {
+                <div class="mb-3">
+                    <label class="form-label">Code</label>
+                    <input type="text" name="code" class="form-control" placeholder="Enter 6-digit code" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 mb-3" name="action" value="verify">Verify & Register</button>
+            }
+            else
+            {
+                <button type="submit" class="btn btn-primary w-100 mb-3" name="action" value="send">Send Code</button>
+            }
+        </form>
+
+        <div class="text-center">
+            <h5 class="fs-6 text-muted">Already have an account? <a asp-controller="Account" asp-action="Login" class="text-primary fw-bold text-decoration-none">Log in</a></h5>
         </div>
-        <div class="mb-3">
-            <label>Password</label>
-            <input type="password" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label>Code</label>
-            <input type="number" class="form-control" required>
-        </div>
-        <input type="submit" class="btn btn-primary mb-3" value="Signup">
-    </form>
-    <h5>Already have an account? <a asp-controller="Account" asp-action="Login">Log in</a> </h5>
+    </div>
 </div>
