@@ -1,0 +1,258 @@
+/* ==========================================================================
+   SportLab - Shop & Cart Stylesheet
+   Developer 1: E-Commerce & Public Portal
+   ========================================================================== */
+
+.shop-hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0f172a 100%);
+    color: #ffffff;
+    border-radius: var(--sl-radius-lg, 1.25rem);
+    padding: 3rem 2rem;
+    margin-bottom: 2.5rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 30px -10px rgba(15, 23, 42, 0.35);
+}
+
+.shop-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(13, 110, 253, 0.25) 0%, rgba(16, 185, 129, 0.2) 60%, transparent 80%);
+    filter: blur(40px);
+    pointer-events: none;
+}
+
+.shop-filter-bar {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+    padding: 1rem 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.05);
+}
+
+.product-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: transform 0.25s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.05);
+    border-color: #cbd5e1;
+}
+
+.product-img-wrapper {
+    position: relative;
+    padding-top: 75%;
+    overflow: hidden;
+    background: #f8fafc;
+}
+
+.product-img-wrapper img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.product-card:hover .product-img-wrapper img {
+    transform: scale(1.06);
+}
+
+.product-category-chip {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(6px);
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.3rem 0.65rem;
+    border-radius: 50rem;
+    z-index: 2;
+}
+
+.product-stock-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.3rem 0.65rem;
+    border-radius: 50rem;
+    z-index: 2;
+}
+
+.product-card-body {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.product-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 0.4rem;
+    line-height: 1.35;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.product-title:hover {
+    color: #0d6efd;
+}
+
+.product-desc {
+    color: #64748b;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin-bottom: 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.product-price-row {
+    margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.product-price {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.product-currency {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0d6efd;
+}
+
+.btn-add-cart {
+    background: #0d6efd;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.88rem;
+    border-radius: 0.5rem;
+    padding: 0.45rem 0.85rem;
+    border: none;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.btn-add-cart:hover {
+    background: #0b5ed7;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
+}
+
+/* Product Details Page */
+.product-details-img {
+    border-radius: 1.25rem;
+    overflow: hidden;
+    box-shadow: 0 15px 30px -5px rgba(15, 23, 42, 0.12);
+    border: 1px solid #e2e8f0;
+}
+
+.quantity-stepper {
+    display: inline-flex;
+    align-items: center;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+.quantity-stepper button {
+    background: #f8fafc;
+    border: none;
+    padding: 0.6rem 0.9rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #334155;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.quantity-stepper button:hover {
+    background: #e2e8f0;
+}
+
+.quantity-stepper input {
+    width: 50px;
+    text-align: center;
+    border: none;
+    font-weight: 700;
+    color: #0f172a;
+    outline: none;
+}
+
+/* Cart Page */
+.cart-table th {
+    background: #f8fafc;
+    font-weight: 700;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #64748b;
+    padding: 1rem;
+}
+
+.cart-table td {
+    padding: 1.25rem 1rem;
+    vertical-align: middle;
+}
+
+.cart-img-thumb {
+    width: 65px;
+    height: 65px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    border: 1px solid #e2e8f0;
+}
+
+.cart-summary-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+    padding: 1.75rem;
+    box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.05);
+}
+
+/* Toast Alert for Cart */
+.cart-toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 1090;
+    min-width: 300px;
+}

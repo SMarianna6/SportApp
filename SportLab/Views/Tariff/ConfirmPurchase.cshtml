@@ -1,7 +1,7 @@
 @model SportLab.Models.Tariff
 
 @{
-    ViewData["Title"] = "Підтвердження придбання абонемента";
+    ViewData["Title"] = "Confirm Membership Purchase";
     var startDate = (DateTime)(ViewBag.StartDate ?? DateTime.Today);
     var endDate = (DateTime)(ViewBag.EndDate ?? DateTime.Today.AddDays(Model.Duration > 0 ? Model.Duration : 30));
 }
@@ -13,9 +13,9 @@
     <!-- Breadcrumb -->
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-decoration-none">Головна</a></li>
-            <li class="breadcrumb-item"><a asp-controller="Tariff" asp-action="Index" class="text-decoration-none">Тарифи</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Підтвердження придбання</li>
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-decoration-none">Home</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Tariff" asp-action="Index" class="text-decoration-none">Memberships</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Confirm Purchase</li>
         </ol>
     </nav>
 
@@ -28,8 +28,8 @@
                         <i class="bi bi-shield-lock-fill"></i>
                     </div>
                     <div>
-                        <h2 class="h4 fw-bold mb-1">Оформлення абонемента</h2>
-                        <p class="text-muted small mb-0">Введіть дані для активації вашої клубної картки</p>
+                        <h2 class="h4 fw-bold mb-1">Membership Checkout</h2>
+                        <p class="text-muted small mb-0">Enter your details to activate your SportLab club pass</p>
                     </div>
                 </div>
 
@@ -37,18 +37,18 @@
                     @Html.AntiForgeryToken()
                     <input type="hidden" name="tariffId" value="@Model.Id" />
 
-                    <h5 class="fw-bold mb-3 small text-uppercase text-muted">1. Контактні дані власника</h5>
+                    <h5 class="fw-bold mb-3 small text-uppercase text-muted">1. Customer Information</h5>
                     <div class="row g-3 mb-4">
                         <div class="col-md-12">
-                            <label for="customerName" class="form-label fw-semibold small">Прізвище, Ім'я та По батькові <span class="text-danger">*</span></label>
+                            <label for="customerName" class="form-label fw-semibold small">Full Name <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <span class="input-group-text bg-white"><i class="bi bi-person text-muted"></i></span>
-                                <input type="text" class="form-control" id="customerName" name="customerName" placeholder="Іваненко Петро Олексійович" required />
+                                <input type="text" class="form-control" id="customerName" name="customerName" placeholder="Alexander Smith" required />
                             </div>
                         </div>
 
                         <div class="col-md-6">
-                            <label for="customerPhone" class="form-label fw-semibold small">Номер телефону <span class="text-danger">*</span></label>
+                            <label for="customerPhone" class="form-label fw-semibold small">Phone Number <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <span class="input-group-text bg-white"><i class="bi bi-telephone text-muted"></i></span>
                                 <input type="tel" class="form-control" id="customerPhone" name="customerPhone" placeholder="+380 (97) 000-00-00" required />
@@ -56,38 +56,38 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label for="customerEmail" class="form-label fw-semibold small">Email (для електронного квитка) <span class="text-danger">*</span></label>
+                            <label for="customerEmail" class="form-label fw-semibold small">Email (for digital pass delivery) <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <span class="input-group-text bg-white"><i class="bi bi-envelope text-muted"></i></span>
-                                <input type="email" class="form-control" id="customerEmail" name="customerEmail" placeholder="petro@example.com" required />
+                                <input type="email" class="form-control" id="customerEmail" name="customerEmail" placeholder="client@example.com" required />
                             </div>
                         </div>
                     </div>
 
-                    <h5 class="fw-bold mb-3 small text-uppercase text-muted">2. Параметри активації</h5>
+                    <h5 class="fw-bold mb-3 small text-uppercase text-muted">2. Activation Details</h5>
                     <div class="row g-3 mb-4">
                         <div class="col-md-6">
-                            <label for="startDate" class="form-label fw-semibold small">Дата початку дії <span class="text-danger">*</span></label>
+                            <label for="startDate" class="form-label fw-semibold small">Start Date <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <span class="input-group-text bg-white"><i class="bi bi-calendar-check text-muted"></i></span>
                                 <input type="date" class="form-control" id="startDate" name="startDate" value="@startDate.ToString("yyyy-MM-dd")" min="@DateTime.Today.ToString("yyyy-MM-dd")" required />
                             </div>
-                            <span class="form-text text-muted small">Ви можете обрати старт сьогодні або у зручний для вас день.</span>
+                            <span class="form-text text-muted small">Choose today or any convenient start date.</span>
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold small">Термін дії</label>
+                            <label class="form-label fw-semibold small">Validity Period</label>
                             <div class="p-2 px-3 bg-light rounded border text-muted small">
-                                <strong class="text-dark">@Model.Duration днів</strong> (до <span id="summaryEndDate">@endDate.ToString("dd.MM.yyyy")</span>)
+                                <strong class="text-dark">@Model.Duration days</strong> (valid until <span id="summaryEndDate">@endDate.ToString("dd.MM.yyyy")</span>)
                             </div>
                         </div>
                     </div>
 
-                    <h5 class="fw-bold mb-3 small text-uppercase text-muted">3. Спосіб оплати</h5>
+                    <h5 class="fw-bold mb-3 small text-uppercase text-muted">3. Payment Method</h5>
                     <div class="payment-method-selector mb-4">
                         <div class="payment-method-card active" data-method="card">
                             <i class="bi bi-credit-card-2-front text-primary"></i>
-                            <span>Банківська картка</span>
+                            <span>Credit / Debit Card</span>
                         </div>
                         <div class="payment-method-card" data-method="applepay">
                             <i class="bi bi-apple text-dark"></i>
@@ -95,7 +95,7 @@
                         </div>
                         <div class="payment-method-card" data-method="desk">
                             <i class="bi bi-cash-stack text-success"></i>
-                            <span>На рецепції</span>
+                            <span>At Club Reception</span>
                         </div>
                     </div>
                     <input type="hidden" name="paymentMethod" id="pagePaymentMethod" value="card" />
@@ -103,16 +103,16 @@
                     <div class="form-check mb-4">
                         <input class="form-check-input" type="checkbox" id="pageAgree" checked required />
                         <label class="form-check-label small text-muted" for="pageAgree">
-                            Я ознайомлений(а) та погоджуюсь з <a href="#" class="text-primary text-decoration-none">правилами клубу SportLab</a> та обробкою персональних даних.
+                            I agree to the <a href="#" class="text-primary text-decoration-none">SportLab rules & terms</a> and personal data processing policy.
                         </label>
                     </div>
 
                     <div class="d-flex flex-column flex-sm-row gap-3 align-items-center">
                         <button type="submit" class="btn btn-primary px-5 py-3 rounded-pill fw-bold w-100 shadow-sm">
-                            <i class="bi bi-check2-circle me-1"></i> Підтвердити придбання та сплатити
+                            <i class="bi bi-check2-circle me-1"></i> Confirm Purchase & Pay
                         </button>
                         <a asp-action="Index" class="btn btn-outline-secondary px-4 py-3 rounded-pill w-100 w-sm-auto">
-                            Повернутися
+                            Back to Plans
                         </a>
                     </div>
                 </form>
@@ -125,30 +125,30 @@
                 <span class="badge bg-primary-subtle text-primary fw-bold text-uppercase mb-2">@Model.Type</span>
                 <h3 class="fw-bold mb-1">@Model.Name</h3>
                 <div class="text-muted small mb-4">
-                    <i class="bi bi-clock-history me-1 text-primary"></i> Термін: <strong>@Model.Duration днів</strong>
+                    <i class="bi bi-clock-history me-1 text-primary"></i> Duration: <strong>@Model.Duration days</strong>
                 </div>
 
                 <div class="p-3 bg-light rounded-3 mb-4 border">
                     <div class="d-flex justify-content-between mb-2">
-                        <span class="text-muted">Вартість абонемента:</span>
+                        <span class="text-muted">Membership Price:</span>
                         <span class="fw-bold">@Model.Price.ToString("N0") ₴</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
-                        <span class="text-muted">ПДВ / Комісія:</span>
-                        <span class="text-success fw-semibold">0 ₴ (включено)</span>
+                        <span class="text-muted">Taxes & Fees:</span>
+                        <span class="text-success fw-semibold">0 ₴ (Included)</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
-                        <span class="text-muted">Ввідний інструктаж:</span>
-                        <span class="badge bg-success-subtle text-success">Безкоштовно</span>
+                        <span class="text-muted">Introductory Workout:</span>
+                        <span class="badge bg-success-subtle text-success">Complimentary</span>
                     </div>
                     <hr class="my-2">
                     <div class="d-flex justify-content-between align-items-baseline">
-                        <span class="fw-bold fs-5">Разом до сплати:</span>
+                        <span class="fw-bold fs-5">Total to Pay:</span>
                         <span class="fw-bold fs-3 text-primary">@Model.Price.ToString("N0") ₴</span>
                     </div>
                 </div>
 
-                <h6 class="fw-bold text-uppercase small text-muted mb-3">Включені послуги та бонуси:</h6>
+                <h6 class="fw-bold text-uppercase small text-muted mb-3">Included Services & Perks:</h6>
                 <ul class="tariff-features-list mb-4">
                     @{
                         var services = (Model.Description ?? "")
@@ -160,11 +160,11 @@
                         {
                             <li class="tariff-feature-item">
                                 <i class="bi bi-check-circle-fill"></i>
-                                <span>Безлімітне відвідування залу</span>
+                                <span>Unlimited gym & cardio access</span>
                             </li>
                             <li class="tariff-feature-item">
                                 <i class="bi bi-check-circle-fill"></i>
-                                <span>Доступ до душових та роздягалень</span>
+                                <span>Modern locker rooms & shower facilities</span>
                             </li>
                         }
                         else
@@ -183,8 +183,8 @@
                 <div class="d-flex align-items-center gap-3 p-3 bg-success-subtle rounded-3 text-success">
                     <i class="bi bi-shield-check fs-2"></i>
                     <div class="small">
-                        <strong>Гарантія безпеки</strong><br>
-                        Миттєва генерація цифрової картки в особистому кабінеті відразу після оформлення.
+                        <strong>Security Guarantee</strong><br>
+                        Instant digital membership card generation in your profile upon confirmation.
                     </div>
                 </div>
             </div>
@@ -195,7 +195,6 @@
 @section Scripts {
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // Payment methods selector
         const cards = document.querySelectorAll(".payment-method-card");
         const methodInput = document.getElementById("pagePaymentMethod");
 
@@ -207,7 +206,6 @@
             });
         });
 
-        // Date recalculation
         const startDateInput = document.getElementById("startDate");
         const summaryEndDate = document.getElementById("summaryEndDate");
         const duration = @Model.Duration;

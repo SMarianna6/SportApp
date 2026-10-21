@@ -58,7 +58,7 @@ namespace SportLab.Controllers
             {
                 user = new User
                 {
-                    Name = string.IsNullOrWhiteSpace(customerName) ? "Клієнт SportLab" : customerName.Trim(),
+                    Name = string.IsNullOrWhiteSpace(customerName) ? "SportLab Client" : customerName.Trim(),
                     Email = string.IsNullOrWhiteSpace(customerEmail) ? $"client_{Guid.NewGuid().ToString()[..8]}@sportlab.ua" : customerEmail.Trim(),
                     Password = "UserPass123!",
                     Role = "Client",
@@ -89,13 +89,13 @@ namespace SportLab.Controllers
         {
             if (request == null || request.TariffId <= 0)
             {
-                return Json(new { success = false, message = "Некоректні дані запиту." });
+                return Json(new { success = false, message = "Invalid request payload." });
             }
 
             var tariff = _context.Tariffs.Find(request.TariffId);
             if (tariff == null)
             {
-                return Json(new { success = false, message = "Обраний тариф не знайдено." });
+                return Json(new { success = false, message = "Selected membership plan was not found." });
             }
 
             var startDate = request.StartDate ?? DateTime.Today;
@@ -106,7 +106,7 @@ namespace SportLab.Controllers
             {
                 user = new User
                 {
-                    Name = string.IsNullOrWhiteSpace(request.FullName) ? "Клієнт SportLab" : request.FullName.Trim(),
+                    Name = string.IsNullOrWhiteSpace(request.FullName) ? "SportLab Client" : request.FullName.Trim(),
                     Email = string.IsNullOrWhiteSpace(request.Email) ? $"guest_{Guid.NewGuid().ToString()[..8]}@sportlab.ua" : request.Email.Trim(),
                     Password = "UserPass123!",
                     Role = "Client",
@@ -137,7 +137,7 @@ namespace SportLab.Controllers
                 startDate = startDate.ToString("dd.MM.yyyy"),
                 endDate = endDate.ToString("dd.MM.yyyy"),
                 userName = user.Name,
-                message = "Абонемент успішно придбано та активовано!"
+                message = "Membership successfully activated!"
             });
         }
 
@@ -218,35 +218,35 @@ namespace SportLab.Controllers
             {
                 new Tariff
                 {
-                    Name = "Базовий Старт",
-                    Type = "Базовий",
+                    Name = "Basic Start",
+                    Type = "Basic",
                     Price = 850,
                     Duration = 30,
-                    Description = "Доступ до тренажерного залу (07:00 - 16:00)\nВвідний інструктаж чергового тренера\nШафка для речей та душові кабіни\nМобільний додаток для трекінгу тренувань\nБезкоштовна питна вода"
+                    Description = "Full gym access (07:00 - 16:00)\nIntroductory coach orientation\nPersonal locker & shower facilities\nMobile workout tracking app\nComplimentary fresh drinking water"
                 },
                 new Tariff
                 {
-                    Name = "Безліміт Про",
-                    Type = "Популярний",
+                    Name = "Unlimited Pro",
+                    Type = "Popular",
                     Price = 1450,
                     Duration = 30,
-                    Description = "Повний безлімітний доступ до залу 24/7\nУсі групові програми (CrossFit, TRX, Yoga)\nSPA-зона: фінська сауна та джакузі\nГостьовий візит для друга (2 рази на місяць)\nБезкоштовна заморозка абонемента до 7 днів"
+                    Description = "24/7 Unlimited access to all workout zones\nAll group classes included (CrossFit, TRX, Yoga)\nSpa & Recovery: Finnish sauna & jacuzzi\n2 Free guest passes per month\nFree membership freeze up to 7 days"
                 },
                 new Tariff
                 {
-                    Name = "Студентський Драйв",
-                    Type = "Студентський",
+                    Name = "Student Drive",
+                    Type = "Student",
                     Price = 650,
                     Duration = 30,
-                    Description = "Доступ у тренажерну зону з 09:00 до 18:00\nГрупові функціональні тренування\nСпортивні комфортні роздягальні\nДіє за умови пред'явлення студентського квитка\nЗнижка 10% на спортивне харчування в барі"
+                    Description = "Gym access between 09:00 - 18:00\nGroup functional training sessions\nModern comfortable changing rooms\nValid with active student ID\n10% discount at the SportLab nutrition bar"
                 },
                 new Tariff
                 {
-                    Name = "Річний VIP Безліміт",
-                    Type = "Преміум",
+                    Name = "Annual VIP Unlimited",
+                    Type = "Premium",
                     Price = 11900,
                     Duration = 365,
-                    Description = "Необмежений доступ до всіх зон клубу цілий рік\n5 індивідуальних занять з персональним тренером\nІндивідуальна постійна шафка та свіжий рушник щодня\nПерсональна консультація лікаря та нутриціолога\nЗаморозка абонемента до 30 днів без втрати терміну\nЗнижка 15% у фітнес-магазині SportLab"
+                    Description = "All-inclusive 365-day pass with no restrictions\n5 One-on-one sessions with a master trainer\nDedicated personal locker & fresh towel daily\nCertified doctor & nutritionist assessment\nUp to 30 days membership freeze protection\n15% discount at the SportLab store"
                 }
             };
 
