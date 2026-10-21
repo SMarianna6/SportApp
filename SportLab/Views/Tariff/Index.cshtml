@@ -33,16 +33,16 @@
         <button type="button" class="filter-pill active" data-filter="all">
             <i class="bi bi-grid-fill me-1"></i> Всі абонементи
         </button>
-        <button type="button" class="filter-pill" data-filter="популярний">
+        <button type="button" class="filter-pill" data-filter="popular">
             <i class="bi bi-star-fill text-warning me-1"></i> Популярні
         </button>
-        <button type="button" class="filter-pill" data-filter="базовий">
+        <button type="button" class="filter-pill" data-filter="basic">
             <i class="bi bi-check2-circle me-1"></i> Базові
         </button>
-        <button type="button" class="filter-pill" data-filter="преміум">
+        <button type="button" class="filter-pill" data-filter="premium">
             <i class="bi bi-gem me-1"></i> Преміум / Річні
         </button>
-        <button type="button" class="filter-pill" data-filter="студентський">
+        <button type="button" class="filter-pill" data-filter="student">
             <i class="bi bi-mortarboard-fill me-1"></i> Студентські
         </button>
     </div>
@@ -64,19 +64,52 @@
         {
             @foreach (var item in Model)
             {
-                var typeLower = (item.Type ?? "").ToLower();
-                var isFeatured = typeLower.Contains("популяр") || typeLower.Contains("хіт") || typeLower.Contains("про");
-                var isVip = typeLower.Contains("преміум") || typeLower.Contains("vip") || item.Price >= 5000;
-                var isStudent = typeLower.Contains("студент");
+                var fullSearchText = $"{(item.Type ?? "")} {(item.Name ?? "")} {(item.Description ?? "")}".ToLowerInvariant();
+                var cardCategories = new List<string> { "all" };
+
+                // Student detection (Ukrainian & English keywords)
+                if (fullSearchText.Contains("студент") || fullSearchText.Contains("student") || fullSearchText.Contains("учен") || fullSearchText.Contains("youth"))
+                {
+                    cardCategories.Add("student");
+                }
+
+                // Basic detection (Ukrainian & English keywords or lower price tier)
+                if (fullSearchText.Contains("базов") || fullSearchText.Contains("basic") || fullSearchText.Contains("стандарт") || fullSearchText.Contains("standard") || fullSearchText.Contains("start") || fullSearchText.Contains("старт") || (item.Price < 1000 && !cardCategories.Contains("student")))
+                {
+                    cardCategories.Add("basic");
+                }
+
+                // Popular / Pro detection
+                if (fullSearchText.Contains("популяр") || fullSearchText.Contains("popular") || fullSearchText.Contains("про") || fullSearchText.Contains("pro") || fullSearchText.Contains("хіт") || fullSearchText.Contains("hit") || fullSearchText.Contains("безліміт") || fullSearchText.Contains("unlimited"))
+                {
+                    cardCategories.Add("popular");
+                }
+
+                // Premium / VIP / Elite / Annual detection
+                if (fullSearchText.Contains("преміум") || fullSearchText.Contains("premium") || fullSearchText.Contains("vip") || fullSearchText.Contains("elite") || fullSearchText.Contains("еліт") || fullSearchText.Contains("річн") || fullSearchText.Contains("annual") || fullSearchText.Contains("year") || item.Price >= 3000 || item.Duration >= 180)
+                {
+                    cardCategories.Add("premium");
+                }
+
+                // Fallback: ensure every card is categorized
+                if (cardCategories.Count == 1)
+                {
+                    cardCategories.Add("basic");
+                }
+
+                var isStudent = cardCategories.Contains("student");
+                var isFeatured = cardCategories.Contains("popular");
+                var isVip = cardCategories.Contains("premium");
 
                 string iconClass = "bi-fire";
                 if (isVip) iconClass = "bi-gem";
                 else if (isFeatured) iconClass = "bi-lightning-charge-fill";
                 else if (isStudent) iconClass = "bi-mortarboard-fill";
 
-                string cardModifier = isFeatured ? "featured" : (isVip ? "vip" : "");
+                string cardModifier = isFeatured ? "featured" : (isVip ? "vip" : (isStudent ? "student" : ""));
+                string categoriesAttr = string.Join(" ", cardCategories);
 
-                <div class="col-lg-4 col-md-6 tariff-card-col" data-category="@typeLower">
+                <div class="col-lg-4 col-md-6 tariff-card-col" data-categories="@categoriesAttr">
                     <div class="tariff-card @cardModifier">
                         @if (isFeatured)
                         {
@@ -89,7 +122,7 @@
                                 <div class="tariff-icon-wrapper">
                                     <i class="bi @iconClass"></i>
                                 </div>
-                                <span class="tariff-badge-type">@item.Type</span>
+                                <span class="tariff-badge-type">@(isStudent ? "Студентський" : (isVip ? "Преміум" : (isFeatured ? "Популярний" : item.Type)))</span>
                             </div>
 
                             <h3 class="tariff-title">@item.Name</h3>
@@ -167,6 +200,18 @@
                     </div>
                 </div>
             }
+
+            <!-- Empty Filter State (displayed if no cards match a chosen filter) -->
+            <div class="col-12 text-center py-4 d-none" id="filterEmptyState">
+                <div class="p-4 bg-white rounded-4 border shadow-sm">
+                    <i class="bi bi-funnel text-primary fs-1 mb-2 d-block"></i>
+                    <h5 class="fw-bold text-dark">У цій категорії поки що немає тарифів</h5>
+                    <p class="text-muted small mb-3">Спробуйте обрати іншу категорію або переглянути всі доступні абонементи.</p>
+                    <button type="button" class="btn btn-primary btn-sm rounded-pill px-4 py-2 fw-semibold" onclick="document.querySelector('[data-filter=all]').click();">
+                        <i class="bi bi-grid-fill me-1"></i> Показати всі абонементи
+                    </button>
+                </div>
+            </div>
         }
     </div>
 
@@ -370,22 +415,35 @@
         // ----------------------------------------------------
         const filterPills = document.querySelectorAll(".filter-pill");
         const cards = document.querySelectorAll(".tariff-card-col");
+        const emptyState = document.getElementById("filterEmptyState");
 
         filterPills.forEach(pill => {
             pill.addEventListener("click", function () {
                 filterPills.forEach(p => p.classList.remove("active"));
                 this.classList.add("active");
 
-                const filter = this.getAttribute("data-filter").toLowerCase();
+                const selectedFilter = this.getAttribute("data-filter").toLowerCase();
+                let visibleCount = 0;
 
                 cards.forEach(card => {
-                    const category = (card.getAttribute("data-category") || "").toLowerCase();
-                    if (filter === "all" || category.includes(filter)) {
+                    const rawCategories = card.getAttribute("data-categories") || "";
+                    const categoriesList = rawCategories.toLowerCase().split(/\s+/);
+
+                    if (selectedFilter === "all" || categoriesList.includes(selectedFilter)) {
                         card.style.display = "";
+                        visibleCount++;
                     } else {
                         card.style.display = "none";
                     }
                 });
+
+                if (emptyState) {
+                    if (visibleCount === 0) {
+                        emptyState.classList.remove("d-none");
+                    } else {
+                        emptyState.classList.add("d-none");
+                    }
+                }
             });
         });
 

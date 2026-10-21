@@ -185,6 +185,16 @@
     color: #b45309;
 }
 
+.tariff-card.student .tariff-icon-wrapper {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.tariff-card.student .tariff-badge-type {
+    background: #dcfce7;
+    color: #15803d;
+}
+
 .tariff-title {
     font-size: 1.4rem;
     font-weight: 700;
