@@ -1,43 +1,277 @@
-﻿@{
-    ViewData["Title"] = "Client Reviews";
+@model IEnumerable<SportLab.Models.Review>
+
+@{
+    ViewData["Title"] = "Member Reviews - SportLab";
+    var avgRating = ViewBag.AverageRating ?? 4.9;
+    var totalReviews = ViewBag.TotalReviews ?? Model.Count();
+    var filterRating = ViewBag.FilterRating as int?;
 }
 
-<div class="container mt-4">
-    <h2 class="mb-4 text-center">What Our Clients Say</h2>
-    <p class="text-center text-muted mb-5">Real stories from our fitness community.</p>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
-    <div class="row g-4">
-        <div class="col-md-4">
-            <div class="card h-100 shadow-sm border-0 bg-light">
-                <div class="card-body">
-                    <div class="text-warning mb-2">★★★★★</div>
-                    <h5 class="fw-bold">Best gym in the city!</h5>
-                    <p class="card-text text-muted">Spacious, clean, and never feels overcrowded even during peak hours. The equipment is top-notch.</p>
-                    <p class="mb-0 fw-bold small">- Anton P.</p>
-                </div>
-            </div>
+<style>
+    .star-rating-selector i {
+        font-size: 1.85rem;
+        cursor: pointer;
+        color: #cbd5e1;
+        transition: color 0.15s ease, transform 0.15s ease;
+    }
+    .star-rating-selector i.active,
+    .star-rating-selector i.hovered {
+        color: #f59e0b;
+        transform: scale(1.1);
+    }
+    .review-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        border: 1px solid #e2e8f0;
+    }
+    .review-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 20px -5px rgba(15, 23, 42, 0.08);
+        border-color: #cbd5e1;
+    }
+    .avatar-circle {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #0d6efd, #0a58ca);
+        color: #ffffff;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+    }
+</style>
+
+<div class="container my-5">
+    <!-- Header Hero -->
+    <div class="text-center mb-5">
+        <span class="badge bg-primary-subtle text-primary fw-bold text-uppercase px-3 py-2 rounded-pill mb-2">
+            <i class="bi bi-chat-heart-fill text-danger me-1"></i> Community Trust & Feedback
+        </span>
+        <h1 class="display-5 fw-bold text-dark mb-2">Member Reviews & Experiences</h1>
+        <p class="lead text-muted mx-auto" style="max-width: 650px;">
+            Real testimonials from our athletes, powerlifters, and fitness enthusiasts at SportLab.
+        </p>
+    </div>
+
+    <!-- Feedback Alerts -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show rounded-4 shadow-sm mb-4" role="alert">
+            <i class="bi bi-check-circle-fill me-2 fs-5 align-middle"></i>
+            <strong>@TempData["SuccessMessage"]</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-
-        <div class="col-md-4">
-            <div class="card h-100 shadow-sm border-0 bg-light">
-                <div class="card-body">
-                    <div class="text-warning mb-2">★★★★★</div>
-                    <h5 class="fw-bold">Amazing trainers</h5>
-                    <p class="card-text text-muted">Iryna Boyko is a phenomenal powerlifting coach. She completely transformed my approach to heavy weights.</p>
-                    <p class="mb-0 fw-bold small">- Olena M.</p>
-                </div>
-            </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show rounded-4 shadow-sm mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2 fs-5 align-middle"></i>
+            <strong>@TempData["ErrorMessage"]</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
+    }
 
-        <div class="col-md-4">
-            <div class="card h-100 shadow-sm border-0 bg-light">
-                <div class="card-body">
-                    <div class="text-warning mb-2">★★★★☆</div>
-                    <h5 class="fw-bold">Great shop selection</h5>
-                    <p class="card-text text-muted">Love that I can buy protein and aminos right at the front desk. Very convenient after a hard workout.</p>
-                    <p class="mb-0 fw-bold small">- Dmytro S.</p>
+    <!-- Rating Summary & Filter Bar -->
+    <div class="card bg-white border-0 shadow-sm rounded-4 p-4 mb-5">
+        <div class="row align-items-center g-4">
+            <div class="col-md-4 text-center border-end-md">
+                <div class="display-4 fw-extrabold text-dark mb-1">@avgRating</div>
+                <div class="text-warning fs-5 mb-1">
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                </div>
+                <span class="text-muted small">Based on @totalReviews verified reviews</span>
+            </div>
+
+            <div class="col-md-8">
+                <span class="text-muted small fw-bold text-uppercase d-block mb-2">Filter by Star Rating:</span>
+                <div class="d-flex flex-wrap gap-2">
+                    <a asp-action="Index" class="btn btn-sm rounded-pill px-3 @(!filterRating.HasValue ? "btn-dark fw-bold" : "btn-outline-secondary")">
+                        All Reviews (@totalReviews)
+                    </a>
+                    <a asp-action="Index" asp-route-filterRating="5" class="btn btn-sm rounded-pill px-3 @(filterRating == 5 ? "btn-dark fw-bold" : "btn-outline-secondary")">
+                        <i class="bi bi-star-fill text-warning me-1"></i> 5 Stars
+                    </a>
+                    <a asp-action="Index" asp-route-filterRating="4" class="btn btn-sm rounded-pill px-3 @(filterRating == 4 ? "btn-dark fw-bold" : "btn-outline-secondary")">
+                        <i class="bi bi-star-fill text-warning me-1"></i> 4 Stars
+                    </a>
+                    <a asp-action="Index" asp-route-filterRating="3" class="btn btn-sm rounded-pill px-3 @(filterRating == 3 ? "btn-dark fw-bold" : "btn-outline-secondary")">
+                        <i class="bi bi-star-fill text-warning me-1"></i> 3 Stars
+                    </a>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="row g-5">
+        <!-- Left: Write a Review Form -->
+        <div class="col-lg-5">
+            <div class="card bg-white border rounded-4 shadow-sm p-4 p-md-4 sticky-top" style="top: 2rem;">
+                <h4 class="fw-bold mb-1">Share Your Experience</h4>
+                <p class="text-muted small mb-4">Your feedback helps us continuously improve our facilities and training programs.</p>
+
+                <form asp-action="Create" method="post" id="reviewForm">
+                    @Html.AntiForgeryToken()
+
+                    <!-- Star Rating Selector -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold small d-block">Overall Rating <span class="text-danger">*</span></label>
+                        <div class="star-rating-selector d-flex align-items-center gap-2 mb-1" id="starContainer">
+                            <i class="bi bi-star-fill" data-score="1"></i>
+                            <i class="bi bi-star-fill" data-score="2"></i>
+                            <i class="bi bi-star-fill" data-score="3"></i>
+                            <i class="bi bi-star-fill" data-score="4"></i>
+                            <i class="bi bi-star-fill active" data-score="5"></i>
+                        </div>
+                        <input type="hidden" name="rating" id="ratingInput" value="5" />
+                        <span class="small fw-semibold text-primary" id="ratingScoreText">5/5 - Outstanding!</span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="authorName" class="form-label fw-semibold small">Your Name <span class="text-danger">*</span></label>
+                        <input type="text" name="authorName" id="authorName" class="form-control" placeholder="e.g. John Doe" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="authorEmail" class="form-label fw-semibold small">Email Address</label>
+                        <input type="email" name="authorEmail" id="authorEmail" class="form-control" placeholder="john@example.com" />
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="comment" class="form-label fw-semibold small">Your Review <span class="text-danger">*</span></label>
+                        <textarea name="comment" id="comment" rows="4" class="form-control" placeholder="Tell us about the trainers, equipment, classes, or atmosphere..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary rounded-pill w-100 py-2 fw-bold shadow-sm">
+                        <i class="bi bi-send me-1"></i> Submit Review
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right: Published Reviews List -->
+        <div class="col-lg-7">
+            <h4 class="fw-bold mb-4">Published Reviews (@Model.Count())</h4>
+
+            @if (!Model.Any())
+            {
+                <div class="text-center py-5 bg-white rounded-4 border p-4">
+                    <i class="bi bi-chat-square-text display-4 text-muted mb-3 d-block"></i>
+                    <h5 class="fw-bold">No reviews found</h5>
+                    <p class="text-muted small">Be the first to share your thoughts about SportLab!</p>
+                </div>
+            }
+            else
+            {
+                <div class="d-flex flex-column gap-3">
+                    @foreach (var review in Model)
+                    {
+                        var userName = review.User?.Name ?? "Member";
+                        var initial = !string.IsNullOrWhiteSpace(userName) ? userName.Substring(0, 1).ToUpper() : "M";
+
+                        <div class="card review-card bg-white rounded-4 p-4 shadow-sm">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="avatar-circle">
+                                        @initial
+                                    </div>
+                                    <div>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <h6 class="fw-bold mb-0 text-dark">@userName</h6>
+                                            <span class="badge bg-success-subtle text-success small py-1 px-2 rounded-pill">
+                                                <i class="bi bi-patch-check-fill me-1"></i> Verified Athlete
+                                            </span>
+                                        </div>
+                                        <span class="text-muted small">@review.CreatedDate.ToString("dd MMM yyyy")</span>
+                                    </div>
+                                </div>
+
+                                <div class="text-warning">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        if (i <= review.Rating)
+                                        {
+                                            <i class="bi bi-star-fill"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-star text-secondary"></i>
+                                        }
+                                    }
+                                </div>
+                            </div>
+
+                            <p class="text-muted mb-0" style="line-height: 1.6;">
+                                @review.Comment
+                            </p>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const starIcons = document.querySelectorAll("#starContainer i");
+        const ratingInput = document.getElementById("ratingInput");
+        const ratingText = document.getElementById("ratingScoreText");
+
+        const descriptions = {
+            1: "1/5 - Poor",
+            2: "2/5 - Fair",
+            3: "3/5 - Good",
+            4: "4/5 - Very Good",
+            5: "5/5 - Outstanding!"
+        };
+
+        function setStars(score) {
+            starIcons.forEach(icon => {
+                const s = parseInt(icon.getAttribute("data-score"));
+                if (s <= score) {
+                    icon.classList.add("active");
+                } else {
+                    icon.classList.remove("active");
+                }
+            });
+            ratingInput.value = score;
+            ratingText.textContent = descriptions[score] || `${score}/5`;
+        }
+
+        starIcons.forEach(icon => {
+            icon.addEventListener("click", function () {
+                const score = parseInt(this.getAttribute("data-score"));
+                setStars(score);
+            });
+
+            icon.addEventListener("mouseenter", function () {
+                const score = parseInt(this.getAttribute("data-score"));
+                starIcons.forEach(i => {
+                    const s = parseInt(i.getAttribute("data-score"));
+                    if (s <= score) {
+                        i.classList.add("hovered");
+                    } else {
+                        i.classList.remove("hovered");
+                    }
+                });
+            });
+
+            icon.addEventListener("mouseleave", function () {
+                starIcons.forEach(i => i.classList.remove("hovered"));
+            });
+        });
+
+        // Set initial 5 stars
+        setStars(5);
+    });
+</script>
+}
