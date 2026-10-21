@@ -8,5 +8,6 @@ namespace SportLab.Controllers
         {
             return View();
         }
+
     }
 }

@@ -14,6 +14,16 @@ namespace SportLab.Controllers
             return View();
         }
 
+        public IActionResult Clients()
+        {
+            return View();
+        }
+
+        public IActionResult Settings()
+        {
+            return View();
+        }
+
         public IActionResult Index()
         {
             return View();

@@ -1,22 +1,25 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - SportHUB</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <script>
         tailwind.config = {
+            safelist: ['animate-toast-in', 'animate-toast-out', 'bg-neon', 'text-ink', 'bg-ink/30', 'bg-red-600', 'bg-black/30', 'text-white'],
             theme: {
                 extend: {
                     fontFamily: { sans: ['Archivo', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
                     colors: {
+                        mono: { DEFAULT: '#F2F2F4', 100: '#F2F2F4', 200: '#FFFFFF' },
+                        ink: { DEFAULT: '#141414', 900: '#141414', 700: '#333333' },
                         shell: '#141414',
                         main: '#1a1a1a',
                         card: '#333333',
-                        mono: '#F2F2F4',
                         neon: '#AAFF00',
                         violet: '#7D51FE'
                     }
@@ -36,6 +39,10 @@
         body.collapsed .nav-link { justify-content: center; padding-left: 0; padding-right: 0; }
         .nav-link[aria-current="page"] { color: #AAFF00; background: #1c1c1c; box-shadow: inset 4px 0 0 #AAFF00; }
     </style>
+    
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body class="bg-main font-sans text-white antialiased">
     <!-- Mobile overlay -->
@@ -58,47 +65,46 @@
         <nav class="mt-4 flex-1 overflow-y-auto" aria-label="Main">
             <ul class="space-y-1">
                 <li>
-                    <a href="@Url.Action("Trainer", "Profile")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon" title="Dashboard">
+                    <a href="@Url.Action("Trainer", "Profile")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon @(ViewContext.RouteData.Values["action"]?.ToString() == "Trainer" ? "text-neon bg-[#1c1c1c] shadow-[inset_4px_0_0_#AAFF00]" : "")" title="Dashboard">
                         <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
                         <span class="nav-label">Dashboard</span>
                     </a>
                 </li>
                 <li>
-                    <a href="@Url.Action("Index", "Schedule")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon" title="Schedule">
+                    <a href="@Url.Action("Index", "Schedule")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon @(ViewContext.RouteData.Values["controller"]?.ToString() == "Schedule" ? "text-neon bg-[#1c1c1c] shadow-[inset_4px_0_0_#AAFF00]" : "")" title="Schedule">
                         <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
                         <span class="nav-label">Schedule</span>
                     </a>
                 </li>
-
+                <!-- ONLY TRAINERS (Clients) -->
                 @if (ViewContext.RouteData.Values["action"]?.ToString() == "Trainer" || ViewContext.RouteData.Values["action"]?.ToString() == "Clients")
                 {
                     <li>
-                        <a href="@Url.Action("Clients", "Profile")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon" title="Clients">
+                        <a href="@Url.Action("Clients", "Profile")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon @(ViewContext.RouteData.Values["action"]?.ToString() == "Clients" ? "text-neon bg-[#1c1c1c] shadow-[inset_4px_0_0_#AAFF00]" : "")" title="Clients">
                             <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3.1-6.5 7-6.5s7 2.5 7 6.5M16 4.2a4 4 0 0 1 0 7.6M22 21c0-3-1.7-5-4-6"/></svg>
                             <span class="nav-label">Clients</span>
                         </a>
                     </li>
                 }
 
+                <!-- ONLY CLIENTS (My Progress) -->
                 @if (ViewContext.RouteData.Values["action"]?.ToString() == "Client" || ViewContext.RouteData.Values["action"]?.ToString() == "Progress")
                 {
                     <li>
-                        <a href="@Url.Action("Progress", "Client")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon" title="My Progress">
+                        <a href="@Url.Action("Progress", "Client")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon @(ViewContext.RouteData.Values["action"]?.ToString() == "Progress" ? "text-neon bg-[#1c1c1c] shadow-[inset_4px_0_0_#AAFF00]" : "")" title="My Progress">
                             <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
                             <span class="nav-label">My Progress</span>
                         </a>
                     </li>
                 }
-
                 <li>
-                    <a href="@Url.Action("Index", "Messages")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon" title="Messages">
+                    <a href="@Url.Action("Index", "Messages")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon @(ViewContext.RouteData.Values["controller"]?.ToString() == "Messages" ? "text-neon bg-[#1c1c1c] shadow-[inset_4px_0_0_#AAFF00]" : "")" title="Messages">
                         <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg>
                         <span class="nav-label">Messages</span>
                     </a>
                 </li>
-
                 <li>
-                    <a href="@Url.Action("Settings", "Profile")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon" title="Settings">
+                    <a href="@Url.Action("Settings", "Profile")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon @(ViewContext.RouteData.Values["action"]?.ToString() == "Settings" ? "text-neon bg-[#1c1c1c] shadow-[inset_4px_0_0_#AAFF00]" : "")" title="Settings">
                         <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>
                         <span class="nav-label">Settings</span>
                     </a>
@@ -123,12 +129,34 @@
                 <h1 class="hidden text-sm font-bold uppercase tracking-widest text-mono/70 lg:block">@ViewData["Title"]</h1>
             </div>
             <div class="flex items-center gap-3 sm:gap-4">
-                <button type="button" class="rounded-md border border-neon bg-transparent px-4 py-2 text-xs font-bold uppercase tracking-widest text-neon transition-colors hover:bg-neon hover:text-shell focus:outline-none focus-visible:ring-2 focus-visible:ring-neon focus-visible:ring-offset-2 focus-visible:ring-offset-shell">Schedule</button>
+                <a href="@Url.Action("Index", "Schedule")" class="rounded-md border border-neon bg-transparent px-4 py-2 text-xs font-bold uppercase tracking-widest text-neon transition-colors hover:bg-neon hover:text-shell focus:outline-none focus-visible:ring-2 focus-visible:ring-neon">Schedule</a>
                 <button type="button" class="relative rounded-md p-2 text-white transition-colors hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon" aria-label="Notifications, 3 unread">
                     <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg>
                     <span class="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-violet px-1 text-[11px] font-extrabold leading-none text-white">3</span>
                 </button>
-                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-violet text-sm font-extrabold text-white" role="img" aria-label="Alex Morgan">AM</div>
+                <div class="relative" id="avatar-wrap">
+                    <button id="avatar-btn" type="button" class="flex h-10 w-10 items-center justify-center rounded-full bg-violet text-sm font-extrabold text-white transition-shadow hover:ring-2 hover:ring-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon" aria-haspopup="menu" aria-expanded="false" aria-controls="avatar-menu">AM</button>
+                    <div id="avatar-menu" class="absolute right-0 top-12 z-50 hidden w-52 overflow-hidden rounded-lg bg-card py-1 shadow-xl ring-1 ring-white/10" role="menu">
+                        <div class="border-b border-white/10 px-4 py-3">
+                            <p class="text-sm font-extrabold">Alex Morgan</p>
+                            <p class="text-xs text-mono/50">alex@sporthub.com</p>
+                        </div>
+                        <a href="@Url.Action("Trainer", "Profile")" role="menuitem" class="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm font-semibold text-mono transition-colors hover:bg-shell hover:text-neon">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+                            My Profile
+                        </a>
+                        <a href="@Url.Action("Settings", "Profile")" role="menuitem" class="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm font-semibold text-mono transition-colors hover:bg-shell hover:text-neon">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg>
+                            Settings
+                        </a>
+                        <form method="post" action="@Url.Action("Logout", "Account")" class="m-0 p-0">
+                            <button type="submit" role="menuitem" class="flex w-full items-center gap-3 border-t border-white/10 px-4 py-2.5 text-left text-sm font-semibold text-[#FF5252] transition-colors hover:bg-[#FF5252]/10">
+                                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+                                Log Out
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </header>
 
@@ -137,7 +165,7 @@
         </main>
     </div>
 
-    <!-- Layout Navigation Script -->
+    <!-- Layout Scripts (Sidebar & Avatar only) -->
     <script>
         (function () {
             'use strict';
@@ -162,12 +190,20 @@
             $('open-mobile').addEventListener('click', function () { applyCollapse(false); setMobile(true); });
             $('close-mobile').addEventListener('click', function () { setMobile(false); });
             overlay.addEventListener('click', function () { setMobile(false); });
-            desktop.addEventListener('change', function () {
-                setMobile(false);
-                applyCollapse(body.classList.contains('collapsed') && desktop.matches);
-            });
+            desktop.addEventListener('change', function () { setMobile(false); applyCollapse(body.classList.contains('collapsed') && desktop.matches); });
             document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMobile(false); });
             content.style.paddingLeft = '';
+
+            var avatarBtn = $('avatar-btn'), avatarMenu = $('avatar-menu');
+            if(avatarBtn && avatarMenu) {
+                function setAvatarMenu(open) {
+                    avatarMenu.classList.toggle('hidden', !open);
+                    avatarBtn.setAttribute('aria-expanded', String(open));
+                }
+                avatarBtn.addEventListener('click', function () { setAvatarMenu(avatarMenu.classList.contains('hidden')); });
+                document.addEventListener('click', function (e) { if (!$('avatar-wrap').contains(e.target)) setAvatarMenu(false); });
+                document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setAvatarMenu(false); });
+            }
         })();
     </script>
     
