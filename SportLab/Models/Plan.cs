@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SportLab.Models
 {
+    [Table("Plans")]
     public class Plan
     {
         public int Id { get; set; }

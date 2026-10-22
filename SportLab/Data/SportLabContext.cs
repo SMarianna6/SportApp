@@ -30,6 +30,9 @@ namespace SportLab.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // Мапінг на таблицю Plans у базі даних
+            modelBuilder.Entity<Plan>().ToTable("Plans");
+
             // Налаштування зв'язків для Plan та Subscription (1:N)
             modelBuilder.Entity<Subscription>()
                 .HasOne(s => s.Plan)
