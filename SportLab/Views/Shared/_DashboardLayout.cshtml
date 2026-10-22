@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@{
+    // MENU PLACEHOLDER: Change to false to see the client menu
+    bool isTrainerLayout = true;
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -77,7 +82,7 @@
                     </a>
                 </li>
                 <!-- ONLY TRAINERS (Clients) -->
-                @if (ViewContext.RouteData.Values["action"]?.ToString() == "Trainer" || ViewContext.RouteData.Values["action"]?.ToString() == "Clients")
+                @if (isTrainerLayout)
                 {
                     <li>
                         <a href="@Url.Action("Clients", "Profile")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon @(ViewContext.RouteData.Values["action"]?.ToString() == "Clients" ? "text-neon bg-[#1c1c1c] shadow-[inset_4px_0_0_#AAFF00]" : "")" title="Clients">
@@ -88,7 +93,7 @@
                 }
 
                 <!-- ONLY CLIENTS (My Progress) -->
-                @if (ViewContext.RouteData.Values["action"]?.ToString() == "Client" || ViewContext.RouteData.Values["action"]?.ToString() == "Progress")
+                @if (!isTrainerLayout)
                 {
                     <li>
                         <a href="@Url.Action("Progress", "Profile")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon @(ViewContext.RouteData.Values["action"]?.ToString() == "Progress" ? "text-neon bg-[#1c1c1c] shadow-[inset_4px_0_0_#AAFF00]" : "")" title="My Progress">
