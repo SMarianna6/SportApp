@@ -1,4 +1,3 @@
-﻿using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using SportLab.Models;
 
@@ -10,10 +9,12 @@ namespace SportLab.Data
         {
         }
 
-        public DbSet<User> Users { get; set; }
-        public DbSet<Tariff> Tariffs { get; set; }
-        public DbSet<WorkoutSlot> WorkoutSlots { get; set; }
-        public DbSet<Subscription> Subscriptions { get; set; }
-        public DbSet<Product> Products { get; set; }
+        public DbSet<User> Users { get; set; } = null!;
+        public DbSet<Plan> Plan { get; set; } = null!;
+        public DbSet<Plan> Plans { get; set; } = null!;
+        public DbSet<Plan> Tariffs => Plan;
+        public DbSet<WorkoutSlot> WorkoutSlots { get; set; } = null!;
+        public DbSet<Subscription> Subscriptions { get; set; } = null!;
+        public DbSet<Product> Products { get; set; } = null!;
     }
 }

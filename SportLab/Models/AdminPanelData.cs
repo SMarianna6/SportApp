@@ -1,9 +1,9 @@
-﻿namespace SportLab.Models
+namespace SportLab.Models
 {
     public class AdminPanelData
     {
-        public IEnumerable<Tariff> Tariffs { get; set; }
-        public IEnumerable<Product> Products { get; set; }
-        public IEnumerable<User> Users { get; set; }
+        public IEnumerable<Plan> Tariffs { get; set; } = new List<Plan>();
+        public IEnumerable<Product> Products { get; set; } = new List<Product>();
+        public IEnumerable<User> Users { get; set; } = new List<User>();
     }
 }

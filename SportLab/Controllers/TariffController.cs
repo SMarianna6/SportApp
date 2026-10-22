@@ -17,18 +17,18 @@ namespace SportLab.Controllers
         public IActionResult Index()
         {
             // Seed initial tariffs if the database table is empty
-            if (!_context.Tariffs.Any())
+            if (!_context.Plan.Any())
             {
                 SeedDefaultTariffs();
             }
 
-            var tariffs = _context.Tariffs.ToList();
+            var tariffs = _context.Plan.ToList();
             return View(tariffs);
         }
 
         public IActionResult ConfirmPurchase(int id)
         {
-            var tariff = _context.Tariffs.Find(id);
+            var tariff = _context.Plan.Find(id);
             if (tariff == null)
             {
                 return NotFound();
@@ -43,7 +43,7 @@ namespace SportLab.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult ConfirmPurchase(int tariffId, string customerName, string customerPhone, string customerEmail, DateTime? startDate, string paymentMethod)
         {
-            var tariff = _context.Tariffs.Find(tariffId);
+            var tariff = _context.Plan.Find(tariffId);
             if (tariff == null)
             {
                 return NotFound();
@@ -92,7 +92,7 @@ namespace SportLab.Controllers
                 return Json(new { success = false, message = "Invalid request payload." });
             }
 
-            var tariff = _context.Tariffs.Find(request.TariffId);
+            var tariff = _context.Plan.Find(request.TariffId);
             if (tariff == null)
             {
                 return Json(new { success = false, message = "Selected membership plan was not found." });
@@ -167,7 +167,7 @@ namespace SportLab.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Tariffs.Add(tariff);
+                _context.Plan.Add(tariff);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
@@ -178,7 +178,7 @@ namespace SportLab.Controllers
         {
             if (id == null) return NotFound();
 
-            var tariff = _context.Tariffs.Find(id);
+            var tariff = _context.Plan.Find(id);
             if (tariff == null) return NotFound();
 
             return View(tariff);
@@ -203,10 +203,10 @@ namespace SportLab.Controllers
         {
             if (id == null) return NotFound();
 
-            var tariff = _context.Tariffs.Find(id);
+            var tariff = _context.Plan.Find(id);
             if (tariff != null)
             {
-                _context.Tariffs.Remove(tariff);
+                _context.Plan.Remove(tariff);
                 _context.SaveChanges();
             }
             return RedirectToAction(nameof(Index));
@@ -214,9 +214,9 @@ namespace SportLab.Controllers
 
         private void SeedDefaultTariffs()
         {
-            var initialTariffs = new List<Tariff>
+            var initialTariffs = new List<Plan>
             {
-                new Tariff
+                new Plan
                 {
                     Name = "Basic Start",
                     Type = "Basic",
@@ -224,7 +224,7 @@ namespace SportLab.Controllers
                     Duration = 30,
                     Description = "Full gym access (07:00 - 16:00)\nIntroductory coach orientation\nPersonal locker & shower facilities\nMobile workout tracking app\nComplimentary fresh drinking water"
                 },
-                new Tariff
+                new Plan
                 {
                     Name = "Unlimited Pro",
                     Type = "Popular",
@@ -232,7 +232,7 @@ namespace SportLab.Controllers
                     Duration = 30,
                     Description = "24/7 Unlimited access to all workout zones\nAll group classes included (CrossFit, TRX, Yoga)\nSpa & Recovery: Finnish sauna & jacuzzi\n2 Free guest passes per month\nFree membership freeze up to 7 days"
                 },
-                new Tariff
+                new Plan
                 {
                     Name = "Student Drive",
                     Type = "Student",
@@ -240,7 +240,7 @@ namespace SportLab.Controllers
                     Duration = 30,
                     Description = "Gym access between 09:00 - 18:00\nGroup functional training sessions\nModern comfortable changing rooms\nValid with active student ID\n10% discount at the SportLab nutrition bar"
                 },
-                new Tariff
+                new Plan
                 {
                     Name = "Annual VIP Unlimited",
                     Type = "Premium",
@@ -250,7 +250,7 @@ namespace SportLab.Controllers
                 }
             };
 
-            _context.Tariffs.AddRange(initialTariffs);
+            _context.Plan.AddRange(initialTariffs);
             _context.SaveChanges();
         }
     }

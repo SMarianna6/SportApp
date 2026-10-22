@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using SportLab.Data;
 using SportLab.Models;
 using System.Linq;
@@ -18,7 +18,7 @@ namespace SportLab.Controllers
         {
             var model = new AdminPanelData
             {
-                Tariffs = _context.Tariffs.ToList(),
+                Tariffs = _context.Plan.ToList(),
                 Products = _context.Products.ToList(),
                 Users = _context.Users.ToList(),
             };
@@ -32,11 +32,11 @@ namespace SportLab.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CreateTariff(Tariff tariff)
+        public IActionResult CreateTariff(Plan tariff)
         {
             if (ModelState.IsValid)
             {
-                _context.Tariffs.Add(tariff);
+                _context.Plan.Add(tariff);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
@@ -47,7 +47,7 @@ namespace SportLab.Controllers
         {
             if (id == null) return NotFound();
 
-            var tariff = _context.Tariffs.Find(id);
+            var tariff = _context.Plan.Find(id);
             if (tariff == null) return NotFound();
 
             return View(tariff);
@@ -55,7 +55,7 @@ namespace SportLab.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult EditTariff(int id, Tariff tariff)
+        public IActionResult EditTariff(int id, Plan tariff)
         {
             if (id != tariff.Id) return NotFound();
 
@@ -72,10 +72,10 @@ namespace SportLab.Controllers
         {
             if (id == null) return NotFound();
 
-            var tariff = _context.Tariffs.Find(id);
+            var tariff = _context.Plan.Find(id);
             if (tariff != null)
             {
-                _context.Tariffs.Remove(tariff);
+                _context.Plan.Remove(tariff);
                 _context.SaveChanges();
             }
             return RedirectToAction(nameof(Index));
