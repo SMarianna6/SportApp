@@ -15,12 +15,14 @@ namespace SportLab.Models
         [Display(Name = "Тренер")]
         public int TrainerId { get; set; }
 
+        [ForeignKey(nameof(TrainerId))]
         public User? Trainer { get; set; }
 
         [Display(Name = "Клієнт / Користувач")]
         public int? UserId { get; set; }
 
         // Зв'язок 1:N з User (Користувач може записатися на кілька тренувальних слотів)
+        [ForeignKey(nameof(UserId))]
         public User? User { get; set; }
 
         // Псевдоніми для зворотної сумісності з попереднім ClientId / Client
