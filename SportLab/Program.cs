@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SportLab.Data;
+using SportLab.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,13 @@ builder.Services.AddSession(options =>
 });
 
 var app = builder.Build();
+
+// Ініціалізація початкових даних (SeedData) згідно з ЛР4
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    SeedData.Initialize(services);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
