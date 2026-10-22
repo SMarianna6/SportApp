@@ -14,19 +14,19 @@ namespace SportLab.Models
             using (var context = new SportLabContext(
                 serviceProvider.GetRequiredService<DbContextOptions<SportLabContext>>()))
             {
-                // Створюємо базу даних та схему, якщо вони ще не існують
+                // Ensure database is created
                 context.Database.EnsureCreated();
 
-                // Перевірка наявності даних у таблиці Plan згідно з вимогами ЛР4
+                // Look for any Plans according to Lab 4 requirements
                 if (context.Plan.Any())
                 {
-                    return; // Базу даних уже ініціалізовано початковими даними
+                    return; // Database has already been seeded
                 }
 
-                // 1. Початкові користувачі (тренери та клієнти для слотів і підписок)
+                // 1. Initial users (trainers and clients for slots and subscriptions)
                 var trainer1 = new User
                 {
-                    Name = "Олександр Коваленко",
+                    Name = "Alex Kovalenko",
                     Email = "alex.trainer@sportlab.ua",
                     Password = "TrainerPass123!",
                     Role = "Trainer",
@@ -35,7 +35,7 @@ namespace SportLab.Models
 
                 var trainer2 = new User
                 {
-                    Name = "Марина Шевченко",
+                    Name = "Marina Shevchenko",
                     Email = "marina.trainer@sportlab.ua",
                     Password = "TrainerPass123!",
                     Role = "Trainer",
@@ -44,7 +44,7 @@ namespace SportLab.Models
 
                 var client1 = new User
                 {
-                    Name = "Іван Бондаренко",
+                    Name = "Ivan Bondarenko",
                     Email = "ivan.client@sportlab.ua",
                     Password = "ClientPass123!",
                     Role = "Client",
@@ -53,7 +53,7 @@ namespace SportLab.Models
 
                 var client2 = new User
                 {
-                    Name = "Олена Мельник",
+                    Name = "Olena Melnyk",
                     Email = "olena.client@sportlab.ua",
                     Password = "ClientPass123!",
                     Role = "Client",
@@ -63,47 +63,47 @@ namespace SportLab.Models
                 context.Users.AddRange(trainer1, trainer2, client1, client2);
                 context.SaveChanges();
 
-                // 2. Початкові тарифи (Plan)
+                // 2. Initial membership plans (Plan) with English descriptions
                 var plans = new List<Plan>
                 {
                     new Plan
                     {
                         Name = "Basic Start",
-                        Type = "Базовий",
+                        Type = "Basic",
                         Price = 850.00m,
                         Duration = 30,
-                        Description = "Ранковий та денний доступ до залу (07:00 - 16:00). Вступний інструктаж тренера, персональна шафка та душові."
+                        Description = "Morning and afternoon gym access (07:00 - 16:00). Introductory coach orientation, personal locker, and shower facilities."
                     },
                     new Plan
                     {
                         Name = "Unlimited Pro",
-                        Type = "Популярний",
+                        Type = "Popular",
                         Price = 1450.00m,
                         Duration = 30,
-                        Description = "Цілодобовий безлімітний доступ 24/7 до всіх зон. Усі групові заняття (CrossFit, TRX, Yoga), фінська сауна та джакузі."
+                        Description = "24/7 Unlimited access to all workout zones. All group classes included (CrossFit, TRX, Yoga), Finnish sauna, and jacuzzi."
                     },
                     new Plan
                     {
                         Name = "Student Drive",
-                        Type = "Студентський",
+                        Type = "Student",
                         Price = 650.00m,
                         Duration = 30,
-                        Description = "Доступ з 09:00 до 18:00 за наявності студентського квитка. Функціональні тренінги та знижка 10% у фітнес-барі."
+                        Description = "Gym access between 09:00 - 18:00 with valid student ID. Group functional workouts and 10% discount at the nutrition bar."
                     },
                     new Plan
                     {
                         Name = "Annual VIP Unlimited",
-                        Type = "Преміум",
+                        Type = "Premium",
                         Price = 11900.00m,
                         Duration = 365,
-                        Description = "Повний річний абонемент без будь-яких обмежень. 5 персональних занять, консультація нутриціолога та 15% знижка в магазині."
+                        Description = "All-inclusive 365-day pass with no restrictions. 5 personal training sessions, doctor assessment, and 15% store discount."
                     }
                 };
 
                 context.Plan.AddRange(plans);
                 context.SaveChanges();
 
-                // 3. Початкові тренувальні слоти (WorkoutSlot)
+                // 3. Initial workout slots (WorkoutSlot)
                 var tomorrow = DateTime.Today.AddDays(1);
                 var workoutSlots = new List<WorkoutSlot>
                 {
@@ -156,7 +156,7 @@ namespace SportLab.Models
 
                 context.WorkoutSlots.AddRange(workoutSlots);
 
-                // 4. Тестові оформлені підписки (Subscription)
+                // 4. Initial customer subscriptions (Subscription)
                 var subscriptions = new List<Subscription>
                 {
                     new Subscription
@@ -179,7 +179,7 @@ namespace SportLab.Models
 
                 context.Subscriptions.AddRange(subscriptions);
 
-                // 5. Тестові записи показників ваги (MetricLog)
+                // 5. Initial fitness metric logs (MetricLog)
                 var metricLogs = new List<MetricLog>
                 {
                     new MetricLog
@@ -187,21 +187,21 @@ namespace SportLab.Models
                         UserId = client1.Id,
                         Weight = 78.5f,
                         RecordDate = DateTime.Today.AddDays(-7),
-                        Notes = "Початок тренувального циклу"
+                        Notes = "Initial fitness assessment and training start"
                     },
                     new MetricLog
                     {
                         UserId = client1.Id,
                         Weight = 77.8f,
                         RecordDate = DateTime.Today,
-                        Notes = "Прогрес після першого тижня кардіо"
+                        Notes = "Progress after first week of cardio"
                     },
                     new MetricLog
                     {
                         UserId = client2.Id,
                         Weight = 59.2f,
                         RecordDate = DateTime.Today,
-                        Notes = "Контрольне зважування після занять йогою"
+                        Notes = "Post-yoga measurement session"
                     }
                 };
 
