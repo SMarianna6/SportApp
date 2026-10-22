@@ -32,7 +32,7 @@ namespace SportLab.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CreateTariff(Plan tariff)
+        public IActionResult CreateTariff([Bind("Id,Name,Description,Price,Duration,Type")] Plan tariff)
         {
             if (ModelState.IsValid)
             {
@@ -55,7 +55,7 @@ namespace SportLab.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult EditTariff(int id, Plan tariff)
+        public IActionResult EditTariff(int id, [Bind("Id,Name,Description,Price,Duration,Type")] Plan tariff)
         {
             if (id != tariff.Id) return NotFound();
 

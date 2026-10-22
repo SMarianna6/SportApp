@@ -6,9 +6,9 @@ using SportLab.Data;
 
 public class ProductsController : Controller
 {
-    private readonly GymContext _context;
+    private readonly SportLabContext _context;
 
-    public ProductsController(GymContext context)
+    public ProductsController(SportLabContext context)
     {
         _context = context;
     }
