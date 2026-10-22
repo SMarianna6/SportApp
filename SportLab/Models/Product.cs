@@ -20,6 +20,8 @@ namespace SportLab.Models
             set => PhotoUrl = value;
         }
 
+        public ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
+
         [NotMapped]
         public string Category
         {

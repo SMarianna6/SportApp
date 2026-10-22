@@ -170,7 +170,8 @@ namespace SportLab.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhotoUrl")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Photo");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -392,9 +393,9 @@ namespace SportLab.Migrations
                         .IsRequired();
 
                     b.HasOne("SportLab.Models.Product", "Product")
-                        .WithMany()
+                        .WithMany("OrderDetails")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Order");
@@ -451,6 +452,11 @@ namespace SportLab.Migrations
                 });
 
             modelBuilder.Entity("SportLab.Models.Order", b =>
+                {
+                    b.Navigation("OrderDetails");
+                });
+
+            modelBuilder.Entity("SportLab.Models.Product", b =>
                 {
                     b.Navigation("OrderDetails");
                 });
