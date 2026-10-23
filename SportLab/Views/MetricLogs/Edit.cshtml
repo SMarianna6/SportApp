@@ -1,0 +1,41 @@
+﻿@model SportLab.Models.MetricLog
+
+@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Edit Progress";
+}
+
+<div class="container p-4 text-white">
+    <h2>Edit Weight Record</h2>
+    <hr class="border-secondary" />
+    <div class="row">
+        <div class="col-md-5">
+            <div class="card bg-dark p-4 shadow-sm border-secondary">
+                <form asp-action="Edit">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="mb-4">
+                        <label asp-for="UserId" class="form-label text-white fw-bold">Client</label>
+                        <select asp-for="UserId" class="form-select bg-dark text-white border-secondary" asp-items="ViewBag.UserId"></select>
+                    </div>
+                    <div class="mb-4">
+                        <label asp-for="Weight" class="form-label text-white fw-bold">Weight (kg)</label>
+                        <input asp-for="Weight" class="form-control bg-dark text-white border-secondary" />
+                        <span asp-validation-for="Weight" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-4">
+                        <label asp-for="RecordDate" class="form-label text-white fw-bold">Date</label>
+                        <input asp-for="RecordDate" type="date" class="form-control bg-dark text-white border-secondary" />
+                    </div>
+                    <div class="mb-4">
+                        <label asp-for="Notes" class="form-label text-white fw-bold">Notes (Optional)</label>
+                        <input asp-for="Notes" class="form-control bg-dark text-white border-secondary" />
+                    </div>
+                    <div class="d-flex gap-3 mt-2">
+                        <button type="submit" class="btn btn-primary px-4 fw-bold">Save Changes</button>
+                        <a asp-action="Index" class="btn btn-outline-light px-4">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

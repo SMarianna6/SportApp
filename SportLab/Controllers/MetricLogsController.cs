@@ -20,7 +20,8 @@ namespace SportLab.Controllers
         public async Task<IActionResult> Index()
         {
             var metricLogs = _context.MetricLogs
-                .Include(m => m.User);
+                .Include(m => m.User)
+                .OrderBy(m => m.RecordDate);
             return View(await metricLogs.ToListAsync());
         }
 
@@ -52,7 +53,6 @@ namespace SportLab.Controllers
         }
 
         // POST: MetricLogs/Create
-        // Захист від надмірної передачі даних (overposting) за допомогою атрибута [Bind]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,UserId,Weight,RecordDate,Notes")] MetricLog metricLog)
@@ -85,7 +85,6 @@ namespace SportLab.Controllers
         }
 
         // POST: MetricLogs/Edit/5
-        // Захист від надмірної передачі даних (overposting) за допомогою атрибута [Bind]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,Weight,RecordDate,Notes")] MetricLog metricLog)

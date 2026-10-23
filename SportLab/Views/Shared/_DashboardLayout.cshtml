@@ -1,6 +1,6 @@
 ﻿@{
     // MENU PLACEHOLDER: Change to false to see the client menu
-    bool isTrainerLayout = true;
+    bool isTrainerLayout = false;
 }
 
 <!DOCTYPE html>
@@ -96,7 +96,7 @@
                 @if (!isTrainerLayout)
                 {
                     <li>
-                        <a href="@Url.Action("Progress", "Profile")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon @(ViewContext.RouteData.Values["action"]?.ToString() == "Progress" ? "text-neon bg-[#1c1c1c] shadow-[inset_4px_0_0_#AAFF00]" : "")" title="My Progress">
+                        <a href="@Url.Action("Index", "MetricLogs")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon @(ViewContext.RouteData.Values["action"]?.ToString() == "MetricLogs" ? "text-neon bg-[#1c1c1c] shadow-[inset_4px_0_0_#AAFF00]" : "")" title="My Progress">
                             <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
                             <span class="nav-label">My Progress</span>
                         </a>
