@@ -18,7 +18,7 @@ namespace SportLab.Controllers
         {
             var model = new AdminPanelData
             {
-                Tariffs = _context.Plan.ToList(),
+                Tariffs = _context.Plans.ToList(),
                 Products = _context.Products.ToList(),
                 Users = _context.Users.ToList(),
             };
@@ -36,7 +36,7 @@ namespace SportLab.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Plan.Add(tariff);
+                _context.Plans.Add(tariff);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
@@ -47,7 +47,7 @@ namespace SportLab.Controllers
         {
             if (id == null) return NotFound();
 
-            var tariff = _context.Plan.Find(id);
+            var tariff = _context.Plans.Find(id);
             if (tariff == null) return NotFound();
 
             return View(tariff);
@@ -72,10 +72,10 @@ namespace SportLab.Controllers
         {
             if (id == null) return NotFound();
 
-            var tariff = _context.Plan.Find(id);
+            var tariff = _context.Plans.Find(id);
             if (tariff != null)
             {
-                _context.Plan.Remove(tariff);
+                _context.Plans.Remove(tariff);
                 _context.SaveChanges();
             }
             return RedirectToAction(nameof(Index));

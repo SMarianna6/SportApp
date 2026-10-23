@@ -3,34 +3,34 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SportLab.Models
 {
+    [Table("Tariffs")]
     public class Plan
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Назва тарифу є обов'язковою")]
-        [StringLength(100, ErrorMessage = "Назва не може перевищувати 100 символів")]
-        [Display(Name = "Назва тарифу")]
+        [Required(ErrorMessage = "Plan name is required")]
+        [StringLength(100, ErrorMessage = "Name cannot exceed 100 characters")]
+        [Display(Name = "Plan Name")]
         public required string Name { get; set; }
 
-        [Required(ErrorMessage = "Опис тарифу є обов'язковим")]
-        [Display(Name = "Опис")]
+        [Required(ErrorMessage = "Description is required")]
+        [Display(Name = "Description")]
         public required string Description { get; set; }
 
-        [Required(ErrorMessage = "Ціна є обов'язковою")]
-        [Range(0.01, 100000.00, ErrorMessage = "Ціна повинна бути більшою за 0")]
+        [Required(ErrorMessage = "Price is required")]
+        [Range(0.01, 100000.00, ErrorMessage = "Price must be between 0.01 and 100000")]
         [Column(TypeName = "decimal(18,2)")]
-        [Display(Name = "Ціна (грн)")]
+        [Display(Name = "Price")]
         public decimal Price { get; set; }
 
-        [Required(ErrorMessage = "Тривалість є обов'язковою")]
-        [Range(1, 3650, ErrorMessage = "Тривалість має становити від 1 до 3650 днів")]
-        [Display(Name = "Тривалість (днів)")]
+        [Required(ErrorMessage = "Duration is required")]
+        [Range(1, 3650, ErrorMessage = "Duration must be between 1 and 3650 days")]
+        [Display(Name = "Duration (days)")]
         public int Duration { get; set; }
 
-        [Display(Name = "Тип тарифу")]
+        [Display(Name = "Plan Type")]
         public string? Type { get; set; }
 
-        // Зв'язок 1:N (Один план/тариф містить багато підписок)
         public ICollection<Subscription> Subscriptions { get; set; } = new List<Subscription>();
     }
 }

@@ -16,19 +16,18 @@ namespace SportLab.Controllers
 
         public IActionResult Index()
         {
-            // Seed initial tariffs if the database table is empty
-            if (!_context.Plan.Any())
+            if (!_context.Plans.Any())
             {
                 SeedDefaultTariffs();
             }
 
-            var tariffs = _context.Plan.ToList();
+            var tariffs = _context.Plans.ToList();
             return View(tariffs);
         }
 
         public IActionResult ConfirmPurchase(int id)
         {
-            var tariff = _context.Plan.Find(id);
+            var tariff = _context.Plans.Find(id);
             if (tariff == null)
             {
                 return NotFound();
@@ -43,7 +42,7 @@ namespace SportLab.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult ConfirmPurchase(int tariffId, string customerName, string customerPhone, string customerEmail, DateTime? startDate, string paymentMethod)
         {
-            var tariff = _context.Plan.Find(tariffId);
+            var tariff = _context.Plans.Find(tariffId);
             if (tariff == null)
             {
                 return NotFound();
@@ -52,7 +51,6 @@ namespace SportLab.Controllers
             var effectiveStartDate = startDate ?? DateTime.Today;
             var effectiveEndDate = effectiveStartDate.AddDays(tariff.Duration > 0 ? tariff.Duration : 30);
 
-            // Find or register client user
             var user = _context.Users.FirstOrDefault(u => u.Email == customerEmail);
             if (user == null)
             {
@@ -68,7 +66,6 @@ namespace SportLab.Controllers
                 _context.SaveChanges();
             }
 
-            // Create active subscription
             var subscription = new Subscription
             {
                 UserId = user.Id,
@@ -92,7 +89,7 @@ namespace SportLab.Controllers
                 return Json(new { success = false, message = "Invalid request payload." });
             }
 
-            var tariff = _context.Plan.Find(request.TariffId);
+            var tariff = _context.Plans.Find(request.TariffId);
             if (tariff == null)
             {
                 return Json(new { success = false, message = "Selected membership plan was not found." });
@@ -167,7 +164,7 @@ namespace SportLab.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Plan.Add(tariff);
+                _context.Plans.Add(tariff);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
@@ -178,7 +175,7 @@ namespace SportLab.Controllers
         {
             if (id == null) return NotFound();
 
-            var tariff = _context.Plan.Find(id);
+            var tariff = _context.Plans.Find(id);
             if (tariff == null) return NotFound();
 
             return View(tariff);
@@ -203,10 +200,10 @@ namespace SportLab.Controllers
         {
             if (id == null) return NotFound();
 
-            var tariff = _context.Plan.Find(id);
+            var tariff = _context.Plans.Find(id);
             if (tariff != null)
             {
-                _context.Plan.Remove(tariff);
+                _context.Plans.Remove(tariff);
                 _context.SaveChanges();
             }
             return RedirectToAction(nameof(Index));
@@ -250,7 +247,7 @@ namespace SportLab.Controllers
                 }
             };
 
-            _context.Plan.AddRange(initialTariffs);
+            _context.Plans.AddRange(initialTariffs);
             _context.SaveChanges();
         }
     }

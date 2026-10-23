@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SportLab.Data;
 using SportLab.Models;
@@ -32,7 +33,6 @@ namespace SportLab.Controllers
 
             var reviews = query.OrderByDescending(r => r.CreatedDate).ToList();
 
-            // Calculate overall rating stats
             var allReviews = _context.Reviews.Where(r => r.ModerationStatus == "Approved" || r.ModerationStatus == "Published").ToList();
             ViewBag.AverageRating = allReviews.Any() ? Math.Round(allReviews.Average(r => r.Rating), 1) : 5.0;
             ViewBag.TotalReviews = allReviews.Count;
@@ -87,7 +87,6 @@ namespace SportLab.Controllers
 
         private void SeedDefaultReviews()
         {
-            // Seed a representative user if needed
             var user1 = _context.Users.FirstOrDefault(u => u.Email == "anton.p@example.com");
             if (user1 == null)
             {
@@ -156,6 +155,88 @@ namespace SportLab.Controllers
 
             _context.Reviews.AddRange(defaultReviews);
             _context.SaveChanges();
+        }
+
+        // GET: Review/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var review = await _context.Reviews
+                .Include(r => r.User)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (review == null) return NotFound();
+
+            return View(review);
+        }
+
+        // GET: Review/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var review = await _context.Reviews.FindAsync(id);
+            if (review == null) return NotFound();
+
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", review.UserId);
+            return View(review);
+        }
+
+        // POST: Review/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,Comment,Rating,CreatedDate,ModerationStatus")] Review review)
+        {
+            if (id != review.Id) return NotFound();
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(review);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ReviewExists(review.Id)) return NotFound();
+                    else throw;
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", review.UserId);
+            return View(review);
+        }
+
+        // GET: Review/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var review = await _context.Reviews
+                .Include(r => r.User)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (review == null) return NotFound();
+
+            return View(review);
+        }
+
+        // POST: Review/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var review = await _context.Reviews.FindAsync(id);
+            if (review != null) _context.Reviews.Remove(review);
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool ReviewExists(int id)
+        {
+            return _context.Reviews.Any(e => e.Id == id);
         }
     }
 }

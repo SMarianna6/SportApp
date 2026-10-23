@@ -18,7 +18,7 @@ namespace SportLab.Controllers
         // GET: Plans
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Plan.ToListAsync());
+            return View(await _context.Plans.ToListAsync());
         }
 
         // GET: Plans/Details/5
@@ -29,7 +29,7 @@ namespace SportLab.Controllers
                 return NotFound();
             }
 
-            var plan = await _context.Plan
+            var plan = await _context.Plans
                 .Include(p => p.Subscriptions)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
@@ -48,7 +48,6 @@ namespace SportLab.Controllers
         }
 
         // POST: Plans/Create
-        // Захист від надмірної передачі даних (overposting) за допомогою атрибута [Bind]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,Duration,Type")] Plan plan)
@@ -70,7 +69,7 @@ namespace SportLab.Controllers
                 return NotFound();
             }
 
-            var plan = await _context.Plan.FindAsync(id);
+            var plan = await _context.Plans.FindAsync(id);
             if (plan == null)
             {
                 return NotFound();
@@ -79,7 +78,6 @@ namespace SportLab.Controllers
         }
 
         // POST: Plans/Edit/5
-        // Захист від надмірної передачі даних (overposting) за допомогою атрибута [Bind]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Price,Duration,Type")] Plan plan)
@@ -120,7 +118,7 @@ namespace SportLab.Controllers
                 return NotFound();
             }
 
-            var plan = await _context.Plan
+            var plan = await _context.Plans
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (plan == null)
             {
@@ -135,10 +133,10 @@ namespace SportLab.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var plan = await _context.Plan.FindAsync(id);
+            var plan = await _context.Plans.FindAsync(id);
             if (plan != null)
             {
-                _context.Plan.Remove(plan);
+                _context.Plans.Remove(plan);
                 await _context.SaveChangesAsync();
             }
 
@@ -147,7 +145,7 @@ namespace SportLab.Controllers
 
         private bool PlanExists(int id)
         {
-            return _context.Plan.Any(e => e.Id == id);
+            return _context.Plans.Any(e => e.Id == id);
         }
     }
 }

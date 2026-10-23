@@ -7,25 +7,23 @@ namespace SportLab.Models
     {
         public int Id { get; set; }
 
-        [Display(Name = "Назва заняття")]
+        [Display(Name = "Activity Name")]
         [StringLength(100)]
         public string? ActivityName { get; set; }
 
-        [Required(ErrorMessage = "Необхідно вказати тренера")]
-        [Display(Name = "Тренер")]
+        [Required(ErrorMessage = "Trainer must be specified")]
+        [Display(Name = "Trainer")]
         public int TrainerId { get; set; }
 
         [ForeignKey(nameof(TrainerId))]
         public User? Trainer { get; set; }
 
-        [Display(Name = "Клієнт / Користувач")]
+        [Display(Name = "Client")]
         public int? UserId { get; set; }
 
-        // Зв'язок 1:N з User (Користувач може записатися на кілька тренувальних слотів)
         [ForeignKey(nameof(UserId))]
         public User? User { get; set; }
 
-        // Псевдоніми для зворотної сумісності з попереднім ClientId / Client
         [NotMapped]
         public int? ClientId
         {
@@ -40,18 +38,18 @@ namespace SportLab.Models
             set => User = value;
         }
 
-        [Required(ErrorMessage = "Вкажіть час початку")]
-        [Display(Name = "Час початку")]
+        [Required(ErrorMessage = "Start time is required")]
+        [Display(Name = "Start Time")]
         [DataType(DataType.DateTime)]
         public DateTime StartTime { get; set; }
 
-        [Required(ErrorMessage = "Вкажіть час закінчення")]
-        [Display(Name = "Час завершення")]
+        [Required(ErrorMessage = "End time is required")]
+        [Display(Name = "End Time")]
         [DataType(DataType.DateTime)]
         public DateTime EndTime { get; set; }
 
         [Required]
-        [Display(Name = "Статус")]
+        [Display(Name = "Status")]
         public string Status { get; set; } = "Available"; // "Available", "Booked", "Completed", "Cancelled"
     }
 }

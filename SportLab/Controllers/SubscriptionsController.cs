@@ -49,13 +49,12 @@ namespace SportLab.Controllers
         // GET: Subscriptions/Create
         public IActionResult Create()
         {
-            ViewData["PlanId"] = new SelectList(_context.Plan, "Id", "Name");
+            ViewData["PlanId"] = new SelectList(_context.Plans, "Id", "Name");
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Name");
             return View();
         }
 
         // POST: Subscriptions/Create
-        // Захист від надмірної передачі даних (overposting) за допомогою атрибута [Bind]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,UserId,PlanId,StartDate,EndDate,IsActive")] Subscription subscription)
@@ -66,7 +65,7 @@ namespace SportLab.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PlanId"] = new SelectList(_context.Plan, "Id", "Name", subscription.PlanId);
+            ViewData["PlanId"] = new SelectList(_context.Plans, "Id", "Name", subscription.PlanId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Name", subscription.UserId);
             return View(subscription);
         }
@@ -84,13 +83,12 @@ namespace SportLab.Controllers
             {
                 return NotFound();
             }
-            ViewData["PlanId"] = new SelectList(_context.Plan, "Id", "Name", subscription.PlanId);
+            ViewData["PlanId"] = new SelectList(_context.Plans, "Id", "Name", subscription.PlanId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Name", subscription.UserId);
             return View(subscription);
         }
 
         // POST: Subscriptions/Edit/5
-        // Захист від надмірної передачі даних (overposting) за допомогою атрибута [Bind]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,PlanId,StartDate,EndDate,IsActive")] Subscription subscription)
@@ -120,7 +118,7 @@ namespace SportLab.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PlanId"] = new SelectList(_context.Plan, "Id", "Name", subscription.PlanId);
+            ViewData["PlanId"] = new SelectList(_context.Plans, "Id", "Name", subscription.PlanId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Name", subscription.UserId);
             return View(subscription);
         }

@@ -160,7 +160,6 @@
         });
       })();
 
-      // Sync cart count badge on page load
       document.addEventListener("DOMContentLoaded", function () {
           fetch('/Cart/GetCartSummary')
               .then(r => r.json())

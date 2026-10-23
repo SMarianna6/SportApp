@@ -8,22 +8,19 @@ namespace SportLab.Models
         public int Id { get; set; }
 
         [Required]
-        [Display(Name = "Користувач")]
+        [Display(Name = "User")]
         public int UserId { get; set; }
 
-        // Зв'язок 1:N (Підписка належить одному користувачу)
         [ForeignKey(nameof(UserId))]
         public User? User { get; set; }
 
         [Required]
-        [Display(Name = "Тарифний план")]
+        [Display(Name = "Tariff")]
         public int PlanId { get; set; }
 
-        // Зв'язок 1:N (Підписка прив'язана до одного тарифного плану)
         [ForeignKey(nameof(PlanId))]
         public Plan? Plan { get; set; }
 
-        // Псевдоніми для зворотної сумісності з існуючими контролерами/поданнями
         [NotMapped]
         public int TariffId
         {
@@ -39,16 +36,16 @@ namespace SportLab.Models
         }
 
         [Required]
-        [Display(Name = "Дата початку")]
+        [Display(Name = "Start Date")]
         [DataType(DataType.Date)]
         public DateTime StartDate { get; set; } = DateTime.Today;
 
         [Required]
-        [Display(Name = "Дата завершення")]
+        [Display(Name = "End Date")]
         [DataType(DataType.Date)]
         public DateTime EndDate { get; set; } = DateTime.Today.AddDays(30);
 
-        [Display(Name = "Активна")]
+        [Display(Name = "Is Active")]
         public bool IsActive { get; set; } = true;
     }
 }

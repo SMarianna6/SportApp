@@ -1,6 +1,6 @@
 namespace SportLab.Models
 {
-    // Tariff (Тариф) представляє модель Plan для зворотної сумісності з існуючими формами та поданнями
+    // Tariff for backward compatibility of the Plan with existing forms and views only
     public class Tariff : Plan
     {
     }

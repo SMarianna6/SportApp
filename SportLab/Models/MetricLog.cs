@@ -7,24 +7,23 @@ namespace SportLab.Models
     {
         public int Id { get; set; }
 
-        [Required]
-        [Display(Name = "Користувач")]
+        [Required(ErrorMessage = "User is required")]
+        [Display(Name = "User")]
         public int UserId { get; set; }
 
-        // Зв'язок 1:N з User (Журнал показників користувача)
         public User? User { get; set; }
 
-        [Required(ErrorMessage = "Вкажіть поточну вагу")]
-        [Display(Name = "Вага (кг)")]
-        [Range(20.0, 300.0, ErrorMessage = "Вага повинна бути в діапазоні від 20 до 300 кг")]
+        [Required(ErrorMessage = "Please enter current weight")]
+        [Display(Name = "Weight (kg)")]
+        [Range(20.0, 300.0, ErrorMessage = "Weight must be between 20 and 300 kg")]
         public float Weight { get; set; }
 
         [Required]
-        [Display(Name = "Дата запису")]
+        [Display(Name = "Record Date")]
         [DataType(DataType.Date)]
         public DateTime RecordDate { get; set; } = DateTime.Now;
 
-        [Display(Name = "Примітки")]
+        [Display(Name = "Notes")]
         [StringLength(250)]
         public string? Notes { get; set; }
     }

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SportLab.Models
 {
@@ -6,33 +7,41 @@ namespace SportLab.Models
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Ім'я є обов'язковим")]
-        [Display(Name = "Ім'я")]
+        [Required(ErrorMessage = "Name is required")]
+        [Display(Name = "Full Name")]
         public required string Name { get; set; }
 
-        [Required(ErrorMessage = "Email є обов'язковим")]
-        [EmailAddress(ErrorMessage = "Некоректний формат email")]
-        [Display(Name = "Електронна пошта")]
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Invalid email format")]
+        [Display(Name = "Email Address")]
         public required string Email { get; set; }
 
-        [Required(ErrorMessage = "Пароль є обов'язковим")]
+        [Required(ErrorMessage = "Password is required")]
         [DataType(DataType.Password)]
-        [Display(Name = "Пароль")]
+        [Display(Name = "Password")]
         public required string Password { get; set; }
 
-        [Display(Name = "Роль")]
+        [Display(Name = "Role")]
         public required string Role { get; set; }
 
-        [Display(Name = "Заблоковано")]
+        [Display(Name = "Is Blocked")]
         public bool IsBlocked { get; set; }
 
-        // Зв'язок 1:N з Subscription (Користувач має багато підписок)
         public ICollection<Subscription> Subscriptions { get; set; } = new List<Subscription>();
 
-        // Зв'язок 1:N з WorkoutSlot (Користувач може мати багато тренувальних слотів)
         public ICollection<WorkoutSlot> WorkoutSlots { get; set; } = new List<WorkoutSlot>();
 
-        // Зв'язок 1:N з MetricLog (Користувач веде журнал своїх показників)
         public ICollection<MetricLog> MetricLogs { get; set; } = new List<MetricLog>();
+
+        public ICollection<Order> Orders { get; set; } = new List<Order>();
+
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
+
+        [InverseProperty("Sender")]
+        public ICollection<Message> SentMessages { get; set; } = new List<Message>();
+
+
+        [InverseProperty("Receiver")]
+        public ICollection<Message> ReceivedMessages { get; set; } = new List<Message>();
     }
 }
