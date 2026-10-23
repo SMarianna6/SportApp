@@ -13,32 +13,6 @@ fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;800;900&display=swap" rel="stylesheet" />
     
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Archivo', 'ui-sans-serif', 'system-ui', 'sans-serif']
-                    },
-                    colors: {
-                        mono: {
-                            100: '#F2F2F4',
-                            200: '#FFFFFF'
-                        },
-                        ink: {
-                            900: '#141414',
-                            700: '#333333'
-                        },
-                        neon: '#AAFF00',
-                        deep: '#7AB800',
-                        violet: '#7D51FE'
-                    }
-                }
-            }
-        };
-    </script>
-    
     <style>
         .slot .capacity-label {
             opacity: 0;
@@ -428,7 +402,7 @@ fonts.googleapis.com" />
                 els.success.textContent = "You're in! See you on " + DAYS[activeSlot.day] + ' at ' + timeLabel(activeSlot.hour) + '.';
                 els.success.classList.remove('hidden');
                 render();
-                setTimeout(closeModal, 1400);
+                setTimeout(closeModal, 2000);
             });
             
             els.close.addEventListener('click', closeModal);

@@ -1,53 +1,335 @@
-@model IEnumerable<SportLab.Models.Message>
-
 @{
-    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Messages";
+    
+    // PLACEHOLDER: Change to false to see the Client interface. 
+    // In the future, this will be: bool isTrainer = User.IsInRole("Trainer");
+    bool isTrainer = true;
 }
 
-<h1>Index</h1>
+<style>
+    .typing-dot { animation: blink 1.2s infinite both; }
+    .typing-dot:nth-child(2) { animation-delay: .2s; }
+    .typing-dot:nth-child(3) { animation-delay: .4s; }
+    @@keyframes blink { 0%, 80%, 100% { opacity: .25; } 40% { opacity: 1; } }
+</style>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Sender)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Receiver)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Text)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SentDate)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Sender.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Receiver.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Text)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SentDate)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+<div class="h-[calc(100vh-110px)] min-h-[500px] overflow-hidden rounded-xl border border-white/10 shadow-2xl lg:grid lg:grid-cols-[minmax(260px,27%)_minmax(0,1fr)] xl:grid-cols-[minmax(280px,26%)_minmax(0,1fr)_minmax(260px,25%)]">
+
+    <!-- 1. Chat list -->
+    <aside id="chat-list-col" class="flex h-full min-h-0 flex-col border-r border-white/10 bg-shell" aria-label="Conversations">
+        <div class="sticky top-0 z-10 border-b border-white/10 bg-shell p-4">
+            <h2 class="mb-3 text-2xl font-black uppercase tracking-tighter">Messages</h2>
+            <label class="relative block">
+                <span class="sr-only">Search messages</span>
+                <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-mono/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                <input id="chat-search" type="search" placeholder="Search messages" class="w-full rounded-md border border-white/10 bg-shell py-2.5 pl-9 pr-3 text-sm text-white placeholder:text-mono/40 transition-colors hover:border-white/25 focus:border-neon focus:outline-none focus:ring-1 focus:ring-neon" />
+            </label>
+        </div>
+        <ul id="chat-list" class="min-h-0 flex-1 overflow-y-auto"></ul>
+        <p id="chat-empty" class="hidden p-6 text-center text-sm text-mono/60">No conversations found.</p>
+    </aside>
+
+    <!-- 2. Active chat -->
+    <section id="chat-col" class="hidden h-full min-h-0 flex-col bg-shell lg:flex" aria-label="Active conversation">
+        <header class="flex items-center gap-3 border-b border-white/10 bg-shell px-4 py-3">
+            <button id="chat-back" type="button" class="flex h-10 w-10 items-center justify-center rounded-md text-white transition-colors hover:bg-white/5 hover:text-neon lg:hidden">
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            </button>
+            <span id="head-avatar" class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-violet text-sm font-extrabold"></span>
+            <div class="min-w-0 flex-1">
+                <h3 id="head-name" class="truncate text-base font-extrabold"></h3>
+                <p id="head-status" class="flex items-center gap-1.5 text-xs font-semibold" aria-live="polite"></p>
+            </div>
+            <button id="info-btn" type="button" class="flex h-10 w-10 items-center justify-center rounded-md text-mono/70 transition-colors hover:bg-white/5 hover:text-neon xl:hidden">
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+            </button>
+        </header>
+
+        <div id="messages" class="min-h-0 flex-1 space-y-3 overflow-y-auto px-4 py-5 sm:px-6" role="log" aria-live="polite"></div>
+
+        <!-- Input Area -->
+        <div class="relative border-t border-white/10 bg-shell p-3 sm:p-4">
+            @if (isTrainer)
+            {
+                <div id="plus-menu" class="absolute bottom-full left-3 z-20 mb-2 hidden w-56 overflow-hidden rounded-lg bg-card py-1 shadow-xl ring-1 ring-white/10 sm:left-4" role="menu">
+                    <button type="button" role="menuitem" data-action="workout" class="flex w-full items-center gap-3 px-4 py-3 text-left text-sm font-semibold transition-colors hover:bg-white/5 hover:text-neon">
+                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/></svg>
+                        Send Workout
+                    </button>
+                    <button type="button" role="menuitem" data-action="booking" class="flex w-full items-center gap-3 px-4 py-3 text-left text-sm font-semibold transition-colors hover:bg-white/5 hover:text-neon">
+                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>
+                        Send Booking Link
+                    </button>
+                </div>
+            }
+
+            <form id="composer" class="flex items-center gap-2 sm:gap-3">
+                @if (isTrainer)
+                {
+                    <button id="plus-btn" type="button" class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-card text-white transition-all duration-300 hover:bg-violet focus:outline-none focus-visible:ring-2 focus-visible:ring-neon">
+                        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+                    </button>
+                }
+                <div class="flex min-w-0 flex-1 items-center gap-1 rounded-full border border-white/10 bg-shell px-2 transition-colors focus-within:border-neon hover:border-white/25">
+                    <label for="msg-input" class="sr-only">Type a message</label>
+                    <input id="msg-input" type="text" autocomplete="off" placeholder="Type a message" class="min-w-0 flex-1 bg-transparent px-3 py-3 text-sm text-white placeholder:text-mono/40 focus:outline-none" />
+                    <button type="button" class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-mono/60 transition-colors hover:bg-white/5 hover:text-neon">
+                        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.4 11-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5"/></svg>
+                    </button>
+                </div>
+                <button type="submit" class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-neon text-shell transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M21.7 2.3a1 1 0 0 0-1-.2L2.6 9.2a1 1 0 0 0 .1 1.9l7.1 2.4 2.4 7.1a1 1 0 0 0 1.9.1l7.2-18.1a1 1 0 0 0-.2-1.1ZM10.9 12.6l6.2-6.2-4.3 8.6-1.9-2.4Z"/></svg>
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- 3. Context panel -->
+    <aside id="info-col" class="hidden h-full min-h-0 overflow-y-auto border-l border-white/10 bg-shell p-5 xl:block" aria-label="Context details">
+        <div class="mb-3 flex justify-end xl:hidden">
+            <button id="info-close" type="button" class="rounded-md p-2 text-mono/70 hover:text-neon">
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+            </button>
+        </div>
+        <div class="flex flex-col items-center text-center">
+            <span id="info-avatar" class="flex h-24 w-24 items-center justify-center rounded-full bg-violet text-3xl font-black"></span>
+            <h4 id="info-name" class="mt-4 text-xl font-black uppercase tracking-tighter"></h4>
+            
+            @if (isTrainer)
+            {
+                <span class="mt-2 inline-flex items-center gap-1.5 rounded-full bg-neon/15 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-neon">
+                    <span class="h-1.5 w-1.5 rounded-full bg-neon"></span>Active Client
+                </span>
+            }
+            else
+            {
+                <span class="mt-2 inline-flex items-center gap-1.5 rounded-full bg-violet/15 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-violet">
+                    <svg class="h-3 w-3" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    Head Trainer
+                </span>
+            }
+        </div>
+
+        <dl class="mt-6 grid gap-2.5">
+            @if (isTrainer)
+            {
+                <div class="rounded-lg bg-card p-3.5 transition-colors hover:bg-[#3a3a3a]">
+                    <dt class="text-[11px] font-semibold uppercase tracking-widest text-mono/50">Goal</dt>
+                    <dd id="info-goal" class="mt-1 text-sm font-extrabold"></dd>
+                </div>
+                <div class="rounded-lg bg-card p-3.5 transition-colors hover:bg-[#3a3a3a]">
+                    <dt class="text-[11px] font-semibold uppercase tracking-widest text-mono/50">Current Weight</dt>
+                    <dd id="info-weight" class="mt-1 text-sm font-extrabold"></dd>
+                </div>
+            }
+            else
+            {
+                <div class="rounded-lg bg-card p-3.5 transition-colors hover:bg-[#3a3a3a]">
+                    <dt class="text-[11px] font-semibold uppercase tracking-widest text-mono/50">Experience</dt>
+                    <dd id="info-exp" class="mt-1 text-sm font-extrabold"></dd>
+                </div>
+                <div class="rounded-lg bg-card p-3.5 transition-colors hover:bg-[#3a3a3a]">
+                    <dt class="text-[11px] font-semibold uppercase tracking-widest text-mono/50">Specialization</dt>
+                    <dd id="info-spec" class="mt-1 text-sm font-extrabold"></dd>
+                </div>
+            }
+            <div class="rounded-lg bg-card p-3.5 transition-colors hover:bg-[#3a3a3a]">
+                <dt class="text-[11px] font-semibold uppercase tracking-widest text-mono/50">Next Session</dt>
+                <dd id="info-next" class="mt-1 text-sm font-extrabold"></dd>
+            </div>
+        </dl>
+
+        <section class="mt-7" aria-labelledby="media-title">
+            <div class="mb-3 flex items-center justify-between">
+                <h4 id="media-title" class="text-xs font-extrabold uppercase tracking-widest">Shared Media</h4>
+                <a href="#" class="text-xs font-bold uppercase tracking-widest text-neon underline-offset-4 hover:underline">View all</a>
+            </div>
+            <ul id="media-grid" class="grid grid-cols-3 gap-2"></ul>
+        </section>
+    </aside>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            'use strict';
+            var $ = function (id) { return document.getElementById(id); };
+            
+            // Передаємо Razor-заглушку в JavaScript
+            var isTrainer = @isTrainer.ToString().ToLower();
+
+            var CHATS = isTrainer ? [
+                { id: 1, name: 'Kateryna Melnyk', online: true, typing: false, unread: 2, time: '10:42', goal: 'Weight Loss', weight: '72 kg', next: 'Tomorrow, 10:00 AM', accent: '#7D51FE',
+                  msgs: [
+                    { from: 'in', text: 'Hi Nazar! I finished the leg day routine, it was intense.', time: '10:21' },
+                    { from: 'out', text: 'Great job Kateryna! How did the squats feel at the new weight?', time: '10:24', read: true },
+                    { from: 'in', text: 'Heavy but doable. My knees were fine this time.', time: '10:30' },
+                    { from: 'out', workout: { title: 'Lower Body Power', duration: '45 min', level: 'Intermediate' }, time: '10:33', read: true },
+                    { from: 'in', text: 'Perfect, I will do it on Thursday. Are we still on for tomorrow?', time: '10:41' }
+                  ] },
+                { id: 2, name: 'Arsen Vyshnevetskyi', online: true, typing: true, unread: 0, time: '09:15', goal: 'Strength', weight: '95 kg', next: 'Friday, 6:00 PM', accent: '#AAFF00',
+                  msgs: [
+                    { from: 'out', text: 'Arsen, remember to log your deadlift numbers.', time: '09:02', read: true },
+                    { from: 'in', text: 'Will do, I hit a new PR yesterday: 160 kg.', time: '09:15' }
+                  ] }
+            ] : [
+                { id: 1, name: 'Nazar Dovhopiat', online: true, typing: false, unread: 1, time: '10:33', exp: '8 years, NASM certified', spec: 'Strength, CrossFit', next: 'Tomorrow, 10:00 AM', accent: '#AAFF00',
+                  msgs: [
+                    { from: 'out', text: 'Hi Nazar! I finished the leg day routine, it was intense.', time: '10:21', read: true },
+                    { from: 'in', text: 'Great job! How did the squats feel at the new weight?', time: '10:24' },
+                    { from: 'out', text: 'Heavy but doable. My knees were fine this time.', time: '10:30', read: true },
+                    { from: 'in', workout: { title: 'Lower Body Power', duration: '45 min', level: 'Intermediate' }, time: '10:33' }
+                  ] },
+                { id: 2, name: 'Support Team', online: false, typing: false, unread: 0, time: 'Yesterday', exp: 'SportHUB Staff', spec: 'Technical Support', next: 'Not scheduled', accent: '#7D51FE',
+                  msgs: [
+                    { from: 'in', text: 'Hello! Your issue with the payment method has been resolved.', time: '14:20' },
+                    { from: 'out', text: 'Thanks for the quick fix!', time: '14:35', read: true }
+                  ] }
+            ];
+
+            var MEDIA = [ ['#7D51FE', '#141414'], ['#AAFF00', '#333333'], ['#555555', '#141414'], ['#7D51FE', '#AAFF00'], ['#333333', '#7D51FE'], ['#AAFF00', '#141414'] ];
+            var activeId = 1;
+
+            function initials(n) { return n.split(' ').map(function (p) { return p[0]; }).join(''); }
+            function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+            function lastText(c) {
+                var m = c.msgs[c.msgs.length - 1];
+                return m.workout ? 'Workout: ' + m.workout.title : (m.from === 'out' ? 'You: ' : '') + m.text;
+            }
+            function byId(id) { return CHATS.filter(function (c) { return c.id === id; })[0]; }
+
+            var CHECKS = {
+                read: '<svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m1 13 4 4L15 7M9 15l2 2L22 6"/></svg>',
+                sent: '<svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m4 13 5 5L20 7"/></svg>'
+            };
+
+            function renderList() {
+                var q = $('chat-search').value.trim().toLowerCase();
+                var rows = CHATS.filter(function (c) { return c.name.toLowerCase().indexOf(q) !== -1 || lastText(c).toLowerCase().indexOf(q) !== -1; });
+                $('chat-empty').classList.toggle('hidden', rows.length > 0);
+                $('chat-list').innerHTML = rows.map(function (c) {
+                    var active = c.id === activeId;
+                    return '<li><button type="button" data-id="' + c.id + '" aria-current="' + active + '" class="chat-item flex w-full items-center gap-3 border-l-4 px-4 py-3.5 text-left transition-colors hover:bg-white/5 ' + (active ? 'border-neon bg-white/5' : 'border-transparent') + '">' +
+                        '<span class="relative shrink-0"><span class="flex h-12 w-12 items-center justify-center rounded-full text-sm font-extrabold ' + (c.accent === '#AAFF00' ? 'bg-card text-neon' : 'bg-violet text-white') + '">' + initials(c.name) + '</span>' +
+                        (c.online ? '<span class="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-shell bg-neon"></span>' : '') + '</span>' +
+                        '<span class="min-w-0 flex-1"><span class="flex items-baseline justify-between gap-2"><span class="truncate text-sm font-extrabold">' + esc(c.name) + '</span><span class="shrink-0 text-[11px] font-semibold text-mono/50">' + c.time + '</span></span>' +
+                        '<span class="mt-0.5 flex items-center justify-between gap-2"><span class="truncate text-xs ' + (c.unread ? 'font-semibold text-white' : 'text-mono/70') + '">' + esc(lastText(c)) + '</span>' +
+                        (c.unread ? '<span class="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-violet px-1.5 text-[11px] font-extrabold text-white">' + c.unread + '</span>' : '') +
+                        '</span></span></button></li>';
+                }).join('');
+            }
+
+            function bubble(m) {
+                var out = m.from === 'out';
+                var meta = '<span class="mt-1 flex items-center gap-1 text-[11px] ' + (out ? 'justify-end text-mono/60' : 'text-mono/50') + '">' + m.time +
+                    (out ? '<span class="' + (m.read ? 'text-neon' : 'text-mono/50') + '">' + (m.read ? CHECKS.read : CHECKS.sent) + '</span>' : '') + '</span>';
+                var body;
+                if (m.workout) {
+                    body = '<div class="w-64 max-w-full overflow-hidden rounded-2xl rounded-br-md bg-card ring-1 ring-neon/40"><div class="h-1.5 bg-neon"></div><div class="p-4">' +
+                        '<p class="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-neon"><svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/></svg>Workout</p>' +
+                        '<p class="mt-2 text-lg font-black uppercase leading-tight tracking-tighter">' + esc(m.workout.title) + '</p>' +
+                        '<p class="mt-1 flex items-center gap-3 text-xs text-mono/70"><span>' + esc(m.workout.duration) + '</span><span class="h-1 w-1 rounded-full bg-mono/40"></span><span>' + esc(m.workout.level) + '</span></p>' +
+                        '<button type="button" class="mt-4 w-full rounded-md bg-neon py-2.5 text-xs font-extrabold uppercase tracking-widest text-shell">View Routine</button></div></div>';
+                } else {
+                    body = '<p class="rounded-2xl px-4 py-2.5 text-sm leading-relaxed ' + (out ? 'rounded-br-md bg-violet text-white' : 'rounded-bl-md bg-card text-white') + '">' + esc(m.text) + '</p>';
+                }
+                return '<div class="flex ' + (out ? 'justify-end' : 'justify-start') + '"><div class="max-w-[85%] sm:max-w-[70%] ' + (out ? 'text-right' : '') + '">' + body + meta + '</div></div>';
+            }
+
+            function renderChat() {
+                var c = byId(activeId);
+                $('head-avatar').textContent = initials(c.name);
+                $('head-name').textContent = c.name;
+                var st = $('head-status');
+                if (c.typing) {
+                    st.className = 'flex items-center gap-1.5 text-xs font-semibold text-neon';
+                    st.innerHTML = 'Typing<span class="inline-flex gap-0.5"><i class="typing-dot h-1 w-1 rounded-full bg-neon"></i><i class="typing-dot h-1 w-1 rounded-full bg-neon"></i><i class="typing-dot h-1 w-1 rounded-full bg-neon"></i></span>';
+                } else if (c.online) {
+                    st.className = 'flex items-center gap-1.5 text-xs font-semibold text-neon';
+                    st.innerHTML = '<span class="h-1.5 w-1.5 rounded-full bg-neon"></span>Online';
+                } else {
+                    st.className = 'flex items-center gap-1.5 text-xs font-semibold text-mono/50';
+                    st.textContent = 'Offline';
+                }
+                var box = $('messages');
+                box.innerHTML = '<p class="mx-auto w-fit rounded-full bg-card px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-mono/60">Today</p>' + c.msgs.map(bubble).join('');
+                box.scrollTop = box.scrollHeight;
+
+                $('info-avatar').textContent = initials(c.name);
+                $('info-name').textContent = c.name;
+                
+                if (isTrainer) {
+                    $('info-goal').textContent = c.goal;
+                    $('info-weight').textContent = c.weight;
+                } else {
+                    $('info-exp').textContent = c.exp;
+                    $('info-spec').textContent = c.spec;
+                }
+                $('info-next').textContent = c.next;
+
+                $('media-grid').innerHTML = MEDIA.map(function (g, i) {
+                    return '<li><button type="button" class="relative block aspect-square w-full overflow-hidden rounded-md transition-transform duration-300 hover:scale-105" style="background:linear-gradient(135deg,' + g[0] + ',' + g[1] + ')">' +
+                        (i % 3 === 2 ? '<svg class="absolute inset-0 m-auto h-6 w-6 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>' : '') + '</button></li>';
+                }).join('');
+            }
+
+            function selectChat(id) {
+                activeId = id; var c = byId(id); c.unread = 0;
+                renderList(); renderChat();
+                $('chat-list-col').classList.add('hidden', 'lg:flex');
+                $('chat-col').classList.remove('hidden'); $('chat-col').classList.add('flex');
+            }
+
+            function showList() {
+                $('chat-list-col').classList.remove('hidden');
+                $('chat-col').classList.add('hidden'); $('chat-col').classList.remove('flex');
+            }
+
+            $('chat-list').addEventListener('click', function (e) { var b = e.target.closest('.chat-item'); if (b) selectChat(+b.dataset.id); });
+            $('chat-search').addEventListener('input', renderList);
+            $('chat-back').addEventListener('click', showList);
+
+            function now() { var d = new Date(); return ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); }
+            function push(msg) { var c = byId(activeId); c.msgs.push(msg); c.time = msg.time; renderList(); renderChat(); }
+
+            $('composer').addEventListener('submit', function (e) {
+                e.preventDefault(); var input = $('msg-input'), text = input.value.trim();
+                if (!text) return; input.value = '';
+                push({ from: 'out', text: text, time: now(), read: false });
+            });
+
+            /* Plus menu (Only initialized if isTrainer is true) */
+            var plusBtn = $('plus-btn'), plusMenu = $('plus-menu');
+            if (plusBtn && plusMenu) {
+                function setPlus(open) {
+                    plusMenu.classList.toggle('hidden', !open);
+                    plusBtn.setAttribute('aria-expanded', String(open));
+                    plusBtn.classList.toggle('bg-violet', open); plusBtn.classList.toggle('rotate-45', open);
+                }
+                plusBtn.addEventListener('click', function (e) { e.stopPropagation(); setPlus(plusMenu.classList.contains('hidden')); });
+                document.addEventListener('click', function (e) { if (!plusMenu.contains(e.target)) setPlus(false); });
+                document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { setPlus(false); closeInfo(); } });
+                plusMenu.addEventListener('click', function (e) {
+                    var item = e.target.closest('[data-action]'); if (!item) return;
+                    setPlus(false);
+                    if (item.dataset.action === 'workout') push({ from: 'out', workout: { title: 'Full Body Burn', duration: '30 min', level: 'Beginner' }, time: now(), read: false });
+                    else push({ from: 'out', text: 'Book your next session here: https://sporthub.example/book', time: now(), read: false });
+                });
+            }
+
+            /* Info panel */
+            var infoCol = $('info-col'), infoOverlayClasses = ['fixed', 'inset-y-0', 'right-0', 'z-40', 'w-80', 'max-w-full', 'shadow-2xl', 'block'];
+            function openInfo() { infoCol.classList.remove('hidden'); infoOverlayClasses.forEach(function (c) { infoCol.classList.add(c); }); }
+            function closeInfo() { if (window.matchMedia('(min-width: 1280px)').matches) return; infoOverlayClasses.forEach(function (c) { infoCol.classList.remove(c); }); infoCol.classList.add('hidden'); }
+            $('info-btn').addEventListener('click', openInfo);
+            $('info-close').addEventListener('click', closeInfo);
+            window.matchMedia('(min-width: 1280px)').addEventListener('change', function (e) {
+                if (e.matches) { infoOverlayClasses.forEach(function (c) { infoCol.classList.remove(c); }); infoCol.classList.add('hidden', 'xl:block'); }
+            });
+
+            renderList(); renderChat();
+            if (window.matchMedia('(max-width: 1023px)').matches) showList();
+        })();
+    </script>
 }
-    </tbody>
-</table>

@@ -16,7 +16,7 @@ namespace SportLab.Controllers
 
         public IActionResult Index()
         {
-            var model = new AdminPanelData
+                    var model = new AdminPanelData
             {
                 Tariffs = _context.Plans.ToList(),
                 Products = _context.Products.ToList(),

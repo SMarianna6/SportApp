@@ -1,0 +1,117 @@
+﻿@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Settings";
+}
+
+<div class="mb-6">
+    <h2 class="text-3xl font-black uppercase tracking-tighter sm:text-4xl">Settings</h2>
+    <p class="mt-1 text-sm text-mono/60">Manage your account, security and alerts.</p>
+</div>
+
+<div class="flex flex-col gap-5 lg:flex-row">
+    <nav class="flex shrink-0 gap-1 overflow-x-auto rounded-lg bg-card p-2 lg:w-60 lg:flex-col" aria-label="Settings sections" role="tablist" aria-orientation="vertical">
+        <button type="button" role="tab" data-tab="account" class="settings-tab whitespace-nowrap rounded-md px-4 py-3 text-left text-xs font-bold uppercase tracking-widest">Account</button>
+        <button type="button" role="tab" data-tab="security" class="settings-tab whitespace-nowrap rounded-md px-4 py-3 text-left text-xs font-bold uppercase tracking-widest">Security</button>
+        <button type="button" role="tab" data-tab="notifications" class="settings-tab whitespace-nowrap rounded-md px-4 py-3 text-left text-xs font-bold uppercase tracking-widest">Notifications</button>
+    </nav>
+
+    <div class="min-w-0 flex-1 rounded-lg bg-card p-5 sm:p-7">
+        <!-- Account Tab -->
+        <section id="tab-account" data-tab-panel role="tabpanel">
+            <h3 class="text-lg font-extrabold uppercase tracking-tight">Account</h3>
+            <p class="mt-1 text-sm text-mono/60">Your public trainer details.</p>
+            <form class="mt-6 grid max-w-xl gap-4 sm:grid-cols-2" onsubmit="return false">
+                <div>
+                    <label for="acc-name" class="mb-1.5 block text-[11px] font-semibold uppercase tracking-widest text-mono/50">Full name</label>
+                    <input id="acc-name" type="text" value="Nazar Dovhopiat" class="w-full rounded-md bg-shell px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-neon" />
+                </div>
+                <div>
+                    <label for="acc-email" class="mb-1.5 block text-[11px] font-semibold uppercase tracking-widest text-mono/50">Email</label>
+                    <input id="acc-email" type="email" value="nazarD@sporthub.com" class="w-full rounded-md bg-shell px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-neon" />
+                </div>
+                <div class="sm:col-span-2">
+                    <button type="submit" class="rounded-md bg-neon px-6 py-3 text-xs font-extrabold uppercase tracking-widest text-shell transition-transform hover:-translate-y-0.5">Save changes</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Security Tab -->
+        <section id="tab-security" data-tab-panel role="tabpanel" class="hidden">
+            <h3 class="text-lg font-extrabold uppercase tracking-tight">Security</h3>
+            <p class="mt-1 text-sm text-mono/60">Change your password regularly to keep your account safe.</p>
+            <form class="mt-6 max-w-md space-y-4" onsubmit="return false">
+                <div>
+                    <label for="pw-current" class="mb-1.5 block text-[11px] font-semibold uppercase tracking-widest text-mono/50">Current password</label>
+                    <input id="pw-current" type="password" autocomplete="current-password" class="w-full rounded-md bg-shell px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-neon" />
+                </div>
+                <div>
+                    <label for="pw-new" class="mb-1.5 block text-[11px] font-semibold uppercase tracking-widest text-mono/50">New password</label>
+                    <input id="pw-new" type="password" autocomplete="new-password" class="w-full rounded-md bg-shell px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-neon" />
+                </div>
+                <div>
+                    <label for="pw-confirm" class="mb-1.5 block text-[11px] font-semibold uppercase tracking-widest text-mono/50">Confirm password</label>
+                    <input id="pw-confirm" type="password" autocomplete="new-password" class="w-full rounded-md bg-shell px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-neon" />
+                </div>
+                <button type="submit" class="rounded-md bg-neon px-6 py-3 text-xs font-extrabold uppercase tracking-widest text-shell transition-transform hover:-translate-y-0.5">Update password</button>
+            </form>
+        </section>
+
+        <!-- Notifications Tab -->
+        <section id="tab-notifications" data-tab-panel role="tabpanel" class="hidden">
+            <h3 class="text-lg font-extrabold uppercase tracking-tight">Notifications</h3>
+            <p class="mt-1 text-sm text-mono/60">Choose how you want to hear from us.</p>
+            <ul class="mt-6 max-w-xl divide-y divide-white/10">
+                <li class="flex items-center justify-between gap-4 py-4">
+                    <div>
+                        <p id="sw-email-label" class="text-sm font-bold">Email alerts for new bookings</p>
+                        <p class="text-xs text-mono/50">Get an email whenever a client books a session.</p>
+                    </div>
+                    <button type="button" role="switch" aria-checked="true" aria-labelledby="sw-email-label" class="switch relative h-6 w-11 shrink-0 rounded-full bg-neon transition-colors focus:outline-none">
+                        <span class="knob absolute left-0.5 top-0.5 h-5 w-5 translate-x-5 transform-gpu rounded-full bg-shell transition-transform"></span>
+                    </button>
+                </li>
+                <li class="flex items-center justify-between gap-4 py-4">
+                    <div>
+                        <p id="sw-chat-label" class="text-sm font-bold">In-app chat messages</p>
+                        <p class="text-xs text-mono/50">Show a badge when a client sends you a message.</p>
+                    </div>
+                    <button type="button" role="switch" aria-checked="false" aria-labelledby="sw-chat-label" class="switch relative h-6 w-11 shrink-0 rounded-full bg-shell transition-colors focus:outline-none">
+                        <span class="knob absolute left-0.5 top-0.5 h-5 w-5 transform-gpu rounded-full bg-mono/60 transition-transform"></span>
+                    </button>
+                </li>
+            </ul>
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            'use strict';
+            function setTab(name) {
+                document.querySelectorAll('[data-tab-panel]').forEach(function (p) { p.classList.toggle('hidden', p.id !== 'tab-' + name); });
+                document.querySelectorAll('.settings-tab').forEach(function (t) {
+                    var on = t.dataset.tab === name;
+                    t.setAttribute('aria-selected', String(on));
+                    t.className = 'settings-tab whitespace-nowrap rounded-md px-4 py-3 text-left text-xs font-bold uppercase tracking-widest transition-colors ' +
+                        (on ? 'bg-shell text-neon' : 'text-mono hover:text-neon');
+                    t.style.boxShadow = on ? 'inset 3px 0 0 #AAFF00' : '';
+                });
+            }
+            document.querySelectorAll('.settings-tab').forEach(function (t) {
+                t.addEventListener('click', function () { setTab(t.dataset.tab); });
+            });
+            setTab('account');
+
+            document.querySelectorAll('.switch').forEach(function (sw) {
+                sw.addEventListener('click', function () {
+                    var on = sw.getAttribute('aria-checked') !== 'true';
+                    var knob = sw.querySelector('.knob');
+                    sw.setAttribute('aria-checked', String(on));
+                    sw.classList.toggle('bg-neon', on); sw.classList.toggle('bg-shell', !on);
+                    knob.classList.toggle('translate-x-5', on); knob.classList.toggle('bg-shell', on); knob.classList.toggle('bg-mono/60', !on);
+                });
+            });
+        })();
+    </script>
+}

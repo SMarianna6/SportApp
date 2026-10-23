@@ -2,18 +2,33 @@
     ViewData["Title"] = "Log in Page";
 }
 
-<div class="container">
-    <h3>Log in</h3>
-    <form method="post">
-        <div class="mb-3">
-            <label>Email</label>
-            <input type="email" class="form-control" required>
+<link rel="stylesheet" href="~/css/page.css" asp-append-version="true" />
+
+<div class="login-page-wrapper">
+    <div class="login-card">
+        <h3 class="mb-3 text-center">Log in</h3>
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger py-2 small text-center">
+                Invalid email or password.
+            </div>
+        }
+
+        <form method="post" autocomplete="off">
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" value="@ViewBag.EnteredEmail" required autocomplete="off">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" required autocomplete="new-password">
+            </div>
+            <input type="submit" class="btn btn-primary w-100 mb-3" value="Login">
+        </form>
+
+        <div class="text-center">
+            <h5 class="fs-6 text-muted">Don't have an account? <a asp-controller="Account" asp-action="Register" class="text-primary fw-bold text-decoration-none">Sign up</a></h5>
         </div>
-        <div class="mb-3">
-            <label>Password</label>
-            <input type="password" class="form-control" required>
-        </div>
-        <input type="submit" class="btn btn-primary mb-3" value="Login">
-    </form>
-    <h5>Don't have an account? <a asp-controller="Account" asp-action="Register">Sign up</a> </h5>
+    </div>
 </div>

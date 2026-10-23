@@ -25,3 +25,22 @@ html {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+
+#qb-scroll-area::-webkit-scrollbar {
+    width: 8px;
+}
+
+#qb-scroll-area::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#qb-scroll-area::-webkit-scrollbar-thumb {
+    background: #333333;
+    border-radius: 10px;
+    border: 2px solid #141414; 
+}
+
+#qb-scroll-area::-webkit-scrollbar-thumb:hover {
+    background: #AAFF00;
+}
