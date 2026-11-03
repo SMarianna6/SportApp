@@ -2,11 +2,12 @@
 
 @{
     ViewData["Title"] = "Edit Product";
+    Layout = "_AdminLayout";
 }
 
 <div class="container mt-4">
-    <h2>Edit Product</h2>
-    <hr />
+    <h3 class="h3 fw-bold mt-5 mb-3">Edit Product</h3>
+    <hr class="mb-4" />
     <form asp-action="EditProduct">
         <input type="hidden" asp-for="Id" />
 

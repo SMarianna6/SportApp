@@ -14,14 +14,51 @@ namespace SportLab.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string userSearch, string userStatus, string productSearch, string tariffSearch)
         {
-                    var model = new AdminPanelData
+            var usersQuery = from u in _context.Users select u;
+
+            if (!string.IsNullOrEmpty(userSearch))
             {
-                Tariffs = _context.Plans.ToList(),
-                Products = _context.Products.ToList(),
-                Users = _context.Users.ToList(),
+                usersQuery = usersQuery.Where(u => u.Name != null && u.Name.Contains(userSearch) ||
+                                                   u.Email != null && u.Email.Contains(userSearch));
+            }
+
+            if (!string.IsNullOrEmpty(userStatus))
+            {
+                if (userStatus == "Blocked")
+                {
+                    usersQuery = usersQuery.Where(u => u.IsBlocked);
+                }
+                else if (userStatus == "Active")
+                {
+                    usersQuery = usersQuery.Where(u => !u.IsBlocked);
+                }
+                else
+                {
+                    usersQuery = usersQuery.Where(u => u.Role == userStatus);
+                }
+            }
+
+            var productsQuery = from p in _context.Products select p;
+            if (!string.IsNullOrEmpty(productSearch))
+            {
+                productsQuery = productsQuery.Where(p => p.Name != null && p.Name.Contains(productSearch));
+            }
+
+            var tariffsQuery = from t in _context.Plans select t;
+            if (!string.IsNullOrEmpty(tariffSearch))
+            {
+                tariffsQuery = tariffsQuery.Where(t => t.Name != null && t.Name.Contains(tariffSearch));
+            }
+
+            var model = new AdminPanelData
+            {
+                Tariffs = tariffsQuery.ToList(),
+                Products = productsQuery.ToList(),
+                Users = usersQuery.ToList()
             };
+
             return View(model);
         }
 

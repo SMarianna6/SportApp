@@ -2,11 +2,12 @@
 
 @{
     ViewData["Title"] = "Create Product";
+    Layout = "_AdminLayout";
 }
 
 <div class="container mt-4">
-    <h2>Create Product</h2>
-    <hr />
+    <h3 class="h3 fw-bold mt-5 mb-3">Create Product</h3>
+    <hr class="mb-4" />
     <form asp-action="CreateProduct">
         <div class="mb-3">
             <label class="form-label">Name</label>

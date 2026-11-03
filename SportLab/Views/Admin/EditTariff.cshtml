@@ -2,11 +2,12 @@
 
 @{
     ViewData["Title"] = "Edit Tariff";
+    Layout = "_AdminLayout";
 }
 
 <div class="container mt-4">
-    <h2>Edit Tariff</h2>
-    <hr />
+    <h3 class="h3 fw-bold mt-5 mb-3">Edit Tariff</h3>
+    <hr class="mb-4" />
     <form asp-action="EditTariff">
         <input type="hidden" asp-for="Id" />
 

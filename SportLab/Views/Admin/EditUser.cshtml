@@ -2,11 +2,12 @@
 
 @{
     ViewData["Title"] = "Create User";
+    Layout = "_AdminLayout";
 }
 
 <div class="container mt-4">
-    <h2>Edit User</h2>
-    <hr />
+    <h3 class="h3 fw-bold mt-5 mb-3">Edit User</h3>
+    <hr class="mb-4" />
     <form asp-action="EditUser">
         <input type="hidden" asp-for="Id" />
         <input type="hidden" asp-for="Password" />
