@@ -1,10 +1,12 @@
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using SportLab.Data;
+using SportLab.Filters;
 using SportLab.Models;
-using System.Linq;
 
 namespace SportLab.Controllers
 {
+    [AuthorizeRole("Admin")]
     public class AdminController : Controller
     {
         private readonly SportLabContext _context;

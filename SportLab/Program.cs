@@ -4,7 +4,7 @@ using SportLab.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<SportLabContext>(options => 
+builder.Services.AddDbContext<SportLabContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SportLabContext")));
 
 builder.Services.AddControllersWithViews();
