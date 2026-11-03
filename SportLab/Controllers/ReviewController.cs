@@ -157,7 +157,6 @@ namespace SportLab.Controllers
             _context.SaveChanges();
         }
 
-        // GET: Review/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
@@ -171,7 +170,6 @@ namespace SportLab.Controllers
             return View(review);
         }
 
-        // GET: Review/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -183,7 +181,6 @@ namespace SportLab.Controllers
             return View(review);
         }
 
-        // POST: Review/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,Comment,Rating,CreatedDate,ModerationStatus")] Review review)
@@ -208,7 +205,6 @@ namespace SportLab.Controllers
             return View(review);
         }
 
-        // GET: Review/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
@@ -222,7 +218,6 @@ namespace SportLab.Controllers
             return View(review);
         }
 
-        // POST: Review/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

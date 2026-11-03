@@ -17,7 +17,6 @@ namespace SportLab.Controllers
             _context = context;
         }
 
-        // GET: WorkoutSlots
         public async Task<IActionResult> Index()
         {
             var workoutSlots = _context.WorkoutSlots
@@ -26,7 +25,6 @@ namespace SportLab.Controllers
             return View(await workoutSlots.ToListAsync());
         }
 
-        // GET: WorkoutSlots/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -47,7 +45,6 @@ namespace SportLab.Controllers
             return View(workoutSlot);
         }
 
-        // GET: WorkoutSlots/Create
         public IActionResult Create()
         {
             ViewData["TrainerId"] = new SelectList(_context.Users.Where(u => u.Role == "Trainer" || u.Role == "Admin"), "Id", "Name");
@@ -55,8 +52,6 @@ namespace SportLab.Controllers
             return View();
         }
 
-        // POST: WorkoutSlots/Create
-        // Захист від надмірної передачі даних (overposting) за допомогою атрибута [Bind]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ActivityName,TrainerId,UserId,StartTime,EndTime,Status")] WorkoutSlot workoutSlot)
@@ -72,7 +67,6 @@ namespace SportLab.Controllers
             return View(workoutSlot);
         }
 
-        // GET: WorkoutSlots/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -90,8 +84,6 @@ namespace SportLab.Controllers
             return View(workoutSlot);
         }
 
-        // POST: WorkoutSlots/Edit/5
-        // Захист від надмірної передачі даних (overposting) за допомогою атрибута [Bind]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,ActivityName,TrainerId,UserId,StartTime,EndTime,Status")] WorkoutSlot workoutSlot)
@@ -126,7 +118,6 @@ namespace SportLab.Controllers
             return View(workoutSlot);
         }
 
-        // GET: WorkoutSlots/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -146,7 +137,6 @@ namespace SportLab.Controllers
             return View(workoutSlot);
         }
 
-        // POST: WorkoutSlots/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

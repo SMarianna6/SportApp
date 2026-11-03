@@ -16,7 +16,6 @@ namespace SportLab.Controllers
             _context = context;
         }
 
-        // GET: MetricLogs
         public async Task<IActionResult> Index()
         {
             var metricLogs = _context.MetricLogs
@@ -25,7 +24,6 @@ namespace SportLab.Controllers
             return View(await metricLogs.ToListAsync());
         }
 
-        // GET: MetricLogs/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -45,14 +43,12 @@ namespace SportLab.Controllers
             return View(metricLog);
         }
 
-        // GET: MetricLogs/Create
         public IActionResult Create()
         {
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Name");
             return View();
         }
 
-        // POST: MetricLogs/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,UserId,Weight,RecordDate,Notes")] MetricLog metricLog)
@@ -67,7 +63,6 @@ namespace SportLab.Controllers
             return View(metricLog);
         }
 
-        // GET: MetricLogs/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -84,7 +79,6 @@ namespace SportLab.Controllers
             return View(metricLog);
         }
 
-        // POST: MetricLogs/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,Weight,RecordDate,Notes")] MetricLog metricLog)
@@ -118,7 +112,6 @@ namespace SportLab.Controllers
             return View(metricLog);
         }
 
-        // GET: MetricLogs/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -137,7 +130,6 @@ namespace SportLab.Controllers
             return View(metricLog);
         }
 
-        // POST: MetricLogs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

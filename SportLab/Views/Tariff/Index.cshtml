@@ -1,4 +1,4 @@
-@model IEnumerable<SportLab.Models.Plan>
+﻿@model IEnumerable<SportLab.Models.Plan>
 
 @{
     ViewData["Title"] = "Memberships & Plans";
@@ -67,31 +67,26 @@
                 var fullSearchText = $"{(item.Type ?? "")} {(item.Name ?? "")} {(item.Description ?? "")}".ToLowerInvariant();
                 var cardCategories = new List<string> { "all" };
 
-                // Student detection (Ukrainian & English keywords)
-                if (fullSearchText.Contains("студент") || fullSearchText.Contains("student") || fullSearchText.Contains("учен") || fullSearchText.Contains("youth"))
+                if (fullSearchText.Contains("student") || fullSearchText.Contains("youth"))
                 {
                     cardCategories.Add("student");
                 }
 
-                // Basic detection (Ukrainian & English keywords or lower price tier)
-                if (fullSearchText.Contains("базов") || fullSearchText.Contains("basic") || fullSearchText.Contains("стандарт") || fullSearchText.Contains("standard") || fullSearchText.Contains("start") || fullSearchText.Contains("старт") || (item.Price < 1000 && !cardCategories.Contains("student")))
+                if (fullSearchText.Contains("basic") || fullSearchText.Contains("standard") || fullSearchText.Contains("start") || (item.Price < 1000 && !cardCategories.Contains("student")))
                 {
                     cardCategories.Add("basic");
                 }
 
-                // Popular / Pro detection
-                if (fullSearchText.Contains("популяр") || fullSearchText.Contains("popular") || fullSearchText.Contains("про") || fullSearchText.Contains("pro") || fullSearchText.Contains("хіт") || fullSearchText.Contains("hit") || fullSearchText.Contains("безліміт") || fullSearchText.Contains("unlimited"))
+                if (fullSearchText.Contains("popular") || fullSearchText.Contains("pro") || fullSearchText.Contains("hit") || fullSearchText.Contains("unlimited"))
                 {
                     cardCategories.Add("popular");
                 }
 
-                // Premium / VIP / Elite / Annual detection
-                if (fullSearchText.Contains("преміум") || fullSearchText.Contains("premium") || fullSearchText.Contains("vip") || fullSearchText.Contains("elite") || fullSearchText.Contains("еліт") || fullSearchText.Contains("річн") || fullSearchText.Contains("annual") || fullSearchText.Contains("year") || item.Price >= 3000 || item.Duration >= 180)
+                if (fullSearchText.Contains("premium") || fullSearchText.Contains("vip") || fullSearchText.Contains("elite") || fullSearchText.Contains("annual") || fullSearchText.Contains("year") || item.Price >= 3000 || item.Duration >= 180)
                 {
                     cardCategories.Add("premium");
                 }
 
-                // Fallback: ensure every card is categorized
                 if (cardCategories.Count == 1)
                 {
                     cardCategories.Add("basic");

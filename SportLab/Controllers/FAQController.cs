@@ -81,7 +81,6 @@ namespace SportLab.Controllers
             _context.SaveChanges();
         }
 
-        // GET: FAQ/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
@@ -92,13 +91,11 @@ namespace SportLab.Controllers
             return View(fAQ);
         }
 
-        // GET: FAQ/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: FAQ/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Question,Answer,SortOrder,IsActive")] FAQ fAQ)
@@ -112,7 +109,6 @@ namespace SportLab.Controllers
             return View(fAQ);
         }
 
-        // GET: FAQ/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -123,7 +119,6 @@ namespace SportLab.Controllers
             return View(fAQ);
         }
 
-        // POST: FAQ/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Question,Answer,SortOrder,IsActive")] FAQ fAQ)
@@ -147,7 +142,6 @@ namespace SportLab.Controllers
             return View(fAQ);
         }
 
-        // GET: FAQ/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
@@ -158,7 +152,6 @@ namespace SportLab.Controllers
             return View(fAQ);
         }
 
-        // POST: FAQ/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

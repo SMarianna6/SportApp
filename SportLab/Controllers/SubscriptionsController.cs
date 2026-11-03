@@ -16,7 +16,6 @@ namespace SportLab.Controllers
             _context = context;
         }
 
-        // GET: Subscriptions
         public async Task<IActionResult> Index()
         {
             var subscriptions = _context.Subscriptions
@@ -25,7 +24,6 @@ namespace SportLab.Controllers
             return View(await subscriptions.ToListAsync());
         }
 
-        // GET: Subscriptions/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -46,7 +44,6 @@ namespace SportLab.Controllers
             return View(subscription);
         }
 
-        // GET: Subscriptions/Create
         public IActionResult Create()
         {
             ViewData["PlanId"] = new SelectList(_context.Plans, "Id", "Name");
@@ -54,7 +51,6 @@ namespace SportLab.Controllers
             return View();
         }
 
-        // POST: Subscriptions/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,UserId,PlanId,StartDate,EndDate,IsActive")] Subscription subscription)
@@ -70,7 +66,6 @@ namespace SportLab.Controllers
             return View(subscription);
         }
 
-        // GET: Subscriptions/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -88,7 +83,6 @@ namespace SportLab.Controllers
             return View(subscription);
         }
 
-        // POST: Subscriptions/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,PlanId,StartDate,EndDate,IsActive")] Subscription subscription)
@@ -123,7 +117,6 @@ namespace SportLab.Controllers
             return View(subscription);
         }
 
-        // GET: Subscriptions/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -143,7 +136,6 @@ namespace SportLab.Controllers
             return View(subscription);
         }
 
-        // POST: Subscriptions/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

@@ -5,9 +5,8 @@ using SportLab.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<SportLabContext>(options => 
-options.UseSqlServer(builder.Configuration.GetConnectionString("SportLabContext")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SportLabContext")));
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
@@ -19,18 +18,15 @@ builder.Services.AddSession(options =>
 
 var app = builder.Build();
 
-// Ініціалізація початкових даних (SeedData) згідно з ЛР4
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     SeedData.Initialize(services);
 }
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -46,6 +42,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
-
 
 app.Run();

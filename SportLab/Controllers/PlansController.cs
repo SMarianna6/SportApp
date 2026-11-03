@@ -15,13 +15,11 @@ namespace SportLab.Controllers
             _context = context;
         }
 
-        // GET: Plans
         public async Task<IActionResult> Index()
         {
             return View(await _context.Plans.ToListAsync());
         }
 
-        // GET: Plans/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -41,13 +39,11 @@ namespace SportLab.Controllers
             return View(plan);
         }
 
-        // GET: Plans/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Plans/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,Duration,Type")] Plan plan)
@@ -61,7 +57,6 @@ namespace SportLab.Controllers
             return View(plan);
         }
 
-        // GET: Plans/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -77,7 +72,6 @@ namespace SportLab.Controllers
             return View(plan);
         }
 
-        // POST: Plans/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Price,Duration,Type")] Plan plan)
@@ -110,7 +104,6 @@ namespace SportLab.Controllers
             return View(plan);
         }
 
-        // GET: Plans/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -128,7 +121,6 @@ namespace SportLab.Controllers
             return View(plan);
         }
 
-        // POST: Plans/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

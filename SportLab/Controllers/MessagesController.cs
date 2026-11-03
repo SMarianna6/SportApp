@@ -19,14 +19,12 @@ namespace SportLab.Controllers
             _context = context;
         }
 
-        // GET: Messages
         public async Task<IActionResult> Index()
         {
             var sportLabContext = _context.Messages.Include(m => m.Receiver).Include(m => m.Sender);
             return View(await sportLabContext.ToListAsync());
         }
 
-        // GET: Messages/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -46,7 +44,6 @@ namespace SportLab.Controllers
             return View(message);
         }
 
-        // GET: Messages/Create
         public IActionResult Create()
         {
             ViewData["ReceiverId"] = new SelectList(_context.Users, "Id", "Email");
@@ -54,9 +51,6 @@ namespace SportLab.Controllers
             return View();
         }
 
-        // POST: Messages/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,SenderId,ReceiverId,Text,SentDate")] Message message)
@@ -72,7 +66,6 @@ namespace SportLab.Controllers
             return View(message);
         }
 
-        // GET: Messages/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -90,9 +83,6 @@ namespace SportLab.Controllers
             return View(message);
         }
 
-        // POST: Messages/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,SenderId,ReceiverId,Text,SentDate")] Message message)
@@ -127,7 +117,6 @@ namespace SportLab.Controllers
             return View(message);
         }
 
-        // GET: Messages/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -147,7 +136,6 @@ namespace SportLab.Controllers
             return View(message);
         }
 
-        // POST: Messages/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

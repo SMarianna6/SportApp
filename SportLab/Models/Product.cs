@@ -34,24 +34,11 @@ namespace SportLab.Models
             set => PhotoUrl = value;
         }
 
-        [NotMapped]
         [Display(Name = "Category")]
-        public string Category
-        {
-            get
-            {
-                var text = $"{Name} {Description}".ToLowerInvariant();
-                if (text.Contains("protein") || text.Contains("bcaa") || text.Contains("creatine") || text.Contains("vitamin") || text.Contains("amino") || text.Contains("nutrition") || text.Contains("bar") || text.Contains("snack"))
-                    return "Nutrition";
-                if (text.Contains("shaker") || text.Contains("bottle") || text.Contains("towel") || text.Contains("strap") || text.Contains("lock") || text.Contains("accessory") || text.Contains("accessories"))
-                    return "Accessories";
-                if (text.Contains("bag") || text.Contains("shirt") || text.Contains("hoodie") || text.Contains("shorts") || text.Contains("short") || text.Contains("glove") || text.Contains("wear") || text.Contains("apparel"))
-                    return "Apparel";
-                if (text.Contains("dumbbell") || text.Contains("band") || text.Contains("mat") || text.Contains("belt") || text.Contains("roller") || text.Contains("equipment"))
-                    return "Equipment";
-                return "Accessories";
-            }
-        }
+        public string? Category { get; set; }
+
+        [Display(Name = "Rating")]
+        public string? Rating { get; set; }
 
         public ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
     }

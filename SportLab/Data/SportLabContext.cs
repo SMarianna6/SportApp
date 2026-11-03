@@ -11,6 +11,7 @@ namespace SportLab.Data
         }
 
         public DbSet<Plan> Plans { get; set; } = null!;
+        public DbSet<Plan> Plan => Plans;
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<Subscription> Subscriptions { get; set; } = null!;
         public DbSet<WorkoutSlot> WorkoutSlots { get; set; } = null!;

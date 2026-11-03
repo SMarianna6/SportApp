@@ -198,7 +198,6 @@ namespace SportLab.Controllers
                 return View(model);
             }
 
-            // Find or create customer user
             var user = _context.Users.FirstOrDefault(u => u.Email == model.Email);
             if (user == null)
             {
@@ -216,7 +215,6 @@ namespace SportLab.Controllers
 
             var totalAmount = cart.Sum(i => i.Subtotal);
 
-            // Create Order
             var order = new Order
             {
                 UserId = user.Id,
@@ -228,7 +226,6 @@ namespace SportLab.Controllers
             _context.Orders.Add(order);
             _context.SaveChanges();
 
-            // Create OrderDetails & decrease stock
             foreach (var item in cart)
             {
                 var orderDetail = new OrderDetail
@@ -247,10 +244,8 @@ namespace SportLab.Controllers
 
             _context.SaveChanges();
 
-            // Clear session cart
             HttpContext.Session.Remove(CartSessionKey);
 
-            // Save order metadata in TempData for OrderSuccess page
             TempData["CustomerName"] = model.FullName;
             TempData["CustomerPhone"] = model.Phone;
             TempData["DeliveryMethod"] = model.DeliveryMethod;
