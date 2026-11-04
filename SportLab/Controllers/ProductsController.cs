@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -71,11 +72,13 @@ namespace SportLab.Controllers
             return View(product);
         }
 
+        [Authorize(Roles = Roles.AdminRoles)]
         public IActionResult Create()
         {
             return View();
         }
 
+        [Authorize(Roles = Roles.AdminRoles)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,StockQuantity,PhotoUrl,Category,Rating")] Product product)
@@ -89,6 +92,7 @@ namespace SportLab.Controllers
             return View(product);
         }
 
+        [Authorize(Roles = Roles.AdminRoles)]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -104,6 +108,7 @@ namespace SportLab.Controllers
             return View(product);
         }
 
+        [Authorize(Roles = Roles.AdminRoles)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int? id, [Bind("Id,Name,Description,Price,StockQuantity,PhotoUrl,Category,Rating")] Product product)
@@ -136,6 +141,7 @@ namespace SportLab.Controllers
             return View(product);
         }
 
+        [Authorize(Roles = Roles.AdminRoles)]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -153,6 +159,7 @@ namespace SportLab.Controllers
             return View(product);
         }
 
+        [Authorize(Roles = Roles.AdminRoles)]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int? id)

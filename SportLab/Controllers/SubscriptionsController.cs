@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SportLab.Data;
 using SportLab.Models;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace SportLab.Controllers
@@ -16,6 +18,7 @@ namespace SportLab.Controllers
             _context = context;
         }
 
+        [Authorize(Roles = Roles.AdminRoles)]
         public async Task<IActionResult> Index()
         {
             var subscriptions = _context.Subscriptions
@@ -24,6 +27,7 @@ namespace SportLab.Controllers
             return View(await subscriptions.ToListAsync());
         }
 
+        [Authorize(Roles = Roles.AdminRoles)]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -44,6 +48,7 @@ namespace SportLab.Controllers
             return View(subscription);
         }
 
+        [Authorize(Roles = Roles.AdminRoles)]
         public IActionResult Create()
         {
             ViewData["PlanId"] = new SelectList(_context.Plans, "Id", "Name");
@@ -51,6 +56,7 @@ namespace SportLab.Controllers
             return View();
         }
 
+        [Authorize(Roles = Roles.AdminRoles)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,UserId,PlanId,StartDate,EndDate,IsActive")] Subscription subscription)
@@ -66,6 +72,7 @@ namespace SportLab.Controllers
             return View(subscription);
         }
 
+        [Authorize(Roles = Roles.AdminRoles)]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -83,6 +90,7 @@ namespace SportLab.Controllers
             return View(subscription);
         }
 
+        [Authorize(Roles = Roles.AdminRoles)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,PlanId,StartDate,EndDate,IsActive")] Subscription subscription)
@@ -117,6 +125,7 @@ namespace SportLab.Controllers
             return View(subscription);
         }
 
+        [Authorize(Roles = Roles.AdminRoles)]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -136,6 +145,7 @@ namespace SportLab.Controllers
             return View(subscription);
         }
 
+        [Authorize(Roles = Roles.AdminRoles)]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -149,6 +159,23 @@ namespace SportLab.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        [Authorize(Roles = Roles.ClientRoles)]
+        public async Task<IActionResult> My()
+        {
+            var userId = CurrentUserId();
+
+            var subscriptions = await _context.Subscriptions
+                .Include(s => s.Plan)
+                .Where(s => s.UserId == userId)
+                .OrderByDescending(s => s.StartDate)
+                .ToListAsync();
+
+            return View(subscriptions);
+        }
+
+        private int CurrentUserId() =>
+            int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
         private bool SubscriptionExists(int id)
         {

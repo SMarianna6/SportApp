@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SportLab.Data;
 using SportLab.Models;
+using System.Security.Claims;
 
 namespace SportLab.Controllers
 {
@@ -14,6 +16,7 @@ namespace SportLab.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
         public IActionResult Index()
         {
             if (!_context.Plans.Any())
@@ -25,6 +28,7 @@ namespace SportLab.Controllers
             return View(tariffs);
         }
 
+        [Authorize(Roles = Roles.ClientRoles)]
         public IActionResult ConfirmPurchase(int id)
         {
             var tariff = _context.Plans.Find(id);
@@ -38,6 +42,7 @@ namespace SportLab.Controllers
             return View(tariff);
         }
 
+        [Authorize(Roles = Roles.ClientRoles)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult ConfirmPurchase(int tariffId, string customerName, string customerPhone, string customerEmail, DateTime? startDate, string paymentMethod)
@@ -51,20 +56,16 @@ namespace SportLab.Controllers
             var effectiveStartDate = startDate ?? DateTime.Today;
             var effectiveEndDate = effectiveStartDate.AddDays(tariff.Duration > 0 ? tariff.Duration : 30);
 
-            var user = _context.Users.FirstOrDefault(u => u.Email == customerEmail);
+            var userId = CurrentUserId();
+            var user = _context.Users.Find(userId);
             if (user == null)
             {
-                user = new User
-                {
-                    Name = string.IsNullOrWhiteSpace(customerName) ? "SportLab Client" : customerName.Trim(),
-                    Email = string.IsNullOrWhiteSpace(customerEmail) ? $"client_{Guid.NewGuid().ToString()[..8]}@sportlab.ua" : customerEmail.Trim(),
-                    Password = "UserPass123!",
-                    Role = "Client",
-                    IsBlocked = false
-                };
-                _context.Users.Add(user);
-                _context.SaveChanges();
+                return Challenge();
             }
+
+            // Lab 6: the purchase is always bound to the authenticated user,
+            // never to an e-mail address supplied by the form.
+            DeactivateActiveSubscriptions(userId);
 
             var subscription = new Subscription
             {
@@ -81,6 +82,7 @@ namespace SportLab.Controllers
             return RedirectToAction(nameof(PurchaseSuccess), new { id = subscription.Id });
         }
 
+        [Authorize(Roles = Roles.ClientRoles)]
         [HttpPost]
         public IActionResult QuickPurchase([FromBody] QuickPurchaseRequest request)
         {
@@ -98,20 +100,14 @@ namespace SportLab.Controllers
             var startDate = request.StartDate ?? DateTime.Today;
             var endDate = startDate.AddDays(tariff.Duration > 0 ? tariff.Duration : 30);
 
-            var user = _context.Users.FirstOrDefault(u => u.Email == request.Email);
+            var userId = CurrentUserId();
+            var user = _context.Users.Find(userId);
             if (user == null)
             {
-                user = new User
-                {
-                    Name = string.IsNullOrWhiteSpace(request.FullName) ? "SportLab Client" : request.FullName.Trim(),
-                    Email = string.IsNullOrWhiteSpace(request.Email) ? $"guest_{Guid.NewGuid().ToString()[..8]}@sportlab.ua" : request.Email.Trim(),
-                    Password = "UserPass123!",
-                    Role = "Client",
-                    IsBlocked = false
-                };
-                _context.Users.Add(user);
-                _context.SaveChanges();
+                return Json(new { success = false, message = "Please sign in to purchase a membership." });
             }
+
+            DeactivateActiveSubscriptions(userId);
 
             var subscription = new Subscription
             {
@@ -138,6 +134,7 @@ namespace SportLab.Controllers
             });
         }
 
+        [Authorize(Roles = Roles.ClientRoles)]
         public IActionResult PurchaseSuccess(int id)
         {
             var subscription = _context.Subscriptions
@@ -150,14 +147,21 @@ namespace SportLab.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            if (!User.IsAdmin() && subscription.UserId != CurrentUserId())
+            {
+                return Forbid();
+            }
+
             return View(subscription);
         }
 
+        [Authorize(Roles = Roles.AdminRoles)]
         public IActionResult Create()
         {
             return View();
         }
 
+        [Authorize(Roles = Roles.AdminRoles)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Tariff tariff)
@@ -171,6 +175,7 @@ namespace SportLab.Controllers
             return View(tariff);
         }
 
+        [Authorize(Roles = Roles.AdminRoles)]
         public IActionResult Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -181,6 +186,7 @@ namespace SportLab.Controllers
             return View(tariff);
         }
 
+        [Authorize(Roles = Roles.AdminRoles)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, Tariff tariff)
@@ -196,6 +202,7 @@ namespace SportLab.Controllers
             return View(tariff);
         }
 
+        [Authorize(Roles = Roles.AdminRoles)]
         public IActionResult Delete(int? id)
         {
             if (id == null) return NotFound();
@@ -207,6 +214,24 @@ namespace SportLab.Controllers
                 _context.SaveChanges();
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        private int CurrentUserId() =>
+            int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+        /// <summary>
+        /// Only one membership can be active at a time.
+        /// </summary>
+        private void DeactivateActiveSubscriptions(int userId)
+        {
+            var active = _context.Subscriptions
+                .Where(s => s.UserId == userId && s.IsActive)
+                .ToList();
+
+            foreach (var subscription in active)
+            {
+                subscription.IsActive = false;
+            }
         }
 
         private void SeedDefaultTariffs()

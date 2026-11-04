@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SportLab.Data;
 using SportLab.Models;
+using System.Security.Claims;
 
 namespace SportLab.Controllers
 {
@@ -15,6 +17,7 @@ namespace SportLab.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
         public IActionResult Index(int? filterRating)
         {
             if (!_context.Reviews.Any())
@@ -41,9 +44,10 @@ namespace SportLab.Controllers
             return View(reviews);
         }
 
+        [Authorize(Roles = Roles.ClientRoles)]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(string authorName, string authorEmail, int rating, string comment)
+        public IActionResult Create(int rating, string? comment)
         {
             if (rating < 1 || rating > 5 || string.IsNullOrWhiteSpace(comment))
             {
@@ -51,37 +55,26 @@ namespace SportLab.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var email = string.IsNullOrWhiteSpace(authorEmail) ? $"client_{Guid.NewGuid().ToString()[..8]}@sportlab.ua" : authorEmail.Trim();
-            var name = string.IsNullOrWhiteSpace(authorName) ? "Anonymous Member" : authorName.Trim();
-
-            var user = _context.Users.FirstOrDefault(u => u.Email == email);
-            if (user == null)
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            if (!_context.Users.Any(u => u.Id == userId))
             {
-                user = new User
-                {
-                    Name = name,
-                    Email = email,
-                    Password = "UserPass123!",
-                    Role = "Client",
-                    IsBlocked = false
-                };
-                _context.Users.Add(user);
-                _context.SaveChanges();
+                return Challenge();
             }
 
             var review = new Review
             {
-                UserId = user.Id,
+                UserId = userId,
                 Rating = rating,
                 Comment = comment.Trim(),
                 CreatedDate = DateTime.UtcNow,
-                ModerationStatus = "Approved"
+                // Lab 6: reviews must be approved by a moderator before publication.
+                ModerationStatus = "Pending"
             };
 
             _context.Reviews.Add(review);
             _context.SaveChanges();
 
-            TempData["SuccessMessage"] = "Thank you! Your review has been published successfully.";
+            TempData["SuccessMessage"] = "Thank you! Your review has been sent for moderation.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -157,6 +150,7 @@ namespace SportLab.Controllers
             _context.SaveChanges();
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
@@ -170,6 +164,7 @@ namespace SportLab.Controllers
             return View(review);
         }
 
+        [Authorize(Roles = Roles.ModeratorRoles)]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -181,6 +176,7 @@ namespace SportLab.Controllers
             return View(review);
         }
 
+        [Authorize(Roles = Roles.ModeratorRoles)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,Comment,Rating,CreatedDate,ModerationStatus")] Review review)
@@ -205,6 +201,7 @@ namespace SportLab.Controllers
             return View(review);
         }
 
+        [Authorize(Roles = Roles.ModeratorRoles)]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
@@ -218,6 +215,7 @@ namespace SportLab.Controllers
             return View(review);
         }
 
+        [Authorize(Roles = Roles.ModeratorRoles)]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace SportLab.Controllers
 {
+    // Legacy scaffolded slot CRUD. Trainer slot management goes through
+    // TrainerController (Lab 6), so this low-level CRUD is admin-only.
+    [Authorize(Roles = Roles.AdminRoles)]
     public class WorkoutSlotsController : Controller
     {
         private readonly SportLabContext _context;

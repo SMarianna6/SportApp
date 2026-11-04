@@ -136,7 +136,9 @@ fonts.googleapis.com" />
             </div>
         </div>
     </div>
-    
+
+    @Html.AntiForgeryToken()
+
     <script>
         (function () {
             'use strict';
@@ -200,6 +202,7 @@ fonts.googleapis.com" />
             
             var activeSlot = null;
             var lastFocus = null;
+            var isAuthenticated = @(User.Identity?.IsAuthenticated == true ? "true" : "false");
             
             function pad(n) { return (n < 10 ? '0' : '') + n; }
             function timeLabel(h) { return pad(h) + ':00'; }
@@ -382,13 +385,36 @@ fonts.googleapis.com" />
             
             els.confirm.addEventListener('click', function () {
                 if (!activeSlot) return;
-                activeSlot.booked = Math.min(activeSlot.capacity, activeSlot.booked + 1);
+
+                if (!isAuthenticated) {
+                    window.location.href = '/Account/Login?ReturnUrl=' + encodeURIComponent('/Schedule');
+                    return;
+                }
+
                 els.confirm.disabled = true;
-                els.confirm.textContent = 'Booked';
-                els.success.textContent = "You're in! See you on " + DAYS[activeSlot.day] + ' at ' + timeLabel(activeSlot.hour) + '.';
-                els.success.classList.remove('hidden');
-                render();
-                setTimeout(closeModal, 2000);
+                els.confirm.textContent = 'Booking...';
+
+                var tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+                var body = 'id=' + encodeURIComponent(activeSlot.id)
+                    + '&__RequestVerificationToken=' + encodeURIComponent(tokenInput ? tokenInput.value : '');
+
+                fetch('/Schedule/Book', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    credentials: 'same-origin',
+                    body: body
+                }).then(function (response) {
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                        return;
+                    }
+                    window.location.reload();
+                }).catch(function () {
+                    els.confirm.disabled = false;
+                    els.confirm.textContent = 'Try again';
+                    els.success.textContent = 'Could not book this session. Please try again.';
+                    els.success.classList.remove('hidden');
+                });
             });
             
             els.close.addEventListener('click', closeModal);

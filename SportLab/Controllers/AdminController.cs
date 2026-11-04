@@ -1,4 +1,5 @@
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SportLab.Data;
@@ -7,7 +8,7 @@ using SportLab.Models;
 
 namespace SportLab.Controllers
 {
-    //[AuthorizeRole("Admin")]
+    [Authorize(Roles = Roles.AdminRoles)]
     public class AdminController : Controller
     {
         private readonly SportLabContext _context;

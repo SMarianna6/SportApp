@@ -1,0 +1,71 @@
+@model List<SportLab.Models.WorkoutSlot>
+@{
+    ViewData["Title"] = "My Schedule";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="min-h-screen bg-[#111] text-white px-4 py-8 sm:px-8">
+    <div class="mx-auto max-w-5xl">
+
+        <div class="mb-8">
+            <a asp-action="Dashboard" class="mb-4 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-white/40 transition-colors hover:text-neon">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+                Back to Dashboard
+            </a>
+            <p class="text-xs font-extrabold uppercase tracking-widest text-neon">Trainer Panel</p>
+            <h1 class="mt-1 text-4xl font-black uppercase tracking-tighter">My Schedule</h1>
+            <p class="mt-1 text-sm text-white/50">All upcoming sessions assigned to you.</p>
+        </div>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="mb-6 rounded-lg border border-neon/30 bg-neon/10 px-4 py-3 text-sm font-semibold text-neon">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+
+        @if (!Model.Any())
+        {
+            <div class="rounded-lg border border-dashed border-white/10 p-12 text-center">
+                <p class="text-sm font-semibold text-white/40">
+                    No upcoming sessions. <a asp-action="CreateSlot" class="text-neon hover:underline">Create one?</a>
+                </p>
+            </div>
+        }
+        else
+        {
+            <div class="space-y-3">
+                @foreach (var slot in Model)
+                {
+                    var statusClass =
+                        slot.Status == "Available" ? "bg-neon/20 text-neon" :
+                        slot.Status == "Booked" ? "bg-violet/20 text-violet" :
+                        slot.Status == "Completed" ? "bg-green-500/20 text-green-400" :
+                        "bg-red-500/20 text-red-400";
+
+                    <div class="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-white/10 bg-[#1a1a1a] p-5">
+                        <div class="flex items-center gap-4">
+                            <div class="rounded-md bg-white/5 px-3 py-2 text-center">
+                                <p class="text-[10px] font-extrabold uppercase tracking-widest text-white/40">@slot.StartTime.ToString("MMM")</p>
+                                <p class="text-xl font-black text-neon">@slot.StartTime.ToString("dd")</p>
+                            </div>
+                            <div>
+                                <p class="font-black uppercase tracking-tight">@(slot.ActivityName ?? "Unnamed")</p>
+                                <p class="text-xs text-white/50">@slot.StartTime.ToString("dddd, HH:mm") – @slot.EndTime.ToString("HH:mm")</p>
+                                <p class="mt-1 text-xs text-white/40">Client: @(slot.User?.Name ?? "Not booked")</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="rounded-md px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-widest @statusClass">@slot.Status</span>
+                            @if (slot.Status != "Booked")
+                            {
+                                <a asp-action="EditSlot" asp-route-id="@slot.Id" class="rounded-md border border-white/20 px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-white transition-colors hover:border-neon hover:text-neon">Edit</a>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+    </div>
+</div>

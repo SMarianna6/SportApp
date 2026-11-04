@@ -29,21 +29,25 @@ namespace SportLab.Models
 
                 context.Database.EnsureCreated();
 
+                // Lab 6: administrator and moderator accounts must exist even on an
+                // already seeded database, so the role scenarios can be demonstrated.
+                EnsureStaffAccounts(context);
+
                 if (context.Plan.Any() && context.Products.Any())
                 {
                     return;
                 }
 
-                if (!context.Users.Any())
+                if (!context.Users.Any(u => u.Email == "alex.trainer@sportlab.ua"))
                 {
-                    var trainer1 = new User { Name = "Alexander Kovalenko", Email = "alex.trainer@sportlab.ua", Password = "TrainerPass123!", Role = "Trainer", IsBlocked = false };
-                    var trainer2 = new User { Name = "Maryna Shevchenko", Email = "marina.trainer@sportlab.ua", Password = "TrainerPass123!", Role = "Trainer", IsBlocked = false };
-                    var trainer3 = new User { Name = "Maksym Tkachenko", Email = "maksym@sportlab.ua", Password = "Pass123!", Role = "Trainer", IsBlocked = false };
-                    var trainer4 = new User { Name = "Oksana Koval", Email = "oksana@sportlab.ua", Password = "Pass123!", Role = "Trainer", IsBlocked = false };
-                    var trainer5 = new User { Name = "Dmytro Boyko", Email = "dmytro@sportlab.ua", Password = "Pass123!", Role = "Trainer", IsBlocked = false };
+                    var trainer1 = new User { Name = "Alexander Kovalenko", Email = "alex.trainer@sportlab.ua", Password = "TrainerPass123!", Role = Roles.Trainer, IsBlocked = false };
+                    var trainer2 = new User { Name = "Maryna Shevchenko", Email = "marina.trainer@sportlab.ua", Password = "TrainerPass123!", Role = Roles.Trainer, IsBlocked = false };
+                    var trainer3 = new User { Name = "Maksym Tkachenko", Email = "maksym@sportlab.ua", Password = "Pass123!", Role = Roles.Trainer, IsBlocked = false };
+                    var trainer4 = new User { Name = "Oksana Koval", Email = "oksana@sportlab.ua", Password = "Pass123!", Role = Roles.Trainer, IsBlocked = false };
+                    var trainer5 = new User { Name = "Dmytro Boyko", Email = "dmytro@sportlab.ua", Password = "Pass123!", Role = Roles.Trainer, IsBlocked = false };
 
-                    var client1 = new User { Name = "Ivan Bondarenko", Email = "ivan.client@sportlab.ua", Password = "ClientPass123!", Role = "Client", IsBlocked = false };
-                    var client2 = new User { Name = "Olena Melnyk", Email = "olena.client@sportlab.ua", Password = "ClientPass123!", Role = "Client", IsBlocked = false };
+                    var client1 = new User { Name = "Ivan Bondarenko", Email = "ivan.client@sportlab.ua", Password = "ClientPass123!", Role = Roles.Client, IsBlocked = false };
+                    var client2 = new User { Name = "Olena Melnyk", Email = "olena.client@sportlab.ua", Password = "ClientPass123!", Role = Roles.Client, IsBlocked = false };
 
                     context.Users.AddRange(trainer1, trainer2, trainer3, trainer4, trainer5, client1, client2);
                     context.SaveChanges();
@@ -77,8 +81,8 @@ namespace SportLab.Models
                     context.Plans.AddRange(plans);
                     context.SaveChanges();
 
-                    var trainerUsers = context.Users.Where(u => u.Role == "Trainer").ToList();
-                    var clientUsers = context.Users.Where(u => u.Role == "Client").ToList();
+                    var trainerUsers = context.Users.Where(u => u.Role == Roles.Trainer).ToList();
+                    var clientUsers = context.Users.Where(u => u.Role == Roles.Client).ToList();
 
                     if (trainerUsers.Count >= 5 && clientUsers.Count >= 2)
                     {
@@ -218,6 +222,45 @@ namespace SportLab.Models
                     context.SaveChanges();
                 }
             }
+        }
+
+        /// <summary>
+        /// Creates the accounts used to demonstrate the Lab 6 role scenarios.
+        /// The method is idempotent: it only adds an account when that role is missing.
+        /// </summary>
+        private static void EnsureStaffAccounts(SportLabContext context)
+        {
+            if (!context.Users.Any(u => u.Email == "admin@sportlab.ua"))
+            {
+                context.Users.Add(new User
+                {
+                    Name = "SportLab Administrator",
+                    Email = "admin@sportlab.ua",
+                    Password = "AdminPass123!",
+                    Role = Roles.Administrator,
+                    IsBlocked = false
+                });
+            }
+
+            if (!context.Users.Any(u => u.Email == "moderator@sportlab.ua"))
+            {
+                context.Users.Add(new User
+                {
+                    Name = "SportLab Moderator",
+                    Email = "moderator@sportlab.ua",
+                    Password = "ModeratorPass123!",
+                    Role = Roles.Moderator,
+                    IsBlocked = false
+                });
+            }
+
+            // Records created before Lab 6 may still store the legacy "Admin" value.
+            foreach (var legacyAdmin in context.Users.Where(u => u.Role == Roles.AdminAlias).ToList())
+            {
+                legacyAdmin.Role = Roles.Administrator;
+            }
+
+            context.SaveChanges();
         }
     }
 }

@@ -43,14 +43,16 @@ namespace SportLab.Controllers
             }
 
             HttpContext.Session.SetInt32("UserId", user.Id);
-            HttpContext.Session.SetString("UserRole", user.Role);
+            HttpContext.Session.SetString("UserRole", Roles.Normalize(user.Role));
+
+            var role = Roles.Normalize(user.Role);
 
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Name ?? user.Email),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role)
+                new Claim(ClaimTypes.Role, role)
             };
 
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -58,13 +60,17 @@ namespace SportLab.Controllers
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-            if (user.Role != null && user.Role.ToLower() == "admin")
+            if (role == Roles.Administrator)
             {
                 return RedirectToAction("Index", "Admin");
             }
-            else if (user.Role != null && user.Role.ToLower() == "trainer")
+            else if (role == Roles.Trainer)
             {
                 return RedirectToAction("Dashboard", "Trainer");
+            }
+            else if (role == Roles.Moderator)
+            {
+                return RedirectToAction("Index", "Moderation");
             }
             else
             {
@@ -136,7 +142,7 @@ namespace SportLab.Controllers
                     Name = email.Split('@')[0],
                     Email = savedEmail,
                     Password = savedPassword,
-                    Role = "Client",
+                    Role = Roles.Client,
                     IsBlocked = false
                 };
 

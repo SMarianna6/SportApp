@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SportLab.Data;
+using SportLab.Models;
 using System.Security.Claims;
 
 namespace SportLab.Controllers
@@ -18,10 +19,21 @@ namespace SportLab.Controllers
 
         public IActionResult Index()
         {
-            if (User.IsInRole("Trainer") || User.IsInRole("Admin"))
+            if (User.IsAdmin())
+            {
+                return RedirectToAction("Index", "Admin");
+            }
+
+            if (User.IsInRole(Roles.Trainer))
             {
                 return RedirectToAction("Dashboard", "Trainer");
             }
+
+            if (User.IsInRole(Roles.Moderator))
+            {
+                return RedirectToAction("Index", "Moderation");
+            }
+
             return RedirectToAction(nameof(Client));
         }
 
@@ -29,16 +41,33 @@ namespace SportLab.Controllers
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var user = await _context.Users.FindAsync(userId);
+
+            // Lab 6: the client dashboard shows live membership and booking data.
+            ViewBag.ActiveSubscription = await _context.Subscriptions
+                .Include(s => s.Plan)
+                .Where(s => s.UserId == userId && s.IsActive && s.EndDate >= DateTime.Today)
+                .OrderByDescending(s => s.StartDate)
+                .FirstOrDefaultAsync();
+
+            ViewBag.NextBooking = await _context.WorkoutSlots
+                .Include(w => w.Trainer)
+                .Where(w => w.UserId == userId && w.StartTime >= DateTime.Now && w.Status != "Cancelled")
+                .OrderBy(w => w.StartTime)
+                .FirstOrDefaultAsync();
+
+            ViewBag.BookingCount = await _context.WorkoutSlots
+                .CountAsync(w => w.UserId == userId && w.StartTime >= DateTime.Now && w.Status != "Cancelled");
+
             return View(user);
         }
 
-        [Authorize(Roles = "Trainer,Admin")]
+        [Authorize(Roles = Roles.TrainerRoles)]
         public IActionResult Trainer()
         {
             return RedirectToAction("Dashboard", "Trainer");
         }
 
-        [Authorize(Roles = "Trainer,Admin")]
+        [Authorize(Roles = Roles.TrainerRoles)]
         public async Task<IActionResult> Clients()
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
@@ -58,7 +87,7 @@ namespace SportLab.Controllers
             return View();
         }
 
-        [Authorize(Roles = "Trainer,Admin")]
+        [Authorize(Roles = Roles.TrainerRoles)]
         public async Task<IActionResult> Schedule()
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);

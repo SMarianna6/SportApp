@@ -2,10 +2,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SportLab.Data;
+using SportLab.Models;
 using System.Security.Claims;
 
 namespace SportLab.Controllers
 {
+    /// <summary>
+    /// Lab 6, Person 2: client (registered user) features.
+    /// The schedule itself is public, but booking and cancelling require a client account.
+    /// </summary>
     public class ScheduleController : Controller
     {
         private readonly SportLabContext _context;
@@ -15,23 +20,35 @@ namespace SportLab.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
         public IActionResult Index()
         {
-            var slots = _context.WorkoutSlots.Include(w => w.Trainer).ToList();
+            var slots = _context.WorkoutSlots
+                .Include(w => w.Trainer)
+                .Where(w => w.Status != "Cancelled")
+                .OrderBy(w => w.StartTime)
+                .ToList();
+
             return View(slots);
         }
 
-        [Authorize]
+        [Authorize(Roles = Roles.ClientRoles)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Book(int id)
         {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var userId = CurrentUserId();
             var slot = await _context.WorkoutSlots.FindAsync(id);
 
-            if (slot == null || slot.Status != "Available")
+            if (slot == null || slot.Status != "Available" || slot.UserId != null)
             {
                 TempData["ErrorMessage"] = "This slot is not available.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (slot.StartTime <= DateTime.Now)
+            {
+                TempData["ErrorMessage"] = "This session has already started or finished.";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -46,21 +63,21 @@ namespace SportLab.Controllers
             await _context.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Workout booked successfully!";
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(MyBookings));
         }
 
-        [Authorize]
+        [Authorize(Roles = Roles.ClientRoles)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CancelBooking(int id)
         {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var userId = CurrentUserId();
             var slot = await _context.WorkoutSlots.FindAsync(id);
 
             if (slot == null || slot.UserId != userId)
             {
                 TempData["ErrorMessage"] = "You cannot cancel this booking.";
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(MyBookings));
             }
 
             slot.UserId = null;
@@ -68,7 +85,24 @@ namespace SportLab.Controllers
             await _context.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Booking cancelled successfully.";
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(MyBookings));
         }
+
+        [Authorize(Roles = Roles.ClientRoles)]
+        public async Task<IActionResult> MyBookings()
+        {
+            var userId = CurrentUserId();
+
+            var slots = await _context.WorkoutSlots
+                .Include(w => w.Trainer)
+                .Where(w => w.UserId == userId)
+                .OrderByDescending(w => w.StartTime)
+                .ToListAsync();
+
+            return View(slots);
+        }
+
+        private int CurrentUserId() =>
+            int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
     }
 }
