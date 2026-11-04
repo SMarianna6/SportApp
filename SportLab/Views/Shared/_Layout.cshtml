@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 @{
     bool isDarkPage = ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && 
                           ViewContext.RouteData.Values["action"]?.ToString() == "Index";
@@ -96,20 +96,12 @@
             </a>
           </li>
           <li><a asp-controller="Review" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">Reviews</a></li>
-          @if (User.Identity?.IsAuthenticated == true)
-          {
-              <li><a asp-controller="Profile" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">Dashboard</a></li>
-          }
-          @if (User.IsModerator())
-          {
-              <li><a asp-controller="Moderation" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">Moderation</a></li>
-          }
         </ul>
         
         <div class="hidden items-center gap-3 md:flex">
           @if (User.Identity?.IsAuthenticated == true)
           {
-              <a asp-controller="Profile" asp-action="Index" aria-label="User profile" class="ml-1 flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white transition-colors duration-300 hover:border-neon hover:text-neon">
+              <a asp-controller="Profile" asp-action="Client" aria-label="User profile" class="ml-1 flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white transition-colors duration-300 hover:border-neon hover:text-neon">
                 <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
               </a>
               <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
@@ -140,19 +132,11 @@
             <li><a asp-controller="Shop" asp-action="Index" class="block border-b border-white/5 py-3.5 text-sm font-semibold uppercase tracking-widest text-mono transition-colors hover:text-neon">Shop</a></li>
             <li><a asp-controller="Cart" asp-action="Index" class="block border-b border-white/5 py-3.5 text-sm font-semibold uppercase tracking-widest text-mono transition-colors hover:text-neon">Cart</a></li>
             <li><a asp-controller="Review" asp-action="Index" class="block py-3.5 text-sm font-semibold uppercase tracking-widest text-mono transition-colors hover:text-neon">Reviews</a></li>
-            @if (User.Identity?.IsAuthenticated == true)
-            {
-                <li><a asp-controller="Profile" asp-action="Index" class="block border-t border-white/5 py-3.5 text-sm font-semibold uppercase tracking-widest text-mono transition-colors hover:text-neon">Dashboard</a></li>
-            }
-            @if (User.IsModerator())
-            {
-                <li><a asp-controller="Moderation" asp-action="Index" class="block border-t border-white/5 py-3.5 text-sm font-semibold uppercase tracking-widest text-mono transition-colors hover:text-neon">Moderation</a></li>
-            }
             
             <li class="flex flex-col gap-3 pb-3 pt-4 border-t border-white/10">
               @if (User.Identity?.IsAuthenticated == true)
               {
-                  <a asp-controller="Profile" asp-action="Index" class="flex-1 rounded-md border border-white/20 py-3 text-center text-xs font-bold uppercase tracking-widest text-white transition-colors hover:border-neon hover:text-neon">User Profile</a>
+                  <a asp-controller="Profile" asp-action="Client" class="flex-1 rounded-md border border-white/20 py-3 text-center text-xs font-bold uppercase tracking-widest text-white transition-colors hover:border-neon hover:text-neon">User Profile</a>
                   <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
                       <button type="submit" class="w-full rounded-md bg-red-600/20 border border-red-500/50 py-3 text-center text-xs font-bold uppercase tracking-widest text-red-500 transition-colors hover:bg-red-600/40">Log Out</button>
                   </form>
