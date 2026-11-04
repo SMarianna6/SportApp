@@ -1,0 +1,48 @@
+﻿@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "FAQ";
+}
+
+<link rel="stylesheet" href="~/css/admin/sporthub.css" asp-append-version="true" />
+
+<div class="sh-page" data-sh-page="faq">
+    <div class="sh-head">
+        <div>
+            <h1 class="sh-title">FAQ</h1>
+            <p class="sh-sub" id="sh-faq-count"></p>
+        </div>
+        <button type="button" class="sh-btn sh-btn-primary" id="sh-faq-add">
+            <svg class="sh-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14" /><path d="M12 5v14" /></svg>Add FAQ
+        </button>
+    </div>
+
+    <div class="sh-accordion" id="sh-faq-list"></div>
+</div>
+
+<div class="sh-modal-backdrop" id="sh-faq-modal" hidden>
+    <div class="sh-modal" role="dialog" aria-modal="true" aria-labelledby="sh-faq-modal-title">
+        <div class="sh-modal-bar"></div>
+        <div class="sh-modal-head">
+            <h2 class="sh-modal-title" id="sh-faq-modal-title">Add FAQ</h2>
+            <button type="button" class="sh-modal-close" data-sh-close aria-label="Close"><svg class="sh-ico sh-ico-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg></button>
+        </div>
+        <div class="sh-modal-body">
+            <form class="sh-form" id="sh-faq-form">
+                @Html.AntiForgeryToken()
+                <label class="sh-field">Question<div class="sh-field-body"><input class="sh-input" name="question" required /></div></label>
+                <label class="sh-field">Answer<div class="sh-field-body"><textarea class="sh-input" name="answer" rows="4" required></textarea></div></label>
+                <label class="sh-check">
+                    <input type="checkbox" name="isActive" checked />
+                    <span>Is Active</span>
+                </label>
+                <div class="sh-form-actions">
+                    <button type="button" class="sh-btn sh-btn-ghost" data-sh-close>Cancel</button>
+                    <button type="submit" class="sh-btn sh-btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/admin/sh-common.js" asp-append-version="true"></script>
+<script src="~/js/admin/sh-faq.js" asp-append-version="true"></script>

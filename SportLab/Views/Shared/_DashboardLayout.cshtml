@@ -104,6 +104,16 @@
                         </a>
                     </li>
                     <li>
+                        <a href="@Url.Action("FAQ", "Admin")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon @(ViewContext.RouteData.Values["action"]?.ToString() == "FAQ" && ViewContext.RouteData.Values["controller"]?.ToString() == "Admin" ? "text-neon bg-[#1c1c1c] shadow-[inset_4px_0_0_#AAFF00]" : "")" title="FAQ">
+                            <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                            </svg>
+                            <span class="nav-label">FAQ</span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="@Url.Action("Settings", "Admin")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon @(ViewContext.RouteData.Values["action"]?.ToString() == "Settings" && ViewContext.RouteData.Values["controller"]?.ToString() == "Admin" ? "text-neon bg-[#1c1c1c] shadow-[inset_4px_0_0_#AAFF00]" : "")" title="Settings">
                             <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>
                             <span class="nav-label">Settings</span>

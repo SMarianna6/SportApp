@@ -1,4 +1,7 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;900&display=swap');
+﻿/* SportHUB admin pages - isolated styles.
+   Every rule is scoped under .sh-page (or the .sh-modal-backdrop overlay), so nothing here
+   touches _DashboardLayout.cshtml or other pages. No Tailwind theme tokens are required. */
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;900&display=swap');
 
 .sh-page, .sh-modal-backdrop {
     --sh-shell: #141414;
@@ -987,3 +990,97 @@ textarea.sh-input {
         .sh-page *::-webkit-scrollbar-thumb:hover, .sh-modal::-webkit-scrollbar-thumb:hover {
             background: #aaff00;
         }
+
+/* FAQ accordion */
+.sh-accordion {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+}
+
+.sh-accordion-item {
+    transition: border-color .15s;
+}
+
+    .sh-accordion-item:hover, .sh-accordion-item.is-open {
+        border-color: rgba(170,255,0,.4);
+    }
+
+.sh-accordion-header {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .75rem 1rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+    .sh-accordion-header:focus-visible {
+        outline: 2px solid var(--sh-neon);
+        outline-offset: -2px;
+    }
+
+.sh-accordion-chevron {
+    color: rgba(242,242,244,.5);
+    transition: transform .2s;
+}
+
+.sh-accordion-item.is-open .sh-accordion-chevron {
+    transform: rotate(180deg);
+    color: var(--sh-neon);
+}
+
+.sh-accordion-question {
+    flex: 1;
+    min-width: 0;
+    font-weight: 700;
+    color: var(--sh-ink);
+}
+
+.sh-accordion-body {
+    padding: 1rem 1rem 1.25rem 2.75rem;
+    border-top: 1px solid rgba(255,255,255,.1);
+    font-size: .875rem;
+    line-height: 1.6;
+    color: rgba(242,242,244,.7);
+    white-space: pre-line;
+}
+
+.sh-accordion-empty {
+    padding: 2rem;
+    text-align: center;
+    font-size: .875rem;
+    color: rgba(242,242,244,.5);
+}
+
+.sh-icon-btn:disabled {
+    opacity: .3;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.sh-check {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    font-size: .875rem;
+    color: var(--sh-ink);
+    cursor: pointer;
+}
+
+    .sh-check input {
+        width: 1.125rem;
+        height: 1.125rem;
+        accent-color: var(--sh-neon);
+        cursor: pointer;
+    }
+
+@media (max-width: 640px) {
+    .sh-accordion-header {
+        flex-wrap: wrap;
+    }
+
+    .sh-accordion-question {
+        flex-basis: calc(100% - 2rem);
+    }
+}

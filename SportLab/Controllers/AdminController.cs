@@ -158,6 +158,11 @@ namespace SportLab.Controllers
             return View();
         }
 
+        public IActionResult FAQ()
+        {
+            return View();
+        }
+
         public IActionResult Schedule()
         {
             return View();
@@ -327,15 +332,88 @@ namespace SportLab.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetFaqList()
+        {
+            var faqs = await _context.FAQs
+                .OrderBy(f => f.SortOrder)
+                .Select(f => new
+                {
+                    id = f.Id,
+                    question = f.Question,
+                    answer = f.Answer,
+                    sortOrder = f.SortOrder,
+                    isActive = f.IsActive
+                })
+                .ToListAsync();
+
+            return Json(faqs);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveFaqApi([FromBody] FAQ faq)
+        {
+            if (faq.Id == 0)
+            {
+                _context.FAQs.Add(faq);
+            }
+            else
+            {
+                var existing = await _context.FAQs.FindAsync(faq.Id);
+                if (existing != null)
+                {
+                    existing.Question = faq.Question;
+                    existing.Answer = faq.Answer;
+                    existing.IsActive = faq.IsActive;
+                    existing.SortOrder = faq.SortOrder;
+                }
+            }
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteFaqApi(int id)
+        {
+            var faq = await _context.FAQs.FindAsync(id);
+            if (faq != null)
+            {
+                _context.FAQs.Remove(faq);
+                await _context.SaveChangesAsync();
+            }
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateFaqOrderApi([FromBody] List<FaqOrderDto> orderData)
+        {
+            foreach (var item in orderData)
+            {
+                var faq = await _context.FAQs.FindAsync(item.Id);
+                if (faq != null)
+                {
+                    faq.SortOrder = item.SortOrder;
+                }
+            }
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
     }
 
-        public class UserDto
-        {
-            public int Id { get; set; }
-            public required string Name { get; set; }
-            public required string Email { get; set; }
-            public required string Role { get; set; }
-            public required string Password { get; set; }
-            public required string Tariff { get; set; }
-        }
+    public class UserDto
+    {
+        public int Id { get; set; }
+        public required string Name { get; set; }
+        public required string Email { get; set; }
+        public required string Role { get; set; }
+        public required string Password { get; set; }
+        public required string Tariff { get; set; }
+    }
+
+    public class FaqOrderDto
+    {
+        public int Id { get; set; }
+        public int SortOrder { get; set; }
+    }
 }
