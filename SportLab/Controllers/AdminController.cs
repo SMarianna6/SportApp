@@ -479,8 +479,8 @@ namespace SportLab.Controllers
                     timeEnd = s.EndTime.ToString("HH:mm"),
                     type = s.ActivityName ?? "HIIT",
                     coach = s.Trainer != null ? s.Trainer.Name : "TBA",
-                    booked = s.Booked,      // ÁÅĞÅÌÎ ĞÅÀËÜÍ² ÄÀÍ² Ç ÁÄ
-                    capacity = s.Capacity   // ÁÅĞÅÌÎ ĞÅÀËÜÍ² ÄÀÍ² Ç ÁÄ
+                    booked = s.Booked,
+                    capacity = s.Capacity
                 })
                 .ToListAsync();
 
@@ -506,7 +506,6 @@ namespace SportLab.Controllers
             var startDateTime = targetDate.AddHours(int.Parse(startTimeParts[0])).AddMinutes(int.Parse(startTimeParts[1]));
             var endDateTime = targetDate.AddHours(int.Parse(endTimeParts[0])).AddMinutes(int.Parse(endTimeParts[1]));
 
-            // Ëîã³êà ñòàòóñó: ÿêùî çàïèñàíî ëşäåé á³ëüøå àáî äîğ³âíşº ì³ñòêîñò³ - ñòàòóñ Booked (Ïîâíèé)
             string calculatedStatus = dto.Booked >= dto.Capacity ? "Booked" : "Available";
 
             if (dto.Id <= 0)
@@ -517,8 +516,8 @@ namespace SportLab.Controllers
                     TrainerId = trainer.Id,
                     StartTime = startDateTime,
                     EndTime = endDateTime,
-                    Capacity = dto.Capacity, // ÇÁÅĞ²ÃÀªÌÎ Ì²ÑÒÊ²ÑÒÜ
-                    Booked = dto.Booked,     // ÇÁÅĞ²ÃÀªÌÎ ÇÀÏÈÑÀÍÈÕ
+                    Capacity = dto.Capacity,
+                    Booked = dto.Booked,
                     Status = calculatedStatus
                 };
                 _context.Set<WorkoutSlot>().Add(newSlot);
@@ -534,8 +533,8 @@ namespace SportLab.Controllers
                     existingSlot.TrainerId = trainer.Id;
                     existingSlot.StartTime = startDateTime;
                     existingSlot.EndTime = endDateTime;
-                    existingSlot.Capacity = dto.Capacity; // ÎÍÎÂËŞªÌÎ Ì²ÑÒÊ²ÑÒÜ
-                    existingSlot.Booked = dto.Booked;     // ÎÍÎÂËŞªÌÎ ÇÀÏÈÑÀÍÈÕ
+                    existingSlot.Capacity = dto.Capacity;
+                    existingSlot.Booked = dto.Booked;
                     existingSlot.Status = calculatedStatus;
 
                     await _context.SaveChangesAsync();

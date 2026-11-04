@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using SportLab.Data;
 using SportLab.Models;
 using System.Security.Claims;
+using System.Threading.Tasks;
+using System.Linq;
+using System;
 
 namespace SportLab.Controllers
 {
@@ -19,20 +22,9 @@ namespace SportLab.Controllers
 
         public IActionResult Index()
         {
-            if (User.IsAdmin())
-            {
-                return RedirectToAction("Index", "Admin");
-            }
-
-            if (User.IsInRole(Roles.Trainer))
-            {
-                return RedirectToAction("Dashboard", "Trainer");
-            }
-
-            if (User.IsInRole(Roles.Moderator))
-            {
-                return RedirectToAction("Index", "Moderation");
-            }
+            if (User.IsAdmin()) return RedirectToAction("Index", "Admin");
+            if (User.IsInRole(Roles.Trainer)) return RedirectToAction("Trainer", "Profile");
+            if (User.IsInRole(Roles.Moderator)) return RedirectToAction("Index", "Moderation");
 
             return RedirectToAction(nameof(Client));
         }
@@ -42,7 +34,6 @@ namespace SportLab.Controllers
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var user = await _context.Users.FindAsync(userId);
 
-            // Lab 6: the client dashboard shows live membership and booking data.
             ViewBag.ActiveSubscription = await _context.Subscriptions
                 .Include(s => s.Plan)
                 .Where(s => s.UserId == userId && s.IsActive && s.EndDate >= DateTime.Today)
@@ -64,7 +55,8 @@ namespace SportLab.Controllers
         [Authorize(Roles = Roles.TrainerRoles)]
         public IActionResult Trainer()
         {
-            return RedirectToAction("Dashboard", "Trainer");
+            // ВИПРАВЛЕНО: Був нескінченний редирект, тепер просто повертаємо сторінку
+            return View();
         }
 
         [Authorize(Roles = Roles.TrainerRoles)]
@@ -87,17 +79,22 @@ namespace SportLab.Controllers
             return View();
         }
 
-        [Authorize(Roles = Roles.TrainerRoles)]
+        // ВИПРАВЛЕНО: Прибрано блокування тільки для тренерів. Тепер доступно і клієнтам!
         public async Task<IActionResult> Schedule()
         {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-
-            var slots = await _context.WorkoutSlots
+            var query = _context.WorkoutSlots
+                .Include(w => w.Trainer)
                 .Include(w => w.User)
-                .Where(w => w.TrainerId == userId)
-                .OrderBy(w => w.StartTime)
-                .ToListAsync();
+                .AsQueryable();
 
+            // Якщо це тренер (але не адмін), він бачить тільки свої заняття
+            if (User.IsInRole(Roles.Trainer) && !User.IsAdmin())
+            {
+                var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+                query = query.Where(w => w.TrainerId == userId);
+            }
+
+            var slots = await query.OrderBy(w => w.StartTime).ToListAsync();
             return View(slots);
         }
     }

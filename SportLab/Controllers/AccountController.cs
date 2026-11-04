@@ -66,7 +66,7 @@ namespace SportLab.Controllers
             }
             else if (role == Roles.Trainer)
             {
-                return RedirectToAction("Dashboard", "Trainer");
+                return RedirectToAction("Trainer", "Profile");
             }
             else if (role == Roles.Moderator)
             {
