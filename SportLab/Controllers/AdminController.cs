@@ -7,7 +7,7 @@ using SportLab.Models;
 
 namespace SportLab.Controllers
 {
-    [AuthorizeRole("Admin")]
+    //[AuthorizeRole("Admin")]
     public class AdminController : Controller
     {
         private readonly SportLabContext _context;
@@ -21,9 +21,10 @@ namespace SportLab.Controllers
         {
             var model = new AdminPanelData
             {
-                Tariffs = tariffsQuery.ToList(),
-                Products = productsQuery.ToList(),
-                Users = usersQuery.ToList()
+                Tariffs = _context.Plans.ToList(),
+                Products = _context.Products.ToList(),
+                Users = _context.Users.ToList(),
+
             };
 
             return View(model);

@@ -1,0 +1,72 @@
+﻿@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Users";
+}
+
+<link rel="stylesheet" href="~/css/admin/sporthub.css" asp-append-version="true" />
+
+<div class="sh-page" data-sh-page="users">
+    <div class="sh-head">
+        <div>
+            <h1 class="sh-title">Users</h1>
+            <p class="sh-sub" id="sh-users-count"></p>
+        </div>
+        <button type="button" class="sh-btn sh-btn-primary" id="sh-user-add">
+            <svg class="sh-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14" /><path d="M12 5v14" /></svg>Add User
+        </button>
+    </div>
+
+    <div class="sh-card sh-scroll-x">
+        <table class="sh-table" style="min-width:760px">
+            <thead>
+                <tr>
+                    <th>Name</th><th>Email</th><th>Role</th><th>Current Tariff</th><th>Status</th><th class="sh-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="sh-users-body"></tbody>
+        </table>
+    </div>
+</div>
+
+<div class="sh-modal-backdrop" id="sh-user-modal" hidden>
+    <div class="sh-modal" role="dialog" aria-modal="true" aria-labelledby="sh-user-modal-title">
+        <div class="sh-modal-bar"></div>
+        <div class="sh-modal-head">
+            <h2 class="sh-modal-title" id="sh-user-modal-title">Add User</h2>
+            <button type="button" class="sh-modal-close" data-sh-close aria-label="Close"><svg class="sh-ico sh-ico-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg></button>
+        </div>
+        <div class="sh-modal-body">
+            @* MVC integration point: point action/method at your own controller action and add @Html.AntiForgeryToken() if you post it. *@
+            <form class="sh-form" id="sh-user-form">
+                <label class="sh-field">Full Name<div class="sh-field-body"><input class="sh-input" name="name" required /></div></label>
+                <label class="sh-field">Email<div class="sh-field-body"><input class="sh-input" name="email" type="email" required /></div></label>
+                <label class="sh-field">Password<div class="sh-field-body"><input class="sh-input" name="password" type="password" /></div></label>
+                <div class="sh-form-grid">
+                    <label class="sh-field">Role
+                        <div class="sh-field-body">
+                            <select class="sh-input" name="role">
+                                <option>Client</option>
+                                <option>Trainer</option>
+                                <option>Admin</option>
+                            </select>
+                        </div>
+                    </label>
+                    <label class="sh-field">Select Tariff
+                        <div class="sh-field-body"><select class="sh-input" name="tariff" id="sh-user-tariff"></select></div>
+                    </label>
+                </div>
+                <div class="sh-form-actions">
+                    <button type="button" class="sh-btn sh-btn-ghost" data-sh-close>Cancel</button>
+                    <button type="submit" class="sh-btn sh-btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="application/json" id="sh-tariffs-data">
+    @Html.Raw(Json.Serialize(ViewBag.TariffNames ?? new string[0]))
+</script>
+
+<script src="~/js/admin/sh-common.js" asp-append-version="true"></script>
+<script src="~/js/admin/sh-users.js" asp-append-version="true"></script>

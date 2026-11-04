@@ -1,0 +1,61 @@
+﻿@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Shop";
+}
+
+<link rel="stylesheet" href="~/css/admin/sporthub.css" asp-append-version="true" />
+
+<div class="sh-page" data-sh-page="shop">
+    <div class="sh-head">
+        <div>
+            <h1 class="sh-title">Shop / Inventory</h1>
+            <p class="sh-sub">Products and stock levels</p>
+        </div>
+        <button type="button" class="sh-btn sh-btn-primary" id="sh-product-add">
+            <svg class="sh-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14" /><path d="M12 5v14" /></svg>Add Product
+        </button>
+    </div>
+
+    <div class="sh-card sh-scroll-x">
+        <table class="sh-table" style="min-width:680px">
+            <thead>
+                <tr><th>Photo</th><th>Product Name</th><th>Category</th><th>Price</th><th>Stock Quantity</th></tr>
+            </thead>
+            <tbody id="sh-products-body"></tbody>
+        </table>
+    </div>
+</div>
+
+<div class="sh-modal-backdrop" id="sh-product-modal" hidden>
+    <div class="sh-modal" role="dialog" aria-modal="true" aria-labelledby="sh-product-modal-title">
+        <div class="sh-modal-bar"></div>
+        <div class="sh-modal-head">
+            <h2 class="sh-modal-title" id="sh-product-modal-title">Add Product</h2>
+            <button type="button" class="sh-modal-close" data-sh-close aria-label="Close"><svg class="sh-ico sh-ico-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg></button>
+        </div>
+        <div class="sh-modal-body">
+            @* MVC integration point: post to your own controller action (add @Html.AntiForgeryToken() if needed). *@
+            <form class="sh-form" id="sh-product-form">
+                <label class="sh-field">Product Name<div class="sh-field-body"><input class="sh-input" name="name" required /></div></label>
+                <label class="sh-field">Category
+                    <div class="sh-field-body">
+                        <select class="sh-input" name="category">
+                            <option>Nutrition</option><option>Accessories</option><option>Apparel</option><option>Equipment</option>
+                        </select>
+                    </div>
+                </label>
+                <div class="sh-form-grid">
+                    <label class="sh-field">Price<div class="sh-field-body"><input class="sh-input" name="price" type="number" step="0.01" min="0" required /></div></label>
+                    <label class="sh-field">Stock Quantity<div class="sh-field-body"><input class="sh-input" name="stock" type="number" min="0" value="0" required /></div></label>
+                </div>
+                <div class="sh-form-actions">
+                    <button type="button" class="sh-btn sh-btn-ghost" data-sh-close>Cancel</button>
+                    <button type="submit" class="sh-btn sh-btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/admin/sh-common.js" asp-append-version="true"></script>
+<script src="~/js/admin/sh-shop.js" asp-append-version="true"></script>

@@ -1,0 +1,47 @@
+﻿@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Settings";
+}
+
+<link rel="stylesheet" href="~/css/admin/sporthub.css" asp-append-version="true" />
+
+<div class="sh-page" data-sh-page="settings">
+    <div class="sh-head">
+        <div>
+            <h1 class="sh-title">Settings</h1>
+            <p class="sh-sub">Manage your admin profile</p>
+        </div>
+    </div>
+
+    <div class="sh-tabs" role="tablist">
+        <button type="button" class="sh-tab is-active" role="tab" data-tab="Account">Account</button>
+        <button type="button" class="sh-tab" role="tab" data-tab="Security">Security</button>
+        <button type="button" class="sh-tab" role="tab" data-tab="Notifications">Notifications</button>
+    </div>
+
+    @* MVC integration point: none of these forms post anywhere yet (the prototype's Save buttons were inert). *@
+    <form class="sh-card sh-settings-card sh-form" id="sh-settings-form">
+        <div class="sh-form" data-panel="Account">
+            <label class="sh-field">Display Name<div class="sh-field-body"><input class="sh-input" value="Admin" /></div></label>
+            <label class="sh-field">Update Email<div class="sh-field-body"><input class="sh-input" type="email" value="admin&#64;sporthub.io" /></div></label>
+            <div><button class="sh-btn sh-btn-primary">Save Changes</button></div>
+        </div>
+
+        <div class="sh-form" data-panel="Security" hidden>
+            <label class="sh-field">Current Password<div class="sh-field-body"><input class="sh-input" type="password" /></div></label>
+            <label class="sh-field">New Password<div class="sh-field-body"><input class="sh-input" type="password" /></div></label>
+            <label class="sh-field">Confirm New Password<div class="sh-field-body"><input class="sh-input" type="password" /></div></label>
+            <div><button class="sh-btn sh-btn-primary">Change Password</button></div>
+        </div>
+
+        <div data-panel="Notifications" hidden>
+            <div class="sh-pref"><span>New member registrations</span><button type="button" class="sh-switch" role="switch" aria-checked="true" aria-label="New member registrations"></button></div>
+            <div class="sh-pref"><span>Low stock alerts</span><button type="button" class="sh-switch" role="switch" aria-checked="true" aria-label="Low stock alerts"></button></div>
+            <div class="sh-pref"><span>Class cancellations</span><button type="button" class="sh-switch" role="switch" aria-checked="false" aria-label="Class cancellations"></button></div>
+            <div class="sh-pref"><span>Weekly revenue report</span><button type="button" class="sh-switch" role="switch" aria-checked="true" aria-label="Weekly revenue report"></button></div>
+        </div>
+    </form>
+</div>
+
+<script src="~/js/admin/sh-common.js" asp-append-version="true"></script>
+<script src="~/js/admin/sh-settings.js" asp-append-version="true"></script>

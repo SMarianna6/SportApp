@@ -1,0 +1,65 @@
+﻿@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Schedule";
+}
+
+<link rel="stylesheet" href="~/css/admin/sporthub.css" asp-append-version="true" />
+
+<div class="sh-page" data-sh-page="schedule">
+    <div class="sh-head">
+        <div>
+            <h1 class="sh-title">Schedule</h1>
+            <p class="sh-sub">Weekly class grid. Click an empty cell to add a slot, or a class to edit it.</p>
+        </div>
+    </div>
+
+    <div class="sh-card sh-scroll-x">
+        <div class="sh-sched" id="sh-sched"></div>
+    </div>
+</div>
+
+<div class="sh-modal-backdrop" id="sh-slot-modal" hidden>
+    <div class="sh-modal" role="dialog" aria-modal="true" aria-labelledby="sh-slot-modal-title">
+        <div class="sh-modal-bar"></div>
+        <div class="sh-modal-head">
+            <h2 class="sh-modal-title" id="sh-slot-modal-title">Add Slot</h2>
+            <button type="button" class="sh-modal-close" data-sh-close aria-label="Close"><svg class="sh-ico sh-ico-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg></button>
+        </div>
+        <div class="sh-modal-body">
+            @* MVC integration point: post to your own controller action (add @Html.AntiForgeryToken() if needed). *@
+            <form class="sh-form" id="sh-slot-form">
+                <label class="sh-field">Activity Name<div class="sh-field-body"><input class="sh-input" name="activity" placeholder="Yoga, HIIT..." required /></div></label>
+                <div class="sh-form-grid">
+                    <label class="sh-field">Trainer<div class="sh-field-body"><select class="sh-input" name="trainer" id="sh-slot-trainer"></select></div></label>
+                    <label class="sh-field">Day<div class="sh-field-body"><select class="sh-input" name="day" id="sh-slot-day"></select></div></label>
+                    <label class="sh-field">Start Time<div class="sh-field-body"><input class="sh-input" name="start" type="time" min="08:00" max="20:00" required /></div></label>
+                    <label class="sh-field">End Time<div class="sh-field-body"><input class="sh-input" name="end" type="time" min="08:00" max="20:00" required /></div></label>
+                    <label class="sh-field">Status
+                        <div class="sh-field-body">
+                            <select class="sh-input" name="status"><option>Open</option><option>Full</option><option>Draft</option></select>
+                        </div>
+                    </label>
+                    <label class="sh-field">Capacity<div class="sh-field-body"><input class="sh-input" name="capacity" type="number" min="1" required /></div></label>
+                </div>
+
+                <label class="sh-field" id="sh-slot-reason-wrap" hidden>Reason for cancellation
+                    <div class="sh-field-body"><textarea class="sh-input sh-input-danger" id="sh-slot-reason" rows="3" placeholder="Booked clients will be notified with this message"></textarea></div>
+                </label>
+
+                <div class="sh-form-actions sh-between">
+                    <div>
+                        <button type="button" class="sh-btn sh-btn-outline-danger" id="sh-slot-cancel-class" hidden>Cancel Class</button>
+                        <button type="button" class="sh-btn sh-btn-danger" id="sh-slot-confirm-cancel" hidden disabled>Confirm &amp; Notify Clients</button>
+                    </div>
+                    <div style="display:flex;gap:.5rem">
+                        <button type="button" class="sh-btn sh-btn-ghost" data-sh-close>Close</button>
+                        <button type="submit" class="sh-btn sh-btn-primary" id="sh-slot-submit">Add Slot</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/admin/sh-common.js" asp-append-version="true"></script>
+<script src="~/js/admin/sh-schedule.js" asp-append-version="true"></script>
