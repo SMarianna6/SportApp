@@ -101,7 +101,8 @@
         <div class="hidden items-center gap-3 md:flex">
           @if (User.Identity?.IsAuthenticated == true)
           {
-              <a asp-controller="Profile" asp-action="Client" aria-label="User profile" class="ml-1 flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white transition-colors duration-300 hover:border-neon hover:text-neon">
+              <!-- ЗМІНЕНО: Тепер веде просто на Profile/Index, а контролер сам розбереться з ролями -->
+              <a asp-controller="Profile" asp-action="Index" aria-label="User profile" class="ml-1 flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white transition-colors duration-300 hover:border-neon hover:text-neon">
                 <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
               </a>
               <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
