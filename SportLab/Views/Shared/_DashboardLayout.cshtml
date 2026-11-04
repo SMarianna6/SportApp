@@ -1,11 +1,6 @@
-﻿@using SportLab.Models
-@{
-    // Lab 6: the dashboard menu is built from the authenticated user's role.
-    string userRole =
-        User.IsAdmin() ? Roles.Administrator :
-        User.IsInRole(Roles.Trainer) ? Roles.Trainer :
-        User.IsInRole(Roles.Moderator) ? Roles.Moderator :
-        Roles.Client;
+﻿@{
+    // Змінюйте цю змінну для перемикання інтерфейсів: "Admin", "Trainer", "Client"
+    string userRole = "Admin"; 
 }
 
 <!DOCTYPE html>
@@ -54,7 +49,6 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body class="bg-main font-sans text-white antialiased">
     <!-- Mobile overlay -->
@@ -76,7 +70,7 @@
 
         <nav class="mt-4 flex-1 overflow-y-auto" aria-label="Main">
             <ul class="space-y-1">
-                @if (userRole == Roles.Administrator)
+                @if (userRole == "Admin")
                 {
                     <!-- ADMIN MENU (6 items as per photo) -->
                     <li>
@@ -98,7 +92,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="@Url.Action("Shop", "Admin")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon @(ViewContext.RouteData.Values["action"]?.ToString() == "Inventory" ? "text-neon bg-[#1c1c1c] shadow-[inset_4px_0_0_#AAFF00]" : "")" title="Shop / Inventory">
+                        <a href="@Url.Action("Shop", "Admin")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon @(ViewContext.RouteData.Values["action"]?.ToString() == "Shop" ? "text-neon bg-[#1c1c1c] shadow-[inset_4px_0_0_#AAFF00]" : "")" title="Shop">
                             <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                             <span class="nav-label">Shop</span>
                         </a>
@@ -126,23 +120,23 @@
                         </a>
                     </li>
                 }
-                else if (userRole == Roles.Trainer)
+                else if (userRole == "Trainer")
                 {
                     <!-- TRAINER MENU -->
                     <li>
-                        <a href="@Url.Action("Dashboard", "Trainer")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon" title="Dashboard">
+                        <a href="@Url.Action("Trainer", "Profile")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon" title="Dashboard">
                             <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
                             <span class="nav-label">Dashboard</span>
                         </a>
                     </li>
                     <li>
-                        <a href="@Url.Action("MySchedule", "Trainer")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon" title="Schedule">
+                        <a href="@Url.Action("Schedule", "Profile")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon" title="Schedule">
                             <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
                             <span class="nav-label">Schedule</span>
                         </a>
                     </li>
                     <li>
-                        <a href="@Url.Action("MyClients", "Trainer")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon" title="Clients">
+                        <a href="@Url.Action("Clients", "Profile")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon" title="Clients">
                             <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3.1-6.5 7-6.5s7 2.5 7 6.5M16 4.2a4 4 0 0 1 0 7.6M22 21c0-3-1.7-5-4-6"/></svg>
                             <span class="nav-label">Clients</span>
                         </a>
@@ -164,21 +158,9 @@
                 {
                     <!-- CLIENT MENU -->
                     <li>
-                        <a href="@Url.Action("Index", "Schedule")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon" title="Schedule">
+                        <a href="@Url.Action("Schedule", "Profile")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon" title="Schedule">
                             <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
                             <span class="nav-label">Schedule</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="@Url.Action("MyBookings", "Schedule")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon" title="My Bookings">
-                            <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                            <span class="nav-label">My Bookings</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="@Url.Action("My", "Subscriptions")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon" title="My Memberships">
-                            <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg>
-                            <span class="nav-label">My Memberships</span>
                         </a>
                     </li>
                     <li>
@@ -200,16 +182,6 @@
                         </a>
                     </li>
                 }
-
-                @if (User.IsModerator())
-                {
-                    <li>
-                        <a href="@Url.Action("Index", "Moderation")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon" title="Review Moderation">
-                            <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
-                            <span class="nav-label">Moderation</span>
-                        </a>
-                    </li>
-                }
             </ul>
         </nav>
         
@@ -222,7 +194,7 @@
     <!-- Content wrapper -->
     <div id="content" class="min-h-screen lg:pl-64" style="transition: padding-left .25s ease">
         <header class="relative z-30 flex h-16 shrink-0 items-center gap-4 border-b border-white/10 bg-shell px-4 md:px-6">
-            @if (userRole == Roles.Administrator)
+            @if (userRole == "Admin")
             {
                 <div class="relative w-full max-w-md" id="global-search-container">
                     <svg class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
@@ -238,9 +210,9 @@
             }
 
             <div class="ml-auto flex items-center gap-3">
-                @if (userRole != Roles.Administrator)
+                @if (userRole != "Admin")
                 {
-                    <a href="@Url.Action(userRole == Roles.Trainer ? "MySchedule" : "Index", userRole == Roles.Trainer ? "Trainer" : "Schedule")" class="rounded-md border border-neon bg-transparent px-4 py-2 text-xs font-bold uppercase tracking-widest text-neon transition-colors hover:bg-neon hover:text-shell">Schedule</a>
+                    <a href="@Url.Action("Schedule", "Profile")" class="rounded-md border border-neon bg-transparent px-4 py-2 text-xs font-bold uppercase tracking-widest text-neon transition-colors hover:bg-neon hover:text-shell">Schedule</a>
                 }
 
                 <button aria-label="Notifications" class="relative p-2 text-ink/70 transition-colors hover:text-neon">
@@ -250,7 +222,7 @@
 
                <div class="relative group">
                     <button class="flex items-center gap-3 p-1 transition-colors hover:bg-white/5 focus:outline-none">
-                        @if (userRole == Roles.Administrator)
+                        @if (userRole == "Admin")
                         {
                             <span class="flex h-9 w-9 items-center justify-center bg-violet text-xs font-black text-white">AD</span>
                             <span class="hidden text-left sm:block">
@@ -266,17 +238,14 @@
                     </button>
     
                     <div class="absolute right-0 top-full mt-2 hidden w-48 flex-col border border-white/10 bg-surface shadow-2xl group-focus-within:flex hover:flex z-50">
-                        <a href="@Url.Action("Settings", userRole == Roles.Administrator ? "Admin" : "Profile")" class="flex w-full items-center gap-2 px-3 py-2.5 text-sm text-ink hover:bg-white/5 transition-colors">
+                        <a href="@Url.Action("Settings", "Admin")" class="flex w-full items-center gap-2 px-3 py-2.5 text-sm text-ink hover:bg-white/5 transition-colors">
                             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>
                             Settings
                         </a>
-                        <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
-                            @Html.AntiForgeryToken()
-                            <button type="submit" class="flex w-full items-center gap-2 px-3 py-2.5 text-left text-sm text-ink hover:bg-white/5 transition-colors">
-                                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                                Log out
-                            </button>
-                        </form>
+                        <a href="@Url.Action("Logout", "Account")" class="flex w-full items-center gap-2 px-3 py-2.5 text-sm text-ink hover:bg-white/5 transition-colors">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                            Log out
+                        </a>
                     </div>
                 </div>
             </div>
