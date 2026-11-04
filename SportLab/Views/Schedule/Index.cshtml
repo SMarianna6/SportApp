@@ -163,7 +163,7 @@ fonts.googleapis.com" />
                 }
             ];
 
-            var SLOTS = [
+           var SLOTS = [
                 @if (Model != null && Model.Any()) {
                     foreach (var slot in Model) {
                         int jsDay = ((int)slot.StartTime.DayOfWeek + 6) % 7; 
@@ -174,9 +174,9 @@ fonts.googleapis.com" />
                             hour: @slot.StartTime.Hour,
                             category: '@Html.Raw(slot.ActivityName)',
                             trainer: '@Html.Raw(slot.Trainer?.Name ?? "TBA")',
-                            difficulty: 2, 
-                            capacity: 20,
-                            booked: @(slot.Status == "Booked" ? 20 : 5)
+                            difficulty: 2, // hardcode for now
+                            capacity: @slot.Capacity, 
+                            booked: @slot.Booked 
                         },
                         </text>
                     }
@@ -227,7 +227,6 @@ fonts.googleapis.com" />
             }
             
             function slotCard(s, showTime) {
-                // ������ ������: ���� ����� ���������� �������, ������� ����������� ���� ����
                 var c = CATEGORIES[s.category] || { bg: '#E2E8F0', fg: '#0F172A' };
                 var full = isFull(s);
                 var el = document.createElement('button');
@@ -324,8 +323,7 @@ fonts.googleapis.com" />
             
             function initFilters() {
                 els.trainer.innerHTML = '<option value="">All trainers</option>' + TRAINERS.map(function (t) { return '<option>' + t + '</option>'; }).join('');
-                
-                // ������: ����������� ������� ������ �������� � ����, ��� ����� �������� ���������
+
                 var allCategories = [];
                 SLOTS.forEach(function(s) { if (allCategories.indexOf(s.category) === -1) allCategories.push(s.category); });
                 
@@ -354,7 +352,7 @@ fonts.googleapis.com" />
                 chip.style.background = c.bg;
                 chip.style.color = c.fg;
                 $('modal-day').textContent = DAYS[s.day];
-                $('modal-time').textContent = timeLabel(s.hour) + ' � ' + timeLabel(s.hour + 1);
+                $('modal-time').textContent = timeLabel(s.hour) + ' – ' + timeLabel(s.hour + 1);
                 $('modal-trainer').textContent = s.trainer;
                 $('modal-difficulty').innerHTML = fireIcons(s.difficulty, 'h-4 w-4');
                 $('modal-spots').textContent = left(s) + '/' + s.capacity + ' spots left';

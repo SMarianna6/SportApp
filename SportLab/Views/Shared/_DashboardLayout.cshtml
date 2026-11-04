@@ -98,7 +98,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="@Url.Action("Shop", "Admin")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon @(ViewContext.RouteData.Values["action"]?.ToString() == "Inventory" ? "text-neon bg-[#1c1c1c] shadow-[inset_4px_0_0_#AAFF00]" : "")" title="Shop / Inventory">
+                        <a href="@Url.Action("Shop", "Admin")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon @(ViewContext.RouteData.Values["action"]?.ToString() == "Shop" ? "text-neon bg-[#1c1c1c] shadow-[inset_4px_0_0_#AAFF00]" : "")" title="Shop">
                             <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                             <span class="nav-label">Shop</span>
                         </a>
