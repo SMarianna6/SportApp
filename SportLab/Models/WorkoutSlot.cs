@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SportLab.Models
 {
-    public class WorkoutSlot
+    public class WorkoutSlot : IValidatableObject
     {
         public int Id { get; set; }
 
@@ -60,5 +60,22 @@ namespace SportLab.Models
         [Display(Name = "Booked Spots")]
         [Range(0, 1000, ErrorMessage = "Booked spots cannot be negative")]
         public int Booked { get; set; } = 0;
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (EndTime <= StartTime)
+            {
+                yield return new ValidationResult(
+                    "End time must be later than the start time.",
+                    new[] { nameof(EndTime) });
+            }
+
+            if (Booked > Capacity)
+            {
+                yield return new ValidationResult(
+                    "Booked spots cannot exceed capacity.",
+                    new[] { nameof(Booked) });
+            }
+        }
     }
 }

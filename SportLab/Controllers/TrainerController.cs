@@ -60,11 +60,6 @@ namespace SportLab.Controllers
             ModelState.Remove(nameof(WorkoutSlot.Trainer));
             ModelState.Remove(nameof(WorkoutSlot.User));
 
-            if (slot.EndTime <= slot.StartTime)
-            {
-                ModelState.AddModelError(nameof(WorkoutSlot.EndTime), "End time must be later than the start time.");
-            }
-
             if (ModelState.IsValid)
             {
                 _context.WorkoutSlots.Add(slot);
@@ -128,11 +123,6 @@ namespace SportLab.Controllers
             form.TrainerId = slot.TrainerId;
             ModelState.Remove(nameof(WorkoutSlot.Trainer));
             ModelState.Remove(nameof(WorkoutSlot.User));
-
-            if (form.EndTime <= form.StartTime)
-            {
-                ModelState.AddModelError(nameof(WorkoutSlot.EndTime), "End time must be later than the start time.");
-            }
 
             if (!ModelState.IsValid)
             {
