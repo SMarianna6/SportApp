@@ -8,9 +8,9 @@
     <p class="mt-1 text-sm text-mono/60">Manage your profile, clients and sessions.</p>
 </div>
 
-<div class="grid grid-cols-1 gap-5 xl:grid-cols-5">
+<div class="grid grid-cols-1 gap-5 xl:grid-cols-2">
     <!-- Professional information -->
-    <section class="rounded-lg bg-card p-5 xl:col-span-3" aria-labelledby="pro-title">
+    <section class="rounded-lg bg-card p-5" aria-labelledby="pro-title">
         <h3 id="pro-title" class="mb-4 text-lg font-extrabold uppercase tracking-tight">Professional Information</h3>
         <div class="grid gap-6 md:grid-cols-5">
             <figure class="relative overflow-hidden rounded-lg bg-shell md:col-span-2">
@@ -73,7 +73,7 @@
     </section>
 
     <!-- Work schedule -->
-    <section class="rounded-lg bg-card p-5 xl:order-last xl:col-span-2" aria-labelledby="sched-title">
+   <section class="rounded-lg bg-card p-5 xl:order-last" aria-labelledby="sched-title">
         <div class="mb-4 flex items-center justify-between gap-3">
             <h3 id="sched-title" class="text-lg font-extrabold uppercase tracking-tight">Work Schedule</h3>
             <div class="flex rounded-md bg-shell p-1" role="tablist">
@@ -93,7 +93,7 @@
     </section>
 
     <!-- Clients Widget -->
-    <section class="rounded-lg bg-card p-5 xl:col-span-5 xl:row-start-2" aria-labelledby="clients-title">
+    <section class="rounded-lg bg-card p-5 xl:col-span-2 xl:row-start-2" aria-labelledby="clients-title">
         <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <h3 id="clients-title" class="text-lg font-extrabold uppercase tracking-tight">My Clients <span id="clients-count" class="ml-1 text-sm font-semibold text-mono/50"></span></h3>
             <div class="flex flex-col gap-2 sm:flex-row">
@@ -332,8 +332,8 @@
                     return '<li class="flex gap-3"><div class="flex w-20 shrink-0 flex-col items-end pt-3"><span class="text-xs font-extrabold text-neon">' + s.time + '</span></div>' +
                         '<button type="button" data-idx="' + i + '" class="slot-btn group relative flex flex-1 items-center gap-3 rounded-lg bg-shell p-3 pl-4 text-left transition-colors hover:bg-black focus:outline-none" style="box-shadow: inset 3px 0 0 ' + (i % 2 ? '#7D51FE' : '#AAFF00') + '">' +
                         '<span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-card text-neon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + icons[s.icon] + '</svg></span>' +
-                        '<div class="min-w-0 flex-1"><p class="truncate text-sm font-extrabold">' + s.client + '</p><p class="text-xs text-mono/60">' + s.type + ' session</p></div>' +
-                        '<span class="ml-auto text-[11px] font-bold uppercase tracking-wider text-mono/40 transition-colors group-hover:text-[#FF5252]">Cancel</span></button></li>';
+                        '<div class="flex-1"><p class="text-sm font-extrabold break-words">' + s.client + '</p><p class="text-xs text-mono/60">' + s.type + ' session</p></div>' +
+                        '<span class="ml-auto shrink-0 text-[11px] font-bold uppercase tracking-wider text-mono/40 transition-colors group-hover:text-[#FF5252]">Cancel</span></button></li>';
                 }).join('');
                 document.querySelectorAll('.day-tab').forEach(function (t) {
                     var on = t.dataset.day === day; t.setAttribute('aria-selected', String(on));

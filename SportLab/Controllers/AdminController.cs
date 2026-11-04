@@ -1,5 +1,6 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SportLab.Data;
 using SportLab.Filters;
 using SportLab.Models;
@@ -16,44 +17,8 @@ namespace SportLab.Controllers
             _context = context;
         }
 
-        public IActionResult Index(string userSearch, string userStatus, string productSearch, string tariffSearch)
+        public IActionResult Index()
         {
-            var usersQuery = from u in _context.Users select u;
-
-            if (!string.IsNullOrEmpty(userSearch))
-            {
-                usersQuery = usersQuery.Where(u => u.Name != null && u.Name.Contains(userSearch) ||
-                                                   u.Email != null && u.Email.Contains(userSearch));
-            }
-
-            if (!string.IsNullOrEmpty(userStatus))
-            {
-                if (userStatus == "Blocked")
-                {
-                    usersQuery = usersQuery.Where(u => u.IsBlocked);
-                }
-                else if (userStatus == "Active")
-                {
-                    usersQuery = usersQuery.Where(u => !u.IsBlocked);
-                }
-                else
-                {
-                    usersQuery = usersQuery.Where(u => u.Role == userStatus);
-                }
-            }
-
-            var productsQuery = from p in _context.Products select p;
-            if (!string.IsNullOrEmpty(productSearch))
-            {
-                productsQuery = productsQuery.Where(p => p.Name != null && p.Name.Contains(productSearch));
-            }
-
-            var tariffsQuery = from t in _context.Plans select t;
-            if (!string.IsNullOrEmpty(tariffSearch))
-            {
-                tariffsQuery = tariffsQuery.Where(t => t.Name != null && t.Name.Contains(tariffSearch));
-            }
-
             var model = new AdminPanelData
             {
                 Tariffs = tariffsQuery.ToList(),
@@ -176,7 +141,28 @@ namespace SportLab.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult CreateUser()
+        public IActionResult Users()
+        {
+            ViewBag.TariffNames = _context.Plans.Select(p => p.Name).ToList();
+            return View();
+        }
+
+        public IActionResult Tariffs()
+        {
+            return View();
+        }
+
+        public IActionResult Shop()
+        {
+            return View();
+        }
+
+        public IActionResult Schedule()
+        {
+            return View();
+        }
+
+        public IActionResult Settings()
         {
             return View();
         }
@@ -194,55 +180,161 @@ namespace SportLab.Controllers
             return View(user);
         }
 
-        public IActionResult EditUser(int? id)
+        [HttpGet]
+        public async Task<IActionResult> GlobalSearch(string q)
         {
-            if (id == null) return NotFound();
-            var user = _context.Users.Find(id);
-            if (user == null) return NotFound();
-            return View(user);
+            if (string.IsNullOrWhiteSpace(q))
+                return Json(new { users = new string[0], products = new string[0], tariffs = new string[0], faqs = new string[0] });
+
+            var users = await _context.Users
+                .Where(u => u.Name.Contains(q) || u.Email.Contains(q))
+                .Take(4)
+                .Select(u => new { id = u.Id, name = u.Name, subtitle = u.Email, url = $"/Admin/Users?openUser={u.Id}" })
+                .ToListAsync();
+
+            var products = await _context.Products
+                .Where(p => p.Name.Contains(q))
+                .Take(4)
+                .Select(p => new { id = p.Id, name = p.Name, subtitle = p.Category, url = $"/Admin/Shop?openProduct={p.Id}" })
+                .ToListAsync();
+
+            var tariffs = await _context.Plans
+                .Where(p => p.Name.Contains(q))
+                .Take(4)
+                .Select(p => new { id = p.Id, name = p.Name, subtitle = p.Price + " $", url = $"/Admin/Tariffs?openTariff={p.Id}" })
+                .ToListAsync();
+
+            var faqs = await _context.FAQs
+                .Where(f => f.Question.Contains(q))
+                .Take(3)
+                .Select(f => new { id = f.Id, name = f.Question, subtitle = "FAQ", url = $"/Admin/FAQ?openFAQ=/{f.Id}" })
+                .ToListAsync();
+
+            return Json(new { users, products, tariffs, faqs });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUsersList()
+        {
+            var users = await _context.Users
+                .Include(u => u.Subscriptions)
+                .ThenInclude(s => s.Plan)
+                .Select(u => new
+                {
+                    id = u.Id,
+                    name = u.Name,
+                    email = u.Email,
+                    role = u.Role,
+                    active = !u.IsBlocked,
+                    tariff = u.Subscriptions
+                    .OrderByDescending(s => s.Id)
+                    .Where(s => s.Plan != null)
+                    .Select(s => s.Plan!.Name)
+                    .FirstOrDefault()
+                    ?? (u.Role == "Trainer" || u.Role == "Staff" ? "Staff" : "No Plan")
+                })
+                .ToListAsync();
+
+            return Json(users);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult EditUser(int id, User user)
+        public async Task<IActionResult> DeleteUserApi(int id)
         {
-            if (id != user.Id) return NotFound();
-
-            if (ModelState.IsValid)
-            {
-                _context.Update(user);
-                _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(user);
-        }
-
-        public IActionResult DeleteUser(int? id)
-        {
-            if (id == null) return NotFound();
-            var user = _context.Users.Find(id);
-
+            var user = await _context.Users.FindAsync(id);
             if (user != null)
             {
                 _context.Users.Remove(user);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
-
-            return RedirectToAction(nameof(Index));
+            return Ok();
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult ToggleBlockUser(int id)
+        public async Task<IActionResult> ToggleUserApi(int id)
         {
-            var user = _context.Users.Find(id);
+            var user = await _context.Users.FindAsync(id);
             if (user != null)
             {
                 user.IsBlocked = !user.IsBlocked;
-                _context.Update(user);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
-            return RedirectToAction(nameof(Index));
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveUserApi([FromBody] UserDto userDto)
+        {
+            User? user;
+            if (userDto.Id == 0)
+            {
+                if (string.IsNullOrWhiteSpace(userDto.Password))
+                {
+                    return BadRequest("A password is required for new users.");
+                }
+
+                user = new User
+                {
+                    Name = userDto.Name,
+                    Email = userDto.Email,
+                    Role = userDto.Role,
+                    Password = userDto.Password ?? "Default123!",
+                    IsBlocked = false
+                };
+                _context.Users.Add(user);
+            }
+            else
+            {
+                user = await _context.Users.Include(u => u.Subscriptions).FirstOrDefaultAsync(u => u.Id == userDto.Id);
+                if (user == null) return NotFound();
+
+                user.Name = userDto.Name;
+                user.Email = userDto.Email;
+                user.Role = userDto.Role;
+                if (!string.IsNullOrEmpty(userDto.Password))
+                {
+                    user.Password = userDto.Password;
+                }
+            }
+
+            var plan = await _context.Plans.FirstOrDefaultAsync(p => p.Name == userDto.Tariff);
+
+            if (plan != null)
+            {
+                var lastSubscription = user.Subscriptions.OrderByDescending(s => s.Id).FirstOrDefault();
+
+                if (lastSubscription == null || lastSubscription.PlanId != plan.Id)
+                {
+                    foreach (var sub in user.Subscriptions.Where(s => s.IsActive))
+                    {
+                        sub.IsActive = false;
+                        _context.Update(sub);
+                    }
+
+                    var newSubscription = new Subscription
+                    {
+                        PlanId = plan.Id,
+                        User = user,
+                        StartDate = DateTime.Today,
+                        EndDate = DateTime.Today.AddDays(plan.Duration),
+                        IsActive = true
+                    };
+                    _context.Set<Subscription>().Add(newSubscription);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok();
         }
     }
+
+        public class UserDto
+        {
+            public int Id { get; set; }
+            public required string Name { get; set; }
+            public required string Email { get; set; }
+            public required string Role { get; set; }
+            public required string Password { get; set; }
+            public required string Tariff { get; set; }
+        }
 }

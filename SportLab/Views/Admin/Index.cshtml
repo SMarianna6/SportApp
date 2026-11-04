@@ -1,167 +1,42 @@
-﻿@model SportLab.Models.AdminPanelData
-
-@{
-    ViewData["Title"] = "Admin Panel";
-    Layout = "_AdminLayout";
+﻿@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="container mt-4">
-    <h3 class="h3 fw-bold mb-3">List of Users</h3>
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <a asp-action="CreateUser" class="btn btn-primary">New User</a>
-        </div>
-        <form asp-action="Index" method="get" class="d-flex gap-2">
-            <select name="userStatus" class="form-select" style="width: 150px;">
-                <option value="">All Statuses</option>
-                <option value="Trainer">Trainer</option>
-                <option value="Client">Client</option>
-                <option value="Active">Active</option>
-                <option value="Blocked">Blocked</option>
-            </select>
-            <input type="text" name="userSearch" class="form-control" placeholder="Search user..." style="width: 200px;" />
-        </form>
-    </div>
-    <table class="table table-bordered table-striped">
-        <colgroup>
-            <col style="width: 9%;"> 
-            <col style="width: 20%;"> 
-            <col style="width: 39%;"> 
-            <col style="width: 10%;"> 
-            <col style="width: 10%;"> 
-            <col style="width: 12%;">
-        </colgroup>
-        <thead>
-            <tr>
-                <th class="col-block">Block</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Status</th>
-                <th class="col-actions">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Users)
-            {
-                <tr>
-                    <td class="col-block">
-                        @if (item.IsBlocked)
-                        {
-                            <form asp-action="ToggleBlockUser" asp-route-id="@item.Id" method="post" style="display:inline;">
-                                <button type="submit" class="btn btn-success btn-sm">Unblock</button>
-                            </form>
-                        }
-                        else
-                        {
-                            <form asp-action="ToggleBlockUser" asp-route-id="@item.Id" method="post" style="display:inline;">
-                                <button type="submit" class="btn btn-danger btn-sm">Block</button>
-                            </form>
-                        }
-                    </td>
-                    <td>@item.Name</td>
-                    <td>@item.Email</td>
-                    <td>@item.Role</td>
-                    <td>
-                        @(item.IsBlocked ? "Blocked" : "Active")
-                    </td>
-                    <td class="col-actions">
-                        <a asp-action="EditUser" asp-route-id="@item.Id" class="btn btn-primary btn-sm">Edit</a>
-                        <a asp-action="DeleteUser" asp-route-id="@item.Id" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+<link rel="stylesheet" href="~/css/admin/sporthub.css" asp-append-version="true" />
 
-    <h3 class="h3 fw-bold mt-5 mb-3">List of Tariffs</h3>
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="sh-page" data-sh-page="dashboard">
+    <div class="sh-head">
         <div>
-            <a asp-action="CreateTariff" class="btn btn-primary">New Tariff</a>
+            <h1 class="sh-title">Dashboard</h1>
+            <p class="sh-sub">Club performance at a glance</p>
         </div>
-        <form asp-action="Index" method="get" class="d-flex gap-2">
-            <input type="text" name="tariffSearch" class="form-control" placeholder="Search tariff..." style="width: 250px;" />
-        </form>
     </div>
-    <table class="table table-bordered table-striped">
-        <colgroup>
-            <col style="width: 15%;">
-            <col style="width: 48%;">
-            <col style="width: 10%;">
-            <col style="width: 5%;">
-            <col style="width: 10%;">
-            <col style="width: 12%;">
-        </colgroup>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Price</th>
-                <th>Duration</th>
-                <th>Type</th>
-                <th class="col-actions">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Tariffs)
-            {
-                <tr>
-                    <td>@item.Name</td>
-                    <td>@item.Description</td>
-                    <td>@item.Price</td>
-                    <td>@item.Duration</td>
-                    <td>@item.Type</td>
-                    <td class="col-actions">
-                        <a asp-action="EditTariff" asp-route-id="@item.Id" class="btn btn-primary btn-sm">Edit</a>
-                        <a asp-action="DeleteTariff" asp-route-id="@item.Id" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this tariff?');">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
 
-    <h3 class="h3 fw-bold mt-5 mb-3">List of Products</h3>
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <a asp-action="CreateProduct" class="btn btn-primary">New Product</a>
+    <div class="sh-stats" id="sh-stats"></div>
+
+    <div class="sh-dash-grid">
+        <div class="sh-card sh-chart-card">
+            <div class="sh-chart-head">
+                <h2 class="sh-h2">Platform Growth</h2>
+                <div class="sh-chart-controls">
+                    <button type="button" class="sh-select-btn sh-n"><span class="sh-dot sh-dot-n"></span>Revenue <svg class="sh-ico sh-ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></button>
+                    <button type="button" class="sh-select-btn sh-v"><span class="sh-dot sh-dot-v"></span>New Users <svg class="sh-ico sh-ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></button>
+                    <button type="button" class="sh-select-btn sh-dim">2026 <svg class="sh-ico sh-ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></button>
+                </div>
+            </div>
+            <div class="sh-chart-wrap">
+                <svg id="sh-chart" class="sh-chart-svg" role="img" aria-label="Revenue and new users by month"></svg>
+                <div id="sh-tooltip" class="sh-tooltip" hidden></div>
+            </div>
         </div>
-        <form asp-action="Index" method="get" class="d-flex gap-2">
-            <input type="text" name="productSearch" class="form-control" placeholder="Search product..." style="width: 250px;" />
-        </form>
+
+        <div class="sh-card sh-events-card">
+            <h2 class="sh-h2">Recent Events</h2>
+            <ul class="sh-events" id="sh-events"></ul>
+        </div>
     </div>
-    <table class="table table-bordered table-striped">
-        <colgroup>
-            <col style="width: 20%;">
-            <col style="width: 43%;">
-            <col style="width: 10%;">
-            <col style="width: 5%;">
-            <col style="width: 12%;">
-        </colgroup>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Price</th>
-                <th>Stock</th>
-                <th class="col-actions">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Products)
-            {
-                <tr>
-                    <td>@item.Name</td>
-                    <td>@item.Description</td>
-                    <td>@item.Price</td>
-                    <td>@item.StockQuantity</td>
-                    <td class="col-actions">
-                        <a asp-action="EditProduct" asp-route-id="@item.Id" class="btn btn-primary btn-sm">Edit</a>
-                        <a asp-action="DeleteProduct" asp-route-id="@item.Id" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this product?');">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
 </div>
 
-<script src="~/js/admin-filter.js"></script>
+<script src="~/js/admin/sh-common.js" asp-append-version="true"></script>
+<script src="~/js/admin/sh-dashboard.js" asp-append-version="true"></script>

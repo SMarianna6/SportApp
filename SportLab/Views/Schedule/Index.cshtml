@@ -266,7 +266,6 @@ fonts.googleapis.com" />
                 var slots = filtered();
                 els.empty.classList.toggle('hidden', slots.length > 0);
                 
-                // Desktop grid
                 var grid = document.createElement('div');
                 grid.className = 'grid min-w-[880px] gap-1.5';
                 grid.style.gridTemplateColumns = '64px repeat(7, minmax(0, 1fr))';
@@ -301,7 +300,6 @@ fonts.googleapis.com" />
                 els.grid.innerHTML = '';
                 els.grid.appendChild(grid);
                 
-                // Mobile list
                 els.list.innerHTML = '';
                 DAYS.forEach(function (d, di) {
                     var daySlots = slots.filter(function (s) { return s.day === di; }).sort(function (a, b) { return a.hour - b.hour; });

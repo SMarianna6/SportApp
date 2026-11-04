@@ -22,7 +22,6 @@
     };
     var lastFocus = null;
 
-    // Захист: якщо елементів немає на сторінці - скрипт просто зупиняється без помилок
     if (!el.fab || !el.modal) return;
 
     /* ---------- Haptics ---------- */
@@ -32,7 +31,7 @@
         }
     }
 
-    /* ---------- Toasts (Переписано на базові класи Tailwind) ---------- */
+    /* ---------- Toasts ---------- */
     var TOAST_STYLES = {
         success: { box: 'bg-neon text-ink', bar: 'bg-ink/30', haptic: [200], icon: '<path d="m5 12 5 5L20 7"/>' },
         error: { box: 'bg-red-600 text-white', bar: 'bg-black/30', haptic: [100, 50, 100], icon: '<path d="M6 6l12 12M18 6 6 18"/>' }
@@ -42,7 +41,6 @@
         var s = TOAST_STYLES[type] || TOAST_STYLES.success;
         var toast = document.createElement('div');
 
-        // Використовуємо базові транзиції замість кастомної анімації, щоб CDN точно спрацював
         toast.className = 'pointer-events-auto relative overflow-hidden rounded-lg shadow-2xl shadow-black/50 transition-all duration-500 ease-out translate-x-[120%] opacity-0 ' + s.box;
         toast.setAttribute('role', type === 'error' ? 'alert' : 'status');
 
@@ -138,7 +136,6 @@
             el.visitsLabel.innerHTML = '<span class="text-mono/50">No plan</span>';
             el.visitsBar.style.width = '0%';
             el.visitsHint.textContent = 'Buy a membership to start booking.';
-            // Зменшена кнопка для No Sub
             el.submit.className = 'mt-5 w-full cursor-pointer rounded-md bg-card py-3.5 text-base font-black uppercase tracking-wider text-white/40 transition-all duration-300 hover:text-white/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet';
             el.submit.setAttribute('aria-disabled', 'true');
             return;
@@ -156,7 +153,6 @@
         });
 
         el.visitsHint.textContent = ratio > 0.5 ? 'Plenty of visits left.' : ratio > 0.2 ? 'Running low. Consider renewing soon.' : 'Almost out of visits.';
-        // Зменшена неонова кнопка
         el.submit.className = 'mt-5 w-full rounded-md bg-neon py-3.5 text-base font-black uppercase tracking-wider text-ink shadow-lg shadow-neon/30 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-neon/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-ink active:translate-y-0';
         el.submit.setAttribute('aria-disabled', 'false');
     }
