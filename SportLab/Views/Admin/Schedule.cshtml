@@ -9,51 +9,65 @@
     <div class="sh-head">
         <div>
             <h1 class="sh-title">Schedule</h1>
-            <p class="sh-sub">Weekly class grid. Click an empty cell to add a slot, or a class to edit it.</p>
+            <p class="sh-sub">Weekly class grid. Click an empty cell to add a class, or a class to edit it.</p>
         </div>
     </div>
 
+    <div class="sh-legend" id="sh-schedule-legend" role="group" aria-label="Filter classes by type"></div>
+
     <div class="sh-card sh-scroll-x">
-        <div class="sh-sched" id="sh-sched"></div>
+        <div class="sh-cal" id="sh-cal"></div>
     </div>
 </div>
 
-<div class="sh-modal-backdrop" id="sh-slot-modal" hidden>
-    <div class="sh-modal" role="dialog" aria-modal="true" aria-labelledby="sh-slot-modal-title">
+<div class="sh-modal-backdrop" id="sh-schedule-modal" hidden>
+    <div class="sh-modal" role="dialog" aria-modal="true" aria-labelledby="sh-schedule-modal-title">
         <div class="sh-modal-bar"></div>
         <div class="sh-modal-head">
-            <h2 class="sh-modal-title" id="sh-slot-modal-title">Add Slot</h2>
+            <h2 class="sh-modal-title" id="sh-schedule-modal-title">Add Class</h2>
             <button type="button" class="sh-modal-close" data-sh-close aria-label="Close"><svg class="sh-ico sh-ico-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg></button>
         </div>
         <div class="sh-modal-body">
-            @* MVC integration point: post to your own controller action (add @Html.AntiForgeryToken() if needed). *@
-            <form class="sh-form" id="sh-slot-form">
-                <label class="sh-field">Activity Name<div class="sh-field-body"><input class="sh-input" name="activity" placeholder="Yoga, HIIT..." required /></div></label>
+            <form class="sh-form" id="sh-schedule-form" novalidate>
+                @Html.AntiForgeryToken()
                 <div class="sh-form-grid">
-                    <label class="sh-field">Trainer<div class="sh-field-body"><select class="sh-input" name="trainer" id="sh-slot-trainer"></select></div></label>
-                    <label class="sh-field">Day<div class="sh-field-body"><select class="sh-input" name="day" id="sh-slot-day"></select></div></label>
-                    <label class="sh-field">Start Time<div class="sh-field-body"><input class="sh-input" name="start" type="time" min="08:00" max="20:00" required /></div></label>
-                    <label class="sh-field">End Time<div class="sh-field-body"><input class="sh-input" name="end" type="time" min="08:00" max="20:00" required /></div></label>
-                    <label class="sh-field">Status
+                    <label class="sh-field">Activity Type
+                        <div class="sh-field-body"><select class="sh-input" name="type" id="sh-schedule-type"></select></div>
+                    </label>
+                    <label class="sh-field">Day
                         <div class="sh-field-body">
-                            <select class="sh-input" name="status"><option>Open</option><option>Full</option><option>Draft</option></select>
+                            <select class="sh-input" name="day">
+                                <option value="1">Mon</option><option value="2">Tue</option><option value="3">Wed</option>
+                                <option value="4">Thu</option><option value="5">Fri</option><option value="6">Sat</option><option value="7">Sun</option>
+                            </select>
                         </div>
                     </label>
-                    <label class="sh-field">Capacity<div class="sh-field-body"><input class="sh-input" name="capacity" type="number" min="1" required /></div></label>
+                    <label class="sh-field">Start Time<div class="sh-field-body"><input class="sh-input" name="timeStart" type="time" min="08:00" max="20:00" step="900" required /></div></label>
+                    <label class="sh-field">End Time<div class="sh-field-body"><input class="sh-input" name="timeEnd" type="time" min="08:00" max="20:00" step="900" required /></div></label>
+                </div>
+                <label class="sh-field">Coach
+                    <div class="sh-field-body">
+                        <select class="sh-input" name="coach" required>
+                            <option value="" disabled selected>Select a trainer</option>
+                            @foreach (var trainer in ViewBag.Trainers)
+                            {
+                                <option value="@trainer.Name">@trainer.Name</option>
+                            }
+                        </select>
+                    </div>
+                </label>
+                <div class="sh-form-grid">
+                    <label class="sh-field">Capacity<div class="sh-field-body"><input class="sh-input" name="capacity" type="number" min="1" step="1" required /></div></label>
+                    <label class="sh-field">Booked<div class="sh-field-body"><input class="sh-input" name="booked" type="number" min="0" step="1" value="0" required /></div></label>
                 </div>
 
-                <label class="sh-field" id="sh-slot-reason-wrap" hidden>Reason for cancellation
-                    <div class="sh-field-body"><textarea class="sh-input sh-input-danger" id="sh-slot-reason" rows="3" placeholder="Booked clients will be notified with this message"></textarea></div>
-                </label>
+                <p class="sh-form-error" id="sh-schedule-error" role="alert" hidden></p>
 
                 <div class="sh-form-actions sh-between">
-                    <div>
-                        <button type="button" class="sh-btn sh-btn-outline-danger" id="sh-slot-cancel-class" hidden>Cancel Class</button>
-                        <button type="button" class="sh-btn sh-btn-danger" id="sh-slot-confirm-cancel" hidden disabled>Confirm &amp; Notify Clients</button>
-                    </div>
-                    <div style="display:flex;gap:.5rem">
+                    <button type="button" class="sh-btn sh-btn-outline-danger" id="sh-schedule-delete" hidden>Delete</button>
+                    <div class="sh-form-actions-right">
                         <button type="button" class="sh-btn sh-btn-ghost" data-sh-close>Close</button>
-                        <button type="submit" class="sh-btn sh-btn-primary" id="sh-slot-submit">Add Slot</button>
+                        <button type="submit" class="sh-btn sh-btn-primary">Save</button>
                     </div>
                 </div>
             </form>

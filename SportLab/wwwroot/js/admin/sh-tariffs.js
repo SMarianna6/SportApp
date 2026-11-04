@@ -1,23 +1,38 @@
-﻿/* Tariffs page. Demo data and in-memory add/edit/delete only (no backend).
-   MVC integration point: replace the marked spots with calls to your own actions. */
-(function () {
+﻿(function () {
     'use strict';
     var SH = window.SH;
 
-    var tariffs = [
-        { id: 1, name: 'Basic Plan', description: 'Gym floor access during off-peak hours. No classes included.', price: 29, days: 30, type: 'Monthly' },
-        { id: 2, name: 'Pro Plan', description: 'Unlimited gym access, group classes and one PT session.', price: 59, days: 30, type: 'Monthly' },
-        { id: 3, name: 'Elite Plan', description: 'Everything in Pro plus sauna, nutrition coaching and guest passes.', price: 99, days: 30, type: 'Premium' },
-        { id: 4, name: 'Annual Pass', description: 'Twelve months of Pro access at a discounted rate.', price: 590, days: 365, type: 'Annual' },
-        { id: 5, name: 'Day Pass', description: 'Single visit access to all gym facilities.', price: 12, days: 1, type: 'Trial' }
-    ];
+    var URLS = {
+        list: '/Admin/GetTariffsList',
+        save: '/Admin/SaveTariffApi',
+        remove: '/Admin/DeleteTariffApi'
+    };
+
+    var tariffs = [];
     var editing = null;
 
     var grid = document.getElementById('sh-tariff-grid');
     var form = document.getElementById('sh-tariff-form');
     var title = document.getElementById('sh-tariff-modal-title');
 
+    async function loadTariffs() {
+        try {
+            const response = await fetch(URLS.list);
+            tariffs = await response.json();
+            render();
+        } catch (error) {
+            console.error("Error loading tariffs:", error);
+        }
+    }
+
     function render() {
+        if (!grid) return;
+
+        if (!tariffs.length) {
+            grid.innerHTML = '<div class="sh-card sh-tariff-empty">No tariffs available. Click "Add Tariff" to create one.</div>';
+            return;
+        }
+
         grid.innerHTML = tariffs.map(function (t) {
             return '<div class="sh-card sh-tariff" data-id="' + t.id + '">' +
                 '<div class="sh-tariff-top"><h3 class="sh-tariff-name">' + SH.esc(t.name) + '</h3><span class="sh-tariff-type">' + SH.esc(t.type) + '</span></div>' +
@@ -33,46 +48,71 @@
 
     function openForm(t) {
         editing = t;
-        title.textContent = t ? 'Edit Tariff' : 'Add Tariff';
-        form.elements.name.value = t ? t.name : '';
-        form.elements.description.value = t ? t.description : '';
-        form.elements.price.value = t ? t.price : '';
-        form.elements.days.value = t ? t.days : '30';
-        form.elements.type.value = t ? t.type : 'Monthly';
+        if (title) title.textContent = t ? 'Edit Tariff' : 'Add Tariff';
+
+        if (form.elements.name) form.elements.name.value = t ? t.name : '';
+        if (form.elements.description) form.elements.description.value = t ? t.description : '';
+        if (form.elements.price) form.elements.price.value = t ? t.price : '';
+        if (form.elements.days) form.elements.days.value = t ? t.days : '30';
+        if (form.elements.type) form.elements.type.value = t ? t.type : 'Monthly';
+
         SH.openModal('sh-tariff-modal');
     }
 
-    document.getElementById('sh-tariff-add').addEventListener('click', function () { openForm(null); });
+    var addBtn = document.getElementById('sh-tariff-add');
+    if (addBtn) {
+        addBtn.addEventListener('click', function () { openForm(null); });
+    }
 
-    grid.addEventListener('click', function (e) {
-        var btn = e.target.closest('[data-act]');
-        if (!btn) return;
-        var id = Number(btn.closest('[data-id]').getAttribute('data-id'));
-        if (btn.getAttribute('data-act') === 'edit') {
-            openForm(tariffs.filter(function (t) { return t.id === id; })[0]);
-        } else {
-            // MVC integration point: delete via your own endpoint.
-            tariffs = tariffs.filter(function (t) { return t.id !== id; });
-            render();
-        }
-    });
+    if (grid) {
+        grid.addEventListener('click', async function (e) {
+            var btn = e.target.closest('[data-act]');
+            if (!btn) return;
 
-    form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        var f = form.elements;
-        var data = {
-            name: f.name.value,
-            description: f.description.value,
-            price: parseFloat(f.price.value),
-            days: parseInt(f.days.value, 10),
-            type: f.type.value
-        };
-        // MVC integration point: send `data` to your own create/update action.
-        if (editing) Object.assign(editing, data);
-        else tariffs.push(Object.assign({ id: Date.now() }, data));
-        SH.closeModal('sh-tariff-modal');
-        render();
-    });
+            var card = btn.closest('[data-id]');
+            if (!card) return;
 
-    render();
+            var id = Number(card.getAttribute('data-id'));
+            var tariff = tariffs.filter(function (t) { return t.id === id; })[0];
+            var act = btn.getAttribute('data-act');
+
+            if (act === 'edit') {
+                openForm(tariff);
+            }
+
+            if (act === 'delete') {
+                if (confirm('Are you sure you want to delete this tariff?')) {
+                    await fetch(URLS.remove + '?id=' + id, { method: 'POST' });
+                    loadTariffs();
+                }
+            }
+        });
+    }
+
+    if (form) {
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            var f = form.elements;
+
+            var data = {
+                Id: editing ? editing.id : 0,
+                Name: f.name ? f.name.value.trim() : '',
+                Description: f.description ? f.description.value.trim() : '',
+                Price: f.price ? parseFloat(f.price.value) : 0,
+                Days: f.days ? parseInt(f.days.value, 10) : 30,
+                Type: f.type ? f.type.value.trim() : 'Monthly'
+            };
+
+            await fetch(URLS.save, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            SH.closeModal('sh-tariff-modal');
+            loadTariffs();
+        });
+    }
+
+    loadTariffs();
 })();

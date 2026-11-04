@@ -8,7 +8,7 @@
 <div class="sh-page" data-sh-page="shop">
     <div class="sh-head">
         <div>
-            <h1 class="sh-title">Shop / Inventory</h1>
+            <h1 class="sh-title">Shop</h1>
             <p class="sh-sub">Products and stock levels</p>
         </div>
         <button type="button" class="sh-btn sh-btn-primary" id="sh-product-add">
@@ -17,9 +17,16 @@
     </div>
 
     <div class="sh-card sh-scroll-x">
-        <table class="sh-table" style="min-width:680px">
+        <table class="sh-table" style="min-width:820px">
             <thead>
-                <tr><th>Photo</th><th>Product Name</th><th>Category</th><th>Price</th><th>Stock Quantity</th></tr>
+                <tr>
+                    <th>Photo</th>
+                    <th>Product Info</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th class="sh-right sh-nowrap">Actions</th>
+                </tr>
             </thead>
             <tbody id="sh-products-body"></tbody>
         </table>
@@ -34,9 +41,10 @@
             <button type="button" class="sh-modal-close" data-sh-close aria-label="Close"><svg class="sh-ico sh-ico-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg></button>
         </div>
         <div class="sh-modal-body">
-            @* MVC integration point: post to your own controller action (add @Html.AntiForgeryToken() if needed). *@
-            <form class="sh-form" id="sh-product-form">
+            <form class="sh-form" id="sh-product-form" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
                 <label class="sh-field">Product Name<div class="sh-field-body"><input class="sh-input" name="name" required /></div></label>
+                <label class="sh-field">Description<div class="sh-field-body"><textarea class="sh-input" name="description" rows="3"></textarea></div></label>
                 <label class="sh-field">Category
                     <div class="sh-field-body">
                         <select class="sh-input" name="category">
@@ -48,12 +56,48 @@
                     <label class="sh-field">Price<div class="sh-field-body"><input class="sh-input" name="price" type="number" step="0.01" min="0" required /></div></label>
                     <label class="sh-field">Stock Quantity<div class="sh-field-body"><input class="sh-input" name="stock" type="number" min="0" value="0" required /></div></label>
                 </div>
+                <div class="sh-field">
+                    <label>Photo</label>
+                    <div class="sh-field-body">
+                        <style>
+                            .sh-file-wrapper:hover .sh-custom-file-btn {
+                                background: rgba(163, 255, 0, 0.15) !important;
+                                box-shadow: 0 0 12px rgba(163, 255, 0, 0.3);
+                                border-color: #a3ff00 !important;
+                                border-style: solid !important;
+                            }
+                        </style>
+                        <div class="sh-file-wrapper" style="position: relative; overflow: hidden; display: block; width: 100%; margin-bottom: 0.5rem;">
+                            <input class="sh-input" name="photo" type="file" id="sh-product-photo" accept="image/*" style="position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; z-index: 2;" />
+                            <div class="sh-btn sh-custom-file-btn" style="width: 100%; border: 1px dashed #a3ff00; background: rgba(163, 255, 0, 0.05); color: #a3ff00; text-align: center; position: relative; z-index: 1; padding: 0.75rem; transition: all 0.2s ease; border-radius: 4px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <svg class="sh-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="17 8 12 3 7 8"></polyline>
+                                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                                <span id="sh-file-chosen" style="font-weight: 600;">Choose file</span>
+                            </div>
+                        </div>
+                        <div class="sh-preview" id="sh-photo-preview">
+                            <img id="sh-photo-preview-img" alt="Selected product photo preview" hidden />
+                            <span class="sh-preview-empty" id="sh-photo-preview-empty">No image selected</span>
+                        </div>
+
+                    </div>
+                </div>
                 <div class="sh-form-actions">
                     <button type="button" class="sh-btn sh-btn-ghost" data-sh-close>Cancel</button>
                     <button type="submit" class="sh-btn sh-btn-primary">Save</button>
                 </div>
             </form>
         </div>
+    </div>
+</div>
+
+<div class="sh-modal-backdrop" id="sh-lightbox-modal" hidden>
+    <div class="sh-lightbox" role="dialog" aria-modal="true" aria-label="Product photo">
+        <button type="button" class="sh-lightbox-close" data-sh-close aria-label="Close"><svg class="sh-ico sh-ico-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg></button>
+        <img id="sh-lightbox-img" alt="Product photo" />
     </div>
 </div>
 
