@@ -161,7 +161,7 @@ fonts.googleapis.com" />
                 }
             ];
 
-            var SLOTS = [
+           var SLOTS = [
                 @if (Model != null && Model.Any()) {
                     foreach (var slot in Model) {
                         int jsDay = ((int)slot.StartTime.DayOfWeek + 6) % 7; 
@@ -172,9 +172,9 @@ fonts.googleapis.com" />
                             hour: @slot.StartTime.Hour,
                             category: '@Html.Raw(slot.ActivityName)',
                             trainer: '@Html.Raw(slot.Trainer?.Name ?? "TBA")',
-                            difficulty: 2, 
-                            capacity: 20,
-                            booked: @(slot.Status == "Booked" ? 20 : 5)
+                            difficulty: 2, // hardcode for now
+                            capacity: @slot.Capacity, 
+                            booked: @slot.Booked 
                         },
                         </text>
                     }
@@ -224,7 +224,6 @@ fonts.googleapis.com" />
             }
             
             function slotCard(s, showTime) {
-                // ДОДАНО ЗАХИСТ: якщо назва тренування невідома, ставимо нейтральний сірий колір
                 var c = CATEGORIES[s.category] || { bg: '#E2E8F0', fg: '#0F172A' };
                 var full = isFull(s);
                 var el = document.createElement('button');
@@ -321,8 +320,7 @@ fonts.googleapis.com" />
             
             function initFilters() {
                 els.trainer.innerHTML = '<option value="">All trainers</option>' + TRAINERS.map(function (t) { return '<option>' + t + '</option>'; }).join('');
-                
-                // ДОДАНО: автоматично збираємо список категорій з бази, щоб фільтр працював правильно
+
                 var allCategories = [];
                 SLOTS.forEach(function(s) { if (allCategories.indexOf(s.category) === -1) allCategories.push(s.category); });
                 

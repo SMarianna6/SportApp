@@ -51,5 +51,11 @@ namespace SportLab.Models
         [Required]
         [Display(Name = "Status")]
         public string Status { get; set; } = "Available"; // "Available", "Booked", "Completed", "Cancelled"
+
+        [Display(Name = "Capacity")]
+        public int Capacity { get; set; } = 15;
+
+        [Display(Name = "Booked Spots")]
+        public int Booked { get; set; } = 0;
     }
 }

@@ -30,118 +30,6 @@ namespace SportLab.Controllers
             return View(model);
         }
 
-        public IActionResult CreateTariff()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult CreateTariff([Bind("Id,Name,Description,Price,Duration,Type")] Plan tariff)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Plans.Add(tariff);
-                _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(tariff);
-        }
-
-        public IActionResult EditTariff(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var tariff = _context.Plans.Find(id);
-            if (tariff == null) return NotFound();
-
-            return View(tariff);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult EditTariff(int id, [Bind("Id,Name,Description,Price,Duration,Type")] Plan tariff)
-        {
-            if (id != tariff.Id) return NotFound();
-
-            if (ModelState.IsValid)
-            {
-                _context.Update(tariff);
-                _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(tariff);
-        }
-
-        public IActionResult DeleteTariff(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var tariff = _context.Plans.Find(id);
-            if (tariff != null)
-            {
-                _context.Plans.Remove(tariff);
-                _context.SaveChanges();
-            }
-            return RedirectToAction(nameof(Index));
-        }
-
-        public IActionResult CreateProduct()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult CreateProduct(Product product)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Products.Add(product);
-                _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(product);
-        }
-
-        public IActionResult EditProduct(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var product = _context.Products.Find(id);
-            if (product == null) return NotFound();
-
-            return View(product);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult EditProduct(int id, Product product)
-        {
-            if (id != product.Id) return NotFound();
-
-            if (ModelState.IsValid)
-            {
-                _context.Update(product);
-                _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(product);
-        }
-
-        public IActionResult DeleteProduct(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var product = _context.Products.Find(id);
-            if (product != null)
-            {
-                _context.Products.Remove(product);
-                _context.SaveChanges();
-            }
-            return RedirectToAction(nameof(Index));
-        }
-
         public IActionResult Users()
         {
             ViewBag.TariffNames = _context.Plans.Select(p => p.Name).ToList();
@@ -163,8 +51,10 @@ namespace SportLab.Controllers
             return View();
         }
 
-        public IActionResult Schedule()
+        [HttpGet]
+        public async Task<IActionResult> Schedule()
         {
+            ViewBag.Trainers = await _context.Users.ToListAsync();
             return View();
         }
 
@@ -399,6 +289,272 @@ namespace SportLab.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTariffsList()
+        {
+            var tariffs = await _context.Plans
+                .Select(p => new
+                {
+                    id = p.Id,
+                    name = p.Name,
+                    description = p.Description,
+                    price = p.Price,
+                    days = p.Duration,
+                    type = p.Type ?? "Standard"
+                })
+                .ToListAsync();
+
+            return Json(tariffs);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveTariffApi([FromBody] PlanDto dto)
+        {
+            if (dto.Id == 0)
+            {
+                var newPlan = new Plan
+                {
+                    Name = dto.Name,
+                    Description = dto.Description,
+                    Price = dto.Price,
+                    Duration = dto.Days,
+                    Type = dto.Type
+                };
+                _context.Plans.Add(newPlan);
+            }
+            else
+            {
+                var existingPlan = await _context.Plans.FindAsync(dto.Id);
+                if (existingPlan != null)
+                {
+                    existingPlan.Name = dto.Name;
+                    existingPlan.Description = dto.Description;
+                    existingPlan.Price = dto.Price;
+                    existingPlan.Duration = dto.Days;
+                    existingPlan.Type = dto.Type;
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteTariffApi(int id)
+        {
+            var plan = await _context.Plans.FindAsync(id);
+            if (plan != null)
+            {
+                _context.Plans.Remove(plan);
+                await _context.SaveChangesAsync();
+            }
+            return Ok();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetProductList()
+        {
+            var products = await _context.Products
+                .Select(p => new
+                {
+                    id = p.Id,
+                    name = p.Name,
+                    description = p.Description,
+                    category = p.Category ?? "Other",
+                    price = p.Price,
+                    stock = p.StockQuantity,
+                    photo = p.PhotoUrl
+                })
+                .ToListAsync();
+
+            return Json(products);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveProductApi(int id, string name, string? description, string category, decimal price, int stock, IFormFile? photo)
+        {
+            Product? product;
+
+            string? photoPath = null;
+            if (photo != null && photo.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/products");
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(photo.FileName);
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await photo.CopyToAsync(fileStream);
+                }
+
+                photoPath = "/images/products/" + uniqueFileName;
+            }
+
+            if (id == 0)
+            {
+                product = new Product
+                {
+                    Name = name,
+                    Description = description,
+                    Category = category,
+                    Price = price,
+                    StockQuantity = stock,
+                    PhotoUrl = photoPath
+                };
+                _context.Products.Add(product);
+            }
+            else
+            {
+                product = await _context.Products.FindAsync(id);
+                if (product == null) return NotFound();
+
+                product.Name = name;
+                product.Description = description;
+                product.Category = category;
+                product.Price = price;
+                product.StockQuantity = stock;
+
+                if (photoPath != null)
+                {
+                    product.PhotoUrl = photoPath;
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Json(new { id = product.Id, photo = product.PhotoUrl });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateProductStockApi([FromBody] StockUpdateDto dto)
+        {
+            var product = await _context.Products.FindAsync(dto.Id);
+            if (product != null)
+            {
+                product.StockQuantity = Math.Max(0, dto.Stock);
+                await _context.SaveChangesAsync();
+            }
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteProductApi([FromBody] DeleteDto dto)
+        {
+            var product = await _context.Products.FindAsync(dto.Id);
+            if (product != null)
+            {
+                _context.Products.Remove(product);
+                await _context.SaveChangesAsync();
+            }
+            return Ok();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetScheduleList()
+        {
+            var today = DateTime.Today;
+            var diff = (7 + (today.DayOfWeek - DayOfWeek.Monday)) % 7;
+            var startOfWeek = today.AddDays(-1 * diff).Date;
+            var endOfWeek = startOfWeek.AddDays(7);
+
+            var slots = await _context.Set<WorkoutSlot>()
+                .Include(s => s.Trainer)
+                .Where(s => s.StartTime >= startOfWeek && s.StartTime < endOfWeek)
+                .Select(s => new
+                {
+                    id = s.Id,
+                    day = s.StartTime.DayOfWeek == DayOfWeek.Sunday ? 7 : (int)s.StartTime.DayOfWeek,
+                    timeStart = s.StartTime.ToString("HH:mm"),
+                    timeEnd = s.EndTime.ToString("HH:mm"),
+                    type = s.ActivityName ?? "HIIT",
+                    coach = s.Trainer != null ? s.Trainer.Name : "TBA",
+                    booked = s.Booked,      // ¡≈–≈ÃŒ –≈¿À‹Õ≤ ƒ¿Õ≤ « ¡ƒ
+                    capacity = s.Capacity   // ¡≈–≈ÃŒ –≈¿À‹Õ≤ ƒ¿Õ≤ « ¡ƒ
+                })
+                .ToListAsync();
+
+            return Json(slots);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveScheduleApi([FromBody] ScheduleDto dto)
+        {
+            var trainer = await _context.Users.FirstOrDefaultAsync(u => u.Name == dto.Coach)
+                          ?? await _context.Users.FirstOrDefaultAsync();
+
+            if (trainer == null) return BadRequest("No trainers found in database.");
+
+            var today = DateTime.Today;
+            var diff = (7 + (today.DayOfWeek - DayOfWeek.Monday)) % 7;
+            var startOfWeek = today.AddDays(-1 * diff).Date;
+            var targetDate = startOfWeek.AddDays(dto.Day - 1);
+
+            var startTimeParts = dto.TimeStart.Split(':');
+            var endTimeParts = dto.TimeEnd.Split(':');
+
+            var startDateTime = targetDate.AddHours(int.Parse(startTimeParts[0])).AddMinutes(int.Parse(startTimeParts[1]));
+            var endDateTime = targetDate.AddHours(int.Parse(endTimeParts[0])).AddMinutes(int.Parse(endTimeParts[1]));
+
+            // ÀÓ„≥Í‡ ÒÚ‡ÚÛÒÛ: ˇÍ˘Ó Á‡ÔËÒ‡ÌÓ Î˛‰ÂÈ ·≥Î¸¯Â ‡·Ó ‰Ó≥‚Ì˛∫ Ï≥ÒÚÍÓÒÚ≥ - ÒÚ‡ÚÛÒ Booked (œÓ‚ÌËÈ)
+            string calculatedStatus = dto.Booked >= dto.Capacity ? "Booked" : "Available";
+
+            if (dto.Id <= 0)
+            {
+                var newSlot = new WorkoutSlot
+                {
+                    ActivityName = dto.Type,
+                    TrainerId = trainer.Id,
+                    StartTime = startDateTime,
+                    EndTime = endDateTime,
+                    Capacity = dto.Capacity, // «¡≈–≤√¿™ÃŒ Ã≤—“ ≤—“‹
+                    Booked = dto.Booked,     // «¡≈–≤√¿™ÃŒ «¿œ»—¿Õ»’
+                    Status = calculatedStatus
+                };
+                _context.Set<WorkoutSlot>().Add(newSlot);
+                await _context.SaveChangesAsync();
+                return Json(new { id = newSlot.Id });
+            }
+            else
+            {
+                var existingSlot = await _context.Set<WorkoutSlot>().FindAsync(dto.Id);
+                if (existingSlot != null)
+                {
+                    existingSlot.ActivityName = dto.Type;
+                    existingSlot.TrainerId = trainer.Id;
+                    existingSlot.StartTime = startDateTime;
+                    existingSlot.EndTime = endDateTime;
+                    existingSlot.Capacity = dto.Capacity; // ŒÕŒ¬Àﬁ™ÃŒ Ã≤—“ ≤—“‹
+                    existingSlot.Booked = dto.Booked;     // ŒÕŒ¬Àﬁ™ÃŒ «¿œ»—¿Õ»’
+                    existingSlot.Status = calculatedStatus;
+
+                    await _context.SaveChangesAsync();
+                    return Json(new { id = existingSlot.Id });
+                }
+                return NotFound();
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteScheduleApi([FromBody] DeleteDto dto)
+        {
+            var slot = await _context.Set<WorkoutSlot>().FindAsync(dto.Id);
+            if (slot != null)
+            {
+                _context.Set<WorkoutSlot>().Remove(slot);
+                await _context.SaveChangesAsync();
+            }
+            return Ok();
+        }
     }
 
     public class UserDto
@@ -415,5 +571,38 @@ namespace SportLab.Controllers
     {
         public int Id { get; set; }
         public int SortOrder { get; set; }
+    }
+
+    public class PlanDto
+    {
+        public int Id { get; set; }
+        public required string Name { get; set; }
+        public required string Description { get; set; }
+        public decimal Price { get; set; }
+        public int Days { get; set; }
+        public string? Type { get; set; }
+    }
+
+    public class StockUpdateDto
+    {
+        public int Id { get; set; }
+        public int Stock { get; set; }
+    }
+
+    public class DeleteDto
+    {
+        public int Id { get; set; }
+    }
+
+    public class ScheduleDto
+    {
+        public int Id { get; set; }
+        public int Day { get; set; }
+        public required string TimeStart { get; set; }
+        public required string TimeEnd { get; set; }
+        public required string Type { get; set; }
+        public required string Coach { get; set; }
+        public int Booked { get; set; }
+        public int Capacity { get; set; }
     }
 }

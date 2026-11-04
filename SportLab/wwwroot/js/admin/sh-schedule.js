@@ -1,133 +1,262 @@
-﻿/* Schedule page. Demo data; changes live in memory only.
-   MVC integration points: loading slots, saving slots, and the "notify clients" step on
-   cancellation must be wired to your own backend - nothing is sent anywhere here. */
+﻿/* Weekly schedule page. Integrated with database. */
 (function () {
     'use strict';
     var SH = window.SH;
 
-    var TRAINERS = ['Max Berg', 'Sara Lindqvist', 'Daniel Cho', 'Olga Smirnova'];
+    var URLS = { list: '/Admin/GetScheduleList', save: '/Admin/SaveScheduleApi', remove: '/Admin/DeleteScheduleApi' };
+
     var DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    var FIRST_HOUR = 8, LAST_HOUR = 20, ROW = 56;
+    var FIRST_HOUR = 8, LAST_HOUR = 20;
+    var ROW = 64; // px per hour
     var HOURS = [];
     for (var h = FIRST_HOUR; h < LAST_HOUR; h++) HOURS.push(h);
 
-    var slots = [
-        { id: 1, activity: 'Yoga', trainer: 'Sara Lindqvist', day: 0, start: 9, end: 10, status: 'Open', capacity: 15, booked: 11 },
-        { id: 2, activity: 'HIIT', trainer: 'Max Berg', day: 1, start: 18, end: 19, status: 'Open', capacity: 20, booked: 19 },
-        { id: 3, activity: 'Spinning', trainer: 'Daniel Cho', day: 2, start: 12, end: 13, status: 'Open', capacity: 12, booked: 6 },
-        { id: 4, activity: 'Boxing', trainer: 'Max Berg', day: 3, start: 17, end: 18.5, status: 'Open', capacity: 16, booked: 9 },
-        { id: 5, activity: 'Pilates', trainer: 'Olga Smirnova', day: 4, start: 10, end: 11, status: 'Open', capacity: 14, booked: 14 },
-        { id: 6, activity: 'CrossFit', trainer: 'Daniel Cho', day: 5, start: 11, end: 12.5, status: 'Open', capacity: 18, booked: 7 }
-    ];
+    var TYPES = {
+        HIIT: { cls: 'hiit', label: 'HIIT' },
+        Pilates: { cls: 'pilates', label: 'Pilates' },
+        Yoga: { cls: 'yoga', label: 'Yoga' },
+        Strength: { cls: 'strength', label: 'Strength' },
+        Cycling: { cls: 'cycling', label: 'Cycling' },
+        Boxing: { cls: 'boxing', label: 'Boxing' }
+    };
+
+    var slots = [];
     var editing = null;
-    var cancelling = false;
+    var visible = {};
+    Object.keys(TYPES).forEach(function (t) { visible[t] = true; });
 
+    var cal = document.getElementById('sh-cal');
+    var legend = document.getElementById('sh-schedule-legend');
+    var form = document.getElementById('sh-schedule-form');
+    var modalTitle = document.getElementById('sh-schedule-modal-title');
+    var errorEl = document.getElementById('sh-schedule-error');
+    var deleteBtn = document.getElementById('sh-schedule-delete');
+
+    /* ---------- helpers ---------- */
     function pad(n) { return String(n).padStart(2, '0'); }
-    function hhmm(v) { return pad(Math.floor(v)) + ':' + (v % 1 ? '30' : '00'); }
-    function toHour(t) { var p = t.split(':').map(Number); return p[0] + (p[1] || 0) / 60; }
+    function hhmm(v) { return pad(Math.floor(v)) + ':' + pad(Math.round((v % 1) * 60)); }
+    function toHour(t) { var p = String(t).split(':').map(Number); return p[0] + (p[1] || 0) / 60; }
 
-    var root = document.getElementById('sh-sched');
-    var form = document.getElementById('sh-slot-form');
-    var title = document.getElementById('sh-slot-modal-title');
-    var submitBtn = document.getElementById('sh-slot-submit');
-    var cancelBtn = document.getElementById('sh-slot-cancel-class');
-    var confirmBtn = document.getElementById('sh-slot-confirm-cancel');
-    var reasonWrap = document.getElementById('sh-slot-reason-wrap');
-    var reason = document.getElementById('sh-slot-reason');
-
-    document.getElementById('sh-slot-trainer').innerHTML = TRAINERS.map(function (t) { return '<option>' + SH.esc(t) + '</option>'; }).join('');
-    document.getElementById('sh-slot-day').innerHTML = DAYS.map(function (d, i) { return '<option value="' + i + '">' + d + '</option>'; }).join('');
-
-    function slotHtml(s) {
-        var pct = Math.min(s.booked / s.capacity, 1) * 100;
-        return '<button type="button" class="sh-slot' + (s.cancelled ? ' is-cancelled' : '') + '" data-slot="' + s.id + '" ' +
-            'style="top:' + ((s.start - FIRST_HOUR) * ROW + 2) + 'px;height:' + ((s.end - s.start) * ROW - 4) + 'px">' +
-            '<span><span class="sh-slot-act">' + SH.esc(s.activity) + '</span>' +
-            '<span class="sh-slot-trainer">' + SH.esc(s.trainer) + '</span>' +
-            '<span class="sh-slot-time">' + hhmm(s.start) + ' - ' + hhmm(s.end) + '</span></span>' +
-            '<span><span class="sh-slot-bar"><span class="sh-slot-fill' + (s.booked / s.capacity >= 1 ? ' is-full' : '') + '" style="width:' + pct + '%"></span></span>' +
-            '<span class="sh-slot-count">' + s.booked + '/' + s.capacity + '</span></span></button>';
+    function normDay(d) {
+        var n = Number(d);
+        if (n >= 1 && n <= 7) return n;
+        var i = DAYS.map(function (x) { return x.toLowerCase(); }).indexOf(String(d).slice(0, 3).toLowerCase());
+        return i + 1 || 1;
     }
 
-    function render() {
-        var html = '<div class="sh-sched-row sh-sched-days"><div></div>' +
-            DAYS.map(function (d) { return '<div class="sh-sched-day">' + d + '</div>'; }).join('') + '</div>';
-        html += '<div class="sh-sched-row"><div>' +
-            HOURS.map(function (h) { return '<div class="sh-sched-hour" style="height:' + ROW + 'px">' + hhmm(h) + '</div>'; }).join('') + '</div>';
-        DAYS.forEach(function (d, di) {
-            html += '<div class="sh-sched-col" data-day="' + di + '" style="height:' + ROW * HOURS.length + 'px">' +
-                HOURS.map(function () { return '<div class="sh-sched-cell" style="height:' + ROW + 'px"></div>'; }).join('') +
-                slots.filter(function (s) { return s.day === di; }).map(slotHtml).join('') + '</div>';
-        });
-        root.innerHTML = html + '</div>';
-    }
-
-    function syncCancelUi() {
-        reasonWrap.hidden = !(editing && cancelling);
-        cancelBtn.hidden = !(editing && !cancelling);
-        confirmBtn.hidden = !(editing && cancelling);
-        confirmBtn.disabled = !reason.value.trim();
-        reason.required = !!(editing && cancelling);
-    }
-
-    function openModal(slot, day, hour) {
-        editing = slot || null;
-        cancelling = false;
-        reason.value = '';
-        var f = form.elements;
-        title.textContent = slot ? 'Edit / Cancel Class' : 'Add Slot';
-        submitBtn.textContent = slot ? 'Save' : 'Add Slot';
-        f.activity.value = slot ? slot.activity : '';
-        f.trainer.value = slot ? slot.trainer : TRAINERS[0];
-        f.day.value = String(slot ? slot.day : day);
-        f.start.value = hhmm(slot ? slot.start : hour);
-        f.end.value = hhmm(slot ? slot.end : Math.min(hour + 1, LAST_HOUR));
-        f.status.value = slot ? slot.status : 'Open';
-        f.capacity.value = slot ? slot.capacity : '15';
-        syncCancelUi();
-        SH.openModal('sh-slot-modal');
-    }
-
-    root.addEventListener('click', function (e) {
-        var slotEl = e.target.closest('[data-slot]');
-        if (slotEl) {
-            var id = Number(slotEl.getAttribute('data-slot'));
-            openModal(slots.filter(function (s) { return s.id === id; })[0]);
-            return;
-        }
-        var col = e.target.closest('.sh-sched-col');
-        if (col) {
-            var y = e.clientY - col.getBoundingClientRect().top;
-            openModal(null, Number(col.getAttribute('data-day')), FIRST_HOUR + Math.floor(y / ROW));
-        }
-    });
-
-    cancelBtn.addEventListener('click', function () { cancelling = true; syncCancelUi(); reason.focus(); });
-    reason.addEventListener('input', function () { confirmBtn.disabled = !reason.value.trim(); });
-
-    confirmBtn.addEventListener('click', function () {
-        if (!editing || !reason.value.trim()) return;
-        editing.cancelled = reason.value;
-        editing.status = 'Cancelled';
-        SH.closeModal('sh-slot-modal');
-        render();
-    });
-
-    form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        if (cancelling) return;
-        var f = form.elements;
-        var data = {
-            activity: f.activity.value, trainer: f.trainer.value, day: Number(f.day.value),
-            start: toHour(f.start.value), end: toHour(f.end.value), status: f.status.value, capacity: parseInt(f.capacity.value, 10)
+    function normalize(s) {
+        return {
+            id: s.id, day: normDay(s.day), timeStart: String(s.timeStart).slice(0, 5), timeEnd: String(s.timeEnd).slice(0, 5),
+            type: TYPES[s.type] ? s.type : 'Strength', coach: s.coach || '', booked: Number(s.booked) || 0, capacity: Number(s.capacity) || 10
         };
-        if (data.end <= data.start) return;
-        // MVC integration point: send `data` to your own create/update action.
-        if (editing) Object.assign(editing, data);
-        else slots.push(Object.assign({ id: Date.now(), booked: 0 }, data));
-        SH.closeModal('sh-slot-modal');
-        render();
-    });
+    }
 
-    render();
+    /* ---------- api ---------- */
+    async function load() {
+        try {
+            const response = await fetch(URLS.list);
+            const data = await response.json();
+            slots = data.map(normalize);
+            render();
+        } catch (error) {
+            console.error("Error loading schedule:", error);
+        }
+    }
+
+    /* ---------- layout ---------- */
+    function layoutDay(items) {
+        var sorted = items.map(function (s) { return { s: s, start: toHour(s.timeStart), end: toHour(s.timeEnd) }; })
+            .sort(function (a, b) { return a.start - b.start || a.end - b.end; });
+        var cluster = [], lanes = [], clusterEnd = 0;
+        function flush() {
+            cluster.forEach(function (c) { c.laneCount = lanes.length; });
+            cluster = []; lanes = []; clusterEnd = 0;
+        }
+        sorted.forEach(function (c) {
+            if (cluster.length && c.start >= clusterEnd) flush();
+            var lane = lanes.findIndex(function (end) { return end <= c.start; });
+            if (lane === -1) { lane = lanes.length; lanes.push(0); }
+            lanes[lane] = c.end;
+            c.lane = lane;
+            cluster.push(c);
+            clusterEnd = Math.max(clusterEnd, c.end);
+        });
+        flush();
+        return sorted;
+    }
+
+    function slotHtml(c) {
+        var s = c.s;
+        var top = (Math.max(c.start, FIRST_HOUR) - FIRST_HOUR) * ROW;
+        var height = (Math.min(c.end, LAST_HOUR) - Math.max(c.start, FIRST_HOUR)) * ROW;
+        var size = height < 56 ? 'sh-slot-sm' : height < 90 ? 'sh-slot-md' : 'sh-slot-lg';
+        var full = s.booked >= s.capacity;
+        var pct = Math.min(s.booked / s.capacity, 1) * 100;
+        var width = 100 / c.laneCount;
+        var tip = s.type + ' | ' + s.timeStart + ' - ' + s.timeEnd + ' | Coach: ' + s.coach + ' | ' + s.booked + '/' + s.capacity + ' booked';
+
+        return '<button type="button" class="sh-slot sh-t-' + TYPES[s.type].cls + ' ' + size + (full ? ' is-full' : '') + '" data-id="' + s.id + '" title="' + SH.esc(tip) + '" ' +
+            'style="top:' + (top + 1) + 'px;height:' + (height - 2) + 'px;left:calc(' + (c.lane * width) + '% + 2px);width:calc(' + width + '% - 4px)">' +
+            '<span class="sh-slot-head"><span class="sh-slot-act">' + SH.esc(s.type) + '</span><span class="sh-slot-count">' + s.booked + '/' + s.capacity + '</span></span>' +
+            '<span class="sh-slot-time">' + s.timeStart + ' - ' + s.timeEnd + '</span>' +
+            '<span class="sh-slot-coach">' + SH.esc(s.coach) + '</span>' +
+            '<span class="sh-slot-bar"><span class="sh-slot-fill" style="width:' + pct + '%"></span></span>' +
+            '</button>';
+    }
+
+    /* ---------- render ---------- */
+    function render() {
+        if (!cal) return;
+        var html = '<div class="sh-cal-head"><div></div>' +
+            DAYS.map(function (d) { return '<div class="sh-cal-day">' + d + '</div>'; }).join('') + '</div>';
+
+        html += '<div class="sh-cal-body"><div class="sh-cal-times">' +
+            HOURS.map(function (h) { return '<div class="sh-cal-hour" style="height:' + ROW + 'px">' + hhmm(h) + '</div>'; }).join('') + '</div>';
+
+        DAYS.forEach(function (name, i) {
+            var day = i + 1;
+            var items = slots.filter(function (s) { return s.day === day && visible[s.type]; });
+            html += '<div class="sh-cal-col" data-day="' + day + '">' +
+                HOURS.map(function (h) {
+                    return '<div class="sh-cal-cell" data-day="' + day + '" data-hour="' + h + '" style="height:' + ROW + 'px" aria-label="Add class on ' + name + ' at ' + hhmm(h) + '"></div>';
+                }).join('') +
+                '<div class="sh-cal-layer">' + layoutDay(items).map(slotHtml).join('') + '</div></div>';
+        });
+        cal.innerHTML = html + '</div>';
+    }
+
+    function renderLegend() {
+        if (!legend) return;
+        legend.innerHTML = Object.keys(TYPES).map(function (t) {
+            return '<label class="sh-legend-item sh-t-' + TYPES[t].cls + '">' +
+                '<input type="checkbox" data-type="' + t + '"' + (visible[t] ? ' checked' : '') + ' />' +
+                '<span class="sh-legend-swatch"></span><span>' + t + '</span></label>';
+        }).join('');
+    }
+
+    if (legend) {
+        legend.addEventListener('change', function (e) {
+            var cb = e.target.closest('[data-type]');
+            if (!cb) return;
+            visible[cb.getAttribute('data-type')] = cb.checked;
+            render();
+        });
+    }
+
+    /* ---------- modal ---------- */
+    var typeSelect = document.getElementById('sh-schedule-type');
+    if (typeSelect) {
+        typeSelect.innerHTML = Object.keys(TYPES).map(function (t) { return '<option>' + t + '</option>'; }).join('');
+    }
+
+    function showError(msg) {
+        if (!errorEl) return;
+        errorEl.textContent = msg || '';
+        errorEl.hidden = !msg;
+    }
+
+    function openForm(slot, day, hour) {
+        editing = slot || null;
+        showError('');
+        var f = form.elements;
+        if (modalTitle) modalTitle.textContent = slot ? 'Edit Class' : 'Add Class';
+        if (deleteBtn) deleteBtn.hidden = !slot;
+
+        f.type.value = slot ? slot.type : 'HIIT';
+        f.day.value = String(slot ? slot.day : day);
+        f.timeStart.value = slot ? slot.timeStart : hhmm(hour);
+        f.timeEnd.value = slot ? slot.timeEnd : hhmm(Math.min(hour + 1, LAST_HOUR));
+        f.coach.value = slot ? slot.coach : '';
+        f.capacity.value = slot ? slot.capacity : '15';
+        f.booked.value = slot ? slot.booked : '0';
+
+        SH.openModal('sh-schedule-modal');
+    }
+
+    if (cal) {
+        cal.addEventListener('click', function (e) {
+            var slotEl = e.target.closest('.sh-slot');
+            if (slotEl) {
+                var id = Number(slotEl.getAttribute('data-id'));
+                openForm(slots.filter(function (s) { return s.id === id; })[0]);
+                return;
+            }
+            var cell = e.target.closest('.sh-cal-cell');
+            if (cell) openForm(null, Number(cell.getAttribute('data-day')), Number(cell.getAttribute('data-hour')));
+        });
+    }
+
+    if (form) {
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            var f = form.elements;
+            var data = {
+                type: f.type.value,
+                day: Number(f.day.value),
+                timeStart: f.timeStart.value,
+                timeEnd: f.timeEnd.value,
+                coach: f.coach.value.trim(),
+                capacity: parseInt(f.capacity.value, 10),
+                booked: parseInt(f.booked.value, 10)
+            };
+
+            if (!data.timeStart || !data.timeEnd) return showError('Start and end time are required.');
+            if (toHour(data.timeStart) < FIRST_HOUR || toHour(data.timeEnd) > LAST_HOUR) return showError('Classes must be between 08:00 and 20:00.');
+            if (toHour(data.timeEnd) <= toHour(data.timeStart)) return showError('End time must be after start time.');
+            if (!data.coach) return showError('Coach is required.');
+            if (!(data.capacity >= 1)) return showError('Capacity must be at least 1.');
+            if (!(data.booked >= 0)) return showError('Booked cannot be negative.');
+            if (data.booked > data.capacity) return showError('Booked cannot exceed capacity.');
+
+            var record;
+            if (editing) {
+                record = Object.assign(editing, data);
+            } else {
+                record = Object.assign({ id: -Date.now() }, data);
+                slots.push(record);
+            }
+
+            SH.closeModal('sh-schedule-modal');
+            render();
+
+            // Відправка на сервер
+            const payload = Object.assign({}, data, { id: record.id < 0 ? 0 : record.id });
+            const response = await fetch(URLS.save, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                const saved = await response.json();
+                if (saved && saved.id && record.id < 0) {
+                    record.id = saved.id;
+                    render();
+                }
+            }
+        });
+    }
+
+    if (deleteBtn) {
+        deleteBtn.addEventListener('click', async function () {
+            if (!editing) return;
+            var id = editing.id;
+
+            if (confirm('Delete this class?')) {
+                slots = slots.filter(function (s) { return s.id !== id; });
+                SH.closeModal('sh-schedule-modal');
+                render();
+
+                await fetch(URLS.remove, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: id })
+                });
+            }
+        });
+    }
+
+    /* ---------- init ---------- */
+    renderLegend();
+    load();
 })();

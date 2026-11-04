@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SportLab.Data;
+using SportLab.Models;
 
 namespace SportLab.Controllers
 {
@@ -40,7 +41,8 @@ namespace SportLab.Controllers
 
         public IActionResult Schedule()
         {
-            return View();
+            var slots = _context.Set<WorkoutSlot>().Include(w => w.Trainer).ToList();
+            return View(slots);
         }
     }
 }

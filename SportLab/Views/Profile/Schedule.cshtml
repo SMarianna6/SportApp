@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IEnumerable<SportLab.Models.WorkoutSlot>
+
+@{
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
     ViewData["Title"] = "Schedule";
 }
@@ -100,23 +102,34 @@
     Boxing:   { color: '#FF3D8B' }
   };
 
-  var TRAINERS = ['Oleksandr Tkachenko', 'Anastasiia Kravchenko', 'Andrii Polishchuk', 'Mariia Bondarenko', 'Dmytro Boyko'];
+  var TRAINERS = [
+      @if (Model != null && Model.Any()) {
+          var uniqueTrainers = Model.Select(m => m.Trainer?.Name).Where(n => !string.IsNullOrEmpty(n)).Distinct();
+          foreach (var trainerName in uniqueTrainers) {
+              <text>'@Html.Raw(trainerName)',</text>
+          }
+      }
+  ];
 
-  // Replace with JSON from an MVC endpoint, e.g. fetch('/Schedule/Slots')
-  // [day (0=Mon), hour, category, trainerIndex, difficulty (1-3), capacity, booked]
   var SLOTS = [
-    [0, 8, 'HIIT', 1, 3, 15, 4], [0, 10, 'Yoga', 2, 1, 20, 9], [0, 12, 'Strength', 0, 2, 12, 12],
-    [0, 17, 'Cycling', 4, 2, 18, 15], [0, 19, 'Boxing', 2, 3, 14, 6],
-    [1, 9, 'Pilates', 1, 1, 16, 5], [1, 12, 'HIIT', 4, 3, 15, 14], [1, 18, 'Strength', 0, 2, 12, 7], [1, 20, 'Yoga', 3, 1, 20, 3],
-    [2, 8, 'Cycling', 4, 2, 18, 8], [2, 11, 'Boxing', 2, 2, 14, 14], [2, 13, 'Pilates', 1, 1, 16, 10],
-    [2, 17, 'HIIT', 0, 3, 15, 13], [2, 19, 'Yoga', 3, 1, 20, 12],
-    [3, 9, 'Strength', 0, 3, 12, 3], [3, 12, 'Cycling', 4, 1, 18, 17], [3, 18, 'Boxing', 2, 3, 14, 9], [3, 20, 'Pilates', 1, 2, 16, 4],
-    [4, 8, 'Yoga', 3, 1, 20, 6], [4, 10, 'HIIT', 0, 2, 15, 15], [4, 16, 'Strength', 0, 2, 12, 5], [4, 18, 'Cycling', 4, 3, 18, 11],
-    [5, 9, 'HIIT', 4, 3, 15, 8], [5, 11, 'Pilates', 1, 1, 16, 16], [5, 13, 'Boxing', 2, 2, 14, 5], [5, 15, 'Yoga', 3, 1, 20, 7],
-    [6, 10, 'Yoga', 3, 1, 20, 4], [6, 12, 'Strength', 0, 2, 12, 9], [6, 16, 'Cycling', 4, 2, 18, 12]
-  ].map(function (s, i) {
-    return { id: i + 1, day: s[0], hour: s[1], category: s[2], trainer: TRAINERS[s[3]], difficulty: s[4], capacity: s[5], booked: s[6] };
-  });
+      @if (Model != null && Model.Any()) {
+          foreach (var slot in Model) {
+              int jsDay = ((int)slot.StartTime.DayOfWeek + 6) % 7; 
+              <text>
+              {
+                  id: @slot.Id,
+                  day: @jsDay,
+                  hour: @slot.StartTime.Hour,
+                  category: '@Html.Raw(slot.ActivityName)',
+                  trainer: '@Html.Raw(slot.Trainer?.Name ?? "TBA")',
+                  difficulty: 2, 
+                  capacity: @slot.Capacity,
+                  booked: @slot.Booked
+              },
+              </text>
+          }
+      }
+  ];
 
   var $ = function (id) { return document.getElementById(id); };
   var els = {
