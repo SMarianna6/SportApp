@@ -7,8 +7,9 @@ namespace SportLab.Models
     {
         public int Id { get; set; }
 
+        [Required(ErrorMessage = "Activity name is required")]
+        [StringLength(100, MinimumLength = 2, ErrorMessage = "Activity name must be between 2 and 100 characters")]
         [Display(Name = "Activity Name")]
-        [StringLength(100)]
         public string? ActivityName { get; set; }
 
         [Required(ErrorMessage = "Trainer must be specified")]
@@ -53,9 +54,11 @@ namespace SportLab.Models
         public string Status { get; set; } = "Available"; // "Available", "Booked", "Completed", "Cancelled"
 
         [Display(Name = "Capacity")]
+        [Range(1, 1000, ErrorMessage = "Capacity must be between 1 and 1000")]
         public int Capacity { get; set; } = 15;
 
         [Display(Name = "Booked Spots")]
+        [Range(0, 1000, ErrorMessage = "Booked spots cannot be negative")]
         public int Booked { get; set; } = 0;
     }
 }
