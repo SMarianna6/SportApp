@@ -49,6 +49,12 @@ namespace SportLab.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(int rating, string? comment)
         {
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMessage"] = "Invalid review data.";
+                return RedirectToAction(nameof(Index));
+            }
+
             if (rating < 1 || rating > 5 || string.IsNullOrWhiteSpace(comment))
             {
                 TempData["ErrorMessage"] = "Please select a rating and write your review feedback.";

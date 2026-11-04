@@ -105,6 +105,11 @@ namespace SportLab.Controllers
             ViewBag.Email = email;
             ViewBag.Password = password;
 
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
             if (action == "send")
             {
                 if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
@@ -133,6 +138,13 @@ namespace SportLab.Controllers
 
                 if (string.IsNullOrEmpty(savedCode) || code != savedCode || email != savedEmail)
                 {
+                    TempData["GeneratedCode"] = savedCode;
+                    return View();
+                }
+
+                if (_context.Users.Any(u => u.Email == savedEmail))
+                {
+                    ModelState.AddModelError(string.Empty, "This email is already registered.");
                     TempData["GeneratedCode"] = savedCode;
                     return View();
                 }

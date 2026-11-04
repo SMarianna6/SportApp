@@ -37,6 +37,12 @@ namespace SportLab.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Book(int id)
         {
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMessage"] = "Invalid booking request.";
+                return RedirectToAction(nameof(Index));
+            }
+
             var userId = CurrentUserId();
             var slot = await _context.WorkoutSlots.FindAsync(id);
 
@@ -71,6 +77,12 @@ namespace SportLab.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CancelBooking(int id)
         {
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMessage"] = "Invalid cancellation request.";
+                return RedirectToAction(nameof(MyBookings));
+            }
+
             var userId = CurrentUserId();
             var slot = await _context.WorkoutSlots.FindAsync(id);
 

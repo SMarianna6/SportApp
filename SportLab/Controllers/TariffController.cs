@@ -53,6 +53,15 @@ namespace SportLab.Controllers
                 return NotFound();
             }
 
+            if (!ModelState.IsValid)
+            {
+                return View(tariff);
+            }
+            if (tariff == null)
+            {
+                return NotFound();
+            }
+
             var effectiveStartDate = startDate ?? DateTime.Today;
             var effectiveEndDate = effectiveStartDate.AddDays(tariff.Duration > 0 ? tariff.Duration : 30);
 
@@ -86,6 +95,11 @@ namespace SportLab.Controllers
         [HttpPost]
         public IActionResult QuickPurchase([FromBody] QuickPurchaseRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                return Json(new { success = false, message = "Invalid request data." });
+            }
+
             if (request == null || request.TariffId <= 0)
             {
                 return Json(new { success = false, message = "Invalid request payload." });
