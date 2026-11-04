@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +12,7 @@ using SportLab.Models;
 
 namespace SportLab.Controllers
 {
+    [Authorize]
     public class MessagesController : Controller
     {
         private readonly SportLabContext _context;
@@ -21,7 +24,11 @@ namespace SportLab.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var sportLabContext = _context.Messages.Include(m => m.Receiver).Include(m => m.Sender);
+            var userId = CurrentUserId();
+            var sportLabContext = _context.Messages
+                .Include(m => m.Receiver)
+                .Include(m => m.Sender)
+                .Where(m => User.IsAdmin() || m.SenderId == userId || m.ReceiverId == userId);
             return View(await sportLabContext.ToListAsync());
         }
 
@@ -55,6 +62,11 @@ namespace SportLab.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,SenderId,ReceiverId,Text,SentDate")] Message message)
         {
+            if (!User.IsAdmin())
+            {
+                message.SenderId = CurrentUserId();
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(message);
@@ -154,5 +166,8 @@ namespace SportLab.Controllers
         {
             return _context.Messages.Any(e => e.Id == id);
         }
+
+        private int CurrentUserId() =>
+            int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
     }
 }

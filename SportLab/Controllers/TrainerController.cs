@@ -191,9 +191,23 @@ namespace SportLab.Controllers
                 return Forbid();
             }
 
+            // Lab 6: cancelling a booked session must notify the client automatically.
+            if (slot.Status == "Booked" && slot.UserId.HasValue)
+            {
+                var trainerId = CurrentUserId();
+                var notification = new Message
+                {
+                    SenderId = trainerId,
+                    ReceiverId = slot.UserId.Value,
+                    Text = $"Your training session \"{slot.ActivityName}\" on {slot.StartTime:dd.MM.yyyy HH:mm} was cancelled by the trainer. Please book another slot if needed.",
+                    SentDate = DateTime.Now
+                };
+                _context.Messages.Add(notification);
+            }
+
             slot.Status = "Cancelled";
             await _context.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Slot cancelled.";
+            TempData["SuccessMessage"] = "Slot cancelled and the client has been notified.";
             return RedirectToAction(nameof(Dashboard));
         }
 

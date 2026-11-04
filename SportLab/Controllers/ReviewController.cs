@@ -83,28 +83,28 @@ namespace SportLab.Controllers
             var user1 = _context.Users.FirstOrDefault(u => u.Email == "anton.p@example.com");
             if (user1 == null)
             {
-                user1 = new User { Name = "Anton Pavlenko", Email = "anton.p@example.com", Password = "Pass!", Role = "Client" };
+                user1 = new User { Name = "Anton Pavlenko", Email = "anton.p@example.com", Password = "Pass!", Role = Roles.Client };
                 _context.Users.Add(user1);
             }
 
             var user2 = _context.Users.FirstOrDefault(u => u.Email == "olena.m@example.com");
             if (user2 == null)
             {
-                user2 = new User { Name = "Olena Melnyk", Email = "olena.m@example.com", Password = "Pass!", Role = "Client" };
+                user2 = new User { Name = "Olena Melnyk", Email = "olena.m@example.com", Password = "Pass!", Role = Roles.Client };
                 _context.Users.Add(user2);
             }
 
             var user3 = _context.Users.FirstOrDefault(u => u.Email == "dmytro.s@example.com");
             if (user3 == null)
             {
-                user3 = new User { Name = "Dmytro Shevchenko", Email = "dmytro.s@example.com", Password = "Pass!", Role = "Client" };
+                user3 = new User { Name = "Dmytro Shevchenko", Email = "dmytro.s@example.com", Password = "Pass!", Role = Roles.Client };
                 _context.Users.Add(user3);
             }
 
             var user4 = _context.Users.FirstOrDefault(u => u.Email == "kate.v@example.com");
             if (user4 == null)
             {
-                user4 = new User { Name = "Kateryna Vasylenko", Email = "kate.v@example.com", Password = "Pass!", Role = "Client" };
+                user4 = new User { Name = "Kateryna Vasylenko", Email = "kate.v@example.com", Password = "Pass!", Role = Roles.Client };
                 _context.Users.Add(user4);
             }
 

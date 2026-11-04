@@ -1,12 +1,15 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SportLab.Data;
 using SportLab.Models;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace SportLab.Controllers
 {
+    [Authorize]
     public class MetricLogsController : Controller
     {
         private readonly SportLabContext _context;
@@ -18,10 +21,18 @@ namespace SportLab.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var metricLogs = _context.MetricLogs
+            var query = _context.MetricLogs
                 .Include(m => m.User)
-                .OrderBy(m => m.RecordDate);
-            return View(await metricLogs.ToListAsync());
+                .OrderBy(m => m.RecordDate)
+                .AsQueryable();
+
+            if (!User.IsAdmin() && !User.IsInRole(Roles.Trainer))
+            {
+                var userId = CurrentUserId();
+                query = query.Where(m => m.UserId == userId);
+            }
+
+            return View(await query.ToListAsync());
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -53,6 +64,11 @@ namespace SportLab.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,UserId,Weight,RecordDate,Notes")] MetricLog metricLog)
         {
+            if (!User.IsAdmin())
+            {
+                metricLog.UserId = CurrentUserId();
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(metricLog);
@@ -75,6 +91,12 @@ namespace SportLab.Controllers
             {
                 return NotFound();
             }
+
+            if (!User.IsAdmin() && !User.IsInRole(Roles.Trainer) && metricLog.UserId != CurrentUserId())
+            {
+                return Forbid();
+            }
+
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Name", metricLog.UserId);
             return View(metricLog);
         }
@@ -86,6 +108,22 @@ namespace SportLab.Controllers
             if (id != metricLog.Id)
             {
                 return NotFound();
+            }
+
+            var existing = await _context.MetricLogs.AsNoTracking().FirstOrDefaultAsync(m => m.Id == id);
+            if (existing == null)
+            {
+                return NotFound();
+            }
+
+            if (!User.IsAdmin() && !User.IsInRole(Roles.Trainer) && existing.UserId != CurrentUserId())
+            {
+                return Forbid();
+            }
+
+            if (!User.IsAdmin())
+            {
+                metricLog.UserId = existing.UserId;
             }
 
             if (ModelState.IsValid)
@@ -127,6 +165,11 @@ namespace SportLab.Controllers
                 return NotFound();
             }
 
+            if (!User.IsAdmin() && !User.IsInRole(Roles.Trainer) && metricLog.UserId != CurrentUserId())
+            {
+                return Forbid();
+            }
+
             return View(metricLog);
         }
 
@@ -135,12 +178,18 @@ namespace SportLab.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var metricLog = await _context.MetricLogs.FindAsync(id);
-            if (metricLog != null)
+            if (metricLog == null)
             {
-                _context.MetricLogs.Remove(metricLog);
-                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
 
+            if (!User.IsAdmin() && !User.IsInRole(Roles.Trainer) && metricLog.UserId != CurrentUserId())
+            {
+                return Forbid();
+            }
+
+            _context.MetricLogs.Remove(metricLog);
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -148,5 +197,8 @@ namespace SportLab.Controllers
         {
             return _context.MetricLogs.Any(e => e.Id == id);
         }
+
+        private int CurrentUserId() =>
+            int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
     }
 }
