@@ -1,6 +1,9 @@
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using SportLab.Data;
 using SportLab.Models;
+using System.Security.Claims;
 
 namespace SportLab.Controllers
 {
@@ -21,7 +24,7 @@ namespace SportLab.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Login(string email, string password)
+        public async Task<IActionResult> Login(string email, string password)
         {
             ViewBag.EnteredEmail = email;
 
@@ -42,18 +45,45 @@ namespace SportLab.Controllers
             HttpContext.Session.SetInt32("UserId", user.Id);
             HttpContext.Session.SetString("UserRole", user.Role);
 
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Name ?? user.Email),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.Role)
+            };
+
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
             if (user.Role != null && user.Role.ToLower() == "admin")
             {
                 return RedirectToAction("Index", "Admin");
             }
             else if (user.Role != null && user.Role.ToLower() == "trainer")
             {
-                return View("~/Views/Profile/Trainer.cshtml", user);
+                return RedirectToAction("Dashboard", "Trainer");
             }
             else
             {
-                return View("~/Views/Profile/Client.cshtml", user);
+                return RedirectToAction("Client", "Profile");
             }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
 
         [HttpGet]

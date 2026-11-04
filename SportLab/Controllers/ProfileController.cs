@@ -1,9 +1,12 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SportLab.Data;
+using System.Security.Claims;
 
 namespace SportLab.Controllers
 {
+    [Authorize]
     public class ProfileController : Controller
     {
         private readonly SportLabContext _context;
@@ -13,19 +16,41 @@ namespace SportLab.Controllers
             _context = context;
         }
 
-        public IActionResult Client()
+        public IActionResult Index()
         {
-            return View();
+            if (User.IsInRole("Trainer") || User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Dashboard", "Trainer");
+            }
+            return RedirectToAction(nameof(Client));
         }
 
+        public async Task<IActionResult> Client()
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var user = await _context.Users.FindAsync(userId);
+            return View(user);
+        }
+
+        [Authorize(Roles = "Trainer,Admin")]
         public IActionResult Trainer()
         {
-            return View();
+            return RedirectToAction("Dashboard", "Trainer");
         }
 
-        public IActionResult Clients()
+        [Authorize(Roles = "Trainer,Admin")]
+        public async Task<IActionResult> Clients()
         {
-            return View();
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+            var clients = await _context.WorkoutSlots
+                .Include(w => w.User)
+                .Where(w => w.TrainerId == userId && w.UserId != null)
+                .Select(w => w.User!)
+                .Distinct()
+                .ToListAsync();
+
+            return View(clients);
         }
 
         public IActionResult Settings()
@@ -33,14 +58,18 @@ namespace SportLab.Controllers
             return View();
         }
 
-        public IActionResult Index()
+        [Authorize(Roles = "Trainer,Admin")]
+        public async Task<IActionResult> Schedule()
         {
-            return View();
-        }
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
-        public IActionResult Schedule()
-        {
-            return View();
+            var slots = await _context.WorkoutSlots
+                .Include(w => w.User)
+                .Where(w => w.TrainerId == userId)
+                .OrderBy(w => w.StartTime)
+                .ToListAsync();
+
+            return View(slots);
         }
     }
 }

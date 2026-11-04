@@ -1,4 +1,4 @@
-@{
+п»ї@{
     ViewData["Title"] = "Workout Schedule";
 }
 @model IEnumerable<SportLab.Models.WorkoutSlot>
@@ -224,7 +224,7 @@ fonts.googleapis.com" />
             }
             
             function slotCard(s, showTime) {
-                // ДОДАНО ЗАХИСТ: якщо назва тренування невідома, ставимо нейтральний сірий колір
+                // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
                 var c = CATEGORIES[s.category] || { bg: '#E2E8F0', fg: '#0F172A' };
                 var full = isFull(s);
                 var el = document.createElement('button');
@@ -322,7 +322,7 @@ fonts.googleapis.com" />
             function initFilters() {
                 els.trainer.innerHTML = '<option value="">All trainers</option>' + TRAINERS.map(function (t) { return '<option>' + t + '</option>'; }).join('');
                 
-                // ДОДАНО: автоматично збираємо список категорій з бази, щоб фільтр працював правильно
+                // пїЅпїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
                 var allCategories = [];
                 SLOTS.forEach(function(s) { if (allCategories.indexOf(s.category) === -1) allCategories.push(s.category); });
                 
@@ -351,7 +351,7 @@ fonts.googleapis.com" />
                 chip.style.background = c.bg;
                 chip.style.color = c.fg;
                 $('modal-day').textContent = DAYS[s.day];
-                $('modal-time').textContent = timeLabel(s.hour) + ' – ' + timeLabel(s.hour + 1);
+                $('modal-time').textContent = timeLabel(s.hour) + ' пїЅ ' + timeLabel(s.hour + 1);
                 $('modal-trainer').textContent = s.trainer;
                 $('modal-difficulty').innerHTML = fireIcons(s.difficulty, 'h-4 w-4');
                 $('modal-spots').textContent = left(s) + '/' + s.capacity + ' spots left';
@@ -404,3 +404,5 @@ fonts.googleapis.com" />
         })();
     </script>
 </body>
+
+
