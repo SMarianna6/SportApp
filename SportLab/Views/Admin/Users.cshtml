@@ -1,4 +1,6 @@
-﻿@{
+﻿@model SportLab.Models.User
+
+@{
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
     ViewData["Title"] = "Users";
 }
@@ -38,23 +40,59 @@
         <div class="sh-modal-body">
             @* MVC integration point: point action/method at your own controller action and add @Html.AntiForgeryToken() if you post it. *@
             <form class="sh-form" id="sh-user-form">
-                <label class="sh-field">Full Name<div class="sh-field-body"><input class="sh-input" name="name" required /></div></label>
-                <label class="sh-field">Email<div class="sh-field-body"><input class="sh-input" name="email" type="email" required /></div></label>
-                <label class="sh-field">Password<div class="sh-field-body"><input class="sh-input" name="password" type="password" /></div></label>
+                <div asp-validation-summary="ModelOnly"
+                     style="color: #ff4d4d; font-size: 14px; margin-bottom: 10px;">
+                </div>
+
+                <label class="sh-field">
+                    Full Name
+                    <div class="sh-field-body">
+                        <input class="sh-input" asp-for="Name" />
+                        <span asp-validation-for="Name"
+                              style="color: #ff4d4d; font-size: 12px; margin-top: 4px; display: block;"></span>
+                    </div>
+                </label>
+
+                <label class="sh-field">
+                    Email
+                    <div class="sh-field-body">
+                        <input class="sh-input" asp-for="Email" type="email" />
+                        <span asp-validation-for="Email"
+                              style="color: #ff4d4d; font-size: 12px; margin-top: 4px; display: block;"></span>
+                    </div>
+                </label>
+
+                <label class="sh-field">
+                    Password
+                    <div class="sh-field-body">
+                        <input class="sh-input" asp-for="Password" type="password" />
+                        <span asp-validation-for="Password"
+                              style="color: #ff4d4d; font-size: 12px; margin-top: 4px; display: block;"></span>
+                    </div>
+                </label>
+
                 <div class="sh-form-grid">
-                    <label class="sh-field">Role
+                    <label class="sh-field">
+                        Role
                         <div class="sh-field-body">
-                            <select class="sh-input" name="role">
-                                <option>Client</option>
-                                <option>Trainer</option>
-                                <option>Admin</option>
+                            <select class="sh-input" asp-for="Role">
+                                <option value="Client">Client</option>
+                                <option value="Trainer">Trainer</option>
+                                <option value="Admin">Admin</option>
                             </select>
+                            <span asp-validation-for="Role"
+                                  style="color: #ff4d4d; font-size: 12px; margin-top: 4px; display: block;"></span>
                         </div>
                     </label>
-                    <label class="sh-field">Select Tariff
-                        <div class="sh-field-body"><select class="sh-input" name="tariff" id="sh-user-tariff"></select></div>
+
+                    <label class="sh-field">
+                        Select Tariff
+                        <div class="sh-field-body">
+                            <select class="sh-input" name="tariff" id="sh-user-tariff"></select>
+                        </div>
                     </label>
                 </div>
+
                 <div class="sh-form-actions">
                     <button type="button" class="sh-btn sh-btn-ghost" data-sh-close>Cancel</button>
                     <button type="submit" class="sh-btn sh-btn-primary">Save</button>

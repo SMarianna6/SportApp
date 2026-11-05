@@ -1,4 +1,6 @@
-﻿@{
+﻿@model SportLab.Models.FAQ
+
+@{
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
     ViewData["Title"] = "FAQ";
 }
@@ -29,12 +31,27 @@
         <div class="sh-modal-body">
             <form class="sh-form" id="sh-faq-form">
                 @Html.AntiForgeryToken()
-                <label class="sh-field">Question<div class="sh-field-body"><input class="sh-input" name="question" required /></div></label>
-                <label class="sh-field">Answer<div class="sh-field-body"><textarea class="sh-input" name="answer" rows="4" required></textarea></div></label>
+                <div asp-validation-summary="ModelOnly" style="color: #ff4d4d; font-size: 14px; margin-bottom: 10px;"></div>
+                
+                <label class="sh-field">Question
+                    <div class="sh-field-body">
+                        <input class="sh-input" asp-for="Question" />
+                        <span asp-validation-for="Question" style="color: #ff4d4d; font-size: 12px; margin-top: 4px; display: block;"></span>
+                    </div>
+                </label>
+                
+                <label class="sh-field">Answer
+                    <div class="sh-field-body">
+                        <textarea class="sh-input" asp-for="Answer" rows="4"></textarea>
+                        <span asp-validation-for="Answer" style="color: #ff4d4d; font-size: 12px; margin-top: 4px; display: block;"></span>
+                    </div>
+                </label>
+                
                 <label class="sh-check">
-                    <input type="checkbox" name="isActive" checked />
+                    <input type="checkbox" asp-for="IsActive" checked />
                     <span>Is Active</span>
                 </label>
+                
                 <div class="sh-form-actions">
                     <button type="button" class="sh-btn sh-btn-ghost" data-sh-close>Cancel</button>
                     <button type="submit" class="sh-btn sh-btn-primary">Save</button>
@@ -46,3 +63,8 @@
 
 <script src="~/js/admin/sh-common.js" asp-append-version="true"></script>
 <script src="~/js/admin/sh-faq.js" asp-append-version="true"></script>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+}

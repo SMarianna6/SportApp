@@ -45,24 +45,79 @@
         }).join('');
     }
 
+    if (typeof $ !== 'undefined' && form) {
+        $(form)
+            .off('.shLiveValidation')
+            .on('input.shLiveValidation change.shLiveValidation', 'input, textarea, select', function () {
+                $(this).valid();
+            });
+    }
+
     function openForm(user) {
-        editing = user;
-        title.textContent = user ? 'Edit User' : 'Add User';
-        if (form.elements.name) form.elements.name.value = user ? user.name : '';
-        if (form.elements.email) form.elements.email.value = user ? user.email : '';
-        if (form.elements.password) {
-            form.elements.password.value = '';
-            form.elements.password.required = !user;
-            form.elements.password.placeholder = user ? 'Leave blank to keep' : '';
+        editing = user || null;
+
+        if (form) {
+            form.reset();
+
+            var f = form.elements;
+
+            if (f.Name) f.Name.value = user ? user.name : '';
+            if (f.Email) f.Email.value = user ? user.email : '';
+
+            if (f.Password) {
+                f.Password.value = '';
+                f.Password.placeholder = user ? 'Leave blank to keep' : '';
+            }
+
+            if (f.Role) {
+                f.Role.value = user ? user.role : 'Client';
+            }
+
+            if (f.tariff) {
+                f.tariff.value = (user && user.tariff && user.tariff !== 'No Plan')
+                    ? user.tariff
+                    : (tariffNames[0] || 'Basic Plan');
+            }
+
+            // CLEAR PREVIOUS VALIDATION ERRORS
+            if (typeof $ !== 'undefined') {
+                var validator = $(form).validate();
+
+                validator.resetForm();
+
+                // PASSWORD IS REQUIRED ONLY WHEN CREATING A USER
+                if (user) {
+                    $(f.Password).prop('required', false);
+                    $(f.Password).rules('remove', 'required');
+                } else {
+                    $(f.Password).prop('required', true);
+                    $(f.Password).rules('add', {
+                        required: true,
+                        messages: {
+                            required: 'Password is required'
+                        }
+                    });
+                }
+
+                $(form).find('[data-valmsg-for]')
+                    .removeClass('field-validation-error')
+                    .addClass('field-validation-valid')
+                    .empty();
+
+                $(form).find('[data-valmsg-summary="true"]')
+                    .removeClass('validation-summary-errors')
+                    .addClass('validation-summary-valid')
+                    .empty();
+
+                $(form).find('.input-validation-error')
+                    .removeClass('input-validation-error');
+            }
         }
 
-        if (form.elements.role) {
-            form.elements.role.value = user ? user.role : 'Member';
+        if (title) {
+            title.textContent = user ? 'Edit User' : 'Add User';
         }
 
-        if (form.elements.tariff) {
-            form.elements.tariff.value = (user && user.tariff && user.tariff !== 'No Plan') ? user.tariff : (tariffNames[0] || 'Basic Plan');
-        }
         SH.openModal('sh-user-modal');
     }
 
@@ -87,27 +142,43 @@
         }
     });
 
-    form.addEventListener('submit', async function (e) {
-        e.preventDefault();
-        var f = form.elements;
-        var userData = {
-            Id: editing ? editing.id : 0,
-            Name: f.name ? f.name.value : '',
-            Email: f.email ? f.email.value : '',
-            Role: f.role ? f.role.value : 'Member',
-            Password: f.password ? f.password.value : '',
-            Tariff: f.tariff ? f.tariff.value : ''
-        };
+    if (form) {
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
 
-        await fetch('/Admin/SaveUserApi', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(userData)
+            // JQUERY UNOBTRUSIVE VALIDATION
+            if (typeof $ !== 'undefined' && $(form).valid && !$(form).valid()) {
+                return;
+            }
+
+            var f = form.elements;
+
+            var userData = {
+                Id: editing ? editing.id : 0,
+                Name: f.Name ? f.Name.value.trim() : '',
+                Email: f.Email ? f.Email.value.trim() : '',
+                Role: f.Role ? f.Role.value : 'Client',
+                Password: f.Password ? f.Password.value : '',
+                Tariff: f.tariff ? f.tariff.value : ''
+            };
+
+            await fetch('/Admin/SaveUserApi', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(userData)
+            });
+
+            SH.closeModal('sh-user-modal');
+            loadUsers();
         });
 
-        SH.closeModal('sh-user-modal');
-        loadUsers();
-    });
+        // VALIDATE FIELDS ON BLUR AND CHANGE
+        if (typeof $ !== 'undefined') {
+            $(form).on('input change focusout', 'input, textarea, select', function () {
+                $(this).valid();
+            });
+        }
+    }
 
     loadUsers();
 

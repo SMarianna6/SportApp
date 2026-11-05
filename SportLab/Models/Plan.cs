@@ -17,7 +17,6 @@ namespace SportLab.Models
         [Display(Name = "Description")]
         public required string Description { get; set; }
 
-        [Required(ErrorMessage = "Price is required")]
         [Range(0.01, 100000.00, ErrorMessage = "Price must be between 0.01 and 100000")]
         [Column(TypeName = "decimal(18,2)")]
         [Display(Name = "Price")]
@@ -25,11 +24,11 @@ namespace SportLab.Models
         [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
         public decimal Price { get; set; }
 
-        [Required(ErrorMessage = "Duration is required")]
         [Range(1, 3650, ErrorMessage = "Duration must be between 1 and 3650 days")]
         [Display(Name = "Duration (days)")]
         public int Duration { get; set; }
 
+        [Required(ErrorMessage = "Plan type is required")]
         [Display(Name = "Plan Type")]
         public string? Type { get; set; }
 

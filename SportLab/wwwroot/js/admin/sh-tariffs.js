@@ -46,15 +46,57 @@
         }).join('');
     }
 
-    function openForm(t) {
-        editing = t;
-        if (title) title.textContent = t ? 'Edit Tariff' : 'Add Tariff';
+    if (typeof $ !== 'undefined' && form) {
+        $(form)
+            .off('.shLiveValidation')
+            .on('input.shLiveValidation change.shLiveValidation', 'input, textarea, select', function () {
+                $(this).valid();
+            });
+    }
 
-        if (form.elements.name) form.elements.name.value = t ? t.name : '';
-        if (form.elements.description) form.elements.description.value = t ? t.description : '';
-        if (form.elements.price) form.elements.price.value = t ? t.price : '';
-        if (form.elements.days) form.elements.days.value = t ? t.days : '30';
-        if (form.elements.type) form.elements.type.value = t ? t.type : 'Monthly';
+    function openForm(t) {
+        editing = t || null;
+
+        if (form) {
+            form.reset();
+
+            var f = form.elements;
+
+            if (f.Name) f.Name.value = t ? t.name : '';
+            if (f.Description) f.Description.value = t ? t.description : '';
+            if (f.Price) f.Price.value = t ? t.price : '';
+            if (f.Duration) f.Duration.value = t ? t.days : '30';
+            if (f.Type) f.Type.value = t ? t.type : 'Monthly';
+
+            // CLEAR PREVIOUS VALIDATION ERRORS
+            if (typeof $ !== 'undefined') {
+                var validator = $(form).data('validator');
+
+                if (validator) {
+                    validator.resetForm();
+                }
+
+                // CLEAR FIELD VALIDATION MESSAGES
+                $(form).find('[data-valmsg-for]')
+                    .removeClass('field-validation-error')
+                    .addClass('field-validation-valid')
+                    .empty();
+
+                // CLEAR VALIDATION SUMMARY
+                $(form).find('[data-valmsg-summary="true"]')
+                    .removeClass('validation-summary-errors')
+                    .addClass('validation-summary-valid')
+                    .empty();
+
+                // REMOVE ERROR STYLING FROM INPUTS
+                $(form).find('.input-validation-error')
+                    .removeClass('input-validation-error');
+            }
+        }
+
+        if (title) {
+            title.textContent = t ? 'Edit Tariff' : 'Add Tariff';
+        }
 
         SH.openModal('sh-tariff-modal');
     }
@@ -92,15 +134,21 @@
     if (form) {
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
+
+            // JQUERY UNOBTRUSIVE VALIDATION
+            if (typeof $ !== 'undefined' && $(form).valid && !$(form).valid()) {
+                return;
+            }
+
             var f = form.elements;
 
             var data = {
                 Id: editing ? editing.id : 0,
-                Name: f.name ? f.name.value.trim() : '',
-                Description: f.description ? f.description.value.trim() : '',
-                Price: f.price ? parseFloat(f.price.value) : 0,
-                Days: f.days ? parseInt(f.days.value, 10) : 30,
-                Type: f.type ? f.type.value.trim() : 'Monthly'
+                Name: f.Name ? f.Name.value.trim() : '',
+                Description: f.Description ? f.Description.value.trim() : '',
+                Price: f.Price ? parseFloat(f.Price.value) : 0,
+                Days: f.Duration ? parseInt(f.Duration.value, 10) : 30,
+                Type: f.Type ? f.Type.value.trim() : ''
             };
 
             await fetch(URLS.save, {
@@ -112,6 +160,13 @@
             SH.closeModal('sh-tariff-modal');
             loadTariffs();
         });
+
+        // VALIDATE FIELDS ON BLUR AND CHANGE
+        if (typeof $ !== 'undefined') {
+            $(form).find('input, textarea, select').on('blur change', function () {
+                $(this).valid();
+            });
+        }
     }
 
     loadTariffs();

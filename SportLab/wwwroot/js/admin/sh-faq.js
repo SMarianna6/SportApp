@@ -70,12 +70,32 @@
         }).join('');
     }
 
+    if (typeof $ !== 'undefined' && form) {
+        $(form)
+            .off('.shLiveValidation')
+            .on('input.shLiveValidation change.shLiveValidation', 'input, textarea, select', function () {
+                $(this).valid();
+            });
+    }
+
     function openForm(faq) {
         editing = faq;
         title.textContent = faq ? 'Edit FAQ' : 'Add FAQ';
-        if (form.elements.question) form.elements.question.value = faq ? faq.question : '';
-        if (form.elements.answer) form.elements.answer.value = faq ? faq.answer : '';
-        if (form.elements.isActive) form.elements.isActive.checked = faq ? faq.isActive : true;
+
+        if (form.elements.Question) form.elements.Question.value = faq ? faq.question : '';
+        if (form.elements.Answer) form.elements.Answer.value = faq ? faq.answer : '';
+        if (form.elements.IsActive) form.elements.IsActive.checked = faq ? faq.isActive : true;
+
+        if (typeof $ !== 'undefined' && $(form).data('validator')) {
+            $(form).validate().resetForm();
+
+            $(form).find('.input-validation-error').removeClass('input-validation-error');
+            $(form).find('.field-validation-error')
+                .removeClass('field-validation-error')
+                .addClass('field-validation-valid')
+                .text('');
+        }
+
         SH.openModal('sh-faq-modal');
     }
 
@@ -162,15 +182,19 @@
     if (form) {
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
-            var f = form.elements;
 
-            var maxOrder = faqs.length > 0 ? Math.max(...faqs.map(f => f.sortOrder)) : 0;
+            if (typeof $ !== 'undefined' && $(form).valid && !$(form).valid()) {
+                return;
+            }
+
+            var f = form.elements;
+            var maxOrder = faqs.length > 0 ? Math.max(...faqs.map(item => item.sortOrder)) : 0;
 
             var data = {
                 Id: editing ? editing.id : 0,
-                Question: f.question ? f.question.value.trim() : '',
-                Answer: f.answer ? f.answer.value.trim() : '',
-                IsActive: f.isActive ? f.isActive.checked : true,
+                Question: f.Question ? f.Question.value.trim() : '',
+                Answer: f.Answer ? f.Answer.value.trim() : '',
+                IsActive: f.IsActive ? f.IsActive.checked : true,
                 SortOrder: editing ? editing.sortOrder : maxOrder + 1
             };
 
@@ -183,6 +207,12 @@
             SH.closeModal('sh-faq-modal');
             loadFaqs();
         });
+
+        if (typeof $ !== 'undefined') {
+            $(form).find('input, textarea').on('blur', function () {
+                $(this).valid();
+            });
+        }
     }
 
     loadFaqs();

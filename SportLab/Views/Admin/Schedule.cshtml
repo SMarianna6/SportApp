@@ -1,4 +1,6 @@
-﻿@{
+﻿@model SportLab.Models.WorkoutSlot
+
+@{
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
     ViewData["Title"] = "Schedule";
 }
@@ -28,25 +30,44 @@
             <button type="button" class="sh-modal-close" data-sh-close aria-label="Close"><svg class="sh-ico sh-ico-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg></button>
         </div>
         <div class="sh-modal-body">
-            <form class="sh-form" id="sh-schedule-form" novalidate>
+            <!-- Видаляємо novalidate, щоб працював jQuery Unobtrusive -->
+            <form class="sh-form" id="sh-schedule-form">
                 @Html.AntiForgeryToken()
+                
+                <div asp-validation-summary="ModelOnly" style="color: #ff4d4d; font-size: 14px; margin-bottom: 10px;"></div>
+                
                 <div class="sh-form-grid">
                     <label class="sh-field">Activity Type
-                        <div class="sh-field-body"><select class="sh-input" name="type" id="sh-schedule-type"></select></div>
+                        <div class="sh-field-body">
+                            <select class="sh-input" name="ActivityName" id="sh-schedule-type"></select>
+                        </div>
                     </label>
                     <label class="sh-field">Day
                         <div class="sh-field-body">
+                            <!-- Це поле не є частиною моделі WorkoutSlot, тому залишаємо звичайний name -->
                             <select class="sh-input" name="day">
                                 <option value="1">Mon</option><option value="2">Tue</option><option value="3">Wed</option>
                                 <option value="4">Thu</option><option value="5">Fri</option><option value="6">Sat</option><option value="7">Sun</option>
                             </select>
                         </div>
                     </label>
-                    <label class="sh-field">Start Time<div class="sh-field-body"><input class="sh-input" name="timeStart" type="time" min="08:00" max="20:00" step="900" required /></div></label>
-                    <label class="sh-field">End Time<div class="sh-field-body"><input class="sh-input" name="timeEnd" type="time" min="08:00" max="20:00" step="900" required /></div></label>
+                    <label class="sh-field">Start Time
+                        <div class="sh-field-body">
+                            <input class="sh-input" asp-for="StartTime" type="time" min="08:00" max="20:00" step="900" />
+                            <span asp-validation-for="StartTime" style="color: #ff4d4d; font-size: 12px; margin-top: 4px; display: block;"></span>
+                        </div>
+                    </label>
+                    <label class="sh-field">End Time
+                        <div class="sh-field-body">
+                            <input class="sh-input" asp-for="EndTime" type="time" min="08:00" max="20:00" step="900" />
+                            <span asp-validation-for="EndTime" style="color: #ff4d4d; font-size: 12px; margin-top: 4px; display: block;"></span>
+                        </div>
+                    </label>
                 </div>
+                
                 <label class="sh-field">Coach
                     <div class="sh-field-body">
+                        <!-- Поле для тренера (в API воно передається як рядок) -->
                         <select class="sh-input" name="coach" required>
                             <option value="" disabled selected>Select a trainer</option>
                             @foreach (var trainer in ViewBag.Trainers)
@@ -56,9 +77,20 @@
                         </select>
                     </div>
                 </label>
+                
                 <div class="sh-form-grid">
-                    <label class="sh-field">Capacity<div class="sh-field-body"><input class="sh-input" name="capacity" type="number" min="1" step="1" required /></div></label>
-                    <label class="sh-field">Booked<div class="sh-field-body"><input class="sh-input" name="booked" type="number" min="0" step="1" value="0" required /></div></label>
+                    <label class="sh-field">Capacity
+                        <div class="sh-field-body">
+                            <input class="sh-input" asp-for="Capacity" type="number" min="1" step="1" />
+                            <span asp-validation-for="Capacity" style="color: #ff4d4d; font-size: 12px; margin-top: 4px; display: block;"></span>
+                        </div>
+                    </label>
+                    <label class="sh-field">Booked
+                        <div class="sh-field-body">
+                            <input class="sh-input" asp-for="Booked" type="number" min="0" step="1" />
+                            <span asp-validation-for="Booked" style="color: #ff4d4d; font-size: 12px; margin-top: 4px; display: block;"></span>
+                        </div>
+                    </label>
                 </div>
 
                 <p class="sh-form-error" id="sh-schedule-error" role="alert" hidden></p>

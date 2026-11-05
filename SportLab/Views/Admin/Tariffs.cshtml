@@ -1,4 +1,6 @@
-﻿@{
+﻿@model SportLab.Models.Plan
+
+@{
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
     ViewData["Title"] = "Tariffs";
 }
@@ -29,13 +31,60 @@
         <div class="sh-modal-body">
             @* MVC integration point: post to your own controller action (add @Html.AntiForgeryToken() if needed). *@
             <form class="sh-form" id="sh-tariff-form">
-                <label class="sh-field">Name<div class="sh-field-body"><input class="sh-input" name="name" required /></div></label>
-                <label class="sh-field">Description<div class="sh-field-body"><textarea class="sh-input" name="description" rows="3" required></textarea></div></label>
-                <div class="sh-form-grid">
-                    <label class="sh-field">Price<div class="sh-field-body"><input class="sh-input" name="price" type="number" step="0.01" min="0" required /></div></label>
-                    <label class="sh-field">Duration (days)<div class="sh-field-body"><input class="sh-input" name="days" type="number" step="1" min="1" required /></div></label>
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly"
+                     style="color: #ff4d4d; font-size: 14px; margin-bottom: 10px;">
                 </div>
-                <label class="sh-field">Type<div class="sh-field-body"><input class="sh-input" name="type" placeholder="Monthly, Annual, Trial..." required /></div></label>
+
+                <label class="sh-field">
+                    Name
+                    <div class="sh-field-body">
+                        <input class="sh-input" asp-for="Name" />
+                        <span asp-validation-for="Name"
+                              style="color: #ff4d4d; font-size: 12px; margin-top: 4px; display: block;"></span>
+                    </div>
+                </label>
+
+                <label class="sh-field">
+                    Description
+                    <div class="sh-field-body">
+                        <textarea class="sh-input" asp-for="Description" rows="3"></textarea>
+                        <span asp-validation-for="Description"
+                              style="color: #ff4d4d; font-size: 12px; margin-top: 4px; display: block;"></span>
+                    </div>
+                </label>
+
+                <div class="sh-form-grid">
+                    <label class="sh-field">
+                        Price
+                        <div class="sh-field-body">
+                            <input class="sh-input" asp-for="Price" type="number" step="0.01" min="0.01" />
+                            <span asp-validation-for="Price"
+                                  style="color: #ff4d4d; font-size: 12px; margin-top: 4px; display: block;"></span>
+                        </div>
+                    </label>
+
+                    <label class="sh-field">
+                        Duration (days)
+                        <div class="sh-field-body">
+                            <input class="sh-input" asp-for="Duration" type="number" step="1" min="1" />
+                            <span asp-validation-for="Duration"
+                                  style="color: #ff4d4d; font-size: 12px; margin-top: 4px; display: block;"></span>
+                        </div>
+                    </label>
+                </div>
+
+                <label class="sh-field">
+                    Type
+                    <div class="sh-field-body">
+                        <input class="sh-input" asp-for="Type"
+                               placeholder="Monthly, Annual, Trial..." />
+                        <span asp-validation-for="Type"
+                              style="color: #ff4d4d; font-size: 12px; margin-top: 4px; display: block;"></span>
+                    </div>
+                </label>
+
                 <div class="sh-form-actions">
                     <button type="button" class="sh-btn sh-btn-ghost" data-sh-close>Cancel</button>
                     <button type="submit" class="sh-btn sh-btn-primary">Save</button>

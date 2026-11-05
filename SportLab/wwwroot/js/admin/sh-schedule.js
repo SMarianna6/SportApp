@@ -155,20 +155,61 @@
         errorEl.hidden = !msg;
     }
 
+    if (typeof $ !== 'undefined' && form) {
+        $(form)
+            .off('.shLiveValidation')
+            .on('input.shLiveValidation change.shLiveValidation', 'input, textarea, select', function () {
+                $(this).valid();
+            });
+    }
+
     function openForm(slot, day, hour) {
         editing = slot || null;
         showError('');
-        var f = form.elements;
-        if (modalTitle) modalTitle.textContent = slot ? 'Edit Class' : 'Add Class';
-        if (deleteBtn) deleteBtn.hidden = !slot;
 
-        f.type.value = slot ? slot.type : 'HIIT';
-        f.day.value = String(slot ? slot.day : day);
-        f.timeStart.value = slot ? slot.timeStart : hhmm(hour);
-        f.timeEnd.value = slot ? slot.timeEnd : hhmm(Math.min(hour + 1, LAST_HOUR));
-        f.coach.value = slot ? slot.coach : '';
-        f.capacity.value = slot ? slot.capacity : '15';
-        f.booked.value = slot ? slot.booked : '0';
+        if (form) {
+            form.reset();
+
+            var f = form.elements;
+
+            if (f.ActivityName) f.ActivityName.value = slot ? slot.type : 'HIIT';
+            if (f.day) f.day.value = String(slot ? slot.day : day);
+            if (f.StartTime) f.StartTime.value = slot ? slot.timeStart : hhmm(hour);
+            if (f.EndTime) f.EndTime.value = slot ? slot.timeEnd : hhmm(Math.min(hour + 1, LAST_HOUR));
+            if (f.coach) f.coach.value = slot ? slot.coach : '';
+            if (f.Capacity) f.Capacity.value = slot ? slot.capacity : '15';
+            if (f.Booked) f.Booked.value = slot ? slot.booked : '0';
+
+            // CLEAR PREVIOUS VALIDATION ERRORS
+            if (typeof $ !== 'undefined') {
+                var validator = $(form).data('validator');
+
+                if (validator) {
+                    validator.resetForm();
+                }
+
+                $(form).find('[data-valmsg-for]')
+                    .removeClass('field-validation-error')
+                    .addClass('field-validation-valid')
+                    .empty();
+
+                $(form).find('[data-valmsg-summary="true"]')
+                    .removeClass('validation-summary-errors')
+                    .addClass('validation-summary-valid')
+                    .empty();
+
+                $(form).find('.input-validation-error')
+                    .removeClass('input-validation-error');
+            }
+        }
+
+        if (modalTitle) {
+            modalTitle.textContent = slot ? 'Edit Class' : 'Add Class';
+        }
+
+        if (deleteBtn) {
+            deleteBtn.hidden = !slot;
+        }
 
         SH.openModal('sh-schedule-modal');
     }
@@ -189,23 +230,30 @@
     if (form) {
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
+
+            // Клієнтська валідація jQuery Unobtrusive
+            if (typeof $ !== 'undefined' && $(form).valid && !$(form).valid()) {
+                return; // Зупиняємо відправку, якщо є помилки
+            }
+
             var f = form.elements;
+
+            // Збираємо дані, читаючи їх з нових полів (з великої літери)
             var data = {
-                type: f.type.value,
-                day: Number(f.day.value),
-                timeStart: f.timeStart.value,
-                timeEnd: f.timeEnd.value,
-                coach: f.coach.value.trim(),
-                capacity: parseInt(f.capacity.value, 10),
-                booked: parseInt(f.booked.value, 10)
+                type: f.ActivityName ? f.ActivityName.value : '',
+                day: f.day ? Number(f.day.value) : 1,
+                timeStart: f.StartTime ? f.StartTime.value : '',
+                timeEnd: f.EndTime ? f.EndTime.value : '',
+                coach: f.coach ? f.coach.value.trim() : '',
+                capacity: f.Capacity ? parseInt(f.Capacity.value, 10) : 15,
+                booked: f.Booked ? parseInt(f.Booked.value, 10) : 0
             };
 
+            // Специфічна ручна валідація
             if (!data.timeStart || !data.timeEnd) return showError('Start and end time are required.');
             if (toHour(data.timeStart) < FIRST_HOUR || toHour(data.timeEnd) > LAST_HOUR) return showError('Classes must be between 08:00 and 20:00.');
             if (toHour(data.timeEnd) <= toHour(data.timeStart)) return showError('End time must be after start time.');
             if (!data.coach) return showError('Coach is required.');
-            if (!(data.capacity >= 1)) return showError('Capacity must be at least 1.');
-            if (!(data.booked >= 0)) return showError('Booked cannot be negative.');
             if (data.booked > data.capacity) return showError('Booked cannot exceed capacity.');
 
             var record;
@@ -219,7 +267,6 @@
             SH.closeModal('sh-schedule-modal');
             render();
 
-            // Відправка на сервер
             const payload = Object.assign({}, data, { id: record.id < 0 ? 0 : record.id });
             const response = await fetch(URLS.save, {
                 method: 'POST',
@@ -235,6 +282,13 @@
                 }
             }
         });
+
+        // Моментальна перевірка поля при втраті фокусу (blur)
+        if (typeof $ !== 'undefined') {
+            $(form).find('input, select').on('blur change', function () {
+                $(this).valid();
+            });
+        }
     }
 
     if (deleteBtn) {
