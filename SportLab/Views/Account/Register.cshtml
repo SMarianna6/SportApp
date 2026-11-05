@@ -1,42 +1,40 @@
-﻿@{
+﻿@model SportLab.Models.User
+@{
     ViewData["Title"] = "Sign up Page";
-    var codeSent = TempData["GeneratedCode"] != null;
-    if (codeSent)
-    {
-        TempData.Keep("GeneratedCode");
-    }
+    var codeSent = Context.Session.GetString("RegCode") != null;
 }
 
 <link rel="stylesheet" href="~/css/page.css" asp-append-version="true" />
-
-@if (TempData["GeneratedCode"] != null)
-{
-    <script>
-        window.onload = function() {
-            alert("Verification code: @TempData["GeneratedCode"]");
-        };
-    </script>
-}
 
 <div class="login-page-wrapper">
     <div class="login-card">
         <h3 class="mb-3 text-center">SIGN UP</h3>
 
+        @if (ViewBag.Message != null)
+        {
+            <div class="alert alert-success text-center">@ViewBag.Message</div>
+        }
+
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small text-center"></div>
+
         <form method="post" autocomplete="off">
             <div class="mb-3">
                 <label class="form-label">Email</label>
-                <input type="email" name="email" class="form-control" value="@ViewBag.Email" required autocomplete="off">
+                <input asp-for="Email" class="form-control" autocomplete="off">
+                <span asp-validation-for="Email" class="text-danger small"></span>
             </div>
+
             <div class="mb-3">
                 <label class="form-label">Password</label>
-                <input type="password" name="password" class="form-control" value="@ViewBag.Password" required autocomplete="new-password">
+                <input asp-for="Password" type="password" class="form-control" value="@ViewBag.Password" autocomplete="new-password">
+                <span asp-validation-for="Password" class="text-danger small"></span>
             </div>
 
             @if (codeSent)
             {
                 <div class="mb-3">
                     <label class="form-label">Code</label>
-                    <input type="text" name="code" class="form-control" placeholder="Enter 6-digit code" required>
+                    <input type="text" name="code" class="form-control" placeholder="Enter 6-digit code" required autocomplete="off">
                 </div>
                 <button type="submit" class="btn btn-primary w-100 mb-3" name="action" value="verify">Verify & Register</button>
             }

@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using SportLab.Data;
 using SportLab.Models;
 using System.Security.Claims;
+using MailKit.Net.Smtp;
+using MimeKit;
 
 namespace SportLab.Controllers
 {
@@ -100,19 +102,16 @@ namespace SportLab.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Register(string email, string password, string code, string action)
+        public IActionResult Register(string email, string password, string? code, string action)
         {
             ViewBag.Email = email;
             ViewBag.Password = password;
 
-            if (!ModelState.IsValid)
-            {
-                return View();
-            }
-
             if (action == "send")
             {
-                if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+                ModelState.Remove("code");
+
+                if (!ModelState.IsValid || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
                 {
                     ModelState.AddModelError(string.Empty, "All fields are required.");
                     return View();
@@ -125,7 +124,33 @@ namespace SportLab.Controllers
                 HttpContext.Session.SetString("RegPassword", password);
                 HttpContext.Session.SetString("RegCode", generatedCode);
 
-                TempData["GeneratedCode"] = generatedCode;
+                try
+                {
+                    var message = new MimeMessage();
+                    message.From.Add(new MailboxAddress("SportLab Support", "sydorenko.marianna@gmail.com"));
+                    message.To.Add(new MailboxAddress("", email));
+                    message.Subject = "Registration Verification Code - SportLab";
+
+                    message.Body = new TextPart("plain")
+                    {
+                        Text = $"Welcome to SportLab!\n\nYour registration verification code is: {generatedCode}"
+                    };
+
+                    using (var client = new SmtpClient())
+                    {
+                        client.Connect("smtp.gmail.com", 587, false);
+                        client.Authenticate("sydorenko.marianna@gmail.com", "fuzm thpd imty ijyp");
+                        client.Send(message);
+                        client.Disconnect(true);
+                    }
+
+                    ViewBag.Message = "Verification code has been successfully sent to your email!";
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, "Error sending email: " + ex.Message);
+                    return View();
+                }
 
                 return View();
             }
@@ -138,14 +163,13 @@ namespace SportLab.Controllers
 
                 if (string.IsNullOrEmpty(savedCode) || code != savedCode || email != savedEmail)
                 {
-                    TempData["GeneratedCode"] = savedCode;
+                    ModelState.AddModelError(string.Empty, "Invalid verification code or email.");
                     return View();
                 }
 
                 if (_context.Users.Any(u => u.Email == savedEmail))
                 {
                     ModelState.AddModelError(string.Empty, "This email is already registered.");
-                    TempData["GeneratedCode"] = savedCode;
                     return View();
                 }
 
@@ -164,7 +188,6 @@ namespace SportLab.Controllers
                 HttpContext.Session.Remove("RegCode");
                 HttpContext.Session.Remove("RegEmail");
                 HttpContext.Session.Remove("RegPassword");
-                TempData.Remove("GeneratedCode");
 
                 return RedirectToAction("Login");
             }
