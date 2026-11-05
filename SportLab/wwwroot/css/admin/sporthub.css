@@ -1384,3 +1384,99 @@ textarea.sh-input {
     .sh-lightbox-close:hover {
         color: var(--sh-neon);
     }
+
+/* Access denied (403) */
+.sh-denied {
+    display: flex;
+    min-height: 70vh;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem 1rem;
+}
+
+.sh-denied-card {
+    position: relative;
+    width: 100%;
+    max-width: 32rem;
+    overflow: hidden;
+    padding: 3rem 1.5rem 2.5rem;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,.1);
+    background: var(--sh-main);
+}
+
+.sh-denied-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--sh-red);
+}
+
+.sh-denied-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 5rem;
+    height: 5rem;
+    margin-bottom: 1.25rem;
+    border: 1px solid rgba(255,77,77,.3);
+    border-radius: 9999px;
+    background: rgba(255,77,77,.1);
+    color: #ff4d4d;
+}
+
+.sh-denied-lock {
+    width: 2.25rem;
+    height: 2.25rem;
+}
+
+.sh-denied-code {
+    margin: 0;
+    font-size: clamp(4.5rem, 18vw, 7rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -.05em;
+    color: #ff4d4d;
+    text-shadow: 0 0 40px rgba(255,77,77,.25);
+}
+
+.sh-denied-title {
+    margin: 1rem 0 0;
+    font-size: 1.5rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -.01em;
+    color: var(--sh-ink);
+}
+
+.sh-denied-text {
+    max-width: 24rem;
+    margin: 1rem auto 0;
+    font-size: .875rem;
+    line-height: 1.6;
+    color: rgba(242,242,244,.7);
+}
+
+.sh-denied-actions {
+    margin-top: 2rem;
+}
+
+.sh-denied-btn {
+    padding: .875rem 2rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    font-weight: 900;
+    transition: transform .2s, box-shadow .2s, filter .15s;
+}
+
+    .sh-denied-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(170,255,0,.3);
+    }
+
+    .sh-denied-btn:focus-visible {
+        outline: 2px solid var(--sh-ink);
+        outline-offset: 2px;
+    }

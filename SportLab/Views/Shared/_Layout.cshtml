@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 @{
-    bool isDarkPage = ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && 
-                          ViewContext.RouteData.Values["action"]?.ToString() == "Index";
+    bool isDarkPage = (ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Index") ||
+    (ViewContext.RouteData.Values["controller"]?.ToString() == "Account" && ViewContext.RouteData.Values["action"]?.ToString() == "AccessDenied");
 }
 <html lang="en" class="scroll-smooth">
 <head>
