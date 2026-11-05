@@ -26,6 +26,7 @@ namespace SportLab.Models
         [Required]
         [Display(Name = "Date Created")]
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime CreatedDate { get; set; } = DateTime.Now;
 
         [Required(ErrorMessage = "Moderation status is required")]

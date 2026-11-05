@@ -162,6 +162,11 @@ namespace SportLab.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveUserApi([FromBody] UserDto userDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             User? user;
             if (userDto.Id == 0)
             {
@@ -245,6 +250,11 @@ namespace SportLab.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveFaqApi([FromBody] FAQ faq)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             if (faq.Id == 0)
             {
                 _context.FAQs.Add(faq);
@@ -312,6 +322,11 @@ namespace SportLab.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveTariffApi([FromBody] PlanDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             if (dto.Id == 0)
             {
                 var newPlan = new Plan
@@ -490,6 +505,11 @@ namespace SportLab.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveScheduleApi([FromBody] ScheduleDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var trainer = await _context.Users.FirstOrDefaultAsync(u => u.Name == dto.Coach)
                           ?? await _context.Users.FirstOrDefaultAsync();
 

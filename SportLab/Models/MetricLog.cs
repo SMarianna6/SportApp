@@ -21,6 +21,7 @@ namespace SportLab.Models
         [Required]
         [Display(Name = "Record Date")]
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime RecordDate { get; set; } = DateTime.Now;
 
         [Display(Name = "Notes")]

@@ -23,6 +23,8 @@ namespace SportLab.Models
         [Required(ErrorMessage = "Unit price is required")]
         [Display(Name = "Unit Price")]
         [Column(TypeName = "decimal(18,2)")]
+        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
         public decimal UnitPrice { get; set; }
     }
 }

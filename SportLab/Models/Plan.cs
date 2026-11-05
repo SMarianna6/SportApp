@@ -21,6 +21,8 @@ namespace SportLab.Models
         [Range(0.01, 100000.00, ErrorMessage = "Price must be between 0.01 and 100000")]
         [Column(TypeName = "decimal(18,2)")]
         [Display(Name = "Price")]
+        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
         public decimal Price { get; set; }
 
         [Required(ErrorMessage = "Duration is required")]

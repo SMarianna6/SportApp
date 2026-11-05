@@ -38,11 +38,13 @@ namespace SportLab.Models
         [Required]
         [Display(Name = "Start Date")]
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime StartDate { get; set; } = DateTime.Today;
 
         [Required]
         [Display(Name = "End Date")]
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime EndDate { get; set; } = DateTime.Today.AddDays(30);
 
         [Display(Name = "Is Active")]

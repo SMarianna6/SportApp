@@ -29,6 +29,7 @@ namespace SportLab.Models
         [Required]
         [Display(Name = "Date Sent")]
         [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}", ApplyFormatInEditMode = false)]
         public DateTime SentDate { get; set; } = DateTime.Now;
     }
 }

@@ -17,6 +17,8 @@ namespace SportLab.Models
         [Required(ErrorMessage = "Price is required")]
         [Display(Name = "Price")]
         [Column(TypeName = "decimal(18,2)")]
+        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
         public decimal Price { get; set; }
 
         [Required(ErrorMessage = "Stock quantity is required")]

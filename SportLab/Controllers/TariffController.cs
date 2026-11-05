@@ -169,67 +169,6 @@ namespace SportLab.Controllers
             return View(subscription);
         }
 
-        [Authorize(Roles = Roles.AdminRoles)]
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        [Authorize(Roles = Roles.AdminRoles)]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(Tariff tariff)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Plans.Add(tariff);
-                _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(tariff);
-        }
-
-        [Authorize(Roles = Roles.AdminRoles)]
-        public IActionResult Edit(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var tariff = _context.Plans.Find(id);
-            if (tariff == null) return NotFound();
-
-            return View(tariff);
-        }
-
-        [Authorize(Roles = Roles.AdminRoles)]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Tariff tariff)
-        {
-            if (id != tariff.Id) return NotFound();
-
-            if (ModelState.IsValid)
-            {
-                _context.Update(tariff);
-                _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(tariff);
-        }
-
-        [Authorize(Roles = Roles.AdminRoles)]
-        public IActionResult Delete(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var tariff = _context.Plans.Find(id);
-            if (tariff != null)
-            {
-                _context.Plans.Remove(tariff);
-                _context.SaveChanges();
-            }
-            return RedirectToAction(nameof(Index));
-        }
-
         private int CurrentUserId() =>
             int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
