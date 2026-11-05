@@ -55,7 +55,6 @@ namespace SportLab.Controllers
         [Authorize(Roles = Roles.TrainerRoles)]
         public IActionResult Trainer()
         {
-            // ВИПРАВЛЕНО: Був нескінченний редирект, тепер просто повертаємо сторінку
             return View();
         }
 
@@ -79,7 +78,6 @@ namespace SportLab.Controllers
             return View();
         }
 
-        // ВИПРАВЛЕНО: Прибрано блокування тільки для тренерів. Тепер доступно і клієнтам!
         public async Task<IActionResult> Schedule()
         {
             var query = _context.WorkoutSlots
@@ -87,7 +85,6 @@ namespace SportLab.Controllers
                 .Include(w => w.User)
                 .AsQueryable();
 
-            // Якщо це тренер (але не адмін), він бачить тільки свої заняття
             if (User.IsInRole(Roles.Trainer) && !User.IsAdmin())
             {
                 var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);

@@ -231,14 +231,12 @@
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
 
-            // Клієнтська валідація jQuery Unobtrusive
             if (typeof $ !== 'undefined' && $(form).valid && !$(form).valid()) {
-                return; // Зупиняємо відправку, якщо є помилки
+                return;
             }
 
             var f = form.elements;
 
-            // Збираємо дані, читаючи їх з нових полів (з великої літери)
             var data = {
                 type: f.ActivityName ? f.ActivityName.value : '',
                 day: f.day ? Number(f.day.value) : 1,
@@ -249,7 +247,6 @@
                 booked: f.Booked ? parseInt(f.Booked.value, 10) : 0
             };
 
-            // Специфічна ручна валідація
             if (!data.timeStart || !data.timeEnd) return showError('Start and end time are required.');
             if (toHour(data.timeStart) < FIRST_HOUR || toHour(data.timeEnd) > LAST_HOUR) return showError('Classes must be between 08:00 and 20:00.');
             if (toHour(data.timeEnd) <= toHour(data.timeStart)) return showError('End time must be after start time.');
@@ -283,7 +280,6 @@
             }
         });
 
-        // Моментальна перевірка поля при втраті фокусу (blur)
         if (typeof $ !== 'undefined') {
             $(form).find('input, select').on('blur change', function () {
                 $(this).valid();

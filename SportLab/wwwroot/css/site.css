@@ -44,3 +44,7 @@ html {
 #qb-scroll-area::-webkit-scrollbar-thumb:hover {
     background: #AAFF00;
 }
+
+#faqAccordion .accordion-collapse {
+    visibility: visible;
+}

@@ -231,14 +231,12 @@
         form.addEventListener('submit', function (e) {
             e.preventDefault();
 
-            // Клієнтська валідація jQuery Unobtrusive
             if (typeof $ !== 'undefined' && $(form).valid && !$(form).valid()) {
-                return; // Якщо є помилки, зупиняємо відправку
+                return;
             }
 
             var f = form.elements;
 
-            // Збираємо дані, читаючи їх з нових полів (з великої літери)
             var data = {
                 name: f.Name ? f.Name.value.trim() : '',
                 description: f.Description ? f.Description.value.trim() : '',
@@ -277,7 +275,6 @@
             });
         });
 
-        // Моментальна перевірка поля при втраті фокусу (blur)
         if (typeof $ !== 'undefined') {
             $(form).find('input, select, textarea').on('blur change', function () {
                 $(this).valid();
