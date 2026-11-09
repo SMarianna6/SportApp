@@ -127,7 +127,7 @@ namespace SportLab.Controllers
                 try
                 {
                     var message = new MimeMessage();
-                    message.From.Add(new MailboxAddress("SportLab Support", "sydorenko.marianna@gmail.com"));
+                    message.From.Add(new MailboxAddress("SportLab Support", "sporthubproject01@gmail.com"));
                     message.To.Add(new MailboxAddress("", email));
                     message.Subject = "Registration Verification Code - SportLab";
 
@@ -139,7 +139,7 @@ namespace SportLab.Controllers
                     using (var client = new SmtpClient())
                     {
                         client.Connect("smtp.gmail.com", 587, false);
-                        client.Authenticate("sydorenko.marianna@gmail.com", "fuzm thpd imty ijyp");
+                        client.Authenticate("sporthubproject01@gmail.com", "zcfe yyad ezet tirb");
                         client.Send(message);
                         client.Disconnect(true);
                     }

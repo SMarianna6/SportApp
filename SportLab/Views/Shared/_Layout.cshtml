@@ -2,7 +2,13 @@
 @{
     bool isDarkPage = (ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Index") ||
     (ViewContext.RouteData.Values["controller"]?.ToString() == "Account" && ViewContext.RouteData.Values["action"]?.ToString() == "AccessDenied");
+
+    bool canUseQuickBook =
+        User.Identity?.IsAuthenticated == true &&
+        (User.IsInRole(Roles.Client) ||
+         User.IsInRole(Roles.Trainer));
 }
+
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="utf-8" />
@@ -82,7 +88,7 @@
         <a asp-controller="Home" asp-action="Index" class="text-2xl font-black uppercase tracking-tighter text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-neon">
           Sport<span class="text-neon">HUB</span>
         </a>
-        
+
         <ul class="hidden items-center gap-8 md:flex">
           <li><a asp-controller="Home" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">Home</a></li>
           <li><a asp-controller="Schedule" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">Schedule</a></li>
@@ -101,13 +107,66 @@
         <div class="hidden items-center gap-3 md:flex">
           @if (User.Identity?.IsAuthenticated == true)
           {
-              <!-- ЗМІНЕНО: Тепер веде просто на Profile/Index, а контролер сам розбереться з ролями -->
-              <a asp-controller="Profile" asp-action="Index" aria-label="User profile" class="ml-1 flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white transition-colors duration-300 hover:border-neon hover:text-neon">
-                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
-              </a>
-              <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
-                  <button type="submit" class="px-3 py-2 text-xs font-semibold uppercase tracking-widest text-white transition-colors duration-300 hover:text-neon">Log Out</button>
-              </form>
+              var fullName = User.FindFirst("FullName")?.Value ?? User.Identity?.Name ?? "Athlete";
+              var firstName = fullName.Split(' ', '@')[0];
+              var avatarUrl = User.FindFirst("AvatarUrl")?.Value
+                  ?? "https://images.unsplash.com/photo-1784894645353-81486c66a687?w=160&h=160&fit=crop&crop=faces";
+
+              <div id="user-menu" class="group relative">
+                  <button id="user-menu-toggle"
+                        type="button"
+                        aria-haspopup="menu"
+                        aria-controls="user-menu-panel"
+                        aria-expanded="false"
+                        class="flex items-center gap-2.5 rounded-full border border-white/10 bg-white/5 py-1 pl-1 pr-3 text-white transition-all duration-300 hover:border-neon/60 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-neon">
+                    <img src="@avatarUrl" alt="" class="h-8 w-8 rounded-full border border-neon/70 object-cover" />
+                    <span class="text-xs font-bold uppercase tracking-widest">@firstName</span>
+                    <svg id="user-menu-arrow"
+                         class="h-3.5 w-3.5 text-neon transition-transform duration-300"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="3"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                         aria-hidden="true">
+                        <path d="m6 9 6 6 6-6" />
+                    </svg>
+                </button>
+
+                  <div id="user-menu-panel" role="menu"
+                       class="invisible absolute right-0 top-full z-50 w-60 translate-y-1 pt-2 opacity-0 transition-all duration-200 ease-out">
+                      <div class="overflow-hidden rounded-lg border border-white/10 bg-card shadow-2xl shadow-black/60">
+                          <div class="h-1 w-full bg-gradient-to-r from-neon to-violet"></div>
+
+                          <div class="flex items-center gap-3 border-b border-white/10 px-4 py-3.5" role="presentation">
+                              <img src="@avatarUrl" alt="" class="h-9 w-9 rounded-full border border-neon/70 object-cover" />
+                              <div class="min-w-0">
+                                  <p class="text-[10px] font-bold uppercase tracking-widest text-mono/50">Welcome,</p>
+                                  <p class="truncate text-sm font-black uppercase tracking-tight text-white">@firstName</p>
+                              </div>
+                          </div>
+
+                          <div class="p-1.5">
+                              <a asp-controller="Profile" asp-action="Index" role="menuitem"
+                                 class="group/item flex items-center gap-3 rounded-md px-3 py-2.5 text-xs font-bold uppercase tracking-widest text-mono/80 transition-colors duration-200 hover:bg-neon/10 hover:text-neon focus:outline-none focus-visible:bg-neon/10 focus-visible:text-neon">
+                                  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" /></svg>
+                                  My Profile
+                              </a>
+
+                              <div class="my-1.5 h-px bg-white/10" role="separator"></div>
+
+                              <form asp-controller="Account" asp-action="Logout" method="post" class="m-0" role="none">
+                                  <button type="submit" role="menuitem"
+                                          class="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-left text-xs font-bold uppercase tracking-widest text-mono/80 transition-colors duration-200 hover:bg-red-600/15 hover:text-red-500 focus:outline-none focus-visible:bg-red-600/15 focus-visible:text-red-500">
+                                      <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><path d="m16 17 5-5-5-5" /><path d="M21 12H9" /></svg>
+                                      Log Out
+                                  </button>
+                              </form>
+                          </div>
+                      </div>
+                  </div>
+              </div>
           }
           else
           {
@@ -137,10 +196,37 @@
             <li class="flex flex-col gap-3 pb-3 pt-4 border-t border-white/10">
               @if (User.Identity?.IsAuthenticated == true)
               {
-                  <a asp-controller="Profile" asp-action="Client" class="flex-1 rounded-md border border-white/20 py-3 text-center text-xs font-bold uppercase tracking-widest text-white transition-colors hover:border-neon hover:text-neon">User Profile</a>
-                  <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
-                      <button type="submit" class="w-full rounded-md bg-red-600/20 border border-red-500/50 py-3 text-center text-xs font-bold uppercase tracking-widest text-red-500 transition-colors hover:bg-red-600/40">Log Out</button>
-                  </form>
+                  var fullName = User.FindFirst("FullName")?.Value ?? User.Identity?.Name ?? "Athlete";
+                  var avatarUrl = User.FindFirst("AvatarUrl")?.Value
+                      ?? "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=160&h=160&fit=crop&crop=faces";
+
+                  <div class="overflow-hidden rounded-lg border border-white/10 bg-card">
+                      <div class="h-1 w-full bg-gradient-to-r from-neon to-violet"></div>
+
+                      <div class="flex items-center gap-4 px-4 py-4">
+                          <img src="@avatarUrl" alt="" class="h-14 w-14 shrink-0 rounded-full border-2 border-neon object-cover" />
+                          <div class="min-w-0">
+                              <p class="text-[10px] font-bold uppercase tracking-widest text-mono/50">Signed in as</p>
+                              <p class="truncate text-lg font-black uppercase leading-tight tracking-tighter text-white">@fullName</p>
+                          </div>
+                      </div>
+
+                      <div class="flex flex-col gap-2.5 border-t border-white/10 p-4">
+                          <a asp-controller="Profile" asp-action="Client"
+                             class="flex w-full items-center justify-center gap-2 rounded-md border border-white/20 py-3 text-xs font-bold uppercase tracking-widest text-white transition-all duration-300 hover:border-neon hover:bg-neon/10 hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon active:scale-[0.98]">
+                              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" /></svg>
+                              My Profile
+                          </a>
+
+                          <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
+                              <button type="submit"
+                                      class="flex w-full items-center justify-center gap-2 rounded-md border border-red-500/50 bg-red-600/20 py-3 text-xs font-bold uppercase tracking-widest text-red-500 transition-all duration-300 hover:bg-red-600 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 active:scale-[0.98]">
+                                  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><path d="m16 17 5-5-5-5" /><path d="M21 12H9" /></svg>
+                                  Log Out
+                              </button>
+                          </form>
+                      </div>
+                  </div>
               }
               else
               {
@@ -162,137 +248,217 @@
     </div>
 
     <!-- Quick Book FAB & Modal -->
-    <button id="fab" type="button" aria-haspopup="dialog" class="animate-gradient fixed bottom-5 right-5 z-40 flex items-center gap-2.5 rounded-lg bg-[length:250%_250%] bg-gradient-to-br from-neon via-[#5FD400] to-violet px-5 py-4 text-sm font-black uppercase tracking-wider text-ink shadow-lg shadow-neon/50 transition-[transform,shadow] duration-300 transform-gpu will-change-transform hover:scale-105 hover:shadow-xl hover:shadow-neon/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-95 sm:bottom-8 sm:right-8">
-        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18M12 14v4M10 16h4"/></svg>
-        Quick Book
-    </button>
-
-    <div id="qb-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="qb-modal-title">
-      <div id="qb-modal-backdrop" class="animate-fade-in absolute inset-0 bg-black/90"></div>
-      
-      <div id="qb-scroll-area" class="animate-modal-in relative max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-lg border border-white/10 bg-ink shadow-2xl shadow-black/80">
-        <div class="h-1.5 w-full bg-gradient-to-r from-neon via-neon to-violet"></div>
-        <button id="qb-modal-close" type="button" class="absolute right-3 top-4 rounded-md p-2 text-mono/60 transition-colors hover:bg-white/10 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-neon">
-          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    @if (canUseQuickBook)
+    {
+        <button id="fab" type="button" aria-haspopup="dialog" class="animate-gradient fixed bottom-5 right-5 z-40 flex items-center gap-2.5 rounded-lg bg-[length:250%_250%] bg-gradient-to-br from-neon via-[#5FD400] to-violet px-5 py-4 text-sm font-black uppercase tracking-wider text-ink shadow-lg shadow-neon/50 transition-[transform,shadow] duration-300 transform-gpu will-change-transform hover:scale-105 hover:shadow-xl hover:shadow-neon/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-95 sm:bottom-8 sm:right-8">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18M12 14v4M10 16h4"/></svg>
+            Quick Book
         </button>
 
-        <div id="qb-view-booking" class="p-6 sm:p-8">
-          <p class="text-xs font-extrabold uppercase tracking-widest text-neon">Quick booking</p>
-          <h2 id="qb-modal-title" class="mt-1 text-4xl font-black uppercase tracking-tighter">Book a Session</h2>
+        <div id="qb-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="qb-modal-title">
+            <div id="qb-modal-backdrop" class="animate-fade-in absolute inset-0 bg-black/90"></div>
 
-          <form id="qb-booking-form" class="mt-6 space-y-4" novalidate>
-            <div>
-              <label for="qb-type" class="mb-1.5 block text-xs font-bold uppercase tracking-wider text-mono/70">Type</label>
-              <div class="relative">
-                <select id="qb-type" class="w-full appearance-none rounded-md border border-white/10 bg-card px-4 py-3 pr-10 text-sm font-semibold text-white transition-colors focus:border-neon focus:outline-none focus:ring-2 focus:ring-neon/30">
-                  <option value="">Select type</option>
-                  <option>Group Class</option>
-                  <option>Personal Training</option>
-                </select>
-                <svg class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
-              </div>
-            </div>
-            <div class="grid gap-4 sm:grid-cols-2">
-              <div>
-                <label for="qb-date" class="mb-1.5 block text-xs font-bold uppercase tracking-wider text-mono/70">Date</label>
-                <div class="relative">
-                  <select id="qb-date" class="w-full appearance-none rounded-md border border-white/10 bg-card px-4 py-3 pr-10 text-sm font-semibold text-white transition-colors focus:border-neon focus:outline-none focus:ring-2 focus:ring-neon/30"></select>
-                  <svg class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
-                </div>
-              </div>
-              <div>
-                <label for="qb-trainer" class="mb-1.5 block text-xs font-bold uppercase tracking-wider text-mono/70">Trainer</label>
-                <div class="relative">
-                  <select id="qb-trainer" class="w-full appearance-none rounded-md border border-white/10 bg-card px-4 py-3 pr-10 text-sm font-semibold text-white transition-colors focus:border-neon focus:outline-none focus:ring-2 focus:ring-neon/30"></select>
-                  <svg class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
-                </div>
-              </div>
-            </div>
-          </form>
+            <div id="qb-scroll-area" class="animate-modal-in relative max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-lg border border-white/10 bg-ink shadow-2xl shadow-black/80">
+                <div class="h-1.5 w-full bg-gradient-to-r from-neon via-neon to-violet"></div>
+                <button id="qb-modal-close" type="button" class="absolute right-3 top-4 rounded-md p-2 text-mono/60 transition-colors hover:bg-white/10 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-neon">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+                </button>
 
-          <div id="qb-slot-card" class="mt-6 overflow-hidden rounded-lg border border-dashed border-white/20 bg-card/60 transition-colors duration-300">
-            <div class="flex items-stretch">
-              <div id="qb-slot-accent" class="w-1.5 bg-white/10 transition-colors duration-300"></div>
-              <div class="flex-1 p-4">
-                <div class="flex items-start justify-between gap-3">
-                  <div>
-                    <p id="qb-slot-type" class="text-2xl font-black uppercase leading-none tracking-tighter text-white/30">Your slot</p>
-                    <p id="qb-slot-date" class="mt-1.5 text-sm font-semibold text-mono/40">Pick a date</p>
-                  </div>
-                  <span id="qb-slot-chip" class="rounded-md bg-white/10 px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-widest text-mono/50">Draft</span>
-                </div>
-                <div class="mt-3 flex items-center gap-2.5">
-                  <span id="qb-slot-avatar" class="flex h-9 w-9 items-center justify-center rounded-md bg-white/10 text-xs font-black text-mono/40">?</span>
-                  <div>
-                    <p class="text-[11px] font-bold uppercase tracking-wider text-mono/40">Trainer</p>
-                    <p id="qb-slot-trainer" class="text-sm font-bold text-mono/40">Not selected</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+                <div id="qb-view-booking" class="p-6 sm:p-8">
+                    <p class="text-xs font-extrabold uppercase tracking-widest text-neon">Quick booking</p>
+                    <h2 id="qb-modal-title" class="mt-1 text-4xl font-black uppercase tracking-tighter">Book a Session</h2>
 
-          <div class="mt-6">
-            <div class="mb-2 flex items-end justify-between">
-              <p class="text-xs font-bold uppercase tracking-wider text-mono/70">Subscription</p>
-              <p id="qb-visits-label" class="text-sm font-black tracking-tight"></p>
-            </div>
-            <div class="h-3 overflow-hidden rounded-md bg-card">
-              <div id="qb-visits-bar" class="h-full rounded-md transition-all duration-700 ease-out" style="width:0%"></div>
-            </div>
-            <p id="qb-visits-hint" class="mt-1.5 text-xs font-medium text-mono/50"></p>
-          </div>
+                    <form id="qb-booking-form" class="mt-6 space-y-4" novalidate>
+                        <div>
+                            <label for="qb-type" class="mb-1.5 block text-xs font-bold uppercase tracking-wider text-mono/70">Type</label>
+                            <div class="relative">
+                                <select id="qb-type" class="w-full appearance-none rounded-md border border-white/10 bg-card px-4 py-3 pr-10 text-sm font-semibold text-white transition-colors focus:border-neon focus:outline-none focus:ring-2 focus:ring-neon/30">
+                                    <option value="">Select type</option>
+                                    <option>Group Class</option>
+                                    <option>Personal Training</option>
+                                </select>
+                                <svg class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+                            </div>
+                        </div>
+                        <div class="grid gap-4 sm:grid-cols-2">
+                            <div>
+                                <label for="qb-date" class="mb-1.5 block text-xs font-bold uppercase tracking-wider text-mono/70">Date</label>
+                                <div class="relative">
+                                    <select id="qb-date" class="w-full appearance-none rounded-md border border-white/10 bg-card px-4 py-3 pr-10 text-sm font-semibold text-white transition-colors focus:border-neon focus:outline-none focus:ring-2 focus:ring-neon/30"></select>
+                                    <svg class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="qb-trainer" class="mb-1.5 block text-xs font-bold uppercase tracking-wider text-mono/70">Trainer</label>
+                                <div class="relative">
+                                    <select id="qb-trainer" class="w-full appearance-none rounded-md border border-white/10 bg-card px-4 py-3 pr-10 text-sm font-semibold text-white transition-colors focus:border-neon focus:outline-none focus:ring-2 focus:ring-neon/30"></select>
+                                    <svg class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
 
-          <button id="qb-submit-btn" type="button" class="mt-5 w-full rounded-md bg-neon py-3.5 text-base font-black uppercase tracking-wider text-ink shadow-lg shadow-neon/30 transition-[transform,colors,box-shadow] duration-300 transform-gpu will-change-transform hover:-translate-y-0.5 hover:shadow-xl hover:shadow-neon/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-ink">
-            Confirm Booking
-          </button>
+                    <div id="qb-slot-card" class="mt-6 overflow-hidden rounded-lg border border-dashed border-white/20 bg-card/60 transition-colors duration-300">
+                        <div class="flex items-stretch">
+                            <div id="qb-slot-accent" class="w-1.5 bg-white/10 transition-colors duration-300"></div>
+                            <div class="flex-1 p-4">
+                                <div class="flex items-start justify-between gap-3">
+                                    <div>
+                                        <p id="qb-slot-type" class="text-2xl font-black uppercase leading-none tracking-tighter text-white/30">Your slot</p>
+                                        <p id="qb-slot-date" class="mt-1.5 text-sm font-semibold text-mono/40">Pick a date</p>
+                                    </div>
+                                    <span id="qb-slot-chip" class="rounded-md bg-white/10 px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-widest text-mono/50">Draft</span>
+                                </div>
+                                <div class="mt-3 flex items-center gap-2.5">
+                                    <span id="qb-slot-avatar" class="flex h-9 w-9 items-center justify-center rounded-md bg-white/10 text-xs font-black text-mono/40">?</span>
+                                    <div>
+                                        <p class="text-[11px] font-bold uppercase tracking-wider text-mono/40">Trainer</p>
+                                        <p id="qb-slot-trainer" class="text-sm font-bold text-mono/40">Not selected</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <div class="mb-2 flex items-end justify-between">
+                            <p class="text-xs font-bold uppercase tracking-wider text-mono/70">Subscription</p>
+                            <p id="qb-visits-label" class="text-sm font-black tracking-tight"></p>
+                        </div>
+                        <div class="h-3 overflow-hidden rounded-md bg-card">
+                            <div id="qb-visits-bar" class="h-full rounded-md transition-all duration-700 ease-out" style="width:0%"></div>
+                        </div>
+                        <p id="qb-visits-hint" class="mt-1.5 text-xs font-medium text-mono/50"></p>
+                    </div>
+
+                    <button id="qb-submit-btn" type="button" class="mt-5 w-full rounded-md bg-neon py-3.5 text-base font-black uppercase tracking-wider text-ink shadow-lg shadow-neon/30 transition-[transform,colors,box-shadow] duration-300 transform-gpu will-change-transform hover:-translate-y-0.5 hover:shadow-xl hover:shadow-neon/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-ink">
+                        Confirm Booking
+                    </button>
+                </div>
+
+                <div id="qb-view-nosub" class="hidden p-8 text-center sm:p-10">
+                    <div class="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-lg bg-card text-violet">
+                        <svg class="h-8 w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    </div>
+                    <h2 class="text-3xl font-black uppercase tracking-tighter">No active subscription</h2>
+                    <p class="mx-auto mt-2 max-w-xs text-sm text-mono/60">You need an active membership to book sessions.</p>
+                    <button id="qb-buy-btn" type="button" class="mt-7 w-full rounded-md bg-neon py-4 text-lg font-black uppercase tracking-wider text-ink shadow-lg shadow-neon/30 transition-[transform,colors,box-shadow] duration-300 transform-gpu will-change-transform hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white">Buy Membership</button>
+                    <button id="qb-back-btn" type="button" class="mt-3 w-full rounded-md py-3 text-xs font-bold uppercase tracking-widest text-mono/60 transition-colors hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-neon">Back</button>
+                </div>
+            </div>
         </div>
 
-        <div id="qb-view-nosub" class="hidden p-8 text-center sm:p-10">
-          <div class="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-lg bg-card text-violet">
-            <svg class="h-8 w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          </div>
-          <h2 class="text-3xl font-black uppercase tracking-tighter">No active subscription</h2>
-          <p class="mx-auto mt-2 max-w-xs text-sm text-mono/60">You need an active membership to book sessions.</p>
-          <button id="qb-buy-btn" type="button" class="mt-7 w-full rounded-md bg-neon py-4 text-lg font-black uppercase tracking-wider text-ink shadow-lg shadow-neon/30 transition-[transform,colors,box-shadow] duration-300 transform-gpu will-change-transform hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white">Buy Membership</button>
-          <button id="qb-back-btn" type="button" class="mt-3 w-full rounded-md py-3 text-xs font-bold uppercase tracking-widest text-mono/60 transition-colors hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-neon">Back</button>
-        </div>
-      </div>
-    </div>
-
-    <div id="toasts" class="pointer-events-none fixed bottom-4 right-4 flex w-[calc(100%-2rem)] max-w-sm flex-col gap-3 sm:bottom-6 sm:right-6" style="z-index: 9999;" aria-live="polite" aria-atomic="false"></div>
+        <div id="toasts" class="pointer-events-none fixed bottom-4 right-4 flex w-[calc(100%-2rem)] max-w-sm flex-col gap-3 sm:bottom-6 sm:right-6" style="z-index: 9999;" aria-live="polite" aria-atomic="false"></div>
+    }
 
     <!-- Footer -->
     <footer class="relative mt-auto overflow-hidden border-t border-white/10 bg-charcoal">
-        <p class="pointer-events-none absolute inset-x-0 -bottom-[0.18em] select-none whitespace-nowrap text-center text-[21vw] font-black uppercase leading-none tracking-tighter text-white/[0.04]" aria-hidden="true">SPORTHUB</p>
+        <p class="pointer-events-none absolute inset-x-0 -bottom-[0.18em] select-none whitespace-nowrap text-center text-[21vw] font-black uppercase leading-none tracking-tighter text-white/[0.04]" aria-hidden="true">
+            SPORTHUB
+        </p>
+
         <div class="relative mx-auto grid max-w-7xl gap-10 px-4 pb-40 pt-14 sm:px-6 sm:pb-56 md:grid-cols-3">
+
             <div>
-                <a asp-controller="Home" asp-action="Index" class="text-2xl font-black uppercase tracking-tighter focus:outline-none focus-visible:ring-2 focus-visible:ring-neon">Sport<span class="text-neon">HUB</span></a>
-                <address class="mt-4 text-sm not-italic leading-relaxed text-mono/70">45 Proskurivska St,<br />Khmelnytskyi</address>
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="text-2xl font-black uppercase tracking-tighter text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-neon">
+                    Sport<span class="text-neon">HUB</span>
+                </a>
+
+                <address class="mt-4 text-sm not-italic leading-relaxed text-mono/70">
+                    45 Proskurivska St,<br />
+                    Khmelnytskyi
+                </address>
             </div>
-            <nav aria-label="Footer navigation">
-                <h3 class="text-xs font-extrabold uppercase tracking-widest text-neon">Explore</h3>
-                <ul class="mt-4 space-y-3 text-sm text-mono/70">
-                    <li><a asp-controller="Trainer" asp-action="Index" class="transition-colors duration-300 hover:text-neon focus:outline-none focus-visible:text-neon">Coaches</a></li>
-                    <li><a asp-controller="Tariff" asp-action="Index" class="transition-colors duration-300 hover:text-neon focus:outline-none focus-visible:text-neon">Memberships</a></li>
-                    <li><a asp-controller="Schedule" asp-action="Index" class="transition-colors duration-300 hover:text-neon focus:outline-none focus-visible:text-neon">Schedule</a></li>
-                    <li><a asp-controller="Shop" asp-action="Index" class="transition-colors duration-300 hover:text-neon focus:outline-none focus-visible:text-neon">Shop</a></li>
+
+            <nav aria-label="SportHUB services">
+                <h3 class="text-sm font-extrabold uppercase tracking-widest text-neon">
+                    SportHUB Services
+                </h3>
+
+                <ul class="mt-5 space-y-3.5 text-base font-medium">
+                    <li>
+                        <a asp-controller="Trainer"
+                           asp-action="Index"
+                           class="text-white/75 transition-colors duration-300 hover:text-neon focus:outline-none focus-visible:text-neon">
+                            Coaches
+                        </a>
+                    </li>
+
+                    <li>
+                        <a asp-controller="Tariff"
+                           asp-action="Index"
+                           class="text-white/75 transition-colors duration-300 hover:text-neon focus:outline-none focus-visible:text-neon">
+                            Memberships
+                        </a>
+                    </li>
+
+                    <li>
+                        <a asp-controller="Schedule"
+                           asp-action="Index"
+                           class="text-white/75 transition-colors duration-300 hover:text-neon focus:outline-none focus-visible:text-neon">
+                            Schedule
+                        </a>
+                    </li>
+
+                    <li>
+                        <a asp-controller="Shop"
+                           asp-action="Index"
+                           class="text-white/75 transition-colors duration-300 hover:text-neon focus:outline-none focus-visible:text-neon">
+                            Shop
+                        </a>
+                    </li>
                 </ul>
             </nav>
-            <nav aria-label="Legal navigation">
-                <h3 class="text-sm font-extrabold uppercase tracking-widest text-neon">Explore</h3>
-                <ul class="mt-4 space-y-3 text-base font-medium text-mono/80">
-                    <li><a asp-controller="Account" asp-action="Login" class="transition-colors duration-300 hover:text-neon focus:outline-none focus-visible:text-neon">Log In</a></li>
-                    <li><a href="#" class="transition-colors duration-300 hover:text-neon focus:outline-none focus-visible:text-neon">Privacy Policy</a></li>
-                    <li><a href="#" class="transition-colors duration-300 hover:text-neon focus:outline-none focus-visible:text-neon">Terms of Use</a></li>
-                    <li><a asp-controller="Faq" asp-action="Index" class="transition-colors duration-300 hover:text-neon focus:outline-none focus-visible:text-neon">FAQ</a></li>
+
+            <nav aria-label="Account and support">
+                <h3 class="text-sm font-extrabold uppercase tracking-widest text-neon">
+                    Account &amp; Support
+                </h3>
+
+                <ul class="mt-5 space-y-3.5 text-base font-medium">
+                    <li>
+                        <a asp-controller="Account"
+                           asp-action="Login"
+                           class="text-white/75 transition-colors duration-300 hover:text-neon focus:outline-none focus-visible:text-neon">
+                            Log In
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#"
+                            style="color: rgba(255, 255, 255, 0.75) !important;"
+                           class="text-white/75 transition-colors duration-300 hover:text-neon focus:outline-none focus-visible:text-neon">
+                            Privacy Policy
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#"
+                            style="color: rgba(255, 255, 255, 0.75) !important;"
+                           class="text-white/75 transition-colors duration-300 hover:text-neon focus:outline-none focus-visible:text-neon">
+                            Terms of Use
+                        </a>
+                    </li>
+
+                    <li>
+                        <a asp-controller="Faq"
+                           asp-action="Index"
+                           class="text-white/75 transition-colors duration-300 hover:text-neon focus:outline-none focus-visible:text-neon">
+                            FAQ
+                        </a>
+                    </li>
                 </ul>
             </nav>
+
         </div>
-        <p class="relative border-t border-white/10 py-5 text-center text-xs text-mono/50">&copy; 2026 SportHUB. Built for strength.</p>
+
+        <p class="relative border-t border-white/10 py-5 text-center text-xs text-mono/50">
+            © 2026 SportHUB. Built for strength.
+        </p>
     </footer>
 
-    <!-- Scripts -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
@@ -337,6 +503,57 @@
               })
               .catch(() => {});
       });
+      
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            var menu = document.getElementById('user-menu');
+            if (menu && menu.contains(document.activeElement)) document.activeElement.blur();
+        }
+      });
+
+        (function () {
+            const toggle = document.getElementById('user-menu-toggle');
+            const menu = document.getElementById('user-menu-panel');
+            const arrow = document.getElementById('user-menu-arrow');
+
+            if (!toggle || !menu) return;
+
+            function setMenuOpen(open) {
+                toggle.setAttribute('aria-expanded', String(open));
+
+                menu.classList.toggle('invisible', !open);
+                menu.classList.toggle('opacity-0', !open);
+                menu.classList.toggle('translate-y-1', !open);
+
+                menu.classList.toggle('visible', open);
+                menu.classList.toggle('opacity-100', open);
+                menu.classList.toggle('translate-y-0', open);
+
+                if (arrow) {
+                    arrow.classList.toggle('rotate-180', open);
+                }
+            }
+
+            toggle.addEventListener('click', function (e) {
+                e.stopPropagation();
+
+                const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+                setMenuOpen(!isOpen);
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!menu.contains(e.target) && !toggle.contains(e.target)) {
+                    setMenuOpen(false);
+                }
+            });
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    setMenuOpen(false);
+                    toggle.blur();
+                }
+            });
+        })();
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

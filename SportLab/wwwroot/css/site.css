@@ -44,3 +44,13 @@ html {
 #qb-scroll-area::-webkit-scrollbar-thumb:hover {
     background: #AAFF00;
 }
+
+#faqAccordion .accordion-collapse {
+    visibility: visible;
+}
+
+header#site-header {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 999999 !important;
+}

@@ -30,7 +30,6 @@
             <button type="button" class="sh-modal-close" data-sh-close aria-label="Close"><svg class="sh-ico sh-ico-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg></button>
         </div>
         <div class="sh-modal-body">
-            <!-- Видаляємо novalidate, щоб працював jQuery Unobtrusive -->
             <form class="sh-form" id="sh-schedule-form">
                 @Html.AntiForgeryToken()
                 
@@ -44,7 +43,6 @@
                     </label>
                     <label class="sh-field">Day
                         <div class="sh-field-body">
-                            <!-- Це поле не є частиною моделі WorkoutSlot, тому залишаємо звичайний name -->
                             <select class="sh-input" name="day">
                                 <option value="1">Mon</option><option value="2">Tue</option><option value="3">Wed</option>
                                 <option value="4">Thu</option><option value="5">Fri</option><option value="6">Sat</option><option value="7">Sun</option>
@@ -67,7 +65,6 @@
                 
                 <label class="sh-field">Coach
                     <div class="sh-field-body">
-                        <!-- Поле для тренера (в API воно передається як рядок) -->
                         <select class="sh-input" name="coach" required>
                             <option value="" disabled selected>Select a trainer</option>
                             @foreach (var trainer in ViewBag.Trainers)

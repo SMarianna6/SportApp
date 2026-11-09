@@ -8,7 +8,6 @@
 <link rel="stylesheet" href="~/css/shop.css" asp-append-version="true" />
 
 <div class="container my-4">
-    <!-- Breadcrumb -->
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-decoration-none">Home</a></li>
@@ -20,12 +19,11 @@
     <h1 class="h3 fw-bold mb-4">Complete Your Order</h1>
 
     <div class="row g-5">
-        <!-- Left: Checkout Form -->
         <div class="col-lg-7">
             <form asp-action="Checkout" method="post" id="checkoutForm">
                 @Html.AntiForgeryToken()
 
-                <!-- Section 1: Contact Information -->
+                <!-- 1. Contact Details -->
                 <div class="bg-white p-4 rounded-4 border shadow-sm mb-4">
                     <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
                         <span class="badge bg-primary rounded-circle">1</span> Contact Details
@@ -52,7 +50,7 @@
                     </div>
                 </div>
 
-                <!-- Section 2: Delivery Method -->
+                <!-- 2. Delivery Options -->
                 <div class="bg-white p-4 rounded-4 border shadow-sm mb-4">
                     <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
                         <span class="badge bg-primary rounded-circle">2</span> Delivery Options
@@ -101,8 +99,7 @@
                         </div>
                     </div>
 
-                    <!-- Address inputs (shown for courier/post) -->
-                    <div id="addressSection" class="mt-3">
+                    <div id="addressSection" class="mt-3" style="display: none;">
                         <div class="row g-3">
                             <div class="col-md-5">
                                 <label asp-for="City" class="form-label fw-semibold small">City / Town</label>
@@ -120,33 +117,68 @@
                     </div>
                 </div>
 
-                <!-- Section 3: Payment Method -->
+                <!-- 3. Payment Method -->
                 <div class="bg-white p-4 rounded-4 border shadow-sm mb-4">
                     <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
                         <span class="badge bg-primary rounded-circle">3</span> Payment Method
                     </h5>
 
-                    <div class="payment-method-selector mb-3">
-                        <div class="payment-method-card active" data-method="card">
-                            <i class="bi bi-credit-card-2-front text-primary"></i>
-                            <span>Credit / Debit Card</span>
-                        </div>
-                        <div class="payment-method-card" data-method="applepay">
-                            <i class="bi bi-apple text-dark"></i>
-                            <span>Apple / Google Pay</span>
-                        </div>
-                        <div class="payment-method-card" data-method="cash">
-                            <i class="bi bi-cash-stack text-success"></i>
-                            <span>Cash on Delivery / Pickup</span>
+                    <div class="row g-3 mb-3">
+                        <div class="col-12">
+                            <div class="form-check p-3 border rounded-3 mb-2 delivery-option-tile">
+                                <input class="form-check-input ms-0 me-3" type="radio" name="PaymentMethod" id="payCard" value="card" checked />
+                                <label class="form-check-label w-100 cursor-pointer" for="payCard">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <strong><i class="bi bi-credit-card-2-front text-primary me-2"></i>Credit / Debit Card</strong>
+                                            <div class="text-muted small">Pay securely with your bank card</div>
+                                        </div>
+                                        <span class="badge bg-primary-subtle text-primary">Online Payment</span>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="form-check p-3 border rounded-3 delivery-option-tile">
+                                <input class="form-check-input ms-0 me-3" type="radio" name="PaymentMethod" id="payCash" value="cash" />
+                                <label class="form-check-label w-100 cursor-pointer" for="payCash">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <strong><i class="bi bi-cash-stack text-success me-2"></i>Cash on Delivery / Pickup</strong>
+                                            <div class="text-muted small">Pay when you receive your order</div>
+                                        </div>
+                                        <span class="badge bg-success-subtle text-success">Pay Later</span>
+                                    </div>
+                                </label>
+                            </div>
                         </div>
                     </div>
-                    <input type="hidden" asp-for="PaymentMethod" id="checkoutPaymentMethod" value="card" />
 
+                    <!-- Card Details Box (Toggles automatically) -->
+                    <div id="cardDetailsSection" class="mt-3 p-3 border rounded-3 bg-light">
+                        <h6 class="fw-bold small mb-2"><i class="bi bi-credit-card me-1"></i> Card Details (Simulation)</h6>
+                        <div class="row g-2">
+                            <div class="col-12">
+                                <input type="text" id="cardNumberInput" class="form-control form-control-sm" placeholder="4141 4141 4141 4141" maxlength="19" required />
+                            </div>
+                            <div class="col-6">
+                                <input type="text" id="cardExpiryInput" class="form-control form-control-sm" placeholder="MM/YY" maxlength="5" required />
+                            </div>
+                            <div class="col-6">
+                                <input type="password" id="cardCvvInput" class="form-control form-control-sm" placeholder="CVV" maxlength="3" required />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Terms Checkbox -->
                     <div class="form-check mt-3">
-                        <input class="form-check-input" type="checkbox" id="termsCheck" checked required />
+                        <input class="form-check-input" type="checkbox" id="termsCheck" />
                         <label class="form-check-label text-muted small" for="termsCheck">
                             I confirm that the entered order information is correct and agree to SportLab store terms.
                         </label>
+                    </div>
+
+                    <div id="termsError" class="text-danger small mt-1" style="display: none;">
+                        You must agree to the terms before placing an order.
                     </div>
                 </div>
 
@@ -156,7 +188,7 @@
             </form>
         </div>
 
-        <!-- Right: Order Items & Breakdown -->
+        <!-- Right Column: Order Summary Sidebar -->
         <div class="col-lg-5">
             <div class="bg-white p-4 rounded-4 border shadow-sm sticky-top" style="top: 2rem;">
                 <h5 class="fw-bold mb-3">Items in Order (@Model.CartItems.Sum(i => i.Quantity))</h5>
@@ -165,8 +197,8 @@
                     @foreach (var item in Model.CartItems)
                     {
                         var photo = string.IsNullOrWhiteSpace(item.PhotoUrl)
-                            ? "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=100&h=100&fit=crop"
-                            : item.PhotoUrl;
+                        ? "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=100&h=100&fit=crop"
+                        : item.PhotoUrl;
 
                         <div class="d-flex align-items-center gap-3 py-2 border-bottom">
                             <img src="@photo" alt="@item.ProductName" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;" />
@@ -205,19 +237,87 @@
 </div>
 
 @section Scripts {
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Payment method selector
-        const cards = document.querySelectorAll(".payment-method-card");
-        const methodInput = document.getElementById("checkoutPaymentMethod");
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
 
-        cards.forEach(card => {
-            card.addEventListener("click", function () {
-                cards.forEach(c => c.classList.remove("active"));
-                this.classList.add("active");
-                methodInput.value = this.getAttribute("data-method");
-            });
+            // 1. Payment Method & Card Details Toggle
+            const radioPayCard = document.getElementById("payCard");
+            const radioPayCash = document.getElementById("payCash");
+            const cardDetailsSection = document.getElementById("cardDetailsSection");
+
+            const cardNumberInput = document.getElementById("cardNumberInput");
+            const cardExpiryInput = document.getElementById("cardExpiryInput");
+            const cardCvvInput = document.getElementById("cardCvvInput");
+
+            function togglePayment() {
+                if (radioPayCard && radioPayCard.checked) {
+                    cardDetailsSection.style.display = "block";
+                    if (cardNumberInput) cardNumberInput.required = true;
+                    if (cardExpiryInput) cardExpiryInput.required = true;
+                    if (cardCvvInput) cardCvvInput.required = true;
+                } else {
+                    cardDetailsSection.style.display = "none";
+                    if (cardNumberInput) cardNumberInput.required = false;
+                    if (cardExpiryInput) cardExpiryInput.required = false;
+                    if (cardCvvInput) cardCvvInput.required = false;
+                }
+            }
+
+            if (radioPayCard && radioPayCash) {
+                radioPayCard.addEventListener("change", togglePayment);
+                radioPayCash.addEventListener("change", togglePayment);
+                togglePayment();
+            }
+
+            // 2. Delivery Address Toggle
+            const radioPickup = document.getElementById("delivPickup");
+            const radioCourier = document.getElementById("delivCourier");
+            const radioPost = document.getElementById("delivPost");
+            const addressSection = document.getElementById("addressSection");
+            const cityInput = document.getElementById("City");
+            const addressInput = document.getElementById("Address");
+
+            function toggleAddress() {
+                if (radioPickup && radioPickup.checked) {
+                    addressSection.style.display = "none";
+                    if (cityInput) cityInput.required = false;
+                    if (addressInput) addressInput.required = false;
+                } else {
+                    addressSection.style.display = "block";
+                    if (cityInput) cityInput.required = true;
+                    if (addressInput) addressInput.required = true;
+                }
+            }
+
+            if (radioPickup && radioCourier && radioPost) {
+                radioPickup.addEventListener("change", toggleAddress);
+                radioCourier.addEventListener("change", toggleAddress);
+                radioPost.addEventListener("change", toggleAddress);
+                toggleAddress();
+            }
+
+            // 3. Terms & Conditions Validation
+            const form = document.getElementById("checkoutForm");
+            const termsCheck = document.getElementById("termsCheck");
+            const termsError = document.getElementById("termsError");
+
+            if (form && termsCheck) {
+                form.addEventListener("submit", function (e) {
+                    if (!termsCheck.checked) {
+                        e.preventDefault();
+                        if (termsError) termsError.style.display = "block";
+                        termsCheck.focus();
+                    } else {
+                        if (termsError) termsError.style.display = "none";
+                    }
+                });
+
+                termsCheck.addEventListener("change", function () {
+                    if (termsCheck.checked && termsError) {
+                        termsError.style.display = "none";
+                    }
+                });
+            }
         });
-    });
-</script>
+    </script>
 }

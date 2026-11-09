@@ -256,3 +256,7 @@
     z-index: 1090;
     min-width: 300px;
 }
+
+nav[aria-label="breadcrumb"] {
+    display: none !important;
+}
