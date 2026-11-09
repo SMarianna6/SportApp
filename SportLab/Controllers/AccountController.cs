@@ -49,7 +49,7 @@ namespace SportLab.Controllers
 
             var role = Roles.Normalize(user.Role);
 
-            var claims = new List<Claim>
+            var claims = new List<Claim> //Lab6 cookie auth by claims
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Name ?? user.Email),

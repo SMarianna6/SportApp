@@ -7,10 +7,8 @@ using System.Security.Claims;
 
 namespace SportLab.Controllers
 {
-    /// <summary>
-    /// Lab 6, Person 2: trainer features.
-    /// Only trainers and administrators may open the trainer cabinet.
-    /// </summary>
+    //Lab 6, trainer features.
+   
     [Authorize(Roles = Roles.TrainerRoles)]
     public class TrainerController : Controller
     {

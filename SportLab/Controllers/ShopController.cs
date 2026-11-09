@@ -31,7 +31,7 @@ namespace SportLab.Controllers
                 var term = search.Trim().ToLower();
                 query = query.Where(p => 
                     (p.Name != null && p.Name.ToLower().Contains(term)) ||
-                    (p.Description != null && p.Description.ToLower().Contains(term))
+                    (p.Description != null && p.Description.ToLower().Contains(term)) //Lab 5
                 );
             }
 

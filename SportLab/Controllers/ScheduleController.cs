@@ -7,10 +7,7 @@ using System.Security.Claims;
 
 namespace SportLab.Controllers
 {
-    /// <summary>
-    /// Lab 6, Person 2: client (registered user) features.
-    /// The schedule itself is public, but booking and cancelling require a client account.
-    /// </summary>
+   
     public class ScheduleController : Controller
     {
         private readonly SportLabContext _context;
@@ -37,7 +34,7 @@ namespace SportLab.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Book(int id)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid)//Lab7
             {
                 TempData["ErrorMessage"] = "Invalid booking request.";
                 return RedirectToAction(nameof(Index));

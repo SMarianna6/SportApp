@@ -7,7 +7,9 @@ using SportLab.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<SportLabContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("SportLabContext")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SportLabContext"))
+    .ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning)));
+    
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>

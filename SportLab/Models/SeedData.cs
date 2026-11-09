@@ -224,10 +224,9 @@ namespace SportLab.Models
             }
         }
 
-        /// <summary>
+        
         /// Creates the accounts used to demonstrate the Lab 6 role scenarios.
-        /// The method is idempotent: it only adds an account when that role is missing.
-        /// </summary>
+        
         private static void EnsureStaffAccounts(SportLabContext context)
         {
             if (!context.Users.Any(u => u.Email == "admin@sportlab.ua"))
@@ -254,7 +253,7 @@ namespace SportLab.Models
                 });
             }
 
-            // Records created before Lab 6 may still store the legacy "Admin" value.
+            
             foreach (var legacyAdmin in context.Users.Where(u => u.Role == Roles.AdminAlias).ToList())
             {
                 legacyAdmin.Role = Roles.Administrator;
