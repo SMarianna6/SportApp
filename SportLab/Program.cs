@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using SportLab.Hubs;
 using Microsoft.EntityFrameworkCore;
 using SportLab.Data;
 using SportLab.Models;
@@ -18,6 +19,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 builder.Services.AddAuthorization();
+
+builder.Services.AddSignalR();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddDistributedMemoryCache();
@@ -55,5 +58,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
+
+app.MapHub<MessagesHub>("/messagesHub");
 
 app.Run();

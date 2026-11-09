@@ -1,0 +1,58 @@
+@model SportLab.Models.WorkoutSlot
+@{
+    ViewData["Title"] = "Create Workout Slot";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="min-h-screen bg-[#111] text-white px-4 py-8 sm:px-8">
+    <div class="mx-auto max-w-xl">
+
+        <div class="mb-8">
+            <a asp-action="Dashboard" class="mb-4 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-white/40 transition-colors hover:text-neon">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+                Back to Dashboard
+            </a>
+            <p class="text-xs font-extrabold uppercase tracking-widest text-neon">New Session</p>
+            <h1 class="mt-1 text-4xl font-black uppercase tracking-tighter">Create Slot</h1>
+        </div>
+
+        <div class="rounded-lg border border-white/10 bg-[#1a1a1a] p-6 sm:p-8">
+            <form asp-action="CreateSlot" method="post" class="space-y-5">
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly" class="rounded-md border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-400"></div>
+
+                <div>
+                    <label asp-for="ActivityName" class="mb-1.5 block text-xs font-bold uppercase tracking-wider text-white/60"></label>
+                    <input asp-for="ActivityName" class="w-full rounded-md border border-white/10 bg-[#111] px-4 py-3 text-sm text-white placeholder-white/30 transition-colors focus:border-neon focus:outline-none focus:ring-2 focus:ring-neon/20"
+                           placeholder="e.g. CrossFit, Yoga, Boxing..." />
+                    <span asp-validation-for="ActivityName" class="mt-1 text-xs text-red-400"></span>
+                </div>
+
+                <div class="grid gap-4 sm:grid-cols-2">
+                    <div>
+                        <label asp-for="StartTime" class="mb-1.5 block text-xs font-bold uppercase tracking-wider text-white/60"></label>
+                        <input asp-for="StartTime" type="datetime-local" class="w-full rounded-md border border-white/10 bg-[#111] px-4 py-3 text-sm text-white transition-colors focus:border-neon focus:outline-none focus:ring-2 focus:ring-neon/20"
+                               style="color-scheme: dark;" />
+                        <span asp-validation-for="StartTime" class="mt-1 text-xs text-red-400"></span>
+                    </div>
+                    <div>
+                        <label asp-for="EndTime" class="mb-1.5 block text-xs font-bold uppercase tracking-wider text-white/60"></label>
+                        <input asp-for="EndTime" type="datetime-local" class="w-full rounded-md border border-white/10 bg-[#111] px-4 py-3 text-sm text-white transition-colors focus:border-neon focus:outline-none focus:ring-2 focus:ring-neon/20"
+                               style="color-scheme: dark;" />
+                        <span asp-validation-for="EndTime" class="mt-1 text-xs text-red-400"></span>
+                    </div>
+                </div>
+
+                <button type="submit" class="mt-2 w-full rounded-md bg-neon py-3.5 text-sm font-extrabold uppercase tracking-widest text-black shadow-lg shadow-neon/20 transition-all hover:-translate-y-0.5 hover:shadow-neon/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">
+                    Create Slot
+                </button>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,7 +1,6 @@
-@model IEnumerable<SportLab.Models.Message>
+﻿@model IEnumerable<SportLab.Models.Message>
 
-@{
-    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+@{    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
     ViewData["Title"] = "Messages";
     
     bool isTrainer = User.IsInRole(Roles.Trainer);
@@ -74,7 +73,7 @@
                     <label for="msg-input" class="sr-only">Type a message</label>
                     <input id="msg-input" type="text" autocomplete="off" placeholder="Type a message" class="min-w-0 flex-1 bg-transparent px-3 py-3 text-sm text-white placeholder:text-mono/40 focus:outline-none" />
                     <button type="button" class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-mono/60 transition-colors hover:bg-white/5 hover:text-neon">
-                        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.4 11-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5"/></svg>
+                        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m21.4 11-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5"/></svg>
                     </button>
                 </div>
                 <button type="submit" class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-neon text-shell transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">
@@ -157,40 +156,13 @@
             
             var isTrainer = @isTrainer.ToString().ToLower();
 
-            var CHATS = isTrainer ? [
-                { id: 1, name: 'Kateryna Melnyk', online: true, typing: false, unread: 2, time: '10:42', goal: 'Weight Loss', weight: '72 kg', next: 'Tomorrow, 10:00 AM', accent: '#7D51FE',
-                  msgs: [
-                    { from: 'in', text: 'Hi Nazar! I finished the leg day routine, it was intense.', time: '10:21' },
-                    { from: 'out', text: 'Great job Kateryna! How did the squats feel at the new weight?', time: '10:24', read: true },
-                    { from: 'in', text: 'Heavy but doable. My knees were fine this time.', time: '10:30' },
-                    { from: 'out', workout: { title: 'Lower Body Power', duration: '45 min', level: 'Intermediate' }, time: '10:33', read: true },
-                    { from: 'in', text: 'Perfect, I will do it on Thursday. Are we still on for tomorrow?', time: '10:41' }
-                  ] },
-                { id: 2, name: 'Arsen Vyshnevetskyi', online: true, typing: true, unread: 0, time: '09:15', goal: 'Strength', weight: '95 kg', next: 'Friday, 6:00 PM', accent: '#AAFF00',
-                  msgs: [
-                    { from: 'out', text: 'Arsen, remember to log your deadlift numbers.', time: '09:02', read: true },
-                    { from: 'in', text: 'Will do, I hit a new PR yesterday: 160 kg.', time: '09:15' }
-                  ] }
-            ] : [
-                { id: 1, name: 'Nazar Dovhopiat', online: true, typing: false, unread: 1, time: '10:33', exp: '8 years, NASM certified', spec: 'Strength, CrossFit', next: 'Tomorrow, 10:00 AM', accent: '#AAFF00',
-                  msgs: [
-                    { from: 'out', text: 'Hi Nazar! I finished the leg day routine, it was intense.', time: '10:21', read: true },
-                    { from: 'in', text: 'Great job! How did the squats feel at the new weight?', time: '10:24' },
-                    { from: 'out', text: 'Heavy but doable. My knees were fine this time.', time: '10:30', read: true },
-                    { from: 'in', workout: { title: 'Lower Body Power', duration: '45 min', level: 'Intermediate' }, time: '10:33' }
-                  ] },
-                { id: 2, name: 'Support Team', online: false, typing: false, unread: 0, time: 'Yesterday', exp: 'SportHUB Staff', spec: 'Technical Support', next: 'Not scheduled', accent: '#7D51FE',
-                  msgs: [
-                    { from: 'in', text: 'Hello! Your issue with the payment method has been resolved.', time: '14:20' },
-                    { from: 'out', text: 'Thanks for the quick fix!', time: '14:35', read: true }
-                  ] }
-            ];
+            var CHATS = [];
 
             var MEDIA = [ ['#7D51FE', '#141414'], ['#AAFF00', '#333333'], ['#555555', '#141414'], ['#7D51FE', '#AAFF00'], ['#333333', '#7D51FE'], ['#AAFF00', '#141414'] ];
             var activeId = 1;
 
             function initials(n) { return n.split(' ').map(function (p) { return p[0]; }).join(''); }
-            function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+            function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&', '<': '<', '>': '>', '"': '"' }[c]; }); }
             function lastText(c) {
                 var m = c.msgs[c.msgs.length - 1];
                 return m.workout ? 'Workout: ' + m.workout.title : (m.from === 'out' ? 'You: ' : '') + m.text;
@@ -220,7 +192,7 @@
 
             function bubble(m) {
                 var out = m.from === 'out';
-                var meta = '<span class="mt-1 flex items-center gap-1 text-[11px] ' + (out ? 'justify-end text-mono/60' : 'text-mono/50') + '">' + m.time +
+                var meta = '<span class="mt-1 flex items-center gap-1 text-[11px] ' + (out ? 'justify-end text-mono/60' : 'text-mono/50') + '>' + m.time +
                     (out ? '<span class="' + (m.read ? 'text-neon' : 'text-mono/50') + '">' + (m.read ? CHECKS.read : CHECKS.sent) + '</span>' : '') + '</span>';
                 var body;
                 if (m.workout) {
@@ -289,7 +261,80 @@
             $('chat-back').addEventListener('click', showList);
 
             function now() { var d = new Date(); return ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); }
-            function push(msg) { var c = byId(activeId); c.msgs.push(msg); c.time = msg.time; renderList(); renderChat(); }
+            
+            // Initialize SignalR connection
+            function initSignalR() {
+                hubConnection = new signalR.HubConnectionBuilder()
+                    .withUrl('/messageshub', { accessTokenProvider: () => null })
+                    .build();
+
+                hubConnection.on('ReceiveMessages', function (conversationId, messages) {
+                    // Populate CHATS with existing messages from server
+                    CHATS = messages.map(m => ({
+                        id: m.SenderId < m.ReceiverId ? m.SenderId : m.ReceiverId,
+                        name: m.SenderName,
+                        online: true,
+                        typing: false,
+                        unread: 0,
+                        time: m.SentDate.toLocaleTimeString(),
+                        goal: '',
+                        weight: '',
+                        next: '',
+                        accent: '#7D51FE',
+                        msgs: m.msgs.map(msg => ({
+                            from: msg.FromCurrentUser ? 'out' : 'in',
+                            text: msg.Text,
+                            time: msg.SentDate.toLocaleTimeString(),
+                            read: false
+                        }))
+                    }));
+                    renderList(); renderChat();
+                });
+
+                hubConnection.on('NewMessage', function (message) {
+                    // Add new message to the active conversation
+                    var c = byId(activeId);
+                    if (c) {
+                        c.msgs.push({
+                            from: message.FromCurrentUser ? 'out' : 'in',
+                            text: message.Text,
+                            time: message.SentDate.toLocaleTimeString(),
+                            read: false
+                        });
+                        renderChat();
+                    }
+                });
+
+                hubConnection.start().then(function () {
+                    // After connection, fetch existing conversations
+                    fetch('/Messages/GetConversation/' + activeId)
+                        .then(response => response.json())
+                        .then(data => {
+                            // Data format: array of { id, name, msgs: [...] }
+                            CHATS = data;
+                            renderList(); renderChat();
+                        });
+                }).catch(err => console.error('SignalR error:', err));
+            }
+
+            // Initialize SignalR when the DOM is ready
+            document.addEventListener('DOMContentLoaded', initSignalR);
+
+            function push(msg) {
+                var c = byId(activeId);
+                if (c) {
+                    c.msgs.push(msg);
+                    c.time = msg.time;
+                    // Also send via SignalR
+                    if (hubConnection && hubConnection.state === signalR.HubConnectionState.Connected) {
+                        var from = msg.from === 'out' ? 'receiver' : 'sender';
+                        hubConnection.send('SendMessage', activeId, msg.text).then(() => {
+                            // Message sent successfully
+                        }).catch(err => console.error('Send error:', err));
+                    }
+                    renderList(); renderChat();
+                }
+            }
 
             $('composer').addEventListener('submit', function (e) {
                 e.preventDefault(); var input = $('msg-input'), text = input.value.trim();
@@ -322,7 +367,7 @@
             function closeInfo() { if (window.matchMedia('(min-width: 1280px)').matches) return; infoOverlayClasses.forEach(function (c) { infoCol.classList.remove(c); }); infoCol.classList.add('hidden'); }
             $('info-btn').addEventListener('click', openInfo);
             $('info-close').addEventListener('click', closeInfo);
-            window.matchMedia('(min-width: 1280px)').addEventListener('change', function (e) {
+            window.matchMedia('(max-width: 1023px)').addEventListener('change', function (e) {
                 if (e.matches) { infoOverlayClasses.forEach(function (c) { infoCol.classList.remove(c); }); infoCol.classList.add('hidden', 'xl:block'); }
             });
 
