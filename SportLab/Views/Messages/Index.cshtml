@@ -31,14 +31,14 @@
             {
                 <li>
                     <button type="button" data-id="@contact.Id" class="chat-item flex w-full items-center gap-3 border-l-4 px-4 py-3.5 text-left transition-colors hover:bg-white/5">
-                        <span class="relative shrink-0"><span class="flex h-12 w-12 items-center justify-center rounded-full text-sm font-extrabold bg-violet text-white">@contact.Name</span></span>
+                        <span class="relative shrink-0"><span class="flex h-12 w-12 items-center justify-center rounded-full text-sm font-extrabold bg-violet text-white">@(contact.Name != null && contact.Name.Length > 0 ? contact.Name.Substring(0, 1) : "?")</span></span>
                         <span class="min-w-0 flex-1">
                             <span class="flex items-baseline justify-between gap-2">
-                                <span class="truncate text-sm font-extrabold">@contact.Name</span>
+                                <span class="min-w-0 truncate text-sm font-extrabold" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">@contact.Name</span>
                                 <span class="shrink-0 text-[11px] font-semibold text-mono/50">@contact.LastMessageDate.ToString("HH:mm")</span>
                             </span>
                             <span class="mt-0.5 flex items-center justify-between gap-2">
-                                <span class="truncate text-xs @(contact.UnreadCount > 0 ? "font-semibold text-white" : "text-mono/70")">@(string.IsNullOrEmpty(contact.LastMessageText) ? "No messages yet" : contact.LastMessageText)</span>
+                                <span class="min-w-0 truncate text-xs @(contact.UnreadCount > 0 ? "font-semibold text-white" : "text-mono/70")" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">@(string.IsNullOrEmpty(contact.LastMessageText) ? "No messages yet" : contact.LastMessageText)</span>
                                 @if (contact.UnreadCount > 0)
                                 {
                                     <span class="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-violet px-1.5 text-[11px] font-extrabold text-white">@contact.UnreadCount</span>
@@ -194,7 +194,8 @@
             function initials(n) { return n.split(' ').map(function (p) { return p[0]; }).join(''); }
             function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&', '<': '<', '>': '>', '"': '"' }[c]; }); }
             function lastText(c) {
-                var m = c.msgs[c.msgs.length - 1];
+                var m = c.msgs && c.msgs.length ? c.msgs[c.msgs.length - 1] : null;
+                if (!m) return 'No messages yet';
                 return m.workout ? 'Workout: ' + m.workout.title : (m.from === 'out' ? 'You: ' : '') + m.text;
             }
             function byId(id) { return CHATS.filter(function (c) { return c.id === id; })[0]; }
@@ -239,6 +240,7 @@
 
             function renderChat() {
                 var c = byId(activeId);
+                if (!c) return;
                 $('head-avatar').textContent = initials(c.name);
                 $('head-name').textContent = c.name;
                 var st = $('head-status');
@@ -253,20 +255,21 @@
                     st.textContent = 'Offline';
                 }
                 var box = $('messages');
-                box.innerHTML = '<p class="mx-auto w-fit rounded-full bg-card px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-mono/60">Today</p>' + c.msgs.map(bubble).join('');
+                var msgs = c.msgs || [];
+                box.innerHTML = '<p class="mx-auto w-fit rounded-full bg-card px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-mono/60">Today</p>' + msgs.map(bubble).join('');
                 box.scrollTop = box.scrollHeight;
 
                 $('info-avatar').textContent = initials(c.name);
                 $('info-name').textContent = c.name;
                 
                 if (isTrainer) {
-                    $('info-goal').textContent = c.goal;
-                    $('info-weight').textContent = c.weight;
+                    $('info-goal').textContent = c.goal || '';
+                    $('info-weight').textContent = c.weight || '';
                 } else {
-                    $('info-exp').textContent = c.exp;
-                    $('info-spec').textContent = c.spec;
+                    $('info-exp').textContent = c.exp || '';
+                    $('info-spec').textContent = c.spec || '';
                 }
-                $('info-next').textContent = c.next;
+                $('info-next').textContent = c.next || '';
 
                 $('media-grid').innerHTML = MEDIA.map(function (g, i) {
                     return '<li><button type="button" class="relative block aspect-square w-full overflow-hidden rounded-md transition-transform duration-300 hover:scale-105" style="background:linear-gradient(135deg,' + g[0] + ',' + g[1] + ')">' +
@@ -275,10 +278,24 @@
             }
 
             function selectChat(id) {
-                activeId = id; var c = byId(id); c.unread = 0;
-                renderList(); renderChat();
+                activeId = id;
+                var c = byId(id);
+                if (c) { c.unread = 0; }
+                renderList();
                 $('chat-list-col').classList.add('hidden', 'lg:flex');
                 $('chat-col').classList.remove('hidden'); $('chat-col').classList.add('flex');
+                loadConversation(id);
+            }
+
+            function loadConversation(id) {
+                return fetch('/Messages/GetConversation/' + id)
+                    .then(function (response) { return response.json(); })
+                    .then(function (data) {
+                        // Data format: array of { id, name, msgs: [...] }
+                        CHATS = data;
+                        renderList(); renderChat();
+                    })
+                    .catch(function (err) { console.error('Failed to load conversation:', err); });
             }
 
             function showList() {
@@ -337,13 +354,7 @@
 
                 hubConnection.start().then(function () {
                     // After connection, fetch existing conversations
-                    fetch('/Messages/GetConversation/' + activeId)
-                        .then(response => response.json())
-                        .then(data => {
-                            // Data format: array of { id, name, msgs: [...] }
-                            CHATS = data;
-                            renderList(); renderChat();
-                        });
+                    return loadConversation(activeId);
                 }).catch(err => console.error('SignalR error:', err));
             }
 
