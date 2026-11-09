@@ -25,11 +25,156 @@ namespace SportLab.Controllers
         public async Task<IActionResult> Index()
         {
             var userId = CurrentUserId();
+            var userRole = User.IsInRole(Roles.Trainer) ? "Trainer" : User.IsInRole(Roles.Client) ? "Client" : "Admin";
+
+            // Build contact list based on role and actual booking relationships
+            var contacts = new List<ContactViewModel>();
+
+            if (userRole == "Admin")
+            {
+                // Admin: show all trainers and clients
+                var allUsers = await _context.Users
+                    .Where(u => u.Role == Roles.Trainer || u.Role == Roles.Client)
+                    .ToListAsync();
+
+                foreach (var u in allUsers)
+                {
+                    // Count unread messages from this user to admin
+                    int unreadCount = 0;
+                    if (User.IsInRole(Roles.Administrator) || User.IsInRole(Roles.AdminAlias))
+                    {
+                        unreadCount = _context.Messages
+                            .Count(m => m.SenderId == u.Id && m.ReceiverId == userId && !m.IsRead);
+                    }
+
+                    // Get last message with this user
+                    var lastMessage = _context.Messages
+                        .Where(m => m.SenderId == u.Id && m.ReceiverId == userId ||
+                                   m.SenderId == userId && m.ReceiverId == u.Id)
+                        .OrderByDescending(m => m.SentDate)
+                        .FirstOrDefault();
+
+                    contacts.Add(new ContactViewModel
+                    {
+                        Id = u.Id,
+                        Name = u.Name,
+                        Role = u.Role,
+                        UnreadCount = unreadCount,
+                        HasConversation = lastMessage != null,
+                        LastMessageText = lastMessage?.Text,
+                        LastMessageDate = lastMessage?.SentDate ?? DateTime.MinValue
+                    });
+                }
+            }
+            else if (userRole == "Trainer")
+            {
+                // Trainer: show clients who booked slots + Admin
+                var clientIds = await _context.WorkoutSlots
+                    .Where(w => w.TrainerId == userId && w.UserId != null && w.Status == "Booked")
+                    .Select(w => w.User!.Id)
+                    .Distinct()
+                    .ToListAsync();
+
+                // Add admin
+                contacts.Add(new ContactViewModel
+                {
+                    Id = 0, // Special ID for admin
+                    Name = "Administrator",
+                    Role = "Administrator",
+                    UnreadCount = 0,
+                    HasConversation = true,
+                    LastMessageText = null,
+                    LastMessageDate = DateTime.MinValue
+                });
+
+                // Add clients who booked slots
+                foreach (var clientId in clientIds)
+                {
+                    var user = await _context.Users.FindAsync(clientId);
+                    if (user != null)
+                    {
+                        int unreadCount = _context.Messages
+                            .Count(m => m.SenderId == clientId && m.ReceiverId == userId && !m.IsRead);
+                        // Get last message with this client
+                        var lastMessage = _context.Messages
+                            .Where(m => m.SenderId == clientId && m.ReceiverId == userId ||
+                                       m.SenderId == userId && m.ReceiverId == clientId)
+                            .OrderByDescending(m => m.SentDate)
+                            .FirstOrDefault();
+                        contacts.Add(new ContactViewModel
+                        {
+                            Id = clientId,
+                            Name = user.Name,
+                            Role = user.Role,
+                            UnreadCount = unreadCount,
+                            HasConversation = lastMessage != null,
+                            LastMessageText = lastMessage?.Text,
+                            LastMessageDate = lastMessage?.SentDate ?? DateTime.MinValue
+                        });
+                    }
+                }
+            }
+            else // Client
+            {
+                // Client: show trainers they have bookings with + Admin
+                var trainerIds = await _context.WorkoutSlots
+                    .Where(w => w.UserId == userId && w.TrainerId != null && w.Status == "Booked")
+                    .Select(w => w.Trainer!.Id)
+                    .Distinct()
+                    .ToListAsync();
+
+                // Add admin
+                contacts.Add(new ContactViewModel
+                {
+                    Id = 0, // Special ID for admin
+                    Name = "Administrator",
+                    Role = "Administrator",
+                    UnreadCount = 0,
+                    HasConversation = true,
+                    LastMessageText = null,
+                    LastMessageDate = DateTime.MinValue
+                });
+
+                // Add trainers who have bookings with this client
+                foreach (var trainerId in trainerIds)
+                {
+                    var user = await _context.Users.FindAsync(trainerId);
+                    if (user != null)
+                    {
+                        int unreadCount = _context.Messages
+                            .Count(m => m.SenderId == trainerId && m.ReceiverId == userId && !m.IsRead);
+                        // Get last message with this trainer
+                        var lastMessage = _context.Messages
+                            .Where(m => m.SenderId == trainerId && m.ReceiverId == userId ||
+                                       m.SenderId == userId && m.ReceiverId == trainerId)
+                            .OrderByDescending(m => m.SentDate)
+                            .FirstOrDefault();
+                        contacts.Add(new ContactViewModel
+                        {
+                            Id = trainerId,
+                            Name = user.Name,
+                            Role = user.Role,
+                            UnreadCount = unreadCount,
+                            HasConversation = lastMessage != null,
+                            LastMessageText = lastMessage?.Text,
+                            LastMessageDate = lastMessage?.SentDate ?? DateTime.MinValue
+                        });
+                    }
+                }
+            }
+
+            ViewData["Contacts"] = contacts;
+            ViewData["CurrentUserRole"] = userRole;
+
+            // Also load existing messages for the view
             var sportLabContext = _context.Messages
                 .Include(m => m.Receiver)
                 .Include(m => m.Sender)
-                .Where(m => User.IsAdmin() || m.SenderId == userId || m.ReceiverId == userId);
-            return View(await sportLabContext.ToListAsync());
+                .Where(m => User.IsAdmin() || m.SenderId == userId || m.ReceiverId == userId)
+                .OrderByDescending(m => m.SentDate)
+                .ToList();
+
+            return View(sportLabContext);
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -60,9 +205,9 @@ namespace SportLab.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,SenderId,ReceiverId,Text,SentDate")] Message message)
+        public async Task<IActionResult> Create([Bind("Id,SenderId,ReceiverId,Text,SentDate,IsRead")] Message message)
         {
-            if (!User.IsAdmin())
+            if (!User.IsInRole(Roles.Administrator) && !User.IsInRole(Roles.AdminAlias))
             {
                 message.SenderId = CurrentUserId();
             }
@@ -97,7 +242,7 @@ namespace SportLab.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,SenderId,ReceiverId,Text,SentDate")] Message message)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,SenderId,ReceiverId,Text,SentDate,IsRead")] Message message)
         {
             if (id != message.Id)
             {
@@ -167,7 +312,6 @@ namespace SportLab.Controllers
             return _context.Messages.Any(e => e.Id == id);
         }
 
-        private int CurrentUserId() =>
-            int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        private int CurrentUserId() => int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
     }
 }

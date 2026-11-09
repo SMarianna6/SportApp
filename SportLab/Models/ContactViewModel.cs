@@ -9,5 +9,7 @@ namespace SportLab.Models
         public string Role { get; set; } = string.Empty;
         public int UnreadCount { get; set; }
         public bool HasConversation { get; set; }
+        public string? LastMessageText { get; set; }  // Added per TZ
+        public DateTime LastMessageDate { get; set; } = DateTime.MinValue;  // Added per TZ
     }
 }
