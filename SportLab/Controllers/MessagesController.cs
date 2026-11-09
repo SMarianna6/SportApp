@@ -75,17 +75,36 @@ namespace SportLab.Controllers
                     .Distinct()
                     .ToListAsync();
 
-                // Add admin
-                contacts.Add(new ContactViewModel
+                // Add admin - find actual admin user
+                var adminUser = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Role == Roles.Administrator || u.Role == Roles.AdminAlias);
+                if (adminUser != null)
                 {
-                    Id = 0, // Special ID for admin
-                    Name = "Administrator",
-                    Role = "Administrator",
-                    UnreadCount = 0,
-                    HasConversation = true,
-                    LastMessageText = null,
-                    LastMessageDate = DateTime.MinValue
-                });
+                    int adminUnreadCount = _context.Messages
+                        .Count(m => m.SenderId == adminUser.Id && m.ReceiverId == userId && !m.IsRead);
+                    contacts.Add(new ContactViewModel
+                    {
+                        Id = adminUser.Id,
+                        Name = adminUser.Name,
+                        Role = adminUser.Role,
+                        UnreadCount = adminUnreadCount,
+                        HasConversation = _context.Messages
+                            .Any(m => (m.SenderId == adminUser.Id && m.ReceiverId == userId) ||
+                                      (m.SenderId == userId && m.ReceiverId == adminUser.Id)),
+                        LastMessageText = _context.Messages
+                            .Where(m => (m.SenderId == adminUser.Id && m.ReceiverId == userId) ||
+                                       (m.SenderId == userId && m.ReceiverId == adminUser.Id))
+                            .OrderByDescending(m => m.SentDate)
+                            .Select(m => m.Text)
+                            .FirstOrDefault(),
+                        LastMessageDate = _context.Messages
+                            .Where(m => (m.SenderId == adminUser.Id && m.ReceiverId == userId) ||
+                                       (m.SenderId == userId && m.ReceiverId == adminUser.Id))
+                            .OrderByDescending(m => m.SentDate)
+                            .Select(m => (DateTime?)m.SentDate)
+                            .FirstOrDefault() ?? DateTime.MinValue
+                    });
+                }
 
                 // Add clients who booked slots
                 foreach (var clientId in clientIds)
@@ -123,17 +142,36 @@ namespace SportLab.Controllers
                     .Distinct()
                     .ToListAsync();
 
-                // Add admin
-                contacts.Add(new ContactViewModel
+                // Add admin - find actual admin user
+                var adminUser = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Role == Roles.Administrator || u.Role == Roles.AdminAlias);
+                if (adminUser != null)
                 {
-                    Id = 0, // Special ID for admin
-                    Name = "Administrator",
-                    Role = "Administrator",
-                    UnreadCount = 0,
-                    HasConversation = true,
-                    LastMessageText = null,
-                    LastMessageDate = DateTime.MinValue
-                });
+                    int adminUnreadCount = _context.Messages
+                        .Count(m => m.SenderId == adminUser.Id && m.ReceiverId == userId && !m.IsRead);
+                    contacts.Add(new ContactViewModel
+                    {
+                        Id = adminUser.Id,
+                        Name = adminUser.Name,
+                        Role = adminUser.Role,
+                        UnreadCount = adminUnreadCount,
+                        HasConversation = _context.Messages
+                            .Any(m => (m.SenderId == adminUser.Id && m.ReceiverId == userId) ||
+                                       (m.SenderId == userId && m.ReceiverId == adminUser.Id)),
+                        LastMessageText = _context.Messages
+                            .Where(m => (m.SenderId == adminUser.Id && m.ReceiverId == userId) ||
+                                       (m.SenderId == userId && m.ReceiverId == adminUser.Id))
+                            .OrderByDescending(m => m.SentDate)
+                            .Select(m => m.Text)
+                            .FirstOrDefault(),
+                        LastMessageDate = _context.Messages
+                            .Where(m => (m.SenderId == adminUser.Id && m.ReceiverId == userId) ||
+                                       (m.SenderId == userId && m.ReceiverId == adminUser.Id))
+                            .OrderByDescending(m => m.SentDate)
+                            .Select(m => (DateTime?)m.SentDate)
+                            .FirstOrDefault() ?? DateTime.MinValue
+                    });
+                }
 
                 // Add trainers who have bookings with this client
                 foreach (var trainerId in trainerIds)
@@ -166,15 +204,7 @@ namespace SportLab.Controllers
             ViewData["Contacts"] = contacts;
             ViewData["CurrentUserRole"] = userRole;
 
-            // Also load existing messages for the view
-            var sportLabContext = _context.Messages
-                .Include(m => m.Receiver)
-                .Include(m => m.Sender)
-                .Where(m => User.IsAdmin() || m.SenderId == userId || m.ReceiverId == userId)
-                .OrderByDescending(m => m.SentDate)
-                .ToList();
-
-            return View(sportLabContext);
+            return View(contacts);
         }
 
         public async Task<IActionResult> Details(int? id)

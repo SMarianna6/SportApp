@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SportLab.Models.Message>
+﻿@model IEnumerable<SportLab.Models.ContactViewModel>
 
 @{    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
     ViewData["Title"] = "Messages";
@@ -24,8 +24,38 @@
                 <input id="chat-search" type="search" placeholder="Search messages" class="w-full rounded-md border border-white/10 bg-shell py-2.5 pl-9 pr-3 text-sm text-white placeholder:text-mono/40 transition-colors hover:border-white/25 focus:border-neon focus:outline-none focus:ring-1 focus:ring-neon" />
             </label>
         </div>
-        <ul id="chat-list" class="min-h-0 flex-1 overflow-y-auto"></ul>
-        <p id="chat-empty" class="hidden p-6 text-center text-sm text-mono/60">No conversations found.</p>
+        @if (Model != null && Model.Any())
+        {
+        <ul id="chat-list" class="min-h-0 flex-1 overflow-y-auto">
+            @foreach (var contact in Model)
+            {
+                <li>
+                    <button type="button" data-id="@contact.Id" class="chat-item flex w-full items-center gap-3 border-l-4 px-4 py-3.5 text-left transition-colors hover:bg-white/5">
+                        <span class="relative shrink-0"><span class="flex h-12 w-12 items-center justify-center rounded-full text-sm font-extrabold bg-violet text-white">@contact.Name</span></span>
+                        <span class="min-w-0 flex-1">
+                            <span class="flex items-baseline justify-between gap-2">
+                                <span class="truncate text-sm font-extrabold">@contact.Name</span>
+                                <span class="shrink-0 text-[11px] font-semibold text-mono/50">@contact.LastMessageDate.ToString("HH:mm")</span>
+                            </span>
+                            <span class="mt-0.5 flex items-center justify-between gap-2">
+                                <span class="truncate text-xs @(contact.UnreadCount > 0 ? "font-semibold text-white" : "text-mono/70")">@(string.IsNullOrEmpty(contact.LastMessageText) ? "No messages yet" : contact.LastMessageText)</span>
+                                @if (contact.UnreadCount > 0)
+                                {
+                                    <span class="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-violet px-1.5 text-[11px] font-extrabold text-white">@contact.UnreadCount</span>
+                                }
+                            </span>
+                        </span>
+                    </button>
+                </li>
+            }
+        </ul>
+        }
+        else
+        {
+            <ul id="chat-list" class="min-h-0 flex-1 overflow-y-auto">
+                <p id="chat-empty" class="hidden p-6 text-center text-sm text-mono/60">No conversations found.</p>
+            </ul>
+        }
     </aside>
 
     <!-- Active chat -->
