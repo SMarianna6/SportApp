@@ -15,14 +15,13 @@ namespace SportLab.Models
             using var context = new SportLabContext(
                 serviceProvider.GetRequiredService<DbContextOptions<SportLabContext>>());
 
-            // Schema is owned by EF Core migrations now. This creates the DB on
-            // first run and applies any pending migrations on subsequent runs.
+            // Schema is owned by EF Core migrations now.
             context.Database.Migrate();
 
             // Staff accounts (admin / moderator / legacy "Admin" → "Administrator")
             EnsureStaffAccounts(context);
 
-            // ---- Users ---------------------------------------------------
+            // ---- Core Users ---------------------------------------------------
             if (!context.Users.Any(u => u.Email == "alex.trainer@sportlab.ua"))
             {
                 var trainer1 = new User { Name = "Alexander Kovalenko", Email = "alex.trainer@sportlab.ua", Password = PasswordHasher.Hash("TrainerPass123!"), Role = Roles.Trainer, IsBlocked = false };
@@ -31,8 +30,8 @@ namespace SportLab.Models
                 var trainer4 = new User { Name = "Oksana Koval", Email = "oksana@sportlab.ua", Password = PasswordHasher.Hash("Pass123!"), Role = Roles.Trainer, IsBlocked = false };
                 var trainer5 = new User { Name = "Dmytro Boyko", Email = "dmytro@sportlab.ua", Password = PasswordHasher.Hash("Pass123!"), Role = Roles.Trainer, IsBlocked = false };
 
-                var client1 = new User { Name = "Ivan Bondarenko", Email = "ivan.client@sportlab.ua", Password = PasswordHasher.Hash("ClientPass123!"), Role = Roles.Client, IsBlocked = false };
-                var client2 = new User { Name = "Olena Melnyk", Email = "olena.client@sportlab.ua", Password = PasswordHasher.Hash("ClientPass123!"), Role = Roles.Client, IsBlocked = false };
+                var client1 = new User { Name = "Ivan Bondarenko", Email = "ivan.client@sportlab.ua", Password = PasswordHasher.Hash("ClientPass123!"), Role = Roles.Client, IsBlocked = false, Goal = "Weight Loss" };
+                var client2 = new User { Name = "Olena Melnyk", Email = "olena.client@sportlab.ua", Password = PasswordHasher.Hash("ClientPass123!"), Role = Roles.Client, IsBlocked = false, Goal = "Flexibility" };
 
                 context.Users.AddRange(trainer1, trainer2, trainer3, trainer4, trainer5, client1, client2);
                 context.SaveChanges();
@@ -43,14 +42,10 @@ namespace SportLab.Models
             {
                 var plans = new List<Plan>
                 {
-                    new Plan { Name = "Basic Start",        Type = "Basic",   Price = 850.00m,   Duration = 30,
-                               Description = "Morning and day access (07:00 - 16:00). Intro trainer session, personal locker and showers." },
-                    new Plan { Name = "Unlimited Pro",      Type = "Popular", Price = 1450.00m,  Duration = 30,
-                               Description = "24/7 unlimited access to all zones. All group classes, sauna and jacuzzi." },
-                    new Plan { Name = "Student Drive",      Type = "Student", Price = 650.00m,   Duration = 30,
-                               Description = "Access from 09:00 to 18:00 with a student ID. Functional training sessions and a 10% discount at the fitness bar." },
-                    new Plan { Name = "Annual VIP Unlimited", Type = "Premium", Price = 11900.00m, Duration = 365,
-                               Description = "Full annual membership with no restrictions. 5 personal training sessions, a consultation with a nutritionist, and a 15% discount in the store." }
+                    new Plan { Name = "Basic Start",        Type = "Basic",   Price = 850.00m,   Duration = 30, Description = "Morning and day access (07:00 - 16:00). Intro trainer session, personal locker and showers." },
+                    new Plan { Name = "Unlimited Pro",      Type = "Popular", Price = 1450.00m,  Duration = 30, Description = "24/7 unlimited access to all zones. All group classes, sauna and jacuzzi." },
+                    new Plan { Name = "Student Drive",      Type = "Student", Price = 650.00m,   Duration = 30, Description = "Access from 09:00 to 18:00 with a student ID. Functional training sessions and a 10% discount at the fitness bar." },
+                    new Plan { Name = "Annual VIP Unlimited", Type = "Premium", Price = 11900.00m, Duration = 365, Description = "Full annual membership with no restrictions. 5 personal training sessions, a consultation with a nutritionist, and a 15% discount in the store." }
                 };
                 context.Plans.AddRange(plans);
                 context.SaveChanges();
@@ -64,34 +59,18 @@ namespace SportLab.Models
                     var currentDayOfWeek = (int)today.DayOfWeek;
                     var startOfWeek = today.AddDays(currentDayOfWeek == 0 ? -6 : -(currentDayOfWeek - 1));
 
-                    // Booked slots carry BOTH the legacy UserId and a matching
-                    // WorkoutBooking row (created below) so old and new code agree.
                     var workoutSlots = new List<WorkoutSlot>
                     {
-                        new WorkoutSlot { ActivityName = "HIIT",     TrainerId = trainerUsers[0].Id,                                                   StartTime = startOfWeek.AddHours(8),                      EndTime = startOfWeek.AddHours(9),                      Status = WorkoutStatuses.Available },
-                        new WorkoutSlot { ActivityName = "Yoga",     TrainerId = trainerUsers[1].Id, UserId = clientUsers[0].Id,                       StartTime = startOfWeek.AddHours(10),                     EndTime = startOfWeek.AddHours(11),                     Status = WorkoutStatuses.Booked,    Booked = 1 },
-                        new WorkoutSlot { ActivityName = "Strength", TrainerId = trainerUsers[2].Id,                                                   StartTime = startOfWeek.AddHours(17),                     EndTime = startOfWeek.AddHours(18),                     Status = WorkoutStatuses.Available },
-                        new WorkoutSlot { ActivityName = "Pilates",  TrainerId = trainerUsers[3].Id,                                                   StartTime = startOfWeek.AddDays(1).AddHours(9),           EndTime = startOfWeek.AddDays(1).AddHours(10),          Status = WorkoutStatuses.Available },
-                        new WorkoutSlot { ActivityName = "Boxing",   TrainerId = trainerUsers[4].Id,                                                   StartTime = startOfWeek.AddDays(1).AddHours(18),          EndTime = startOfWeek.AddDays(1).AddHours(19),          Status = WorkoutStatuses.Available },
-                        new WorkoutSlot { ActivityName = "Cycling",  TrainerId = trainerUsers[0].Id, UserId = clientUsers[1].Id,                       StartTime = startOfWeek.AddDays(1).AddHours(19),          EndTime = startOfWeek.AddDays(1).AddHours(20),          Status = WorkoutStatuses.Booked,    Booked = 1 },
-                        new WorkoutSlot { ActivityName = "Yoga",     TrainerId = trainerUsers[1].Id,                                                   StartTime = startOfWeek.AddDays(2).AddHours(8),           EndTime = startOfWeek.AddDays(2).AddHours(9),           Status = WorkoutStatuses.Available },
-                        new WorkoutSlot { ActivityName = "HIIT",     TrainerId = trainerUsers[0].Id,                                                   StartTime = startOfWeek.AddDays(2).AddHours(12),          EndTime = startOfWeek.AddDays(2).AddHours(13),          Status = WorkoutStatuses.Available },
-                        new WorkoutSlot { ActivityName = "Strength", TrainerId = trainerUsers[2].Id,                                                   StartTime = startOfWeek.AddDays(2).AddHours(18),          EndTime = startOfWeek.AddDays(2).AddHours(19),          Status = WorkoutStatuses.Available },
-                        new WorkoutSlot { ActivityName = "Cycling",  TrainerId = trainerUsers[0].Id,                                                   StartTime = startOfWeek.AddDays(3).AddHours(10),          EndTime = startOfWeek.AddDays(3).AddHours(11),          Status = WorkoutStatuses.Available },
-                        new WorkoutSlot { ActivityName = "Pilates",  TrainerId = trainerUsers[3].Id,                                                   StartTime = startOfWeek.AddDays(3).AddHours(16),          EndTime = startOfWeek.AddDays(3).AddHours(17),          Status = WorkoutStatuses.Available },
-                        new WorkoutSlot { ActivityName = "Boxing",   TrainerId = trainerUsers[4].Id, UserId = clientUsers[0].Id,                       StartTime = startOfWeek.AddDays(3).AddHours(19),          EndTime = startOfWeek.AddDays(3).AddHours(20),          Status = WorkoutStatuses.Booked,    Booked = 1 },
-                        new WorkoutSlot { ActivityName = "Strength", TrainerId = trainerUsers[2].Id,                                                   StartTime = startOfWeek.AddDays(4).AddHours(9),           EndTime = startOfWeek.AddDays(4).AddHours(10),          Status = WorkoutStatuses.Available },
-                        new WorkoutSlot { ActivityName = "Yoga",     TrainerId = trainerUsers[1].Id,                                                   StartTime = startOfWeek.AddDays(4).AddHours(13),          EndTime = startOfWeek.AddDays(4).AddHours(14),          Status = WorkoutStatuses.Available },
-                        new WorkoutSlot { ActivityName = "HIIT",     TrainerId = trainerUsers[0].Id,                                                   StartTime = startOfWeek.AddDays(4).AddHours(18),          EndTime = startOfWeek.AddDays(4).AddHours(19),          Status = WorkoutStatuses.Available },
-                        new WorkoutSlot { ActivityName = "Cycling",  TrainerId = trainerUsers[0].Id, UserId = clientUsers[1].Id,                       StartTime = startOfWeek.AddDays(5).AddHours(10),          EndTime = startOfWeek.AddDays(5).AddHours(11),          Status = WorkoutStatuses.Booked,    Booked = 1 },
-                        new WorkoutSlot { ActivityName = "Boxing",   TrainerId = trainerUsers[4].Id,                                                   StartTime = startOfWeek.AddDays(5).AddHours(12),          EndTime = startOfWeek.AddDays(5).AddHours(13),          Status = WorkoutStatuses.Available },
-                        new WorkoutSlot { ActivityName = "Yoga",     TrainerId = trainerUsers[1].Id,                                                   StartTime = startOfWeek.AddDays(6).AddHours(11),          EndTime = startOfWeek.AddDays(6).AddHours(12),          Status = WorkoutStatuses.Available },
-                        new WorkoutSlot { ActivityName = "Pilates",  TrainerId = trainerUsers[3].Id,                                                   StartTime = startOfWeek.AddDays(6).AddHours(14),          EndTime = startOfWeek.AddDays(6).AddHours(15),          Status = WorkoutStatuses.Available }
+                        new WorkoutSlot { ActivityName = "HIIT",     TrainerId = trainerUsers[0].Id, StartTime = startOfWeek.AddHours(8), EndTime = startOfWeek.AddHours(9), Status = WorkoutStatuses.Available },
+                        new WorkoutSlot { ActivityName = "Yoga",     TrainerId = trainerUsers[1].Id, UserId = clientUsers[0].Id, StartTime = startOfWeek.AddHours(10), EndTime = startOfWeek.AddHours(11), Status = WorkoutStatuses.Booked, Booked = 1 },
+                        new WorkoutSlot { ActivityName = "Strength", TrainerId = trainerUsers[2].Id, StartTime = startOfWeek.AddHours(17), EndTime = startOfWeek.AddHours(18), Status = WorkoutStatuses.Available },
+                        new WorkoutSlot { ActivityName = "Pilates",  TrainerId = trainerUsers[3].Id, StartTime = startOfWeek.AddDays(1).AddHours(9), EndTime = startOfWeek.AddDays(1).AddHours(10), Status = WorkoutStatuses.Available },
+                        new WorkoutSlot { ActivityName = "Boxing",   TrainerId = trainerUsers[4].Id, StartTime = startOfWeek.AddDays(1).AddHours(18), EndTime = startOfWeek.AddDays(1).AddHours(19), Status = WorkoutStatuses.Available },
+                        new WorkoutSlot { ActivityName = "Cycling",  TrainerId = trainerUsers[0].Id, UserId = clientUsers[1].Id, StartTime = startOfWeek.AddDays(1).AddHours(19), EndTime = startOfWeek.AddDays(1).AddHours(20), Status = WorkoutStatuses.Booked, Booked = 1 }
                     };
                     context.WorkoutSlots.AddRange(workoutSlots);
-                    context.SaveChanges();   // IDs are needed for the WorkoutBooking rows below
+                    context.SaveChanges();
 
-                    // Mirror the legacy "booked" slots into the new join table.
                     var seedBookings = workoutSlots
                         .Where(s => s.UserId.HasValue)
                         .Select(s => new WorkoutBooking
@@ -125,11 +104,7 @@ namespace SportLab.Models
                     new Product { Name = "Optimum 100% Whey Gold Standard", Category = "Nutrition",   Description = "24g of high-quality whey protein per serving with whey protein isolate as the primary ingredient. Double Rich Chocolate flavor, 2.27kg tub.", Price = 1850.00m, StockQuantity = 28, Rating = "5.0", PhotoUrl = "https://images.unsplash.com/photo-1579722821273-0f6c7d44362f?w=600&h=450&fit=crop" },
                     new Product { Name = "Essential BCAA Energy 2:1:1",    Category = "Nutrition",   Description = "Instantized Branched Chain Amino Acids with electrolytes for sustained muscle endurance and post-workout recovery. Green Apple flavor, 400g.", Price = 720.00m,  StockQuantity = 35, Rating = "4.8", PhotoUrl = "https://images.unsplash.com/photo-1593095948071-474c5cc2989d?w=600&h=450&fit=crop" },
                     new Product { Name = "SportLab Pro Shaker 750ml",      Category = "Accessories", Description = "BPA-free leak-proof fitness shaker with stainless steel blending ball and dual measurement scales (ml/oz).", Price = 380.00m,  StockQuantity = 60, Rating = "4.9", PhotoUrl = "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&h=450&fit=crop" },
-                    new Product { Name = "Pro Lifting Straps Cotton",      Category = "Accessories", Description = "Heavy-duty cotton wrist straps with neoprene wrist padding for maximum grip support during heavy deadlifts and pulls.", Price = 290.00m,  StockQuantity = 45, Rating = "4.7", PhotoUrl = "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=600&h=450&fit=crop" },
-                    new Product { Name = "SportLab Performance Hoodie",    Category = "Apparel",     Description = "Breathable athletic fleece pullover engineered for pre-workout warm-ups and everyday athletic comfort. Unisex fit.", Price = 1650.00m, StockQuantity = 20, Rating = "4.9", PhotoUrl = "https://images.unsplash.com/photo-1556906781-9a412961c28c?w=600&h=450&fit=crop" },
-                    new Product { Name = "Training Gym Shorts",            Category = "Apparel",     Description = "Ultralight quick-dry shorts with built-in compression liner and zippered phone pocket. Optimized for high-mobility training.", Price = 890.00m,  StockQuantity = 30, Rating = "4.6", PhotoUrl = "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=600&h=450&fit=crop" },
-                    new Product { Name = "Resistance Bands Set 5-Pack",    Category = "Equipment",   Description = "Premium natural latex loop resistance bands spanning 5 progressive resistance levels (X-Light to X-Heavy) with carrying pouch.", Price = 650.00m,  StockQuantity = 25, Rating = "4.8", PhotoUrl = "https://images.unsplash.com/photo-1598289431512-b97b0917affc?w=600&h=450&fit=crop" },
-                    new Product { Name = "Hex Rubber Dumbbells 10kg Pair", Category = "Equipment",   Description = "Commercial-grade cast iron hex dumbbells encased in virgin rubber to protect gym floors and reduce impact noise.", Price = 1950.00m, StockQuantity = 15, Rating = "5.0", PhotoUrl = "https://images.unsplash.com/photo-1638536532686-d610adfc8e5c?w=600&h=450&fit=crop" }
+                    new Product { Name = "SportLab Performance Hoodie",    Category = "Apparel",     Description = "Breathable athletic fleece pullover engineered for pre-workout warm-ups and everyday athletic comfort. Unisex fit.", Price = 1650.00m, StockQuantity = 20, Rating = "4.9", PhotoUrl = "https://images.unsplash.com/photo-1556906781-9a412961c28c?w=600&h=450&fit=crop" }
                 };
                 context.Products.AddRange(products);
                 context.SaveChanges();
@@ -137,6 +112,11 @@ namespace SportLab.Models
 
             // Runs on every startup, idempotent. Ensures every Trainer has a profile row.
             EnsureTrainerProfiles(context);
+
+            // ---- EXTENDED DEMO DATA (NEW) ---------------------------------
+            // Adds a rich set of clients, trainers, history logs, and future bookings
+            // to make the application look heavily used and populated.
+            SeedExtendedDemoData(context);
         }
 
         // ------------------------------------------------------------------
@@ -144,42 +124,22 @@ namespace SportLab.Models
         {
             if (!context.Users.Any(u => u.Email == "admin@sportlab.ua"))
             {
-                context.Users.Add(new User
-                {
-                    Name = "SportLab Administrator",
-                    Email = "admin@sportlab.ua",
-                    Password = PasswordHasher.Hash("AdminPass123!"),
-                    Role = Roles.Administrator,
-                    IsBlocked = false
-                });
+                context.Users.Add(new User { Name = "SportLab Administrator", Email = "admin@sportlab.ua", Password = PasswordHasher.Hash("AdminPass123!"), Role = Roles.Administrator, IsBlocked = false });
             }
-
             if (!context.Users.Any(u => u.Email == "moderator@sportlab.ua"))
             {
-                context.Users.Add(new User
-                {
-                    Name = "SportLab Moderator",
-                    Email = "moderator@sportlab.ua",
-                    Password = PasswordHasher.Hash("ModeratorPass123!"),
-                    Role = Roles.Moderator,
-                    IsBlocked = false
-                });
+                context.Users.Add(new User { Name = "SportLab Moderator", Email = "moderator@sportlab.ua", Password = PasswordHasher.Hash("ModeratorPass123!"), Role = Roles.Moderator, IsBlocked = false });
             }
-
-            
             foreach (var legacyAdmin in context.Users.Where(u => u.Role == Roles.AdminAlias).ToList())
             {
                 legacyAdmin.Role = Roles.Administrator;
             }
-
             context.SaveChanges();
         }
 
         // ------------------------------------------------------------------
         private static void EnsureTrainerProfiles(SportLabContext context)
         {
-            // Demo content for the two "real" trainers, so the Trainer Profile
-            // module has something to render out of the box. Others get empty rows.
             var demo = new Dictionary<string, (DateTime Dob, string About, string Exp, string Spec, string Photo)>
             {
                 ["alex.trainer@sportlab.ua"] = (
@@ -214,6 +174,117 @@ namespace SportLab.Models
                 }
                 context.TrainerProfiles.Add(profile);
             }
+            context.SaveChanges();
+        }
+
+        // ------------------------------------------------------------------
+        private static void SeedExtendedDemoData(SportLabContext context)
+        {
+            // Anchor: Only run if the extended demo data hasn't been seeded yet
+            if (context.Users.Any(u => u.Email == "john.doe@sportlab.ua")) return;
+
+            var plans = context.Plans.ToList();
+            var products = context.Products.ToList();
+            if (!plans.Any() || !products.Any()) return;
+
+            var today = DateTime.Today;
+
+            // 1. Create New Trainers
+            var sarah = new User { Name = "Sarah Jenkins", Email = "sarah.trainer@sportlab.ua", Password = PasswordHasher.Hash("TrainerPass123!"), Role = Roles.Trainer };
+            var mike = new User { Name = "Mike Tyson", Email = "mike.trainer@sportlab.ua", Password = PasswordHasher.Hash("TrainerPass123!"), Role = Roles.Trainer };
+            context.Users.AddRange(sarah, mike);
+            context.SaveChanges();
+
+            context.TrainerProfiles.AddRange(
+                new TrainerProfile { UserId = sarah.Id, DateOfBirth = new DateTime(1990, 5, 20), About = "Expert in HIIT and cardiovascular conditioning. Let's get that heart rate up!", Experience = "5 years", Specializations = "HIIT,Cardio,Mobility", PhotoUrl = "https://images.unsplash.com/photo-1594381898411-846e7d193883?w=400&h=400&fit=crop&crop=faces" },
+                new TrainerProfile { UserId = mike.Id, DateOfBirth = new DateTime(1985, 2, 15), About = "Boxing coach with a passion for technique and power. Former amateur champion.", Experience = "10 years", Specializations = "Boxing,Strength,CrossFit", PhotoUrl = "https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=400&h=400&fit=crop&crop=faces" }
+            );
+            context.SaveChanges();
+
+            // 2. Create New Clients
+            var john = new User { Name = "John Doe", Email = "john.doe@sportlab.ua", Password = PasswordHasher.Hash("ClientPass123!"), Role = Roles.Client, Goal = "Weight Loss" };
+            var emma = new User { Name = "Emma Smith", Email = "emma.smith@sportlab.ua", Password = PasswordHasher.Hash("ClientPass123!"), Role = Roles.Client, Goal = "Muscle Gain" };
+            var david = new User { Name = "David Lee", Email = "david.lee@sportlab.ua", Password = PasswordHasher.Hash("ClientPass123!"), Role = Roles.Client, Goal = "Endurance" };
+            var lisa = new User { Name = "Lisa Ray", Email = "lisa.ray@sportlab.ua", Password = PasswordHasher.Hash("ClientPass123!"), Role = Roles.Client, Goal = "Flexibility & Toning" };
+            context.Users.AddRange(john, emma, david, lisa);
+            context.SaveChanges();
+
+            // 3. Assign Subscriptions (Different states)
+            var planBasic = plans.First(p => p.Type == "Basic");
+            var planPro = plans.First(p => p.Type == "Popular");
+
+            context.Subscriptions.AddRange(
+                new Subscription { UserId = john.Id, PlanId = planPro.Id, StartDate = today.AddDays(-20), EndDate = today.AddDays(10), IsActive = true },
+                new Subscription { UserId = emma.Id, PlanId = planBasic.Id, StartDate = today.AddDays(-45), EndDate = today.AddDays(-15), IsActive = false }, // Expired
+                new Subscription { UserId = david.Id, PlanId = planBasic.Id, StartDate = today, EndDate = today.AddDays(30), IsActive = true },
+                new Subscription { UserId = lisa.Id, PlanId = planPro.Id, StartDate = today.AddDays(-28), EndDate = today.AddDays(2), IsActive = true } // Expiring soon
+            );
+
+            // 4. Generate Weight Logs (5 weeks of history for the sparkline charts)
+            var random = new Random();
+            for (int i = 5; i >= 0; i--)
+            {
+                var date = today.AddDays(-i * 7);
+
+                // John (Losing weight)
+                context.MetricLogs.Add(new MetricLog { UserId = john.Id, Weight = 92.0f - ((5 - i) * 1.2f), RecordDate = date, Notes = "Weekly check-in" });
+                // Emma (Gaining weight)
+                context.MetricLogs.Add(new MetricLog { UserId = emma.Id, Weight = 58.0f + ((5 - i) * 0.8f), RecordDate = date, Notes = "Bulking phase" });
+                // David (Maintaining)
+                context.MetricLogs.Add(new MetricLog { UserId = david.Id, Weight = 75.0f + (float)(random.NextDouble() * 0.5 - 0.25), RecordDate = date, Notes = "Feeling good" });
+                // Lisa (Slight loss)
+                context.MetricLogs.Add(new MetricLog { UserId = lisa.Id, Weight = 55.0f - ((5 - i) * 0.3f), RecordDate = date, Notes = "Yoga & pilates focus" });
+            }
+
+            // 5. Generate Past Workouts (History)
+            var pastSlots = new List<WorkoutSlot>
+            {
+                new WorkoutSlot { ActivityName = "Yoga", TrainerId = sarah.Id, StartTime = today.AddDays(-10).AddHours(9), EndTime = today.AddDays(-10).AddHours(10), Status = WorkoutStatuses.Completed, Capacity = 10, Booked = 1 },
+                new WorkoutSlot { ActivityName = "Boxing", TrainerId = mike.Id, StartTime = today.AddDays(-8).AddHours(18), EndTime = today.AddDays(-8).AddHours(19), Status = WorkoutStatuses.Completed, Capacity = 15, Booked = 1 },
+                new WorkoutSlot { ActivityName = "HIIT", TrainerId = sarah.Id, StartTime = today.AddDays(-5).AddHours(8), EndTime = today.AddDays(-5).AddHours(9), Status = WorkoutStatuses.Completed, Capacity = 20, Booked = 2 }
+            };
+            context.WorkoutSlots.AddRange(pastSlots);
+            context.SaveChanges();
+
+            context.WorkoutBookings.AddRange(
+                new WorkoutBooking { WorkoutSlotId = pastSlots[0].Id, UserId = lisa.Id, BookingDate = today.AddDays(-11), Status = BookingStatuses.Attended },
+                new WorkoutBooking { WorkoutSlotId = pastSlots[1].Id, UserId = john.Id, BookingDate = today.AddDays(-9), Status = BookingStatuses.Attended },
+                new WorkoutBooking { WorkoutSlotId = pastSlots[2].Id, UserId = john.Id, BookingDate = today.AddDays(-6), Status = BookingStatuses.Attended },
+                new WorkoutBooking { WorkoutSlotId = pastSlots[2].Id, UserId = emma.Id, BookingDate = today.AddDays(-6), Status = BookingStatuses.Attended }
+            );
+
+            // 6. Generate Future Workouts (Upcoming)
+            var futureSlots = new List<WorkoutSlot>
+            {
+                new WorkoutSlot { ActivityName = "Boxing", TrainerId = mike.Id, StartTime = today.AddDays(1).AddHours(18), EndTime = today.AddDays(1).AddHours(19), Status = WorkoutStatuses.Booked, Capacity = 15, Booked = 2 },
+                new WorkoutSlot { ActivityName = "HIIT", TrainerId = sarah.Id, StartTime = today.AddDays(2).AddHours(8), EndTime = today.AddDays(2).AddHours(9), Status = WorkoutStatuses.Available, Capacity = 20, Booked = 0 },
+                new WorkoutSlot { ActivityName = "Yoga", TrainerId = sarah.Id, StartTime = today.AddDays(3).AddHours(9), EndTime = today.AddDays(3).AddHours(10), Status = WorkoutStatuses.Booked, Capacity = 10, Booked = 1 }
+            };
+            context.WorkoutSlots.AddRange(futureSlots);
+            context.SaveChanges();
+
+            context.WorkoutBookings.AddRange(
+                new WorkoutBooking { WorkoutSlotId = futureSlots[0].Id, UserId = john.Id, BookingDate = today.AddDays(-1), Status = BookingStatuses.Booked },
+                new WorkoutBooking { WorkoutSlotId = futureSlots[0].Id, UserId = david.Id, BookingDate = today.AddDays(-1), Status = BookingStatuses.Booked },
+                new WorkoutBooking { WorkoutSlotId = futureSlots[2].Id, UserId = lisa.Id, BookingDate = today, Status = BookingStatuses.Booked }
+            );
+
+            // 7. Generate Orders (Recent Orders for the client dashboard)
+            var order1 = new Order { UserId = john.Id, OrderDate = today.AddDays(-3), TotalAmount = 2230.00m, Status = "Completed" };
+            var order2 = new Order { UserId = emma.Id, OrderDate = today.AddDays(-1), TotalAmount = 380.00m, Status = "Processing" };
+
+            context.Orders.AddRange(order1, order2);
+            context.SaveChanges();
+
+            // Note: Ensure you pick products from the actual context list
+            var whey = products.First(p => p.Name.Contains("Whey"));
+            var shaker = products.First(p => p.Name.Contains("Shaker"));
+
+            context.OrderDetails.AddRange(
+                new OrderDetail { OrderId = order1.Id, ProductId = whey.Id, Quantity = 1, UnitPrice = whey.Price },
+                new OrderDetail { OrderId = order1.Id, ProductId = shaker.Id, Quantity = 1, UnitPrice = shaker.Price },
+                new OrderDetail { OrderId = order2.Id, ProductId = shaker.Id, Quantity = 1, UnitPrice = shaker.Price }
+            );
 
             context.SaveChanges();
         }
