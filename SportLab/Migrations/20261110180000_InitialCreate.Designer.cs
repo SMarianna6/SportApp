@@ -12,8 +12,8 @@ using SportLab.Data;
 namespace SportLab.Migrations
 {
     [DbContext(typeof(SportLabContext))]
-    [Migration("20261109211408_AddIsReadToMessage")]
-    partial class AddIsReadToMessage
+    [Migration("20261110180000_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -79,9 +79,9 @@ namespace SportLab.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ReceiverId");
-
                     b.HasIndex("SenderId");
+
+                    b.HasIndex("ReceiverId", "SentDate");
 
                     b.ToTable("Messages");
                 });
@@ -109,7 +109,7 @@ namespace SportLab.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "RecordDate");
 
                     b.ToTable("MetricLogs");
                 });
@@ -131,6 +131,7 @@ namespace SportLab.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<decimal>("TotalAmount")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("UserId")
@@ -138,7 +139,7 @@ namespace SportLab.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "OrderDate");
 
                     b.ToTable("Orders");
                 });
@@ -161,13 +162,15 @@ namespace SportLab.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("UnitPrice")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderId");
-
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("OrderId", "ProductId")
+                        .IsUnique();
 
                     b.ToTable("OrderDetails");
                 });
@@ -193,11 +196,13 @@ namespace SportLab.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -227,6 +232,7 @@ namespace SportLab.Migrations
                         .HasColumnName("Photo");
 
                     b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Rating")
@@ -268,7 +274,7 @@ namespace SportLab.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "CreatedDate");
 
                     b.ToTable("Reviews");
                 });
@@ -300,9 +306,47 @@ namespace SportLab.Migrations
 
                     b.HasIndex("PlanId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "IsActive", "EndDate");
 
                     b.ToTable("Subscriptions");
+                });
+
+            modelBuilder.Entity("SportLab.Models.TrainerProfile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("About")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime?>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Experience")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("PhotoUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Specializations")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("TrainerProfiles");
                 });
 
             modelBuilder.Entity("SportLab.Models.User", b =>
@@ -313,10 +357,18 @@ namespace SportLab.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AvatarUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("Goal")
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
 
                     b.Property<bool>("IsBlocked")
                         .HasColumnType("bit");
@@ -328,8 +380,8 @@ namespace SportLab.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("Role")
                         .IsRequired()
@@ -338,7 +390,47 @@ namespace SportLab.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("SportLab.Models.WorkoutBooking", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("BookingDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WorkoutSlotId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "BookingDate");
+
+                    b.HasIndex("WorkoutSlotId", "UserId")
+                        .IsUnique();
+
+                    b.ToTable("WorkoutBookings");
                 });
 
             modelBuilder.Entity("SportLab.Models.WorkoutSlot", b =>
@@ -363,12 +455,20 @@ namespace SportLab.Migrations
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasDefaultValue("Available");
 
                     b.Property<int>("TrainerId")
                         .HasColumnType("int");
@@ -378,9 +478,11 @@ namespace SportLab.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TrainerId");
-
                     b.HasIndex("UserId");
+
+                    b.HasIndex("StartTime", "EndTime");
+
+                    b.HasIndex("TrainerId", "StartTime");
 
                     b.ToTable("WorkoutSlots");
                 });
@@ -420,7 +522,7 @@ namespace SportLab.Migrations
                     b.HasOne("SportLab.Models.User", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -437,7 +539,7 @@ namespace SportLab.Migrations
                     b.HasOne("SportLab.Models.Product", "Product")
                         .WithMany("OrderDetails")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Order");
@@ -473,6 +575,36 @@ namespace SportLab.Migrations
                     b.Navigation("Plan");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SportLab.Models.TrainerProfile", b =>
+                {
+                    b.HasOne("SportLab.Models.User", "User")
+                        .WithOne("TrainerProfile")
+                        .HasForeignKey("SportLab.Models.TrainerProfile", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SportLab.Models.WorkoutBooking", b =>
+                {
+                    b.HasOne("SportLab.Models.User", "User")
+                        .WithMany("WorkoutBookings")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SportLab.Models.WorkoutSlot", "WorkoutSlot")
+                        .WithMany("Bookings")
+                        .HasForeignKey("WorkoutSlotId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+
+                    b.Navigation("WorkoutSlot");
                 });
 
             modelBuilder.Entity("SportLab.Models.WorkoutSlot", b =>
@@ -522,7 +654,16 @@ namespace SportLab.Migrations
 
                     b.Navigation("Subscriptions");
 
+                    b.Navigation("TrainerProfile");
+
+                    b.Navigation("WorkoutBookings");
+
                     b.Navigation("WorkoutSlots");
+                });
+
+            modelBuilder.Entity("SportLab.Models.WorkoutSlot", b =>
+                {
+                    b.Navigation("Bookings");
                 });
 #pragma warning restore 612, 618
         }

@@ -142,9 +142,9 @@
                             <ul class="tariff-features-list">
                                 @{
                                     var features = (item.Description ?? "")
-                                        .Split(new[] { "\r\n", "\r", "\n", ";" }, StringSplitOptions.RemoveEmptyEntries)
-                                        .Select(f => f.Trim())
-                                        .Where(f => !string.IsNullOrWhiteSpace(f));
+                                    .Split(new[] { "\r\n", "\r", "\n", ";" }, StringSplitOptions.RemoveEmptyEntries)
+                                    .Select(f => f.Trim())
+                                    .Where(f => !string.IsNullOrWhiteSpace(f));
 
                                     if (!features.Any())
                                     {
@@ -173,7 +173,7 @@
 
                         <!-- Card Footer & Actions -->
                         <div class="tariff-card-footer">
-                            <button type="button" 
+                            <button type="button"
                                     class="btn-buy-tariff btn-open-modal"
                                     data-tariff-id="@item.Id"
                                     data-tariff-name="@item.Name"
@@ -248,106 +248,129 @@
 
             <!-- Modal Body: Form State -->
             <div class="modal-body p-4" id="modalFormContainer">
-                <!-- Tariff Summary Banner -->
-                <div class="modal-tariff-summary">
-                    <div class="row align-items-center">
-                        <div class="col-md-7">
-                            <span class="text-muted small d-block">Selected Plan:</span>
-                            <h4 class="fw-bold text-dark mb-1" id="modalTariffName">-</h4>
-                            <div class="text-muted small">
-                                <i class="bi bi-clock-history text-primary me-1"></i> Duration: <strong id="modalTariffDuration">-</strong> days
-                                <span class="mx-2">•</span>
-                                <i class="bi bi-calendar-check text-success me-1"></i> Valid until: <strong id="modalCalculatedEndDate">-</strong>
-                            </div>
-                        </div>
-                        <div class="col-md-5 text-md-end mt-3 mt-md-0">
-                            <span class="text-muted small d-block">Total to Pay:</span>
-                            <div class="fs-2 fw-bold text-primary">
-                                <span id="modalTariffPrice">-</span> <span class="fs-4">₴</span>
-                            </div>
-                        </div>
+                @if (ViewBag.IsAuthenticated != true)
+                {
+                    <div class="text-center py-4">
+                        <i class="bi bi-lock-fill display-4 text-warning mb-3 d-block"></i>
+                        <h4 class="fw-bold text-dark mb-2">Authentication Required</h4>
+                        <p class="text-muted mb-4">
+                            To purchase a membership plan, please <a asp-controller="Account" asp-action="Login" class="fw-bold text-primary text-decoration-underline">Sign In</a> to your account.
+                        </p>
+                        <button type="button" class="btn btn-outline-secondary px-4 rounded-pill" data-bs-dismiss="modal">Close</button>
                     </div>
-                </div>
-
-                <!-- Purchase Form -->
-                <form id="quickPurchaseForm">
-                    <input type="hidden" id="formTariffId" name="tariffId" value="" />
-                    <input type="hidden" id="formDurationDays" value="30" />
-
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label for="customerFullName" class="form-label fw-semibold small">Full Name <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-white"><i class="bi bi-person text-muted"></i></span>
-                                <input type="text" class="form-control" id="customerFullName" placeholder="Alexander Smith" required />
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="customerPhone" class="form-label fw-semibold small">Phone Number <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-white"><i class="bi bi-telephone text-muted"></i></span>
-                                <input type="tel" class="form-control" id="customerPhone" placeholder="+380 (97) 123-45-67" required />
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="customerEmail" class="form-label fw-semibold small">Email Address <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-white"><i class="bi bi-envelope text-muted"></i></span>
-                                <input type="email" class="form-control" id="customerEmail" placeholder="client@example.com" required />
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="subscriptionStartDate" class="form-label fw-semibold small">Activation Date <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-white"><i class="bi bi-calendar-event text-muted"></i></span>
-                                <input type="date" class="form-control" id="subscriptionStartDate" required />
-                            </div>
-                        </div>
-
-                        <!-- Payment Method Options -->
-                        <div class="col-12 mt-3">
-                            <label class="form-label fw-semibold small">Select Payment Method</label>
-                            <div class="payment-method-selector">
-                                <div class="payment-method-card active" data-method="card">
-                                    <i class="bi bi-credit-card-2-front text-primary"></i>
-                                    <span>Credit / Debit Card</span>
-                                </div>
-                                <div class="payment-method-card" data-method="applepay">
-                                    <i class="bi bi-apple text-dark"></i>
-                                    <span>Apple / Google Pay</span>
-                                </div>
-                                <div class="payment-method-card" data-method="desk">
-                                    <i class="bi bi-cash-stack text-success"></i>
-                                    <span>At Club Reception</span>
+                }
+                else
+                {
+                    <!-- Tariff Summary Banner -->
+                    <div class="modal-tariff-summary mb-4">
+                        <div class="row align-items-center">
+                            <div class="col-md-7">
+                                <span class="text-muted small d-block">Selected Plan:</span>
+                                <h4 class="fw-bold text-dark mb-1" id="modalTariffName">-</h4>
+                                <div class="text-muted small">
+                                    <i class="bi bi-clock-history text-primary me-1"></i> Duration: <strong id="modalTariffDuration">-</strong> days
+                                    <span class="mx-2">•</span>
+                                    <i class="bi bi-calendar-check text-success me-1"></i> Valid until: <strong id="modalCalculatedEndDate">-</strong>
                                 </div>
                             </div>
-                            <input type="hidden" id="selectedPaymentMethod" value="card" />
-                        </div>
-
-                        <!-- Terms Checkbox -->
-                        <div class="col-12 mt-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="agreeTerms" checked required />
-                                <label class="form-check-label small text-muted" for="agreeTerms">
-                                    I agree to the SportLab club visit rules and terms of service.
-                                </label>
+                            <div class="col-md-5 text-md-end mt-3 mt-md-0">
+                                <span class="text-muted small d-block">Total to Pay:</span>
+                                <div class="fs-2 fw-bold text-primary">
+                                    <span id="modalTariffPrice">-</span> <span class="fs-4">₴</span>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div id="modalAlert" class="alert alert-danger d-none mt-3" role="alert"></div>
+                    <!-- Purchase Form -->
+                    <form id="quickPurchaseForm">
+                        <input type="hidden" id="formTariffId" name="tariffId" value="" />
+                        <input type="hidden" id="formDurationDays" value="30" />
 
-                    <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
-                        <button type="button" class="btn btn-outline-secondary px-4 rounded-pill" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary px-5 py-2 rounded-pill fw-bold shadow-sm" id="btnSubmitPurchase">
-                            <span class="spinner-border spinner-border-sm d-none me-2" id="submitSpinner" role="status" aria-hidden="true"></span>
-                            <span id="submitBtnText"><i class="bi bi-check2-circle me-1"></i> Confirm & Activate</span>
-                        </button>
-                    </div>
-                </form>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="customerFullName" class="form-label fw-semibold small">Full Name <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i class="bi bi-person text-muted"></i></span>
+                                    <input type="text" class="form-control" id="customerFullName" value="@ViewBag.CurrentUserName" placeholder="Alexander Smith" required />
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="customerPhone" class="form-label fw-semibold small">Phone Number <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i class="bi bi-telephone text-muted"></i></span>
+                                    <input type="tel" class="form-control" id="customerPhone" placeholder="+380 (97) 123-45-67" required />
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="customerEmail" class="form-label fw-semibold small">Email Address <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i class="bi bi-envelope text-muted"></i></span>
+                                    <input type="email" class="form-control" id="customerEmail" value="@ViewBag.CurrentUserEmail" placeholder="client@example.com" required />
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="subscriptionStartDate" class="form-label fw-semibold small">Activation Date <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i class="bi bi-calendar-event text-muted"></i></span>
+                                    <input type="date" class="form-control" id="subscriptionStartDate" required />
+                                </div>
+                            </div>
+
+                            <!-- Payment Details Section (Card Only) -->
+                            <div class="col-12 mt-3">
+                                <h6 class="fw-bold small text-uppercase text-muted mb-2"><i class="bi bi-credit-card-2-front me-1"></i> Payment Details (Credit/Debit Card)</h6>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="cardNumber" class="form-label fw-semibold small">Card Number <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i class="bi bi-credit-card text-muted"></i></span>
+                                    <input type="text" class="form-control" id="cardNumber" maxlength="19" placeholder="0000 0000 0000 0000" pattern="\d{16,19}" title="Enter valid 16-digit card number" required />
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="cardExpiry" class="form-label fw-semibold small">Expiry Date (MM/YY) <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i class="bi bi-calendar3 text-muted"></i></span>
+                                    <input type="text" class="form-control" id="cardExpiry" maxlength="5" placeholder="MM/YY" pattern="(0[1-9]|1[0-2])\/[0-9]{2}" title="Format: MM/YY" required />
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="cardCvc" class="form-label fw-semibold small">CVC / CVV <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i class="bi bi-lock text-muted"></i></span>
+                                    <input type="password" class="form-control" id="cardCvc" maxlength="3" placeholder="123" pattern="\d{3}" title="3-digit security code" required />
+                                </div>
+                            </div>
+
+                            <!-- Terms Checkbox -->
+                            <div class="col-12 mt-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="agreeTerms" checked required />
+                                    <label class="form-check-label small text-muted" for="agreeTerms">
+                                        I agree to the SportLab club visit rules and terms of service.
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="modalAlert" class="alert alert-danger d-none mt-3" role="alert"></div>
+
+                        <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                            <button type="button" class="btn btn-outline-secondary px-4 rounded-pill" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary px-5 py-2 rounded-pill fw-bold shadow-sm" id="btnSubmitPurchase">
+                                <span class="spinner-border spinner-border-sm d-none me-2" id="submitSpinner" role="status" aria-hidden="true"></span>
+                                <span id="submitBtnText"><i class="bi bi-check2-circle me-1"></i> Confirm & Activate</span>
+                            </button>
+                        </div>
+                    </form>
+                }
             </div>
 
             <!-- Modal Body: Success State -->
@@ -398,162 +421,158 @@
 </div>
 
 @section Scripts {
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // 1. Category Filtering
-        const filterPills = document.querySelectorAll(".filter-pill");
-        const cards = document.querySelectorAll(".tariff-card-col");
-        const emptyState = document.getElementById("filterEmptyState");
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // 1. Category Filtering
+            const filterPills = document.querySelectorAll(".filter-pill");
+            const cards = document.querySelectorAll(".tariff-card-col");
+            const emptyState = document.getElementById("filterEmptyState");
 
-        filterPills.forEach(pill => {
-            pill.addEventListener("click", function () {
-                filterPills.forEach(p => p.classList.remove("active"));
-                this.classList.add("active");
+            filterPills.forEach(pill => {
+                pill.addEventListener("click", function () {
+                    filterPills.forEach(p => p.classList.remove("active"));
+                    this.classList.add("active");
 
-                const selectedFilter = this.getAttribute("data-filter").toLowerCase();
-                let visibleCount = 0;
+                    const selectedFilter = this.getAttribute("data-filter").toLowerCase();
+                    let visibleCount = 0;
 
-                cards.forEach(card => {
-                    const rawCategories = card.getAttribute("data-categories") || "";
-                    const categoriesList = rawCategories.toLowerCase().split(/\s+/);
+                    cards.forEach(card => {
+                        const rawCategories = card.getAttribute("data-categories") || "";
+                        const categoriesList = rawCategories.toLowerCase().split(/\s+/);
 
-                    if (selectedFilter === "all" || categoriesList.includes(selectedFilter)) {
-                        card.style.display = "";
-                        visibleCount++;
-                    } else {
-                        card.style.display = "none";
+                        if (selectedFilter === "all" || categoriesList.includes(selectedFilter)) {
+                            card.style.display = "";
+                            visibleCount++;
+                        } else {
+                            card.style.display = "none";
+                        }
+                    });
+
+                    if (emptyState) {
+                        if (visibleCount === 0) {
+                            emptyState.classList.remove("d-none");
+                        } else {
+                            emptyState.classList.add("d-none");
+                        }
                     }
                 });
+            });
 
-                if (emptyState) {
-                    if (visibleCount === 0) {
-                        emptyState.classList.remove("d-none");
-                    } else {
-                        emptyState.classList.add("d-none");
+            // 2. Date Calculation Helper
+            const startDateInput = document.getElementById("subscriptionStartDate");
+            const calculatedEndDateSpan = document.getElementById("modalCalculatedEndDate");
+            const durationInput = document.getElementById("formDurationDays");
+
+            function updateEndDate() {
+                if (!startDateInput) return;
+                if (!startDateInput.value) return;
+                const start = new Date(startDateInput.value);
+                const days = parseInt(durationInput.value) || 30;
+                const end = new Date(start);
+                end.setDate(end.getDate() + days);
+
+                const day = String(end.getDate()).padStart(2, '0');
+                const month = String(end.getMonth() + 1).padStart(2, '0');
+                const year = end.getFullYear();
+
+                calculatedEndDateSpan.textContent = `${day}.${month}.${year}`;
+            }
+
+            if (startDateInput) {
+                const todayStr = new Date().toISOString().split('T')[0];
+                startDateInput.value = todayStr;
+                startDateInput.min = todayStr;
+                startDateInput.addEventListener("change", updateEndDate);
+            }
+
+            // 3. Open Modal & Populate Data
+            const purchaseModalElement = document.getElementById('quickPurchaseModal');
+            const purchaseModal = new bootstrap.Modal(purchaseModalElement);
+            const modalFormContainer = document.getElementById("modalFormContainer");
+            const modalSuccessContainer = document.getElementById("modalSuccessContainer");
+            const modalAlert = document.getElementById("modalAlert");
+
+            document.querySelectorAll(".btn-open-modal").forEach(button => {
+                button.addEventListener("click", function () {
+                    const id = this.getAttribute("data-tariff-id");
+                    const name = this.getAttribute("data-tariff-name");
+                    const price = this.getAttribute("data-tariff-price");
+                    const duration = this.getAttribute("data-tariff-duration");
+                    const type = this.getAttribute("data-tariff-type");
+
+                    const tariffIdInput = document.getElementById("formTariffId");
+                    if (tariffIdInput) {
+                        tariffIdInput.value = id;
+                        document.getElementById("formDurationDays").value = duration;
+                        document.getElementById("modalTariffName").textContent = name;
+                        document.getElementById("modalTariffPrice").textContent = price;
+                        document.getElementById("modalTariffDuration").textContent = duration;
+                        document.getElementById("modalTariffBadge").textContent = type || "Membership";
+                        updateEndDate();
                     }
-                }
-            });
-        });
 
-        // 2. Date Calculation Helper
-        const startDateInput = document.getElementById("subscriptionStartDate");
-        const calculatedEndDateSpan = document.getElementById("modalCalculatedEndDate");
-        const durationInput = document.getElementById("formDurationDays");
+                    if (modalFormContainer) modalFormContainer.classList.remove("d-none");
+                    if (modalSuccessContainer) modalSuccessContainer.classList.add("d-none");
+                    if (modalAlert) modalAlert.classList.add("d-none");
 
-        function updateEndDate() {
-            if (!startDateInput.value) return;
-            const start = new Date(startDateInput.value);
-            const days = parseInt(durationInput.value) || 30;
-            const end = new Date(start);
-            end.setDate(end.getDate() + days);
-
-            const day = String(end.getDate()).padStart(2, '0');
-            const month = String(end.getMonth() + 1).padStart(2, '0');
-            const year = end.getFullYear();
-
-            calculatedEndDateSpan.textContent = `${day}.${month}.${year}`;
-        }
-
-        const todayStr = new Date().toISOString().split('T')[0];
-        startDateInput.value = todayStr;
-        startDateInput.min = todayStr;
-        startDateInput.addEventListener("change", updateEndDate);
-
-        // 3. Open Modal & Populate Data
-        const purchaseModalElement = document.getElementById('quickPurchaseModal');
-        const purchaseModal = new bootstrap.Modal(purchaseModalElement);
-        const modalFormContainer = document.getElementById("modalFormContainer");
-        const modalSuccessContainer = document.getElementById("modalSuccessContainer");
-        const modalAlert = document.getElementById("modalAlert");
-
-        document.querySelectorAll(".btn-open-modal").forEach(button => {
-            button.addEventListener("click", function () {
-                const id = this.getAttribute("data-tariff-id");
-                const name = this.getAttribute("data-tariff-name");
-                const price = this.getAttribute("data-tariff-price");
-                const duration = this.getAttribute("data-tariff-duration");
-                const type = this.getAttribute("data-tariff-type");
-
-                document.getElementById("formTariffId").value = id;
-                document.getElementById("formDurationDays").value = duration;
-                document.getElementById("modalTariffName").textContent = name;
-                document.getElementById("modalTariffPrice").textContent = price;
-                document.getElementById("modalTariffDuration").textContent = duration;
-                document.getElementById("modalTariffBadge").textContent = type || "Membership";
-
-                modalFormContainer.classList.remove("d-none");
-                modalSuccessContainer.classList.add("d-none");
-                modalAlert.classList.add("d-none");
-
-                updateEndDate();
-                purchaseModal.show();
-            });
-        });
-
-        // 4. Payment Method Card Selection
-        const paymentCards = document.querySelectorAll(".payment-method-card");
-        const selectedPaymentMethodInput = document.getElementById("selectedPaymentMethod");
-
-        paymentCards.forEach(card => {
-            card.addEventListener("click", function () {
-                paymentCards.forEach(c => c.classList.remove("active"));
-                this.classList.add("active");
-                selectedPaymentMethodInput.value = this.getAttribute("data-method");
-            });
-        });
-
-        // 5. AJAX Quick Purchase Form Submission
-        const quickForm = document.getElementById("quickPurchaseForm");
-        const submitBtn = document.getElementById("btnSubmitPurchase");
-        const submitSpinner = document.getElementById("submitSpinner");
-
-        quickForm.addEventListener("submit", async function (e) {
-            e.preventDefault();
-
-            modalAlert.classList.add("d-none");
-            submitBtn.disabled = true;
-            submitSpinner.classList.remove("d-none");
-
-            const payload = {
-                tariffId: parseInt(document.getElementById("formTariffId").value),
-                fullName: document.getElementById("customerFullName").value,
-                phone: document.getElementById("customerPhone").value,
-                email: document.getElementById("customerEmail").value,
-                startDate: document.getElementById("subscriptionStartDate").value,
-                paymentMethod: selectedPaymentMethodInput.value
-            };
-
-            try {
-                const response = await fetch('/Tariff/QuickPurchase', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
+                    purchaseModal.show();
                 });
+            });
 
-                const data = await response.json();
+            // 4. AJAX Quick Purchase Form Submission
+            const quickForm = document.getElementById("quickPurchaseForm");
+            if (quickForm) {
+                const submitBtn = document.getElementById("btnSubmitPurchase");
+                const submitSpinner = document.getElementById("submitSpinner");
 
-                if (data.success) {
-                    document.getElementById("passTariffName").textContent = data.tariffName;
-                    document.getElementById("passUserName").textContent = data.userName;
-                    document.getElementById("passDates").textContent = `${data.startDate} — ${data.endDate}`;
-                    document.getElementById("successMessageText").textContent = data.message;
+                quickForm.addEventListener("submit", async function (e) {
+                    e.preventDefault();
 
-                    modalFormContainer.classList.add("d-none");
-                    modalSuccessContainer.classList.remove("d-none");
-                } else {
-                    modalAlert.textContent = data.message || "Failed to complete purchase.";
-                    modalAlert.classList.remove("d-none");
-                }
-            } catch (err) {
-                modalAlert.textContent = "Unable to connect to the server. Please try again.";
-                modalAlert.classList.remove("d-none");
-            } finally {
-                submitBtn.disabled = false;
-                submitSpinner.classList.add("d-none");
+                    modalAlert.classList.add("d-none");
+                    submitBtn.disabled = true;
+                    submitSpinner.classList.remove("d-none");
+
+                    const payload = {
+                        tariffId: parseInt(document.getElementById("formTariffId").value),
+                        fullName: document.getElementById("customerFullName").value,
+                        phone: document.getElementById("customerPhone").value,
+                        email: document.getElementById("customerEmail").value,
+                        startDate: document.getElementById("subscriptionStartDate").value,
+                        paymentMethod: "card"
+                    };
+
+                    try {
+                        const response = await fetch('/Tariff/QuickPurchase', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(payload)
+                        });
+
+                        const data = await response.json();
+
+                        if (data.success) {
+                            document.getElementById("passTariffName").textContent = data.tariffName;
+                            document.getElementById("passUserName").textContent = data.userName;
+                            document.getElementById("passDates").textContent = `${data.startDate} — ${data.endDate}`;
+                            document.getElementById("successMessageText").textContent = data.message;
+
+                            modalFormContainer.classList.add("d-none");
+                            modalSuccessContainer.classList.remove("d-none");
+                        } else {
+                            modalAlert.textContent = data.message || "Failed to complete purchase.";
+                            modalAlert.classList.remove("d-none");
+                        }
+                    } catch (err) {
+                        modalAlert.textContent = "Unable to connect to the server. Please try again.";
+                        modalAlert.classList.remove("d-none");
+                    } finally {
+                        submitBtn.disabled = false;
+                        submitSpinner.classList.add("d-none");
+                    }
+                });
             }
         });
-    });
-</script>
+    </script>
 }
