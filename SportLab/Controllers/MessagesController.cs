@@ -220,23 +220,61 @@ namespace SportLab.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetConversation(int contactId)
+        public async Task<IActionResult> GetConversation(string contactId)
         {
-            var userId = CurrentUserId();
-            var otherUser = await _context.Users.FindAsync(contactId);
+            // Broadcast conversation (admin -> all trainers)
+            if (contactId == "BROADCAST_TRAINERS")
+            {
+                var broadcastMessages = await _context.Messages
+                    .Where(m => m.SenderId == CurrentUserId())
+                    .OrderBy(m => m.SentDate)
+                    .ToListAsync();
+
+                var broadcastConversation = new
+                {
+                    id = "BROADCAST_TRAINERS",
+                    name = "📢 All Trainers",
+                    online = false,
+                    typing = false,
+                    unread = 0,
+                    time = broadcastMessages.Any() ? broadcastMessages.Last().SentDate.ToString("HH:mm") : "",
+                    goal = "",
+                    weight = "",
+                    next = "",
+                    accent = "#7D51FE",
+                    msgs = broadcastMessages.Select(m => new
+                    {
+                        from = "out",
+                        text = m.Text,
+                        time = m.SentDate.ToString("HH:mm"),
+                        read = m.IsRead
+                    }).ToList()
+                };
+
+                return Ok(new[] { broadcastConversation });
+            }
+
+            // Safe parse of regular user contact id
+            if (!int.TryParse(contactId, out var parsedContactId))
+            {
+                return BadRequest(new { success = false, message = "Invalid contact identifier" });
+            }
+
+            var currentUserId = CurrentUserId();
+            var otherUser = await _context.Users.FindAsync(parsedContactId);
             var messages = await _context.Messages
-                .Where(m => (m.SenderId == userId && m.ReceiverId == contactId) ||
-                            (m.SenderId == contactId && m.ReceiverId == userId))
+                .Where(m => (m.SenderId == currentUserId && m.ReceiverId == parsedContactId) ||
+                            (m.SenderId == parsedContactId && m.ReceiverId == currentUserId))
                 .OrderBy(m => m.SentDate)
                 .ToListAsync();
 
             var conversation = new
             {
-                id = contactId,
+                id = parsedContactId,
                 name = otherUser?.Name ?? "Unknown",
                 online = false,
                 typing = false,
-                unread = messages.Count(m => m.ReceiverId == userId && m.SenderId == contactId && !m.IsRead),
+                unread = messages.Count(m => m.ReceiverId == currentUserId && m.SenderId == parsedContactId && !m.IsRead),
                 time = messages.Any() ? messages.Last().SentDate.ToString("HH:mm") : "",
                 goal = "",
                 weight = "",
@@ -244,7 +282,7 @@ namespace SportLab.Controllers
                 accent = "#7D51FE",
                 msgs = messages.Select(m => new
                 {
-                    from = m.SenderId == userId ? "out" : "in",
+                    from = m.SenderId == currentUserId ? "out" : "in",
                     text = m.Text,
                     time = m.SentDate.ToString("HH:mm"),
                     read = m.IsRead
@@ -252,6 +290,54 @@ namespace SportLab.Controllers
             };
 
             return Ok(new[] { conversation });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SendMessage(string receiverId, string text)
+        {
+            var senderId = CurrentUserId();
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return BadRequest(new { success = false, message = "Message text is required" });
+            }
+
+            if (receiverId == "BROADCAST_TRAINERS" &&
+                (User.IsInRole(Roles.Administrator) || User.IsInRole(Roles.AdminAlias)))
+            {
+                // Mass mailing to all trainers
+                var trainers = await _context.Users
+                    .Where(u => u.Role == Roles.Trainer)
+                    .ToListAsync();
+
+                foreach (var trainer in trainers)
+                {
+                    _context.Messages.Add(new Message
+                    {
+                        SenderId = senderId,
+                        ReceiverId = trainer.Id,
+                        Text = text,
+                        SentDate = DateTime.Now,
+                        IsRead = false
+                    });
+                }
+
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                int rId = int.Parse(receiverId);
+                _context.Messages.Add(new Message
+                {
+                    SenderId = senderId,
+                    ReceiverId = rId,
+                    Text = text,
+                    SentDate = DateTime.Now,
+                    IsRead = false
+                });
+                await _context.SaveChangesAsync();
+            }
+
+            return Ok(new { success = true });
         }
 
         public async Task<IActionResult> Details(int? id)
