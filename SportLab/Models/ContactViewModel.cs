@@ -4,7 +4,7 @@ namespace SportLab.Models
 {
     public class ContactViewModel
     {
-        public int Id { get; set; }  // User Id, or 0 for Admin
+        public string Id { get; set; } = string.Empty;  // User Id (as string) or "BROADCAST_TRAINERS" for admin broadcast
         public string Name { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
         public int UnreadCount { get; set; }

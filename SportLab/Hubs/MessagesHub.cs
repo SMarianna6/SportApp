@@ -50,13 +50,51 @@ namespace SportLab.Hubs
             await Clients.Caller.SendAsync("ReceiveMessages", conversationId, messages);
         }
 
-        public async Task SendMessage(int receiverId, string text)
+        public async Task SendMessage(string receiverId, string text)
         {
             var userId = int.Parse(Context.GetHttpContext().User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-
-            // Determine sender and receiver
             var senderId = userId;
-            var receiverIdActual = receiverId;
+
+            // Admin broadcast: send message to all trainers
+            if ((Context.User.IsInRole(Roles.Administrator) || Context.User.IsInRole(Roles.AdminAlias)) &&
+                receiverId == "BROADCAST_TRAINERS")
+            {
+                var trainers = await _context.Users
+                    .Where(u => u.Role == Roles.Trainer)
+                    .ToListAsync();
+
+                foreach (var trainer in trainers)
+                {
+                    var broadcastMessage = new Message
+                    {
+                        SenderId = senderId,
+                        ReceiverId = trainer.Id,
+                        Text = text,
+                        SentDate = DateTime.Now
+                    };
+
+                    _context.Messages.Add(broadcastMessage);
+                    await _context.SaveChangesAsync();
+
+                    var broadcastConversationId = senderId < trainer.Id
+                        ? $"{senderId}_{trainer.Id}"
+                        : $"{trainer.Id}_{senderId}";
+
+                    await Clients.Group(broadcastConversationId).SendAsync("NewMessage", new
+                    {
+                        Id = broadcastMessage.Id,
+                        SenderName = broadcastMessage.Sender?.Name ?? "Unknown",
+                        Text = broadcastMessage.Text,
+                        SentDate = broadcastMessage.SentDate,
+                        FromCurrentUser = broadcastMessage.SenderId == senderId
+                    });
+                }
+
+                return;
+            }
+
+            // Determine receiver for direct messages
+            var receiverIdActual = int.Parse(receiverId);
 
             var message = new Message
             {

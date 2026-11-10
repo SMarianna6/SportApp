@@ -56,7 +56,7 @@ namespace SportLab.Controllers
 
                     contacts.Add(new ContactViewModel
                     {
-                        Id = u.Id,
+                        Id = u.Id.ToString(),
                         Name = u.Name,
                         Role = u.Role,
                         UnreadCount = unreadCount,
@@ -65,6 +65,18 @@ namespace SportLab.Controllers
                         LastMessageDate = lastMessage?.SentDate ?? DateTime.MinValue
                     });
                 }
+
+                // Broadcast contact for Admin: mass mailing to all trainers
+                contacts.Add(new ContactViewModel
+                {
+                    Id = "BROADCAST_TRAINERS",
+                    Name = "📢 All Trainers",
+                    Role = "Broadcast",
+                    UnreadCount = 0,
+                    HasConversation = true,
+                    LastMessageText = null,
+                    LastMessageDate = DateTime.MinValue
+                });
             }
             else if (userRole == "Trainer")
             {
@@ -84,7 +96,7 @@ namespace SportLab.Controllers
                         .Count(m => m.SenderId == adminUser.Id && m.ReceiverId == userId && !m.IsRead);
                     contacts.Add(new ContactViewModel
                     {
-                        Id = adminUser.Id,
+                        Id = adminUser.Id.ToString(),
                         Name = adminUser.Name,
                         Role = adminUser.Role,
                         UnreadCount = adminUnreadCount,
@@ -122,7 +134,7 @@ namespace SportLab.Controllers
                             .FirstOrDefault();
                         contacts.Add(new ContactViewModel
                         {
-                            Id = clientId,
+                            Id = clientId.ToString(),
                             Name = user.Name,
                             Role = user.Role,
                             UnreadCount = unreadCount,
@@ -151,7 +163,7 @@ namespace SportLab.Controllers
                         .Count(m => m.SenderId == adminUser.Id && m.ReceiverId == userId && !m.IsRead);
                     contacts.Add(new ContactViewModel
                     {
-                        Id = adminUser.Id,
+                        Id = adminUser.Id.ToString(),
                         Name = adminUser.Name,
                         Role = adminUser.Role,
                         UnreadCount = adminUnreadCount,
@@ -189,7 +201,7 @@ namespace SportLab.Controllers
                             .FirstOrDefault();
                         contacts.Add(new ContactViewModel
                         {
-                            Id = trainerId,
+                            Id = trainerId.ToString(),
                             Name = user.Name,
                             Role = user.Role,
                             UnreadCount = unreadCount,
@@ -205,6 +217,41 @@ namespace SportLab.Controllers
             ViewData["CurrentUserRole"] = userRole;
 
             return View(contacts);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetConversation(int contactId)
+        {
+            var userId = CurrentUserId();
+            var otherUser = await _context.Users.FindAsync(contactId);
+            var messages = await _context.Messages
+                .Where(m => (m.SenderId == userId && m.ReceiverId == contactId) ||
+                            (m.SenderId == contactId && m.ReceiverId == userId))
+                .OrderBy(m => m.SentDate)
+                .ToListAsync();
+
+            var conversation = new
+            {
+                id = contactId,
+                name = otherUser?.Name ?? "Unknown",
+                online = false,
+                typing = false,
+                unread = messages.Count(m => m.ReceiverId == userId && m.SenderId == contactId && !m.IsRead),
+                time = messages.Any() ? messages.Last().SentDate.ToString("HH:mm") : "",
+                goal = "",
+                weight = "",
+                next = "",
+                accent = "#7D51FE",
+                msgs = messages.Select(m => new
+                {
+                    from = m.SenderId == userId ? "out" : "in",
+                    text = m.Text,
+                    time = m.SentDate.ToString("HH:mm"),
+                    read = m.IsRead
+                }).ToList()
+            };
+
+            return Ok(new[] { conversation });
         }
 
         public async Task<IActionResult> Details(int? id)

@@ -30,7 +30,7 @@
             @foreach (var contact in Model)
             {
                 <li>
-                    <button type="button" data-id="@contact.Id" class="chat-item flex w-full items-center gap-3 border-l-4 px-4 py-3.5 text-left transition-colors hover:bg-white/5">
+                    <button type="button" data-contact-id="@contact.Id" data-contact-name="@contact.Name" class="chat-item flex w-full items-center gap-3 border-l-4 px-4 py-3.5 text-left transition-colors hover:bg-white/5">
                         <span class="relative shrink-0"><span class="flex h-12 w-12 items-center justify-center rounded-full text-sm font-extrabold bg-violet text-white">@(contact.Name != null && contact.Name.Length > 0 ? contact.Name.Substring(0, 1) : "?")</span></span>
                         <span class="min-w-0 flex-1">
                             <span class="flex items-baseline justify-between gap-2">
@@ -93,6 +93,7 @@
             }
 
             <form id="composer" class="flex items-center gap-2 sm:gap-3">
+                <input type="hidden" id="receiverId" name="receiverId" value="" />
                 @if (isTrainer)
                 {
                     <button id="plus-btn" type="button" class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-card text-white transition-all duration-300 hover:bg-violet focus:outline-none focus-visible:ring-2 focus-visible:ring-neon">
@@ -198,7 +199,7 @@
                 if (!m) return 'No messages yet';
                 return m.workout ? 'Workout: ' + m.workout.title : (m.from === 'out' ? 'You: ' : '') + m.text;
             }
-            function byId(id) { return CHATS.filter(function (c) { return c.id === id; })[0]; }
+            function byId(id) { return CHATS.filter(function (c) { return String(c.id) === String(id); })[0]; }
 
             var CHECKS = {
                 read: '<svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m1 13 4 4L15 7M9 15l2 2L22 6"/></svg>',
@@ -210,8 +211,8 @@
                 var rows = CHATS.filter(function (c) { return c.name.toLowerCase().indexOf(q) !== -1 || lastText(c).toLowerCase().indexOf(q) !== -1; });
                 $('chat-empty').classList.toggle('hidden', rows.length > 0);
                 $('chat-list').innerHTML = rows.map(function (c) {
-                    var active = c.id === activeId;
-                    return '<li><button type="button" data-id="' + c.id + '" aria-current="' + active + '" class="chat-item flex w-full items-center gap-3 border-l-4 px-4 py-3.5 text-left transition-colors hover:bg-white/5 ' + (active ? 'border-neon bg-white/5' : 'border-transparent') + '">' +
+                    var active = String(c.id) === String(activeId);
+                    return '<li><button type="button" data-contact-id="' + c.id + '" aria-current="' + active + '" class="chat-item flex w-full items-center gap-3 border-l-4 px-4 py-3.5 text-left transition-colors hover:bg-white/5 ' + (active ? 'border-neon bg-white/5' : 'border-transparent') + '">' +
                         '<span class="relative shrink-0"><span class="flex h-12 w-12 items-center justify-center rounded-full text-sm font-extrabold ' + (c.accent === '#AAFF00' ? 'bg-card text-neon' : 'bg-violet text-white') + '">' + initials(c.name) + '</span>' +
                         (c.online ? '<span class="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-shell bg-neon"></span>' : '') + '</span>' +
                         '<span class="min-w-0 flex-1"><span class="flex items-baseline justify-between gap-2"><span class="truncate text-sm font-extrabold">' + esc(c.name) + '</span><span class="shrink-0 text-[11px] font-semibold text-mono/50">' + c.time + '</span></span>' +
@@ -279,16 +280,28 @@
 
             function selectChat(id) {
                 activeId = id;
-                var c = byId(id);
+                var cid = String(id);
+                var c = byId(cid);
                 if (c) { c.unread = 0; }
                 renderList();
                 $('chat-list-col').classList.add('hidden', 'lg:flex');
                 $('chat-col').classList.remove('hidden'); $('chat-col').classList.add('flex');
-                loadConversation(id);
+                $('receiverId').value = cid;
+                if (cid === 'BROADCAST_TRAINERS') {
+                    // Broadcast chat: clean empty state, composer stays ready for mass mail
+                    var box = $('messages');
+                    box.innerHTML = '<p class="mx-auto w-fit rounded-full bg-card px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-mono/60">Broadcast</p>';
+                    box.scrollTop = box.scrollHeight;
+                    $('head-avatar').textContent = '📢';
+                    $('head-name').textContent = 'All Trainers';
+                    $('head-status').textContent = 'Mass mailing';
+                    return;
+                }
+                loadConversation(cid);
             }
 
             function loadConversation(id) {
-                return fetch('/Messages/GetConversation/' + id)
+                return fetch('/Messages/GetConversation?contactId=' + encodeURIComponent(id))
                     .then(function (response) { return response.json(); })
                     .then(function (data) {
                         // Data format: array of { id, name, msgs: [...] }
@@ -303,7 +316,7 @@
                 $('chat-col').classList.add('hidden'); $('chat-col').classList.remove('flex');
             }
 
-            $('chat-list').addEventListener('click', function (e) { var b = e.target.closest('.chat-item'); if (b) selectChat(+b.dataset.id); });
+            $('chat-list').addEventListener('click', function (e) { var b = e.target.closest('.chat-item'); if (b) selectChat(b.dataset.contactId); });
             $('chat-search').addEventListener('input', renderList);
             $('chat-back').addEventListener('click', showList);
 
@@ -362,14 +375,28 @@
             document.addEventListener('DOMContentLoaded', initSignalR);
 
             function push(msg) {
+                if (activeId === 'BROADCAST_TRAINERS') {
+                    // Admin mass broadcast
+                    if (hubConnection && hubConnection.state === signalR.HubConnectionState.Connected) {
+                        hubConnection.send('SendMessage', 'BROADCAST_TRAINERS', msg.text)
+                            .then(function () {
+                                // Local echo of the broadcast
+                                var b = bubble({ from: 'out', text: msg.text, time: msg.time, read: false });
+                                var box = $('messages');
+                                box.insertAdjacentHTML('beforeend', b);
+                                box.scrollTop = box.scrollHeight;
+                            })
+                            .catch(function (err) { console.error('Send error:', err); });
+                    }
+                    return;
+                }
                 var c = byId(activeId);
                 if (c) {
                     c.msgs.push(msg);
                     c.time = msg.time;
                     // Also send via SignalR
                     if (hubConnection && hubConnection.state === signalR.HubConnectionState.Connected) {
-                        var from = msg.from === 'out' ? 'receiver' : 'sender';
-                        hubConnection.send('SendMessage', activeId, msg.text).then(() => {
+                        hubConnection.send('SendMessage', String(activeId), msg.text).then(() => {
                             // Message sent successfully
                         }).catch(err => console.error('Send error:', err));
                     }
