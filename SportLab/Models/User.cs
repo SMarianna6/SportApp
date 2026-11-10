@@ -20,8 +20,8 @@ namespace SportLab.Models
         public required string Email { get; set; }
 
         [Required(ErrorMessage = "Password is required")]
-        [StringLength(100, MinimumLength = 6,
-            ErrorMessage = "Password must be between 6 and 100 characters")]
+        [StringLength(256, MinimumLength = 6,
+            ErrorMessage = "Password must be between 6 and 256 characters")]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public required string Password { get; set; }
@@ -34,11 +34,22 @@ namespace SportLab.Models
         [Display(Name = "Is Blocked")]
         public bool IsBlocked { get; set; }
 
+        [Display(Name = "Avatar")]
+        [StringLength(500)]
+        public string? AvatarUrl { get; set; }
+
+        [StringLength(120)]
+        [Display(Name = "Goal")]
+        public string? Goal { get; set; }
+
+        public TrainerProfile? TrainerProfile { get; set; }
+
         public ICollection<Subscription> Subscriptions { get; set; } = new List<Subscription>();
         public ICollection<WorkoutSlot> WorkoutSlots { get; set; } = new List<WorkoutSlot>();
         public ICollection<MetricLog> MetricLogs { get; set; } = new List<MetricLog>();
         public ICollection<Order> Orders { get; set; } = new List<Order>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
+        public ICollection<WorkoutBooking> WorkoutBookings { get; set; } = new List<WorkoutBooking>();
 
         [InverseProperty("Sender")]
         public ICollection<Message> SentMessages { get; set; } = new List<Message>();

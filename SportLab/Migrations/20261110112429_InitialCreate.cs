@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SportLab.Migrations
 {
     /// <inheritdoc />
-    public partial class FixProductAndTariff : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -35,9 +35,11 @@ namespace SportLab.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     StockQuantity = table.Column<int>(type: "int", nullable: false),
-                    PhotoUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Photo = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Category = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Rating = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -50,11 +52,11 @@ namespace SportLab.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     Duration = table.Column<int>(type: "int", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -67,11 +69,13 @@ namespace SportLab.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsBlocked = table.Column<bool>(type: "bit", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    IsBlocked = table.Column<bool>(type: "bit", nullable: false),
+                    AvatarUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    Goal = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -86,7 +90,7 @@ namespace SportLab.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SenderId = table.Column<int>(type: "int", nullable: false),
                     ReceiverId = table.Column<int>(type: "int", nullable: false),
-                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Text = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
                     SentDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -114,7 +118,8 @@ namespace SportLab.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     Weight = table.Column<float>(type: "real", nullable: false),
-                    RecordDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    RecordDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -135,8 +140,8 @@ namespace SportLab.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    TotalAmount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -146,7 +151,7 @@ namespace SportLab.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -156,7 +161,7 @@ namespace SportLab.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Comment = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     Rating = table.Column<int>(type: "int", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModerationStatus = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -179,7 +184,7 @@ namespace SportLab.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    TariffId = table.Column<int>(type: "int", nullable: false),
+                    PlanId = table.Column<int>(type: "int", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false)
@@ -188,13 +193,37 @@ namespace SportLab.Migrations
                 {
                     table.PrimaryKey("PK_Subscriptions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Subscriptions_Tariffs_TariffId",
-                        column: x => x.TariffId,
+                        name: "FK_Subscriptions_Tariffs_PlanId",
+                        column: x => x.PlanId,
                         principalTable: "Tariffs",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Subscriptions_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TrainerProfiles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    About = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    Experience = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Specializations = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    PhotoUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TrainerProfiles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TrainerProfiles_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -207,27 +236,31 @@ namespace SportLab.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    ActivityName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     TrainerId = table.Column<int>(type: "int", nullable: false),
-                    ClientId = table.Column<int>(type: "int", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: true),
                     StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false, defaultValue: "Available"),
+                    Capacity = table.Column<int>(type: "int", nullable: false),
+                    Booked = table.Column<int>(type: "int", nullable: false),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_WorkoutSlots", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_WorkoutSlots_Users_ClientId",
-                        column: x => x.ClientId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_WorkoutSlots_Users_TrainerId",
                         column: x => x.TrainerId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_WorkoutSlots_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -237,7 +270,9 @@ namespace SportLab.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     OrderId = table.Column<int>(type: "int", nullable: false),
-                    ProductId = table.Column<int>(type: "int", nullable: false)
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    UnitPrice = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -253,13 +288,42 @@ namespace SportLab.Migrations
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WorkoutBookings",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    WorkoutSlotId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    BookingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WorkoutBookings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WorkoutBookings_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_WorkoutBookings_WorkoutSlots_WorkoutSlotId",
+                        column: x => x.WorkoutSlotId,
+                        principalTable: "WorkoutSlots",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Messages_ReceiverId",
+                name: "IX_Messages_ReceiverId_SentDate",
                 table: "Messages",
-                column: "ReceiverId");
+                columns: new[] { "ReceiverId", "SentDate" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Messages_SenderId",
@@ -267,14 +331,15 @@ namespace SportLab.Migrations
                 column: "SenderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MetricLogs_UserId",
+                name: "IX_MetricLogs_UserId_RecordDate",
                 table: "MetricLogs",
-                column: "UserId");
+                columns: new[] { "UserId", "RecordDate" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderDetails_OrderId",
+                name: "IX_OrderDetails_OrderId_ProductId",
                 table: "OrderDetails",
-                column: "OrderId");
+                columns: new[] { "OrderId", "ProductId" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderDetails_ProductId",
@@ -282,34 +347,62 @@ namespace SportLab.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_UserId",
+                name: "IX_Orders_UserId_OrderDate",
                 table: "Orders",
-                column: "UserId");
+                columns: new[] { "UserId", "OrderDate" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reviews_UserId",
+                name: "IX_Reviews_UserId_CreatedDate",
                 table: "Reviews",
-                column: "UserId");
+                columns: new[] { "UserId", "CreatedDate" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Subscriptions_TariffId",
+                name: "IX_Subscriptions_PlanId",
                 table: "Subscriptions",
-                column: "TariffId");
+                column: "PlanId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Subscriptions_UserId",
+                name: "IX_Subscriptions_UserId_IsActive_EndDate",
                 table: "Subscriptions",
+                columns: new[] { "UserId", "IsActive", "EndDate" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TrainerProfiles_UserId",
+                table: "TrainerProfiles",
+                column: "UserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Email",
+                table: "Users",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorkoutBookings_UserId_BookingDate",
+                table: "WorkoutBookings",
+                columns: new[] { "UserId", "BookingDate" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorkoutBookings_WorkoutSlotId_UserId",
+                table: "WorkoutBookings",
+                columns: new[] { "WorkoutSlotId", "UserId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorkoutSlots_StartTime_EndTime",
+                table: "WorkoutSlots",
+                columns: new[] { "StartTime", "EndTime" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorkoutSlots_TrainerId_StartTime",
+                table: "WorkoutSlots",
+                columns: new[] { "TrainerId", "StartTime" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorkoutSlots_UserId",
+                table: "WorkoutSlots",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WorkoutSlots_ClientId",
-                table: "WorkoutSlots",
-                column: "ClientId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WorkoutSlots_TrainerId",
-                table: "WorkoutSlots",
-                column: "TrainerId");
         }
 
         /// <inheritdoc />
@@ -334,7 +427,10 @@ namespace SportLab.Migrations
                 name: "Subscriptions");
 
             migrationBuilder.DropTable(
-                name: "WorkoutSlots");
+                name: "TrainerProfiles");
+
+            migrationBuilder.DropTable(
+                name: "WorkoutBookings");
 
             migrationBuilder.DropTable(
                 name: "Orders");
@@ -344,6 +440,9 @@ namespace SportLab.Migrations
 
             migrationBuilder.DropTable(
                 name: "Tariffs");
+
+            migrationBuilder.DropTable(
+                name: "WorkoutSlots");
 
             migrationBuilder.DropTable(
                 name: "Users");

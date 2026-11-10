@@ -1,0 +1,118 @@
+﻿@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Client History";
+}
+
+<div class="mb-6 flex items-center gap-4">
+    <a href="/Profile/Trainer" class="flex h-10 w-10 items-center justify-center rounded-md bg-card text-mono transition-colors hover:text-neon">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+    </a>
+    <div>
+        <h2 class="text-3xl font-black uppercase tracking-tighter sm:text-4xl">History: <span id="client-name" class="text-neon">Loading...</span></h2>
+        <p class="mt-1 text-sm text-mono/60">Past workouts and weight logs.</p>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 gap-5 lg:grid-cols-2">
+    <!-- Weight Logs -->
+    <section class="rounded-lg bg-card p-5">
+        <h3 class="text-lg font-extrabold uppercase tracking-tight mb-4">Weight Logs</h3>
+        <div class="overflow-x-auto">
+            <table class="w-full min-w-[300px] text-left text-sm">
+                <thead>
+                    <tr class="border-b border-white/10 text-[11px] font-bold uppercase tracking-widest text-mono/50">
+                        <th class="py-3 px-4">Date</th>
+                        <th class="py-3 px-4">Weight</th>
+                        <th class="py-3 px-4">Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="weight-table" class="divide-y divide-white/5">
+                    <tr><td colspan="3" class="py-4 text-center text-mono/50 animate-pulse">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Past Workouts -->
+    <section class="rounded-lg bg-card p-5">
+        <h3 class="text-lg font-extrabold uppercase tracking-tight mb-4">Past Workouts</h3>
+        <div class="overflow-x-auto">
+            <table class="w-full min-w-[300px] text-left text-sm">
+                <thead>
+                    <tr class="border-b border-white/10 text-[11px] font-bold uppercase tracking-widest text-mono/50">
+                        <th class="py-3 px-4">Date</th>
+                        <th class="py-3 px-4">Activity</th>
+                        <th class="py-3 px-4">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="workout-table" class="divide-y divide-white/5">
+                    <tr><td colspan="3" class="py-4 text-center text-mono/50 animate-pulse">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            'use strict';
+            const urlParams = new URLSearchParams(window.location.search);
+            const clientId = urlParams.get('id');
+
+            if (!clientId) {
+                window.location.href = '/Profile/Trainer';
+                return;
+            }
+
+            async function loadHistory() {
+                try {
+                    const res = await fetch('/Profile/GetClientHistoryData?id=' + clientId);
+                    const data = await res.json();
+
+                    if (!data.success) {
+                        alert('Failed to load client data');
+                        return;
+                    }
+
+                    document.getElementById('client-name').textContent = data.client.name;
+
+                    // Render Weights
+                    const weightTable = document.getElementById('weight-table');
+                    if (data.weights.length === 0) {
+                        weightTable.innerHTML = '<tr><td colspan="3" class="py-4 text-center text-mono/50">No weight records.</td></tr>';
+                    } else {
+                        weightTable.innerHTML = data.weights.map(w => `
+                            <tr class="hover:bg-shell/50 transition-colors">
+                                <td class="py-3 px-4 text-mono/70">${new Date(w.recordDate).toLocaleDateString()}</td>
+                                <td class="py-3 px-4 font-bold text-white">${w.weight.toFixed(1)} kg</td>
+                                <td class="py-3 px-4 text-mono/60 text-xs">${w.notes || '-'}</td>
+                            </tr>
+                        `).join('');
+                    }
+
+                    // Render Workouts
+                    const workoutTable = document.getElementById('workout-table');
+                    if (data.workouts.length === 0) {
+                        workoutTable.innerHTML = '<tr><td colspan="3" class="py-4 text-center text-mono/50">No past workouts.</td></tr>';
+                    } else {
+                        workoutTable.innerHTML = data.workouts.map(w => `
+                            <tr class="hover:bg-shell/50 transition-colors">
+                                <td class="py-3 px-4 text-mono/70">${new Date(w.startTime).toLocaleDateString()}</td>
+                                <td class="py-3 px-4 font-bold text-white">${w.activityName}</td>
+                                <td class="py-3 px-4">
+                                    <span class="inline-flex rounded-full bg-neon/15 px-2 py-0.5 text-xs font-bold text-neon uppercase">${w.status}</span>
+                                </td>
+                            </tr>
+                        `).join('');
+                    }
+
+                } catch (e) {
+                    console.error('Error fetching history:', e);
+                }
+            }
+
+            loadHistory();
+        })();
+    </script>
+}

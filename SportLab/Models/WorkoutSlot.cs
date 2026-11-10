@@ -61,6 +61,26 @@ namespace SportLab.Models
         [Range(0, 1000, ErrorMessage = "Booked spots cannot be negative")]
         public int Booked { get; set; } = 0;
 
+        [Timestamp]
+        public byte[]? RowVersion { get; set; }
+
+        [NotMapped]
+        public int RemainingSpots => Math.Max(0, Capacity - Booked);
+
+        [NotMapped]
+        public bool IsFull => Booked >= Capacity;
+
+        [NotMapped]
+        public bool IsPast => EndTime <= DateTime.Now;
+
+        [NotMapped]
+        public bool IsBookable => !IsPast
+                                  && !IsFull
+                                  && Status == WorkoutStatuses.Available;
+
+        public ICollection<WorkoutBooking> Bookings { get; set; } = new List<WorkoutBooking>();
+
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (EndTime <= StartTime)
@@ -77,5 +97,13 @@ namespace SportLab.Models
                     new[] { nameof(Booked) });
             }
         }
+    }
+
+    public static class WorkoutStatuses
+    {
+        public const string Available = "Available";
+        public const string Booked = "Booked";
+        public const string Completed = "Completed";
+        public const string Cancelled = "Cancelled";
     }
 }

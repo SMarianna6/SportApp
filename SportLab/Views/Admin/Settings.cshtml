@@ -19,20 +19,37 @@
         <button type="button" class="sh-tab" role="tab" data-tab="Notifications">Notifications</button>
     </div>
 
-    @* MVC integration point: none of these forms post anywhere yet (the prototype's Save buttons were inert). *@
-    <form class="sh-card sh-settings-card sh-form" id="sh-settings-form">
-        <div class="sh-form" data-panel="Account">
-            <label class="sh-field">Display Name<div class="sh-field-body"><input class="sh-input" value="Admin" /></div></label>
-            <label class="sh-field">Update Email<div class="sh-field-body"><input class="sh-input" type="email" value="admin&#64;sporthub.io" /></div></label>
-            <div><button class="sh-btn sh-btn-primary">Save Changes</button></div>
-        </div>
+    @Html.AntiForgeryToken()
 
-        <div class="sh-form" data-panel="Security" hidden>
-            <label class="sh-field">Current Password<div class="sh-field-body"><input class="sh-input" type="password" /></div></label>
-            <label class="sh-field">New Password<div class="sh-field-body"><input class="sh-input" type="password" /></div></label>
-            <label class="sh-field">Confirm New Password<div class="sh-field-body"><input class="sh-input" type="password" /></div></label>
-            <div><button class="sh-btn sh-btn-primary">Change Password</button></div>
-        </div>
+    <div class="sh-card sh-settings-card sh-form">
+        <form id="admin-account-form" class="sh-form" data-panel="Account">
+            <label class="sh-field">Display Name
+                <div class="sh-field-body"><input id="admin-acc-name" class="sh-input" required /></div>
+            </label>
+            <label class="sh-field">Update Email
+                <div class="sh-field-body"><input id="admin-acc-email" class="sh-input" type="email" required /></div>
+            </label>
+            <div>
+                <button type="submit" id="admin-btn-save-acc" class="sh-btn sh-btn-primary">Save Changes</button>
+                <p id="admin-acc-msg" class="mt-3 text-sm font-bold hidden" style="color: #AAFF00;"></p>
+            </div>
+        </form>
+
+        <form id="admin-security-form" class="sh-form" data-panel="Security" hidden>
+            <label class="sh-field">Current Password
+                <div class="sh-field-body"><input id="admin-pw-current" class="sh-input" type="password" required /></div>
+            </label>
+            <label class="sh-field">New Password
+                <div class="sh-field-body"><input id="admin-pw-new" class="sh-input" type="password" required /></div>
+            </label>
+            <label class="sh-field">Confirm New Password
+                <div class="sh-field-body"><input id="admin-pw-confirm" class="sh-input" type="password" required /></div>
+            </label>
+            <div>
+                <button type="submit" id="admin-btn-save-pw" class="sh-btn sh-btn-primary">Change Password</button>
+                <p id="admin-pw-msg" class="mt-3 text-sm font-bold hidden" style="color: #AAFF00;"></p>
+            </div>
+        </form>
 
         <div data-panel="Notifications" hidden>
             <div class="sh-pref"><span>New member registrations</span><button type="button" class="sh-switch" role="switch" aria-checked="true" aria-label="New member registrations"></button></div>
@@ -40,8 +57,10 @@
             <div class="sh-pref"><span>Class cancellations</span><button type="button" class="sh-switch" role="switch" aria-checked="false" aria-label="Class cancellations"></button></div>
             <div class="sh-pref"><span>Weekly revenue report</span><button type="button" class="sh-switch" role="switch" aria-checked="true" aria-label="Weekly revenue report"></button></div>
         </div>
-    </form>
+    </div>
 </div>
 
-<script src="~/js/admin/sh-common.js" asp-append-version="true"></script>
-<script src="~/js/admin/sh-settings.js" asp-append-version="true"></script>
+@section Scripts {
+    <script src="~/js/admin/sh-common.js" asp-append-version="true"></script>
+    <script src="~/js/admin/sh-settings.js" asp-append-version="true"></script>
+}

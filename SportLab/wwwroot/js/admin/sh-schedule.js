@@ -178,7 +178,6 @@
             if (f.EndTime) f.EndTime.value = slot ? slot.timeEnd : hhmm(Math.min(hour + 1, LAST_HOUR));
             if (f.coach) f.coach.value = slot ? slot.coach : '';
             if (f.Capacity) f.Capacity.value = slot ? slot.capacity : '15';
-            if (f.Booked) f.Booked.value = slot ? slot.booked : '0';
 
             // CLEAR PREVIOUS VALIDATION ERRORS
             if (typeof $ !== 'undefined') {
@@ -238,70 +237,69 @@
             var f = form.elements;
 
             var data = {
+                id: editing ? editing.id : 0,
                 type: f.ActivityName ? f.ActivityName.value : '',
                 day: f.day ? Number(f.day.value) : 1,
                 timeStart: f.StartTime ? f.StartTime.value : '',
                 timeEnd: f.EndTime ? f.EndTime.value : '',
                 coach: f.coach ? f.coach.value.trim() : '',
-                capacity: f.Capacity ? parseInt(f.Capacity.value, 10) : 15,
-                booked: f.Booked ? parseInt(f.Booked.value, 10) : 0
+                capacity: f.Capacity ? parseInt(f.Capacity.value, 10) : 15
             };
 
             if (!data.timeStart || !data.timeEnd) return showError('Start and end time are required.');
             if (toHour(data.timeStart) < FIRST_HOUR || toHour(data.timeEnd) > LAST_HOUR) return showError('Classes must be between 08:00 and 20:00.');
             if (toHour(data.timeEnd) <= toHour(data.timeStart)) return showError('End time must be after start time.');
             if (!data.coach) return showError('Coach is required.');
-            if (data.booked > data.capacity) return showError('Booked cannot exceed capacity.');
+            if (!Number.isInteger(data.capacity) || data.capacity < 1) return showError('Capacity must be greater than zero.');
 
-            var record;
-            if (editing) {
-                record = Object.assign(editing, data);
-            } else {
-                record = Object.assign({ id: -Date.now() }, data);
-                slots.push(record);
-            }
+            try {
+                const response = await fetch(URLS.save, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
 
-            SH.closeModal('sh-schedule-modal');
-            render();
-
-            const payload = Object.assign({}, data, { id: record.id < 0 ? 0 : record.id });
-            const response = await fetch(URLS.save, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            if (response.ok) {
-                const saved = await response.json();
-                if (saved && saved.id && record.id < 0) {
-                    record.id = saved.id;
-                    render();
+                if (!response.ok) {
+                    const message = await response.text();
+                    return showError(message || 'Failed to save class.');
                 }
+
+                SH.closeModal('sh-schedule-modal');
+                await load();
+            } catch (error) {
+                showError('An error occurred while saving the class.');
             }
         });
+    }
 
         if (typeof $ !== 'undefined') {
             $(form).find('input, select').on('blur change', function () {
                 $(this).valid();
             });
         }
-    }
 
     if (deleteBtn) {
         deleteBtn.addEventListener('click', async function () {
             if (!editing) return;
-            var id = editing.id;
 
-            if (confirm('Delete this class?')) {
-                slots = slots.filter(function (s) { return s.id !== id; });
-                SH.closeModal('sh-schedule-modal');
-                render();
+            if (!confirm('Delete this class?')) return;
 
-                await fetch(URLS.remove, {
+            try {
+                const response = await fetch(URLS.remove, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id: id })
+                    body: JSON.stringify({ id: editing.id })
                 });
+
+                if (!response.ok) {
+                    const message = await response.text();
+                    return showError(message || 'Failed to delete class.');
+                }
+
+                SH.closeModal('sh-schedule-modal');
+                await load();
+            } catch (error) {
+                showError('An error occurred while deleting the class.');
             }
         });
     }

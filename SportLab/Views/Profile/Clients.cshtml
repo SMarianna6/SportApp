@@ -26,7 +26,9 @@
                 <th scope="col" class="px-5 py-4 text-right">Actions</th>
             </tr>
         </thead>
-        <tbody id="clients-table-body" class="divide-y divide-white/5"></tbody>
+        <tbody id="clients-table-body" class="divide-y divide-white/5">
+            <tr><td colspan="5" class="p-8 text-center text-sm text-mono/60 animate-pulse">Loading clients...</td></tr>
+        </tbody>
     </table>
     <p id="table-empty" class="hidden p-8 text-center text-sm text-mono/60">No clients match your search.</p>
 </div>
@@ -36,42 +38,58 @@
         (function () {
             'use strict';
             var $ = function (id) { return document.getElementById(id); };
-            var CLIENTS = [
-                { name: 'Kateryna Melnyk', goal: 'Weight Loss', last: 'Oct 20, 2026', sub: 'Active' },
-                { name: 'Arsen Vyshnevetskyi', goal: 'Strength', last: 'Oct 19, 2026', sub: 'Active' },
-                { name: 'Oksana Paliichuk', goal: 'Flexibility', last: 'Oct 17, 2026', sub: 'Expiring' },
-                { name: 'Taras Zymohliad', goal: 'Endurance', last: 'Oct 15, 2026', sub: 'Active' },
-                { name: 'Yuliia Nestorenko', goal: 'Weight Maintenance', last: 'Oct 12, 2026', sub: 'Expiring' },
-                { name: 'Ivan Moroz', goal: 'Weight Loss', last: 'Oct 10, 2026', sub: 'Active' }
-            ];
+            let CLIENTS = [];
+            
             function initials(n) { return n.split(' ').map(function (x) { return x[0]; }).join('').slice(0, 2); }
+            function formatDate(val) {
+                if (!val) return 'Never';
+                return new Date(val).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+            }
+
+            async function loadClients() {
+                try {
+                    const res = await fetch('/Trainer/GetClients');
+                    const data = await res.json();
+                    if (data.success) {
+                        CLIENTS = data.clients;
+                        renderTable();
+                    }
+                } catch(e) { console.error(e); }
+            }
             
             var searchInput = $('table-search'), tbody = $('clients-table-body'), empty = $('table-empty');
-            if (searchInput && tbody && empty) {
-                function renderTable() {
-                    var q = searchInput.value.trim().toLowerCase();
-                    var rows = CLIENTS.filter(function (c) { return c.name.toLowerCase().indexOf(q) !== -1; });
-                    empty.classList.toggle('hidden', rows.length > 0);
-                    tbody.innerHTML = rows.map(function (c) {
-                        var active = c.sub === 'Active';
-                        var badge = active ? 'bg-neon/15 text-neon' : 'bg-[#FFD93D]/15 text-[#FFD93D]';
-                        var dot = active ? 'bg-neon' : 'bg-[#FFD93D]';
-                        return '<tr class="transition-colors hover:bg-shell/60">' +
-                            '<td class="px-5 py-4"><div class="flex items-center gap-3">' +
-                                '<span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-violet text-xs font-extrabold text-white">' + initials(c.name) + '</span>' +
-                                '<span class="font-extrabold">' + c.name + '</span></div></td>' +
-                            '<td class="px-5 py-4 text-mono">' + c.goal + '</td>' +
-                            '<td class="px-5 py-4 text-mono/70">' + c.last + '</td>' +
-                            '<td class="px-5 py-4"><span class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider ' + badge + '"><span class="h-1.5 w-1.5 rounded-full ' + dot + '"></span>' + c.sub + '</span></td>' +
-                            '<td class="px-5 py-4"><div class="flex items-center justify-end gap-3">' +
-                                '<button type="button" class="flex h-9 w-9 items-center justify-center rounded-md bg-shell text-white transition-colors hover:text-neon"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>' +
-                                '<a href="#" class="text-xs font-bold uppercase tracking-widest text-neon underline-offset-4 hover:underline">View History</a>' +
-                            '</div></td></tr>';
-                    }).join('');
+            
+            function renderTable() {
+                var q = searchInput.value.trim().toLowerCase();
+                var rows = CLIENTS.filter(function (c) { return c.name.toLowerCase().indexOf(q) !== -1; });
+                empty.classList.toggle('hidden', rows.length > 0);
+                
+                if (rows.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-sm text-mono/60">No clients found.</td></tr>';
+                    return;
                 }
-                searchInput.addEventListener('input', renderTable);
-                renderTable();
+
+                tbody.innerHTML = rows.map(function (c) {
+                    var active = c.status === 'Active';
+                    var expiring = c.status === 'Expiring';
+                    var badge = active ? 'bg-neon/15 text-neon' : expiring ? 'bg-[#FFD93D]/15 text-[#FFD93D]' : 'bg-[#FF5252]/15 text-[#FF5252]';
+                    var dot = active ? 'bg-neon' : expiring ? 'bg-[#FFD93D]' : 'bg-[#FF5252]';
+                    
+                    return '<tr class="transition-colors hover:bg-shell/60">' +
+                        '<td class="px-5 py-4"><div class="flex items-center gap-3">' +
+                            '<span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-violet text-xs font-extrabold text-white">' + initials(c.name) + '</span>' +
+                            '<div><span class="block font-extrabold">' + c.name + '</span><span class="text-xs text-mono/50">' + c.email + '</span></div></div></td>' +
+                        '<td class="px-5 py-4 text-mono">' + c.goal + '</td>' +
+                        '<td class="px-5 py-4 text-mono/70">' + formatDate(c.lastWorkout) + '</td>' +
+                        '<td class="px-5 py-4"><span class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider ' + badge + '"><span class="h-1.5 w-1.5 rounded-full ' + dot + '"></span>' + c.status + '</span></td>' +
+                        '<td class="px-5 py-4"><div class="flex items-center justify-end gap-3">' +
+                            '<a href="/Profile/ClientHistory?id=' + c.id + '" class="text-xs font-bold uppercase tracking-widest text-neon underline-offset-4 hover:underline">View History</a>' +
+                        '</div></td></tr>';
+                }).join('');
             }
+            
+            searchInput.addEventListener('input', renderTable);
+            loadClients();
         })();
     </script>
 }

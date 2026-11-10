@@ -885,6 +885,18 @@ textarea.sh-input {
             opacity: .8;
         }
 
+.sh-page[data-is-client="true"] .sh-cal-cell {
+    cursor: default;
+}
+
+.sh-page[data-is-client="true"] .sh-cal-cell::after {
+    content: none;
+}
+
+.sh-page[data-is-client="true"] .sh-cal-cell:hover {
+    background: rgba(170,255,0,.06);
+}
+
 .sh-cal-layer {
     position: absolute;
     inset: 0;
@@ -1479,4 +1491,8 @@ textarea.sh-input {
     .sh-denied-btn:focus-visible {
         outline: 2px solid var(--sh-ink);
         outline-offset: 2px;
+    }
+
+    .is-client-view .sh-cal-cell:hover::after {
+        display: none !important;
     }

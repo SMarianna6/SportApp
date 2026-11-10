@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using SportLab.Data;
 using SportLab.Filters;
 using SportLab.Models;
+using SportLab.Services;
 
 namespace SportLab.Controllers
 {
@@ -180,7 +181,7 @@ namespace SportLab.Controllers
                     Name = userDto.Name,
                     Email = userDto.Email,
                     Role = userDto.Role,
-                    Password = userDto.Password ?? "Default123!",
+                    Password = PasswordHasher.Hash(userDto.Password ?? "Default123!"),
                     IsBlocked = false
                 };
                 _context.Users.Add(user);
@@ -195,7 +196,7 @@ namespace SportLab.Controllers
                 user.Role = userDto.Role;
                 if (!string.IsNullOrEmpty(userDto.Password))
                 {
-                    user.Password = userDto.Password;
+                    user.Password = PasswordHasher.Hash(userDto.Password);
                 }
             }
 
@@ -480,11 +481,10 @@ namespace SportLab.Controllers
         {
             var today = DateTime.Today;
             var diff = (7 + (today.DayOfWeek - DayOfWeek.Monday)) % 7;
-            var startOfWeek = today.AddDays(-1 * diff).Date;
+            var startOfWeek = today.AddDays(-diff).Date;
             var endOfWeek = startOfWeek.AddDays(7);
 
-            var slots = await _context.Set<WorkoutSlot>()
-                .Include(s => s.Trainer)
+            var slots = await _context.WorkoutSlots
                 .Where(s => s.StartTime >= startOfWeek && s.StartTime < endOfWeek)
                 .Select(s => new
                 {
@@ -494,7 +494,7 @@ namespace SportLab.Controllers
                     timeEnd = s.EndTime.ToString("HH:mm"),
                     type = s.ActivityName ?? "HIIT",
                     coach = s.Trainer != null ? s.Trainer.Name : "TBA",
-                    booked = s.Booked,
+                    booked = s.Bookings.Count(),
                     capacity = s.Capacity
                 })
                 .ToListAsync();
@@ -506,27 +506,36 @@ namespace SportLab.Controllers
         public async Task<IActionResult> SaveScheduleApi([FromBody] ScheduleDto dto)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
-            var trainer = await _context.Users.FirstOrDefaultAsync(u => u.Name == dto.Coach)
-                          ?? await _context.Users.FirstOrDefaultAsync();
+            if (dto.Day < 1 || dto.Day > 7)
+                return BadRequest("Invalid day.");
 
-            if (trainer == null) return BadRequest("No trainers found in database.");
+            if (dto.Capacity < 1)
+                return BadRequest("Capacity must be greater than zero.");
+
+            if (!TimeSpan.TryParse(dto.TimeStart, out var startTime) ||
+                !TimeSpan.TryParse(dto.TimeEnd, out var endTime))
+                return BadRequest("Invalid time format.");
+
+            if (startTime < TimeSpan.FromHours(8) ||
+                endTime > TimeSpan.FromHours(20) ||
+                endTime <= startTime)
+                return BadRequest("Invalid class time.");
+
+            var trainer = await _context.Users
+                .FirstOrDefaultAsync(u => u.Name == dto.Coach);
+
+            if (trainer == null)
+                return BadRequest("Selected trainer was not found.");
 
             var today = DateTime.Today;
             var diff = (7 + (today.DayOfWeek - DayOfWeek.Monday)) % 7;
-            var startOfWeek = today.AddDays(-1 * diff).Date;
+            var startOfWeek = today.AddDays(-diff).Date;
             var targetDate = startOfWeek.AddDays(dto.Day - 1);
 
-            var startTimeParts = dto.TimeStart.Split(':');
-            var endTimeParts = dto.TimeEnd.Split(':');
-
-            var startDateTime = targetDate.AddHours(int.Parse(startTimeParts[0])).AddMinutes(int.Parse(startTimeParts[1]));
-            var endDateTime = targetDate.AddHours(int.Parse(endTimeParts[0])).AddMinutes(int.Parse(endTimeParts[1]));
-
-            string calculatedStatus = dto.Booked >= dto.Capacity ? "Booked" : "Available";
+            var startDateTime = targetDate.Add(startTime);
+            var endDateTime = targetDate.Add(endTime);
 
             if (dto.Id <= 0)
             {
@@ -537,42 +546,59 @@ namespace SportLab.Controllers
                     StartTime = startDateTime,
                     EndTime = endDateTime,
                     Capacity = dto.Capacity,
-                    Booked = dto.Booked,
-                    Status = calculatedStatus
+                    Status = "Available"
                 };
-                _context.Set<WorkoutSlot>().Add(newSlot);
+
+                _context.WorkoutSlots.Add(newSlot);
                 await _context.SaveChangesAsync();
+
                 return Json(new { id = newSlot.Id });
             }
-            else
-            {
-                var existingSlot = await _context.Set<WorkoutSlot>().FindAsync(dto.Id);
-                if (existingSlot != null)
-                {
-                    existingSlot.ActivityName = dto.Type;
-                    existingSlot.TrainerId = trainer.Id;
-                    existingSlot.StartTime = startDateTime;
-                    existingSlot.EndTime = endDateTime;
-                    existingSlot.Capacity = dto.Capacity;
-                    existingSlot.Booked = dto.Booked;
-                    existingSlot.Status = calculatedStatus;
 
-                    await _context.SaveChangesAsync();
-                    return Json(new { id = existingSlot.Id });
-                }
+            var existingSlot = await _context.WorkoutSlots
+                .Include(s => s.Bookings)
+                .FirstOrDefaultAsync(s => s.Id == dto.Id);
+
+            if (existingSlot == null)
                 return NotFound();
+
+            if (dto.Capacity < existingSlot.Bookings.Count)
+                return BadRequest("Capacity cannot be lower than the current number of bookings.");
+
+            existingSlot.ActivityName = dto.Type;
+            existingSlot.TrainerId = trainer.Id;
+            existingSlot.StartTime = startDateTime;
+            existingSlot.EndTime = endDateTime;
+            existingSlot.Capacity = dto.Capacity;
+
+            if (existingSlot.Status != "Cancelled" && existingSlot.Status != "Completed")
+            {
+                existingSlot.Status = existingSlot.Bookings.Count >= existingSlot.Capacity
+                    ? "Booked"
+                    : "Available";
             }
+
+            await _context.SaveChangesAsync();
+
+            return Json(new { id = existingSlot.Id });
         }
 
         [HttpPost]
         public async Task<IActionResult> DeleteScheduleApi([FromBody] DeleteDto dto)
         {
-            var slot = await _context.Set<WorkoutSlot>().FindAsync(dto.Id);
-            if (slot != null)
-            {
-                _context.Set<WorkoutSlot>().Remove(slot);
-                await _context.SaveChangesAsync();
-            }
+            var slot = await _context.WorkoutSlots
+                .Include(s => s.Bookings)
+                .FirstOrDefaultAsync(s => s.Id == dto.Id);
+
+            if (slot == null)
+                return NotFound();
+
+            if (slot.Bookings.Any())
+                return BadRequest("This class has active bookings and cannot be deleted.");
+
+            _context.WorkoutSlots.Remove(slot);
+            await _context.SaveChangesAsync();
+
             return Ok();
         }
     }
@@ -622,7 +648,6 @@ namespace SportLab.Controllers
         public required string TimeEnd { get; set; }
         public required string Type { get; set; }
         public required string Coach { get; set; }
-        public int Booked { get; set; }
         public int Capacity { get; set; }
     }
 }

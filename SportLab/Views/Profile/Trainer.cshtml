@@ -3,68 +3,87 @@
     ViewData["Title"] = "Trainer Profile";
 }
 
-<div class="mb-6">
-    <h2 class="text-3xl font-black uppercase tracking-tighter sm:text-4xl">Welcome back, <span class="text-neon">Nazar</span></h2>
-    <p class="mt-1 text-sm text-mono/60">Manage your profile, clients and sessions.</p>
+@Html.AntiForgeryToken()
+
+<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div>
+        <h2 class="text-3xl font-black uppercase tracking-tighter sm:text-4xl">Welcome back, <span id="header-trainer-name" class="text-neon">Trainer</span></h2>
+        <p class="mt-1 text-sm text-mono/60">Manage your profile, clients and sessions.</p>
+    </div>
 </div>
 
 <div class="grid grid-cols-1 gap-5 xl:grid-cols-2">
     <!-- Professional information -->
-    <section class="rounded-lg bg-card p-5" aria-labelledby="pro-title">
-        <h3 id="pro-title" class="mb-4 text-lg font-extrabold uppercase tracking-tight">Professional Information</h3>
-        <div class="grid gap-6 md:grid-cols-5">
-            <figure class="relative overflow-hidden rounded-lg bg-shell md:col-span-2">
-                <img src="~/images/trainer.png" alt="Portrait of trainer" class="aspect-[4/5] h-full w-full object-cover" loading="lazy" />
-                <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-shell via-shell/80 to-transparent p-4 pt-12">
-                    <p class="text-lg font-black uppercase leading-none tracking-tighter">Nazar Dovhopiat</p>
-                    <p class="mt-1 text-xs font-bold uppercase tracking-widest text-neon">Head Trainer</p>
-                </figcaption>
+    <section class="rounded-lg bg-card p-5 sm:p-6" aria-labelledby="pro-title">
+        <div class="mb-6 flex items-center border-b border-white/5 pb-4 sm:min-h-[3.5rem]">
+            <h3 id="pro-title" class="text-lg font-extrabold uppercase tracking-tight">Professional Information</h3>
+        </div>
+
+        <div class="grid gap-8 md:grid-cols-12 md:gap-7">
+            <!-- Photo Container -->
+            <figure class="relative mx-auto w-full max-w-[17.5rem] self-start md:col-span-5 md:mx-0 md:max-w-none">
+                <div class="relative rounded-2xl border border-white/10 bg-shell p-1.5 shadow-[0_28px_60px_-30px_rgba(170,255,0,0.55)]">
+                    <span aria-hidden="true" class="pointer-events-none absolute -left-px -top-px h-6 w-6 rounded-tl-2xl border-l-2 border-t-2 border-neon"></span>
+                    <span aria-hidden="true" class="pointer-events-none absolute -bottom-px -right-px h-6 w-6 rounded-br-2xl border-b-2 border-r-2 border-neon"></span>
+                    <div class="relative overflow-hidden rounded-xl bg-shell ring-1 ring-white/10">
+                        <img id="trainer-photo" src="~/images/default-avatar.png" alt="Portrait of trainer" class="aspect-[4/5] w-full object-cover" loading="lazy" />
+                        <span aria-hidden="true" class="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/50 to-transparent"></span>
+                    </div>
+                </div>
+                <button type="button" id="change-photo-btn" class="mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-white/10 bg-shell py-3 text-[11px] font-extrabold uppercase tracking-[0.18em] text-white transition-all duration-200 hover:border-neon hover:text-neon hover:shadow-[0_0_24px_-10px_rgba(170,255,0,0.9)] focus:outline-none focus-visible:ring-2 focus-visible:ring-neon">
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3"/></svg>
+                    Change Photo
+                </button>
+                <input type="file" id="photo-input" accept=".jpg,.jpeg,.png,.webp" class="hidden" />
+                <figcaption class="mt-2.5 text-center text-[10px] font-semibold uppercase tracking-[0.16em] text-mono/50">JPG, PNG or WEBP</figcaption>
             </figure>
-            <div class="space-y-4 md:col-span-3">
-                <div class="editable" data-multiline="false" data-field="name">
-                    <p class="mb-1 text-[11px] font-semibold uppercase tracking-widest text-mono/50">Full name</p>
-                    <div class="flex items-start justify-between gap-2">
-                        <p class="editable-text text-sm font-semibold">Nazar Dovhopiat</p>
-                        <button type="button" class="edit-btn shrink-0 rounded-md p-1.5 text-mono/60 transition-colors hover:text-neon" aria-label="Edit full name">
-                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+
+            <!-- Info Container -->
+            <div class="divide-y divide-white/5 md:col-span-7">
+                <div class="editable pb-4" data-field="name">
+                    <p class="mb-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-mono/50">Full name</p>
+                    <div class="flex items-start justify-between gap-3">
+                        <p class="editable-text min-w-0 flex-1 break-words text-base font-bold leading-snug text-white">Loading...</p>
+                        <button type="button" class="edit-btn -mr-1.5 -mt-1 shrink-0 rounded-lg p-2 text-mono/40 transition-colors duration-200 hover:bg-white/5 hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon" aria-label="Edit full name">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
                         </button>
                     </div>
                 </div>
-                <div class="editable" data-multiline="false" data-field="dob">
-                    <p class="mb-1 text-[11px] font-semibold uppercase tracking-widest text-mono/50">Date of birth</p>
-                    <div class="flex items-start justify-between gap-2">
-                        <p class="editable-text text-sm font-semibold">April 15, 1994</p>
-                        <button type="button" class="edit-btn shrink-0 rounded-md p-1.5 text-mono/60 transition-colors hover:text-neon" aria-label="Edit date of birth">
-                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                <div class="editable py-4" data-field="dob">
+                    <p class="mb-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-mono/50">Date of birth</p>
+                    <div class="flex items-start justify-between gap-3">
+                        <p class="editable-text min-w-0 flex-1 break-words text-sm font-semibold leading-snug text-white">Loading...</p>
+                        <button type="button" class="edit-btn -mr-1.5 -mt-1 shrink-0 rounded-lg p-2 text-mono/40 transition-colors duration-200 hover:bg-white/5 hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon" aria-label="Edit date of birth">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
                         </button>
                     </div>
                 </div>
-                <div class="editable" data-multiline="false" data-field="exp">
-                    <p class="mb-1 text-[11px] font-semibold uppercase tracking-widest text-mono/50">Experience</p>
-                    <div class="flex items-start justify-between gap-2">
-                        <p class="editable-text text-sm font-semibold">8 years, NASM certified</p>
-                        <button type="button" class="edit-btn shrink-0 rounded-md p-1.5 text-mono/60 transition-colors hover:text-neon" aria-label="Edit experience">
-                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                <div class="editable py-4" data-field="experience">
+                    <p class="mb-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-mono/50">Experience</p>
+                    <div class="flex items-start justify-between gap-3">
+                        <p class="editable-text min-w-0 flex-1 break-words text-sm font-semibold leading-snug text-white">Loading...</p>
+                        <button type="button" class="edit-btn -mr-1.5 -mt-1 shrink-0 rounded-lg p-2 text-mono/40 transition-colors duration-200 hover:bg-white/5 hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon" aria-label="Edit experience">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
                         </button>
                     </div>
                 </div>
-                <div class="editable" data-multiline="true" data-field="about">
-                    <p class="mb-1 text-[11px] font-semibold uppercase tracking-widest text-mono/50">About me</p>
-                    <div class="flex items-start justify-between gap-2">
-                        <p class="editable-text text-sm leading-relaxed text-mono">I help busy people build strength and confidence with short, focused programs. My sessions blend functional training with mobility work.</p>
-                        <button type="button" class="edit-btn shrink-0 rounded-md p-1.5 text-mono/60 transition-colors hover:text-neon" aria-label="Edit about me">
-                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                <div class="editable py-4" data-field="about" data-multiline="true">
+                    <p class="mb-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-mono/50">About me</p>
+                    <div class="flex items-start justify-between gap-3">
+                        <p class="editable-text min-w-0 flex-1 break-words text-sm leading-relaxed text-mono">Loading...</p>
+                        <button type="button" class="edit-btn -mr-1.5 -mt-1 shrink-0 rounded-lg p-2 text-mono/40 transition-colors duration-200 hover:bg-white/5 hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon" aria-label="Edit about me">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
                         </button>
                     </div>
                 </div>
-                <div>
-                    <p id="spec-label" class="mb-1 text-[11px] font-semibold uppercase tracking-widest text-mono/50">Specializations</p>
+                <div class="pt-4">
+                    <p id="spec-label" class="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-mono/50">Specializations</p>
                     <div class="relative" id="spec-wrap">
-                        <button id="spec-trigger" type="button" class="flex w-full items-center justify-between rounded-md bg-shell px-3 py-2.5 text-left text-sm font-semibold text-mono transition-colors hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon" aria-haspopup="true" aria-expanded="false" aria-controls="spec-menu">
+                        <button id="spec-trigger" type="button" class="group flex w-full items-center justify-between gap-3 rounded-lg border border-white/10 bg-shell px-3.5 py-3 text-left text-sm font-semibold text-mono transition-colors duration-200 hover:border-white/20 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-neon aria-expanded:border-neon/50 aria-expanded:text-white" aria-haspopup="true" aria-expanded="false" aria-controls="spec-menu">
                             <span>Select specializations</span>
-                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                            <svg class="h-4 w-4 shrink-0 text-mono/50 transition-transform duration-200 group-aria-expanded:rotate-180 group-aria-expanded:text-neon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
                         </button>
-                        <ul id="spec-menu" class="absolute left-0 right-0 z-10 mt-1 hidden max-h-60 overflow-y-auto rounded-md bg-shell p-1 shadow-xl" role="group"></ul>
+                        <ul id="spec-menu" class="absolute left-0 right-0 z-20 mt-2 hidden max-h-60 overflow-y-auto rounded-lg border border-white/10 bg-shell p-1.5 shadow-2xl shadow-black/60" role="group" aria-labelledby="spec-label"></ul>
                     </div>
                     <ul id="spec-pills" class="mt-3 flex flex-wrap gap-2" aria-live="polite"></ul>
                 </div>
@@ -73,27 +92,36 @@
     </section>
 
     <!-- Work schedule -->
-   <section class="rounded-lg bg-card p-5 xl:order-last" aria-labelledby="sched-title">
-        <div class="mb-4 flex items-center justify-between gap-3">
+    <section class="flex flex-col rounded-lg bg-card p-5 sm:p-6 xl:order-last" aria-labelledby="sched-title">
+        <div class="mb-5 flex flex-col gap-3 border-b border-white/5 pb-4 sm:min-h-[3.5rem] sm:flex-row sm:items-center sm:justify-between">
             <h3 id="sched-title" class="text-lg font-extrabold uppercase tracking-tight">Work Schedule</h3>
-            <div class="flex rounded-md bg-shell p-1" role="tablist">
-                <button type="button" role="tab" data-day="today" aria-selected="true" class="day-tab rounded px-3 py-1.5 text-xs font-bold uppercase tracking-wider">Today</button>
-                <button type="button" role="tab" data-day="tomorrow" aria-selected="false" class="day-tab rounded px-3 py-1.5 text-xs font-bold uppercase tracking-wider">Tomorrow</button>
+            <div class="flex items-center gap-2.5">
+                <div class="flex h-10 flex-1 items-stretch rounded-lg border border-white/10 bg-shell p-1 sm:flex-none" role="tablist" aria-label="Schedule day">
+                    <button type="button" role="tab" data-day="today" aria-selected="true" class="day-tab flex flex-1 items-center justify-center rounded-md px-4 text-[11px] font-extrabold uppercase tracking-[0.14em] transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-white bg-neon text-shell shadow-[0_0_18px_-6px_rgba(170,255,0,0.9)]">Today</button>
+                    <button type="button" role="tab" data-day="tomorrow" aria-selected="false" class="day-tab flex flex-1 items-center justify-center rounded-md px-4 text-[11px] font-extrabold uppercase tracking-[0.14em] transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-white text-mono/60 hover:text-white">Tomorrow</button>
+                </div>
+                <button type="button" id="create-slot-btn" class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-neon text-shell shadow-[0_0_24px_-8px_rgba(170,255,0,0.9)] transition duration-200 hover:-translate-y-0.5 hover:brightness-110 active:translate-y-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-white" title="Create Workout" aria-label="Create workout">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14m-7-7h14"/></svg>
+                </button>
             </div>
         </div>
         <ol id="timeline" class="relative space-y-3"></ol>
-        <div id="empty-schedule" class="hidden flex-col items-center rounded-lg bg-shell px-6 py-10 text-center">
-            <span class="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-card text-neon">
-                <svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M12 14v4M10 16h4"/></svg>
+
+        <div id="empty-schedule" class="hidden flex-1 flex-col items-center justify-center rounded-xl border border-dashed border-white/10 bg-shell bg-[radial-gradient(ellipse_at_top,rgba(170,255,0,0.07),transparent_65%)] px-6 py-12 text-center">
+            <span class="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl border border-white/10 bg-card text-neon shadow-[0_0_32px_-10px_rgba(170,255,0,0.7)]">
+                <svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M12 14v4M10 16h4"/></svg>
             </span>
-            <p class="text-base font-extrabold uppercase tracking-tight">No workouts booked</p>
-            <p class="mt-1 max-w-xs text-sm text-mono/60">Your calendar is open. Add availability so clients can book you.</p>
-            <button id="create-slot-btn" type="button" class="mt-5 rounded-md bg-neon px-5 py-3 text-xs font-extrabold uppercase tracking-widest text-shell transition-transform hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">Create available slot</button>
+            <p class="text-base font-extrabold uppercase tracking-tight">No workouts</p>
+            <p class="mt-1.5 max-w-xs text-sm leading-relaxed text-mono/60">Your calendar is open. Add availability so clients can book you.</p>
+            <p class="mt-5 inline-flex items-center gap-2 rounded-full border border-neon/20 bg-neon/5 px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.16em] text-neon">
+                <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14m-7-7h14"/></svg>
+                Use the + button above
+            </p>
         </div>
     </section>
 
     <!-- Clients Widget -->
-    <section class="rounded-lg bg-card p-5 xl:col-span-2 xl:row-start-2" aria-labelledby="clients-title">
+    <section class="rounded-lg bg-card p-5 sm:p-6 xl:col-span-2 xl:row-start-2" aria-labelledby="clients-title">
         <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <h3 id="clients-title" class="text-lg font-extrabold uppercase tracking-tight">My Clients <span id="clients-count" class="ml-1 text-sm font-semibold text-mono/50"></span></h3>
             <div class="flex flex-col gap-2 sm:flex-row">
@@ -112,7 +140,9 @@
                 </label>
             </div>
         </div>
-        <div id="clients-grid" class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"></div>
+        <div id="clients-grid" class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <p class="text-sm text-mono/50 animate-pulse">Loading clients...</p>
+        </div>
         <p id="clients-empty" class="hidden rounded-lg bg-shell p-8 text-center text-sm text-mono/60">No clients match your search.</p>
     </section>
 </div>
@@ -125,7 +155,6 @@
             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
         </button>
         <h3 id="slot-title" class="text-2xl font-black uppercase tracking-tighter">Create <span class="text-neon">slot</span></h3>
-        <p class="mt-1 text-sm text-mono/60">Open a time window clients can book.</p>
         <form id="slot-form" class="mt-5 space-y-4">
             <div>
                 <label for="slot-date" class="mb-1.5 block text-[11px] font-semibold uppercase tracking-widest text-mono/50">Date</label>
@@ -144,8 +173,12 @@
             <div>
                 <label for="slot-type" class="mb-1.5 block text-[11px] font-semibold uppercase tracking-widest text-mono/50">Workout type</label>
                 <select id="slot-type" class="w-full rounded-md bg-shell px-3 py-2.5 text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-neon">
-                    <option>Strength</option><option>Boxing</option><option>Yoga</option><option>Cardio</option>
+                    <option>Strength</option><option>Boxing</option><option>Yoga</option><option>Cardio</option><option>HIIT</option><option>Pilates</option>
                 </select>
+            </div>
+            <div>
+                <label for="slot-capacity" class="mb-1.5 block text-[11px] font-semibold uppercase tracking-widest text-mono/50">Maximum clients</label>
+                <input id="slot-capacity" type="number" min="1" max="1000" value="15" required class="w-full rounded-md bg-shell px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-neon" />
             </div>
             <p id="slot-error" class="hidden text-sm font-semibold text-[#FF5252]" role="alert"></p>
             <button type="submit" class="w-full rounded-md bg-neon py-3.5 text-sm font-extrabold uppercase tracking-widest text-shell transition-transform hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">Save Slot</button>
@@ -178,83 +211,348 @@
         (function () {
             'use strict';
             var $ = function (id) { return document.getElementById(id); };
+            var token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+
+            function getJsonHeaders() {
+                return { 'Content-Type': 'application/json' };
+            }
+
+            /* ---------- Fetch Profile Data ---------- */
+            let currentProfileData = {};
+
+            async function loadProfile() {
+                try {
+                    const res = await fetch('/Profile/GetTrainerData');
+                    const data = await res.json();
+                    
+                    if (!data.success) return;
+
+                    currentProfileData = data;
+                    
+                    $('header-trainer-name').textContent = data.name.split(' ')[0] || 'Trainer';
+                    $('trainer-photo').src = data.photoUrl || data.avatarUrl || '/images/default-avatar.png';
+                    
+                    document.querySelector('.editable[data-field="name"] .editable-text').textContent = data.name;
+                    document.querySelector('.editable[data-field="dob"] .editable-text').textContent = data.dateOfBirth ? new Date(data.dateOfBirth).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Not set';
+                    document.querySelector('.editable[data-field="experience"] .editable-text').textContent = data.experience || 'Not set';
+                    document.querySelector('.editable[data-field="about"] .editable-text').textContent = data.about || 'Not set';
+
+                    if (data.specializations) {
+                        const specs = data.specializations.split(',').map(s => s.trim());
+                        specs.forEach(s => { if (SPECS.includes(s)) selected[s] = true; });
+                    }
+                    renderPills();
+                } catch (err) {
+                    console.error('Failed to load profile', err);
+                }
+            }
 
             /* ---------- Inline editing ---------- */
             var penSvg = '<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>';
+            var tickSvg = '<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+
             document.querySelectorAll('.editable').forEach(function (box) {
                 var textEl = box.querySelector('.editable-text'), btn = box.querySelector('.edit-btn');
                 if(!textEl || !btn) return;
                 var multi = box.dataset.multiline === 'true';
+                
                 btn.addEventListener('click', function () {
                     if (box.querySelector('.editor')) return;
+                    
                     var input = document.createElement(multi ? 'textarea' : 'input');
                     input.className = 'editor w-full rounded-md bg-shell px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-neon';
-                    if (multi) input.rows = 4; else input.type = 'text';
-                    input.value = textEl.textContent;
+                    if (multi) input.rows = 4; else input.type = box.dataset.field === 'dob' ? 'date' : 'text';
+                    
+                    let originalValue = textEl.textContent;
+                    if (box.dataset.field === 'dob' && currentProfileData.dateOfBirth) {
+                        originalValue = currentProfileData.dateOfBirth; 
+                    }
+                    input.value = originalValue;
+                    
                     textEl.classList.add('hidden');
                     textEl.parentNode.insertBefore(input, textEl);
-                    btn.innerHTML = '<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+                    btn.innerHTML = tickSvg;
                     btn.classList.add('text-neon');
                     input.focus();
+                    
                     var done = false;
-                    function save() {
+                    async function save() {
                         if (done) return; done = true;
-                        var v = input.value.trim();
-                        if (v) textEl.textContent = v;
+                        
+                        var payload = { 
+                            name: currentProfileData.name,
+                            dateOfBirth: currentProfileData.dateOfBirth,
+                            about: currentProfileData.about,
+                            experience: currentProfileData.experience,
+                            specializations: currentProfileData.specializations
+                        };
+
+                        let v = input.value.trim();
+                        if (box.dataset.field === 'dob') {
+                            payload.dateOfBirth = v || null;
+                        } else if (box.dataset.field === 'name') {
+                            payload.name = v;
+                        } else if (box.dataset.field === 'about') {
+                            payload.about = v;
+                        } else if (box.dataset.field === 'experience') {
+                            payload.experience = v;
+                        }
+
+                        try {
+                            btn.innerHTML = '<span class="animate-pulse">...</span>';
+                            const res = await fetch('/Profile/UpdateTrainerProfile', {
+                                method: 'POST',
+                                headers: { ...getJsonHeaders(), 'RequestVerificationToken': token },
+                                body: JSON.stringify(payload)
+                            });
+                            
+                            if (res.ok) {
+                                currentProfileData = payload;
+                                textEl.textContent = box.dataset.field === 'dob' && v ? new Date(v).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : (v || 'Not set');
+                                $('header-trainer-name').textContent = payload.name.split(' ')[0];
+                            } else {
+                                alert('Failed to save changes.');
+                            }
+                        } catch (e) {
+                            alert('Network error.');
+                        }
+
                         input.remove(); textEl.classList.remove('hidden');
                         btn.innerHTML = penSvg; btn.classList.remove('text-neon');
                     }
                     btn.addEventListener('click', save, { once: true });
                     input.addEventListener('keydown', function (e) {
-                        if (e.key === 'Escape') { input.value = textEl.textContent; save(); }
+                        if (e.key === 'Escape') { input.value = originalValue; save(); }
                         if (e.key === 'Enter' && (!multi || e.ctrlKey || e.metaKey)) { e.preventDefault(); save(); }
                     });
                 });
             });
 
+            /* ---------- Photo Upload ---------- */
+            $('change-photo-btn').addEventListener('click', () => $('photo-input').click());
+            $('photo-input').addEventListener('change', async function() {
+                if (!this.files.length) return;
+                const formData = new FormData();
+                formData.append('photo', this.files[0]);
+                
+                try {
+                    const res = await fetch('/Profile/UploadTrainerPhoto', {
+                        method: 'POST',
+                        headers: { 'RequestVerificationToken': token },
+                        body: formData
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        $('trainer-photo').src = data.photoUrl + '?t=' + Date.now();
+                    } else {
+                        alert(data.message);
+                    }
+                } catch (e) {
+                    alert('Upload failed.');
+                }
+            });
+
             /* ---------- Specializations ---------- */
             var SPECS = ['CrossFit', 'Pilates', 'Yoga', 'Strength', 'HIIT', 'Boxing', 'Mobility', 'Nutrition'];
-            var selected = { CrossFit: true, Strength: true };
+            var selected = {};
             var trigger = $('spec-trigger'), menu = $('spec-menu'), pills = $('spec-pills');
+            
             if (menu && trigger && pills) {
-                menu.innerHTML = SPECS.map(function (s, i) {
-                    return '<li><label class="flex cursor-pointer items-center gap-3 rounded px-3 py-2 text-sm font-medium text-mono hover:bg-card">' +
-                        '<input type="checkbox" value="' + s + '" class="h-4 w-4 shrink-0 cursor-pointer accent-[#AAFF00]"' + (selected[s] ? ' checked' : '') + ' />' + s + '</label></li>';
+                menu.innerHTML = SPECS.map(function (s) {
+                    return '<li><label class="flex cursor-pointer items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-mono transition-colors duration-150 hover:bg-white/5 hover:text-white">' +
+                        '<input type="checkbox" value="' + s + '" class="h-4 w-4 shrink-0 cursor-pointer accent-[#AAFF00]" />' + s + '</label></li>';
                 }).join('');
+                
                 function renderPills() {
                     var keys = SPECS.filter(function (s) { return selected[s]; });
                     pills.innerHTML = keys.length ? keys.map(function (s) {
-                        return '<li class="inline-flex items-center gap-1.5 rounded-full border border-neon bg-shell py-1 pl-3 pr-1.5 text-xs font-bold uppercase tracking-wider text-neon">' + s +
-                            '<button type="button" data-remove="' + s + '" class="flex h-4 w-4 items-center justify-center rounded-full hover:bg-neon hover:text-shell"><svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></li>';
-                    }).join('') : '<li class="text-xs text-mono/50">None selected</li>';
+                        return '<li class="inline-flex items-center gap-1.5 rounded-full border border-neon/30 bg-neon/10 py-1 pl-3 pr-1.5 text-[11px] font-bold uppercase tracking-wider text-neon">' + s +
+'<button type="button" data-remove="' + s + '" aria-label="Remove ' + s + '" class="flex h-4 w-4 items-center justify-center rounded-full text-neon/70 transition-colors duration-150 hover:bg-neon hover:text-shell focus:outline-none focus-visible:ring-2 focus-visible:ring-neon"><svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></li>';
+                    }).join('') : '<li class="rounded-full border border-dashed border-white/10 px-3 py-1 text-[11px] font-semibold text-mono/50">None selected</li>';
                     trigger.firstElementChild.textContent = keys.length ? keys.length + ' selected' : 'Select specializations';
                 }
+
+                async function saveSpecs() {
+                    var keys = SPECS.filter(function (s) { return selected[s]; });
+                    var payload = { 
+                        name: currentProfileData.name,
+                        dateOfBirth: currentProfileData.dateOfBirth,
+                        about: currentProfileData.about,
+                        experience: currentProfileData.experience,
+                        specializations: keys.join(',')
+                    };
+                    try {
+                        await fetch('/Profile/UpdateTrainerProfile', {
+                            method: 'POST',
+                            headers: { ...getJsonHeaders(), 'RequestVerificationToken': token },
+                            body: JSON.stringify(payload)
+                        });
+                        currentProfileData.specializations = payload.specializations;
+                    } catch(e) { console.error(e); }
+                }
+
                 function setMenu(open) { menu.classList.toggle('hidden', !open); trigger.setAttribute('aria-expanded', String(open)); }
                 trigger.addEventListener('click', function () { setMenu(menu.classList.contains('hidden')); });
-                menu.addEventListener('change', function (e) { if (e.target.type === 'checkbox') { selected[e.target.value] = e.target.checked; renderPills(); } });
+                menu.addEventListener('change', function (e) { 
+                    if (e.target.type === 'checkbox') { 
+                        selected[e.target.value] = e.target.checked; 
+                        renderPills(); 
+                        saveSpecs();
+                    } 
+                });
                 pills.addEventListener('click', function (e) {
                     var b = e.target.closest('[data-remove]'); if (!b) return;
                     selected[b.dataset.remove] = false;
                     var cb = menu.querySelector('input[value="' + b.dataset.remove + '"]'); if (cb) cb.checked = false;
                     renderPills();
+                    saveSpecs();
                 });
                 document.addEventListener('click', function (e) { if (!$('spec-wrap').contains(e.target)) setMenu(false); });
-                document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
-                renderPills();
             }
 
+            /* ---------- Modals & Schedule ---------- */
+            var openModalEl = null;
+            function openModal(id) {
+                openModalEl = $(id); if(!openModalEl) return;
+                openModalEl.classList.remove('hidden'); openModalEl.classList.add('flex'); document.body.style.overflow = 'hidden';
+            }
+            function closeModal() {
+                if (!openModalEl) return;
+                openModalEl.classList.add('hidden'); openModalEl.classList.remove('flex'); document.body.style.overflow = ''; openModalEl = null;
+            }
+            document.querySelectorAll('.modal').forEach(function (m) {
+                m.querySelector('.modal-overlay').addEventListener('click', closeModal);
+                m.querySelectorAll('[data-close]').forEach(function (b) { b.addEventListener('click', closeModal); });
+            });
+
+            var icons = { strength: '<path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/>', yoga: '<circle cx="12" cy="5" r="2"/><path d="M12 7v6m-6 2 6-2 6 2M8 21l4-8 4 8"/>', cardio: '<path d="M3 12h4l3-8 4 16 3-8h4"/>', boxing: '<path d="M7 11V7a3 3 0 0 1 6 0v1h3a3 3 0 0 1 3 3v4a6 6 0 0 1-6 6h-2a6 6 0 0 1-6-6v-2a2 2 0 0 1 2-2Z"/>' };
+            
+            let DASHBOARD_SLOTS = [];
+            let currentDay = 'today';
+            let pendingCancelId = null;
+
+            async function loadDashboard() {
+                try {
+                    const res = await fetch('/Trainer/GetDashboardData');
+                    const data = await res.json();
+                    if (data.success) {
+                        DASHBOARD_SLOTS = data.slots; // FIXED FROM ********
+                        renderSchedule(currentDay);
+                    }
+                } catch(e) { console.error('Failed to load schedule', e); }
+            }
+
+            function renderSchedule(day) {
+                currentDay = day;
+                
+                const now = new Date();
+                const todayStr = now.toISOString().split('T')[0];
+                
+                const tomorrow = new Date(now);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                const tomorrowStr = tomorrow.toISOString().split('T')[0];
+
+                const items = DASHBOARD_SLOTS.filter(s => day === 'today' ? s.date === todayStr : s.date === tomorrowStr);
+
+                var tl = $('timeline'), empty = $('empty-schedule');
+                tl.classList.toggle('hidden', !items.length); 
+                empty.classList.toggle('hidden', !!items.length); 
+                empty.classList.toggle('flex', !items.length);
+
+                tl.innerHTML = items.map(function (s, i) {
+                    const iconKey = s.activityName.toLowerCase().includes('box') ? 'boxing' : s.activityName.toLowerCase().includes('yoga') ? 'yoga' : 'strength';
+                    const accent = i % 2 ? '#7D51FE' : '#AAFF00';
+                    const fill = s.capacity > 0 ? Math.min(100, Math.round(s.booked / s.capacity * 100)) : 0;
+                    
+                    // Uses File 2's beautiful timeline card layout
+                    return '<li>' +
+                        '<button type="button" data-id="' + s.id + '" class="slot-btn group relative flex w-full items-center gap-3 overflow-hidden rounded-xl border border-white/5 bg-shell py-3.5 pl-5 pr-3.5 text-left transition-colors duration-200 hover:border-white/20 hover:bg-black focus:outline-none focus-visible:ring-2 focus-visible:ring-neon sm:gap-4">' +
+                        '<span aria-hidden="true" class="absolute inset-y-3 left-0 w-1 rounded-r-full" style="background:' + accent + '"></span>' +
+                        '<span class="flex min-w-[3.25rem] shrink-0 flex-col whitespace-nowrap tabular-nums"><span class="text-lg font-black leading-none tracking-tight text-white">' + s.startTime + '</span><span class="mt-1.5 text-[11px] font-semibold leading-none text-mono/50">to ' + s.endTime + '</span></span>' +
+                        '<span aria-hidden="true" class="hidden h-9 w-px shrink-0 bg-white/10 sm:block"></span>' +
+                        '<span class="hidden h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-white/5 bg-card sm:flex" style="color:' + accent + '"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + icons[iconKey] + '</svg></span>' +
+                        '<span class="min-w-0 flex-1"><span class="block break-words text-sm font-extrabold leading-snug text-white">' + s.activityName + '</span>' +
+                        '<span class="mt-2 flex items-center gap-2"><span aria-hidden="true" class="h-1 w-16 overflow-hidden rounded-full bg-white/10"><span class="block h-full rounded-full" style="width:' + fill + '%;background:' + accent + '"></span></span><span class="shrink-0 whitespace-nowrap text-[11px] font-semibold tabular-nums text-mono/60">' + s.booked + '/' + s.capacity + ' booked</span></span></span>' +
+                        '<span class="ml-auto inline-flex shrink-0 items-center gap-1.5 rounded-md border border-white/10 px-2.5 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.14em] text-mono/60 transition-colors duration-200 group-hover:border-[#FF5252]/40 group-hover:bg-[#FF5252]/10 group-hover:text-[#FF5252] group-focus-visible:border-[#FF5252]/40 group-focus-visible:text-[#FF5252]"><svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>Cancel</span></button></li>';
+                }).join('');
+
+                document.querySelectorAll('.day-tab').forEach(function (t) {
+                    var on = t.dataset.day === day; t.setAttribute('aria-selected', String(on));
+                    t.className = 'day-tab flex flex-1 items-center justify-center rounded-md px-4 text-[11px] font-extrabold uppercase tracking-[0.14em] transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-white ' + (on ? 'bg-neon text-shell shadow-[0_0_18px_-6px_rgba(170,255,0,0.9)]' : 'text-mono/60 hover:text-white');
+                });
+            }
+
+            document.querySelectorAll('.day-tab').forEach(function (t) { t.addEventListener('click', function () { renderSchedule(t.dataset.day); }); });
+            
+            function toMins(l) { var p = l.split(':'); return +p[0] * 60 + +p[1]; }
+            function todayISO() { var d = new Date(); return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
+            
+            if($('create-slot-btn')) $('create-slot-btn').addEventListener('click', function () { $('slot-error').classList.add('hidden'); $('slot-date').min = todayISO(); openModal('modal-slot'); });
+            
+            if($('slot-form')) $('slot-form').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                var err = $('slot-error');
+                var payload = new URLSearchParams();
+                payload.append('ActivityName', $('slot-type').value);
+                payload.append('Date', $('slot-date').value);
+                payload.append('StartTime', $('slot-start').value);
+                payload.append('EndTime', $('slot-end').value);
+                payload.append('Capacity', $('slot-capacity').value);
+                payload.append('__RequestVerificationToken', token);
+
+                try {
+                    const res = await fetch('/Trainer/CreateSlotApi', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: payload.toString()
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        closeModal(); $('slot-form').reset();
+                        await loadDashboard();
+                    } else {
+                        err.textContent = data.message; err.classList.remove('hidden');
+                    }
+                } catch(err) {
+                    err.textContent = 'Network error.'; err.classList.remove('hidden');
+                }
+            });
+
+            if($('timeline')) $('timeline').addEventListener('click', function (e) {
+                var btn = e.target.closest('.slot-btn'); if (!btn) return;
+                pendingCancelId = btn.dataset.id;
+                $('cancel-summary').textContent = 'Session ID: ' + pendingCancelId;
+                openModal('modal-cancel');
+            });
+
+            if($('cancel-confirm')) $('cancel-confirm').addEventListener('click', async function () {
+                if (!pendingCancelId) return;
+                const payload = new URLSearchParams();
+                payload.append('id', pendingCancelId);
+                payload.append('__RequestVerificationToken', token);
+                
+                try {
+                    const res = await fetch('/Trainer/CancelSlotApi', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: payload.toString()
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        pendingCancelId = null; closeModal(); await loadDashboard();
+                    } else { alert(data.message); }
+                } catch(e) { alert('Network error.'); }
+            });
+
             /* ---------- Clients Grid ---------- */
-            var CLIENTS = [
-                { name: 'Kateryna Melnyk', workouts: 12, recent: 1, data: [82, 81, 80.5, 79.8, 79, 78.4, 77.9] },
-                { name: 'Arsen Vyshnevetskyi', workouts: 24, recent: 2, data: [92, 92.5, 93, 93.4, 94, 94.2, 95] },
-                { name: 'Oksana Paliichuk', workouts: 8, recent: 3, data: [64, 63.5, 63.8, 63, 62.6, 62.4, 62] },
-                { name: 'Taras Zymohliad', workouts: 17, recent: 4, data: [78, 77, 77.5, 76, 75.4, 75, 74.2] },
-                { name: 'Yuliia Nestorenko', workouts: 5, recent: 5, data: [70, 70.2, 69.8, 69.5, 69.9, 70.1, 70.2] },
-                { name: 'Ivan Moroz', workouts: 31, recent: 6, data: [88, 87, 86.2, 85.5, 85, 84.1, 83.6] }
-            ];
+            let REAL_CLIENTS = [];
             var colors = ['#7D51FE', '#AAFF00', '#7D51FE', '#AAFF00', '#7D51FE', '#AAFF00'];
             function trendColor(delta) { return delta > 0.5 ? '#AAFF00' : delta < -0.5 ? '#FF5252' : '#FFD93D'; }
+            
             function spark(data) {
+                if (!data || data.length === 0) return '<p class="text-xs text-center text-mono/50 py-4">No weight data</p>';
+                if (data.length === 1) return '<p class="text-xs text-center text-mono/50 py-4">Only 1 record</p>';
+                
                 var w = 220, h = 90, left = 30, right = 6, top = 8, bottom = 8;
                 var min = Math.min.apply(null, data), max = Math.max.apply(null, data);
                 var range = (max - min) || 1, base = data[0], delta = data[data.length - 1] - base, color = trendColor(delta);
@@ -274,101 +572,57 @@
                     '<polyline points="' + pts.join(' ') + '" fill="none" stroke="' + color + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
                     '<circle cx="' + xAt(data.length - 1).toFixed(1) + '" cy="' + yAt(data[data.length - 1]).toFixed(1) + '" r="3" fill="' + color + '"/></svg>';
             }
+
             function initials(n) { return n.split(' ').map(function (x) { return x[0]; }).join('').slice(0, 2); }
             
             var searchInput = $('client-search'), sortSelect = $('client-sort'), countEl = $('clients-count'), emptyEl = $('clients-empty'), gridEl = $('clients-grid');
-            if (gridEl) {
-                function renderClients() {
-                    var q = searchInput ? searchInput.value.trim().toLowerCase() : '';
-                    var sort = sortSelect ? sortSelect.value : 'recent';
-                    var list = CLIENTS.filter(function (c) { return c.name.toLowerCase().indexOf(q) !== -1; });
-                    list.sort(function (a, b) {
-                        if (sort === 'az') return a.name.localeCompare(b.name);
-                        if (sort === 'workouts') return b.workouts - a.workouts;
-                        return a.recent - b.recent;
-                    });
-                    if (countEl) countEl.textContent = '(' + list.length + ')';
-                    if (emptyEl) emptyEl.classList.toggle('hidden', list.length > 0);
-                    gridEl.innerHTML = list.map(function (c) {
-                        var idx = CLIENTS.indexOf(c), delta = (c.data[c.data.length - 1] - c.data[0]).toFixed(1);
-                        return '<article class="flex flex-col gap-4 rounded-lg bg-shell p-4 transition-transform duration-200 hover:-translate-y-0.5">' +
-                            '<div class="flex items-center gap-3"><div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-sm font-extrabold ' + (colors[idx] === '#AAFF00' ? 'bg-neon text-shell' : 'bg-violet text-white') + '">' + initials(c.name) + '</div>' +
-                            '<div class="min-w-0"><h4 class="truncate text-base font-extrabold tracking-tight">' + c.name + '</h4><p class="text-xs text-mono/50">Weight ' + (delta > 0 ? '+' : '') + delta + ' kg / 7 wks</p></div></div>' +
-                            '<div class="rounded-md bg-card px-3 py-2">' + spark(c.data) + '</div>' +
-                            '<div class="flex items-center justify-between"><p class="text-sm text-mono">Workouts attended: <span class="font-extrabold text-neon">' + c.workouts + '</span></p>' +
-                            '<button type="button" class="flex h-10 w-10 items-center justify-center rounded-md bg-card text-white transition-colors hover:bg-violet"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg></button></div></article>';
-                    }).join('');
-                }
-                if (searchInput) searchInput.addEventListener('input', renderClients);
-                if (sortSelect) sortSelect.addEventListener('change', renderClients);
-                renderClients();
+            
+            async function loadClients() {
+                try {
+                    const res = await fetch('/Trainer/GetClients');
+                    const data = await res.json();
+                    if (data.success) {
+                        REAL_CLIENTS = data.clients; // FIXED FROM ********
+                        renderClients();
+                    }
+                } catch(e) { console.error('Failed to load clients', e); }
             }
 
-            /* ---------- Modals & Schedule ---------- */
-            var openModalEl = null;
-            function openModal(id) {
-                openModalEl = $(id); if(!openModalEl) return;
-                openModalEl.classList.remove('hidden'); openModalEl.classList.add('flex'); document.body.style.overflow = 'hidden';
-            }
-            function closeModal() {
-                if (!openModalEl) return;
-                openModalEl.classList.add('hidden'); openModalEl.classList.remove('flex'); document.body.style.overflow = ''; openModalEl = null;
-            }
-            document.querySelectorAll('.modal').forEach(function (m) {
-                m.querySelector('.modal-overlay').addEventListener('click', closeModal);
-                m.querySelectorAll('[data-close]').forEach(function (b) { b.addEventListener('click', closeModal); });
-            });
-            
-            var icons = { strength: '<path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/>', yoga: '<circle cx="12" cy="5" r="2"/><path d="M12 7v6m-6 2 6-2 6 2M8 21l4-8 4 8"/>', cardio: '<path d="M3 12h4l3-8 4 16 3-8h4"/>', boxing: '<path d="M7 11V7a3 3 0 0 1 6 0v1h3a3 3 0 0 1 3 3v4a6 6 0 0 1-6 6h-2a6 6 0 0 1-6-6v-2a2 2 0 0 1 2-2Z"/>' };
-            var SCHEDULE = {
-                today: [{ time: '09:00 AM', client: 'Kateryna Melnyk', type: 'Strength', icon: 'strength' }, { time: '11:30 AM', client: 'Arsen Vyshnevetskyi', type: 'Boxing', icon: 'boxing' }, { time: '02:00 PM', client: 'Sofia Rossi', type: 'Yoga', icon: 'yoga' }, { time: '05:30 PM', client: 'Noah Kim', type: 'Cardio', icon: 'cardio' }],
-                tomorrow: []
-            };
-            var currentDay = 'today';
-            function renderSchedule(day) {
-                currentDay = day; var items = SCHEDULE[day]; var tl = $('timeline'), empty = $('empty-schedule'); if(!tl || !empty) return;
-                tl.classList.toggle('hidden', !items.length); empty.classList.toggle('hidden', !!items.length); empty.classList.toggle('flex', !items.length);
-                tl.innerHTML = items.map(function (s, i) {
-                    return '<li class="flex gap-3"><div class="flex w-20 shrink-0 flex-col items-end pt-3"><span class="text-xs font-extrabold text-neon">' + s.time + '</span></div>' +
-                        '<button type="button" data-idx="' + i + '" class="slot-btn group relative flex flex-1 items-center gap-3 rounded-lg bg-shell p-3 pl-4 text-left transition-colors hover:bg-black focus:outline-none" style="box-shadow: inset 3px 0 0 ' + (i % 2 ? '#7D51FE' : '#AAFF00') + '">' +
-                        '<span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-card text-neon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + icons[s.icon] + '</svg></span>' +
-                        '<div class="flex-1"><p class="text-sm font-extrabold break-words">' + s.client + '</p><p class="text-xs text-mono/60">' + s.type + ' session</p></div>' +
-                        '<span class="ml-auto shrink-0 text-[11px] font-bold uppercase tracking-wider text-mono/40 transition-colors group-hover:text-[#FF5252]">Cancel</span></button></li>';
-                }).join('');
-                document.querySelectorAll('.day-tab').forEach(function (t) {
-                    var on = t.dataset.day === day; t.setAttribute('aria-selected', String(on));
-                    t.className = 'day-tab rounded px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-colors ' + (on ? 'bg-neon text-shell' : 'text-mono hover:text-neon');
+            function renderClients() {
+                var q = searchInput ? searchInput.value.trim().toLowerCase() : '';
+                var sort = sortSelect ? sortSelect.value : 'recent';
+                var list = REAL_CLIENTS.filter(function (c) { return c.name.toLowerCase().indexOf(q) !== -1; });
+                
+                list.sort(function (a, b) {
+                    if (sort === 'az') return a.name.localeCompare(b.name);
+                    if (sort === 'workouts') return b.workouts - a.workouts;
+                    return new Date(b.lastBooking) - new Date(a.lastBooking);
                 });
+                
+                if (countEl) countEl.textContent = '(' + list.length + ')';
+                if (emptyEl) emptyEl.classList.toggle('hidden', list.length > 0);
+                
+                gridEl.innerHTML = list.map(function (c, idx) {
+                    var deltaVal = c.weights.length > 0 ? (c.weights[c.weights.length - 1] - c.weights[0]).toFixed(1) : '0.0';
+                    
+                    return '<article class="flex flex-col gap-4 rounded-lg bg-shell p-4 transition-transform duration-200 hover:-translate-y-0.5">' +
+                        '<div class="flex items-center gap-3"><div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-sm font-extrabold ' + (colors[idx % colors.length] === '#AAFF00' ? 'bg-neon text-shell' : 'bg-violet text-white') + '">' + initials(c.name) + '</div>' +
+                        '<div class="min-w-0"><h4 class="truncate text-base font-extrabold tracking-tight">' + c.name + '</h4><p class="text-xs text-mono/50">Weight ' + (deltaVal > 0 ? '+' : '') + deltaVal + ' kg</p></div></div>' +
+                        '<div class="rounded-md bg-card px-3 py-2">' + spark(c.weights) + '</div>' +
+                        '<div class="flex items-center justify-between">' +
+                            '<p class="text-sm text-mono">Sessions: <span class="font-extrabold text-neon">' + c.workouts + '</span></p>' +
+                            '<a href="/Profile/ClientHistory?id=' + c.id + '" class="flex h-9 px-3 items-center justify-center rounded-md bg-card text-xs font-bold text-white transition-colors hover:bg-violet hover:text-white">History</a>' +
+                        '</div></article>';
+                }).join('');
             }
-            document.querySelectorAll('.day-tab').forEach(function (t) { t.addEventListener('click', function () { renderSchedule(t.dataset.day); }); });
-            renderSchedule('today');
 
-            function to12h(hhmm) { var p = hhmm.split(':'), h = +p[0], m = p[1], suffix = h >= 12 ? 'PM' : 'AM'; return (('0' + ((h % 12) || 12)).slice(-2)) + ':' + m + ' ' + suffix; }
-            function toMins(l) { var m = l.match(/(\d+):(\d+) (AM|PM)/); return ((+m[1] % 12) + (m[3] === 'PM' ? 12 : 0)) * 60 + +m[2]; }
-            function todayISO() { var d = new Date(); return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
-            
-            if($('create-slot-btn')) $('create-slot-btn').addEventListener('click', function () { $('slot-error').classList.add('hidden'); $('slot-date').min = todayISO(); openModal('modal-slot'); });
-            if($('slot-form')) $('slot-form').addEventListener('submit', function (e) {
-                e.preventDefault(); var start = $('slot-start').value, end = $('slot-end').value, type = $('slot-type').value, err = $('slot-error');
-                if (end <= start) { err.textContent = 'End time must be after the start time.'; err.classList.remove('hidden'); return; }
-                var day = $('slot-date').value === todayISO() ? 'today' : 'tomorrow', iconKey = { Strength: 'strength', Boxing: 'boxing', Yoga: 'yoga', Cardio: 'cardio' }[type];
-                SCHEDULE[day].push({ time: to12h(start), client: 'Available slot', type: type, icon: iconKey });
-                SCHEDULE[day].sort(function (a, b) { return toMins(a.time) - toMins(b.time); });
-                closeModal(); $('slot-form').reset(); renderSchedule(day);
-            });
+            if (searchInput) searchInput.addEventListener('input', renderClients);
+            if (sortSelect) sortSelect.addEventListener('change', renderClients);
 
-            var pending = null;
-            if($('timeline')) $('timeline').addEventListener('click', function (e) {
-                var btn = e.target.closest('.slot-btn'); if (!btn) return;
-                var item = SCHEDULE[currentDay][+btn.dataset.idx];
-                pending = { day: currentDay, index: +btn.dataset.idx };
-                $('cancel-summary').textContent = item.time + ' - ' + item.client + ' (' + item.type + ')';
-                openModal('modal-cancel');
-            });
-            if($('cancel-confirm')) $('cancel-confirm').addEventListener('click', function () {
-                if (!pending) return; SCHEDULE[pending.day].splice(pending.index, 1);
-                pending = null; closeModal(); renderSchedule(currentDay);
-            });
+            // Init
+            loadProfile();
+            loadDashboard();
+            loadClients();
         })();
     </script>
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using SportLab.Data;
 using SportLab.Models;
+using SportLab.Services;
 using System.Security.Claims;
 using MailKit.Net.Smtp;
 using MimeKit;
@@ -32,10 +33,16 @@ namespace SportLab.Controllers
 
             var user = _context.Users.FirstOrDefault(u => u.Email == email);
 
-            if (user == null || user.Password != password)
+            if (user == null || !PasswordHasher.Verify(password, user.Password))
             {
                 ModelState.AddModelError(string.Empty, "Invalid email or password.");
                 return View();
+            }
+
+            if (!PasswordHasher.IsHashed(user.Password))
+            {
+                user.Password = PasswordHasher.Hash(password);
+                await _context.SaveChangesAsync();
             }
 
             if (user.IsBlocked)
@@ -177,7 +184,7 @@ namespace SportLab.Controllers
                 {
                     Name = email.Split('@')[0],
                     Email = savedEmail,
-                    Password = savedPassword,
+                    Password = PasswordHasher.Hash(savedPassword),
                     Role = Roles.Client,
                     IsBlocked = false
                 };
