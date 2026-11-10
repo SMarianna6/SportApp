@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<SportLab.Models.ContactViewModel>
 
-@{    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
     ViewData["Title"] = "Messages";
     
     bool isTrainer = User.IsInRole(Roles.Trainer);
@@ -24,38 +25,10 @@
                 <input id="chat-search" type="search" placeholder="Search messages" class="w-full rounded-md border border-white/10 bg-shell py-2.5 pl-9 pr-3 text-sm text-white placeholder:text-mono/40 transition-colors hover:border-white/25 focus:border-neon focus:outline-none focus:ring-1 focus:ring-neon" />
             </label>
         </div>
-        @if (Model != null && Model.Any())
-        {
         <ul id="chat-list" class="min-h-0 flex-1 overflow-y-auto">
-            @foreach (var contact in Model)
-            {
-                <li>
-                    <button type="button" data-contact-id="@contact.Id" data-contact-name="@contact.Name" class="chat-item flex w-full items-center gap-3 border-l-4 px-4 py-3.5 text-left transition-colors hover:bg-white/5">
-                        <span class="relative shrink-0"><span class="flex h-12 w-12 items-center justify-center rounded-full text-sm font-extrabold bg-violet text-white">@(contact.Name != null && contact.Name.Length > 0 ? contact.Name.Substring(0, 1) : "?")</span></span>
-                        <span class="min-w-0 flex-1">
-                            <span class="flex items-baseline justify-between gap-2">
-                                <span class="min-w-0 truncate text-sm font-extrabold" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">@contact.Name</span>
-                                <span class="shrink-0 text-[11px] font-semibold text-mono/50">@contact.LastMessageDate.ToString("HH:mm")</span>
-                            </span>
-                            <span class="mt-0.5 flex items-center justify-between gap-2">
-                                <span class="min-w-0 truncate text-xs @(contact.UnreadCount > 0 ? "font-semibold text-white" : "text-mono/70")" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">@(string.IsNullOrEmpty(contact.LastMessageText) ? "No messages yet" : contact.LastMessageText)</span>
-                                @if (contact.UnreadCount > 0)
-                                {
-                                    <span class="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-violet px-1.5 text-[11px] font-extrabold text-white">@contact.UnreadCount</span>
-                                }
-                            </span>
-                        </span>
-                    </button>
-                </li>
-            }
+            <!-- Contacts rendered via JS -->
         </ul>
-        }
-        else
-        {
-            <ul id="chat-list" class="min-h-0 flex-1 overflow-y-auto">
-                <p id="chat-empty" class="hidden p-6 text-center text-sm text-mono/60">No conversations found.</p>
-            </ul>
-        }
+        <p id="chat-empty" class="hidden p-6 text-center text-sm text-mono/60">No conversations found.</p>
     </aside>
 
     <!-- Active chat -->
@@ -66,7 +39,7 @@
             </button>
             <span id="head-avatar" class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-violet text-sm font-extrabold"></span>
             <div class="min-w-0 flex-1">
-                <h3 id="head-name" class="truncate text-base font-extrabold"></h3>
+                <h3 id="head-name" class="truncate text-base font-extrabold">Select a chat</h3>
                 <p id="head-status" class="flex items-center gap-1.5 text-xs font-semibold" aria-live="polite"></p>
             </div>
             <button id="info-btn" type="button" class="flex h-10 w-10 items-center justify-center rounded-md text-mono/70 transition-colors hover:bg-white/5 hover:text-neon xl:hidden">
@@ -103,9 +76,6 @@
                 <div class="flex min-w-0 flex-1 items-center gap-1 rounded-full border border-white/10 bg-shell px-2 transition-colors focus-within:border-neon hover:border-white/25">
                     <label for="msg-input" class="sr-only">Type a message</label>
                     <input id="msg-input" type="text" autocomplete="off" placeholder="Type a message" class="min-w-0 flex-1 bg-transparent px-3 py-3 text-sm text-white placeholder:text-mono/40 focus:outline-none" />
-                    <button type="button" class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-mono/60 transition-colors hover:bg-white/5 hover:text-neon">
-                        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m21.4 11-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5"/></svg>
-                    </button>
                 </div>
                 <button type="submit" class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-neon text-shell transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">
                     <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M21.7 2.3a1 1 0 0 0-1-.2L2.6 9.2a1 1 0 0 0 .1 1.9l7.1 2.4 2.4 7.1a1 1 0 0 0 1.9.1l7.2-18.1a1 1 0 0 0-.2-1.1ZM10.9 12.6l6.2-6.2-4.3 8.6-1.9-2.4Z"/></svg>
@@ -124,58 +94,7 @@
         <div class="flex flex-col items-center text-center">
             <span id="info-avatar" class="flex h-24 w-24 items-center justify-center rounded-full bg-violet text-3xl font-black"></span>
             <h4 id="info-name" class="mt-4 text-xl font-black uppercase tracking-tighter"></h4>
-            
-            @if (isTrainer)
-            {
-                <span class="mt-2 inline-flex items-center gap-1.5 rounded-full bg-neon/15 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-neon">
-                    <span class="h-1.5 w-1.5 rounded-full bg-neon"></span>Active Client
-                </span>
-            }
-            else
-            {
-                <span class="mt-2 inline-flex items-center gap-1.5 rounded-full bg-violet/15 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-violet">
-                    <svg class="h-3 w-3" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                    Head Trainer
-                </span>
-            }
         </div>
-
-        <dl class="mt-6 grid gap-2.5">
-            @if (isTrainer)
-            {
-                <div class="rounded-lg bg-card p-3.5 transition-colors hover:bg-[#3a3a3a]">
-                    <dt class="text-[11px] font-semibold uppercase tracking-widest text-mono/50">Goal</dt>
-                    <dd id="info-goal" class="mt-1 text-sm font-extrabold"></dd>
-                </div>
-                <div class="rounded-lg bg-card p-3.5 transition-colors hover:bg-[#3a3a3a]">
-                    <dt class="text-[11px] font-semibold uppercase tracking-widest text-mono/50">Current Weight</dt>
-                    <dd id="info-weight" class="mt-1 text-sm font-extrabold"></dd>
-                </div>
-            }
-            else
-            {
-                <div class="rounded-lg bg-card p-3.5 transition-colors hover:bg-[#3a3a3a]">
-                    <dt class="text-[11px] font-semibold uppercase tracking-widest text-mono/50">Experience</dt>
-                    <dd id="info-exp" class="mt-1 text-sm font-extrabold"></dd>
-                </div>
-                <div class="rounded-lg bg-card p-3.5 transition-colors hover:bg-[#3a3a3a]">
-                    <dt class="text-[11px] font-semibold uppercase tracking-widest text-mono/50">Specialization</dt>
-                    <dd id="info-spec" class="mt-1 text-sm font-extrabold"></dd>
-                </div>
-            }
-            <div class="rounded-lg bg-card p-3.5 transition-colors hover:bg-[#3a3a3a]">
-                <dt class="text-[11px] font-semibold uppercase tracking-widest text-mono/50">Next Session</dt>
-                <dd id="info-next" class="mt-1 text-sm font-extrabold"></dd>
-            </div>
-        </dl>
-
-        <section class="mt-7" aria-labelledby="media-title">
-            <div class="mb-3 flex items-center justify-between">
-                <h4 id="media-title" class="text-xs font-extrabold uppercase tracking-widest">Shared Media</h4>
-                <a href="#" class="text-xs font-bold uppercase tracking-widest text-neon underline-offset-4 hover:underline">View all</a>
-            </div>
-            <ul id="media-grid" class="grid grid-cols-3 gap-2"></ul>
-        </section>
     </aside>
 </div>
 
@@ -184,22 +103,31 @@
         (function () {
             'use strict';
             var $ = function (id) { return document.getElementById(id); };
-            
-            var isTrainer = @isTrainer.ToString().ToLower();
 
-            var CHATS = [];
+            // 1. Считуємо контакти з серверної моделі C#
+            var CHATS = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Select(c => new {
+                id = c.Id,
+                name = c.Name,
+                time = c.LastMessageDate == DateTime.MinValue ? "" : c.LastMessageDate.ToString("HH:mm"),
+                unread = c.UnreadCount,
+                lastText = string.IsNullOrEmpty(c.LastMessageText) ? "No messages yet" : c.LastMessageText,
+                msgs = new List<object>()
+            })));
 
-            var MEDIA = [ ['#7D51FE', '#141414'], ['#AAFF00', '#333333'], ['#555555', '#141414'], ['#7D51FE', '#AAFF00'], ['#333333', '#7D51FE'], ['#AAFF00', '#141414'] ];
-            var activeId = 1;
+            var activeId = CHATS.length > 0 ? CHATS[0].id : null;
 
-            function initials(n) { return n.split(' ').map(function (p) { return p[0]; }).join(''); }
-            function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&', '<': '<', '>': '>', '"': '"' }[c]; }); }
-            function lastText(c) {
-                var m = c.msgs && c.msgs.length ? c.msgs[c.msgs.length - 1] : null;
-                if (!m) return 'No messages yet';
-                return m.workout ? 'Workout: ' + m.workout.title : (m.from === 'out' ? 'You: ' : '') + m.text;
+            function initials(n) {
+                if (!n) return "?";
+                return n.split(' ').map(function (p) { return p[0]; }).join('');
             }
-            function byId(id) { return CHATS.filter(function (c) { return String(c.id) === String(id); })[0]; }
+            function esc(s) {
+                return String(s || '').replace(/[&<>"]/g, function (c) {
+                    return { '&': '&', '<': '<', '>': '>', '"': '"' }[c];
+                });
+            }
+            function byId(id) {
+                return CHATS.find(function (c) { return String(c.id) === String(id); });
+            }
 
             var CHECKS = {
                 read: '<svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m1 13 4 4L15 7M9 15l2 2L22 6"/></svg>',
@@ -207,16 +135,18 @@
             };
 
             function renderList() {
-                var q = $('chat-search').value.trim().toLowerCase();
-                var rows = CHATS.filter(function (c) { return c.name.toLowerCase().indexOf(q) !== -1 || lastText(c).toLowerCase().indexOf(q) !== -1; });
-                $('chat-empty').classList.toggle('hidden', rows.length > 0);
+                var q = ($('chat-search') ? $('chat-search').value : '').trim().toLowerCase();
+                var rows = CHATS.filter(function (c) {
+                    return c.name.toLowerCase().indexOf(q) !== -1 || (c.lastText && c.lastText.toLowerCase().indexOf(q) !== -1);
+                });
+                if ($('chat-empty')) $('chat-empty').classList.toggle('hidden', rows.length > 0);
+
                 $('chat-list').innerHTML = rows.map(function (c) {
                     var active = String(c.id) === String(activeId);
-                    return '<li><button type="button" data-contact-id="' + c.id + '" aria-current="' + active + '" class="chat-item flex w-full items-center gap-3 border-l-4 px-4 py-3.5 text-left transition-colors hover:bg-white/5 ' + (active ? 'border-neon bg-white/5' : 'border-transparent') + '">' +
-                        '<span class="relative shrink-0"><span class="flex h-12 w-12 items-center justify-center rounded-full text-sm font-extrabold ' + (c.accent === '#AAFF00' ? 'bg-card text-neon' : 'bg-violet text-white') + '">' + initials(c.name) + '</span>' +
-                        (c.online ? '<span class="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-shell bg-neon"></span>' : '') + '</span>' +
-                        '<span class="min-w-0 flex-1"><span class="flex items-baseline justify-between gap-2"><span class="truncate text-sm font-extrabold">' + esc(c.name) + '</span><span class="shrink-0 text-[11px] font-semibold text-mono/50">' + c.time + '</span></span>' +
-                        '<span class="mt-0.5 flex items-center justify-between gap-2"><span class="truncate text-xs ' + (c.unread ? 'font-semibold text-white' : 'text-mono/70') + '">' + esc(lastText(c)) + '</span>' +
+                    return '<li><button type="button" data-contact-id="' + esc(c.id) + '" aria-current="' + active + '" class="chat-item flex w-full items-center gap-3 border-l-4 px-4 py-3.5 text-left transition-colors hover:bg-white/5 ' + (active ? 'border-neon bg-white/5' : 'border-transparent') + '">' +
+                        '<span class="relative shrink-0"><span class="flex h-12 w-12 items-center justify-center rounded-full text-sm font-extrabold bg-violet text-white">' + initials(c.name) + '</span></span>' +
+                        '<span class="min-w-0 flex-1"><span class="flex items-baseline justify-between gap-2"><span class="truncate text-sm font-extrabold">' + esc(c.name) + '</span><span class="shrink-0 text-[11px] font-semibold text-mono/50">' + esc(c.time) + '</span></span>' +
+                        '<span class="mt-0.5 flex items-center justify-between gap-2"><span class="truncate text-xs ' + (c.unread ? 'font-semibold text-white' : 'text-mono/70') + '">' + esc(c.lastText) + '</span>' +
                         (c.unread ? '<span class="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-violet px-1.5 text-[11px] font-extrabold text-white">' + c.unread + '</span>' : '') +
                         '</span></span></button></li>';
                 }).join('');
@@ -224,222 +154,145 @@
 
             function bubble(m) {
                 var out = m.from === 'out';
-                var meta = '<span class="mt-1 flex items-center gap-1 text-[11px] ' + (out ? 'justify-end text-mono/60' : 'text-mono/50') + '>' + m.time +
+                var meta = '<span class="mt-1 flex items-center gap-1 text-[11px] ' + (out ? 'justify-end text-mono/60' : 'text-mono/50') + '>' + esc(m.time) +
                     (out ? '<span class="' + (m.read ? 'text-neon' : 'text-mono/50') + '">' + (m.read ? CHECKS.read : CHECKS.sent) + '</span>' : '') + '</span>';
-                var body;
-                if (m.workout) {
-                    body = '<div class="w-64 max-w-full overflow-hidden rounded-2xl rounded-br-md bg-card ring-1 ring-neon/40"><div class="h-1.5 bg-neon"></div><div class="p-4">' +
-                        '<p class="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-neon"><svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/></svg>Workout</p>' +
-                        '<p class="mt-2 text-lg font-black uppercase leading-tight tracking-tighter">' + esc(m.workout.title) + '</p>' +
-                        '<p class="mt-1 flex items-center gap-3 text-xs text-mono/70"><span>' + esc(m.workout.duration) + '</span><span class="h-1 w-1 rounded-full bg-mono/40"></span><span>' + esc(m.workout.level) + '</span></p>' +
-                        '<button type="button" class="mt-4 w-full rounded-md bg-neon py-2.5 text-xs font-extrabold uppercase tracking-widest text-shell">View Routine</button></div></div>';
-                } else {
-                    body = '<p class="rounded-2xl px-4 py-2.5 text-sm leading-relaxed ' + (out ? 'rounded-br-md bg-violet text-white' : 'rounded-bl-md bg-card text-white') + '">' + esc(m.text) + '</p>';
-                }
+                var body = '<p class="rounded-2xl px-4 py-2.5 text-sm leading-relaxed ' + (out ? 'rounded-br-md bg-violet text-white' : 'rounded-bl-md bg-card text-white') + '">' + esc(m.text) + '</p>';
                 return '<div class="flex ' + (out ? 'justify-end' : 'justify-start') + '"><div class="max-w-[85%] sm:max-w-[70%] ' + (out ? 'text-right' : '') + '">' + body + meta + '</div></div>';
             }
 
             function renderChat() {
+                if (!activeId) return;
                 var c = byId(activeId);
                 if (!c) return;
-                $('head-avatar').textContent = initials(c.name);
-                $('head-name').textContent = c.name;
-                var st = $('head-status');
-                if (c.typing) {
-                    st.className = 'flex items-center gap-1.5 text-xs font-semibold text-neon';
-                    st.innerHTML = 'Typing<span class="inline-flex gap-0.5"><i class="typing-dot h-1 w-1 rounded-full bg-neon"></i><i class="typing-dot h-1 w-1 rounded-full bg-neon"></i><i class="typing-dot h-1 w-1 rounded-full bg-neon"></i></span>';
-                } else if (c.online) {
-                    st.className = 'flex items-center gap-1.5 text-xs font-semibold text-neon';
-                    st.innerHTML = '<span class="h-1.5 w-1.5 rounded-full bg-neon"></span>Online';
-                } else {
-                    st.className = 'flex items-center gap-1.5 text-xs font-semibold text-mono/50';
-                    st.textContent = 'Offline';
+
+                if ($('head-avatar')) $('head-avatar').textContent = initials(c.name);
+                if ($('head-name')) $('head-name').textContent = c.name;
+                if ($('head-status')) {
+                    $('head-status').className = 'flex items-center gap-1.5 text-xs font-semibold text-neon';
+                    $('head-status').innerHTML = '<span class="h-1.5 w-1.5 rounded-full bg-neon"></span>Active';
                 }
+
                 var box = $('messages');
-                var msgs = c.msgs || [];
-                box.innerHTML = '<p class="mx-auto w-fit rounded-full bg-card px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-mono/60">Today</p>' + msgs.map(bubble).join('');
-                box.scrollTop = box.scrollHeight;
-
-                $('info-avatar').textContent = initials(c.name);
-                $('info-name').textContent = c.name;
-                
-                if (isTrainer) {
-                    $('info-goal').textContent = c.goal || '';
-                    $('info-weight').textContent = c.weight || '';
-                } else {
-                    $('info-exp').textContent = c.exp || '';
-                    $('info-spec').textContent = c.spec || '';
+                if (box) {
+                    var msgs = c.msgs || [];
+                    if (msgs.length === 0) {
+                        box.innerHTML = '<p class="mx-auto w-fit rounded-full bg-card px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-mono/60">No messages yet</p>';
+                    } else {
+                        box.innerHTML = '<p class="mx-auto w-fit rounded-full bg-card px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-mono/60">Today</p>' + msgs.map(bubble).join('');
+                    }
+                    box.scrollTop = box.scrollHeight;
                 }
-                $('info-next').textContent = c.next || '';
 
-                $('media-grid').innerHTML = MEDIA.map(function (g, i) {
-                    return '<li><button type="button" class="relative block aspect-square w-full overflow-hidden rounded-md transition-transform duration-300 hover:scale-105" style="background:linear-gradient(135deg,' + g[0] + ',' + g[1] + ')">' +
-                        (i % 3 === 2 ? '<svg class="absolute inset-0 m-auto h-6 w-6 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>' : '') + '</button></li>';
-                }).join('');
+                if ($('info-avatar')) $('info-avatar').textContent = initials(c.name);
+                if ($('info-name')) $('info-name').textContent = c.name;
             }
 
             function selectChat(id) {
                 activeId = id;
-                var cid = String(id);
-                var c = byId(cid);
+                var c = byId(id);
                 if (c) { c.unread = 0; }
                 renderList();
-                $('chat-list-col').classList.add('hidden', 'lg:flex');
-                $('chat-col').classList.remove('hidden'); $('chat-col').classList.add('flex');
-                $('receiverId').value = cid;
-                if (cid === 'BROADCAST_TRAINERS') {
-                    // Broadcast chat: clean empty state, composer stays ready for mass mail
-                    var box = $('messages');
-                    box.innerHTML = '<p class="mx-auto w-fit rounded-full bg-card px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-mono/60">Broadcast</p>';
-                    box.scrollTop = box.scrollHeight;
-                    $('head-avatar').textContent = '📢';
-                    $('head-name').textContent = 'All Trainers';
-                    $('head-status').textContent = 'Mass mailing';
+                if ($('chat-list-col')) $('chat-list-col').classList.add('hidden', 'lg:flex');
+                if ($('chat-col')) {
+                    $('chat-col').classList.remove('hidden');
+                    $('chat-col').classList.add('flex');
+                }
+                if ($('receiverId')) $('receiverId').value = String(id);
+
+                if (String(id) === 'BROADCAST_TRAINERS') {
+                    if (c) c.msgs = [];
+                    if ($('head-avatar')) $('head-avatar').textContent = '📢';
+                    if ($('head-name')) $('head-name').textContent = 'All Trainers';
+                    if ($('head-status')) $('head-status').textContent = 'Mass mailing';
+                    renderChat();
                     return;
                 }
-                loadConversation(cid);
+                loadConversation(id);
             }
 
             function loadConversation(id) {
                 return fetch('/Messages/GetConversation?contactId=' + encodeURIComponent(id))
-                    .then(function (response) { return response.json(); })
+                    .then(function (res) { return res.json(); })
                     .then(function (data) {
-                        // Data format: array of { id, name, msgs: [...] }
-                        CHATS = data;
-                        renderList(); renderChat();
+                        if (data && data[0] && data[0].msgs) {
+                            var c = byId(id);
+                            if (c) {
+                                c.msgs = data[0].msgs;
+                                renderChat();
+                            }
+                        }
                     })
                     .catch(function (err) { console.error('Failed to load conversation:', err); });
             }
 
             function showList() {
-                $('chat-list-col').classList.remove('hidden');
-                $('chat-col').classList.add('hidden'); $('chat-col').classList.remove('flex');
+                if ($('chat-list-col')) $('chat-list-col').classList.remove('hidden');
+                if ($('chat-col')) {
+                    $('chat-col').classList.add('hidden');
+                    $('chat-col').classList.remove('flex');
+                }
             }
 
-            $('chat-list').addEventListener('click', function (e) { var b = e.target.closest('.chat-item'); if (b) selectChat(b.dataset.contactId); });
-            $('chat-search').addEventListener('input', renderList);
-            $('chat-back').addEventListener('click', showList);
+            // Обробка кліків по контактах
+            $('chat-list').addEventListener('click', function (e) {
+                var b = e.target.closest('.chat-item');
+                if (b && b.dataset.contactId) {
+                    selectChat(b.dataset.contactId);
+                }
+            });
 
-            function now() { var d = new Date(); return ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); }
-            
-            // Initialize SignalR connection
-            function initSignalR() {
-                hubConnection = new signalR.HubConnectionBuilder()
-                    .withUrl('/messageshub', { accessTokenProvider: () => null })
-                    .build();
+            if ($('chat-search')) $('chat-search').addEventListener('input', renderList);
+            if ($('chat-back')) $('chat-back').addEventListener('click', showList);
 
-                hubConnection.on('ReceiveMessages', function (conversationId, messages) {
-                    // Populate CHATS with existing messages from server
-                    CHATS = messages.map(m => ({
-                        id: m.SenderId < m.ReceiverId ? m.SenderId : m.ReceiverId,
-                        name: m.SenderName,
-                        online: true,
-                        typing: false,
-                        unread: 0,
-                        time: m.SentDate.toLocaleTimeString(),
-                        goal: '',
-                        weight: '',
-                        next: '',
-                        accent: '#7D51FE',
-                        msgs: m.msgs.map(msg => ({
-                            from: msg.FromCurrentUser ? 'out' : 'in',
-                            text: msg.Text,
-                            time: msg.SentDate.toLocaleTimeString(),
-                            read: false
-                        }))
-                    }));
-                    renderList(); renderChat();
-                });
-
-                hubConnection.on('NewMessage', function (message) {
-                    // Add new message to the active conversation
-                    var c = byId(activeId);
-                    if (c) {
-                        c.msgs.push({
-                            from: message.FromCurrentUser ? 'out' : 'in',
-                            text: message.Text,
-                            time: message.SentDate.toLocaleTimeString(),
-                            read: false
-                        });
-                        renderChat();
-                    }
-                });
-
-                hubConnection.start().then(function () {
-                    // After connection, fetch existing conversations
-                    return loadConversation(activeId);
-                }).catch(err => console.error('SignalR error:', err));
+            function now() {
+                var d = new Date();
+                return ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2);
             }
 
-            // Initialize SignalR when the DOM is ready
-            document.addEventListener('DOMContentLoaded', initSignalR);
-
-            function push(msg) {
-                if (activeId === 'BROADCAST_TRAINERS') {
-                    // Admin mass broadcast
-                    if (hubConnection && hubConnection.state === signalR.HubConnectionState.Connected) {
-                        hubConnection.send('SendMessage', 'BROADCAST_TRAINERS', msg.text)
-                            .then(function () {
-                                // Local echo of the broadcast
-                                var b = bubble({ from: 'out', text: msg.text, time: msg.time, read: false });
-                                var box = $('messages');
-                                box.insertAdjacentHTML('beforeend', b);
-                                box.scrollTop = box.scrollHeight;
-                            })
-                            .catch(function (err) { console.error('Send error:', err); });
-                    }
+            function sendMessage(text) {
+                if (!activeId) {
+                    alert("Please select a contact first.");
                     return;
                 }
-                var c = byId(activeId);
-                if (c) {
-                    c.msgs.push(msg);
-                    c.time = msg.time;
-                    // Also send via SignalR
-                    if (hubConnection && hubConnection.state === signalR.HubConnectionState.Connected) {
-                        hubConnection.send('SendMessage', String(activeId), msg.text).then(() => {
-                            // Message sent successfully
-                        }).catch(err => console.error('Send error:', err));
+
+                fetch('/Messages/SendMessage', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'receiverId=' + encodeURIComponent(activeId) + '&text=' + encodeURIComponent(text)
+                })
+                .then(function (res) {
+                    if (res.ok) {
+                        var c = byId(activeId);
+                        if (c) {
+                            c.msgs = c.msgs || [];
+                            c.msgs.push({ from: 'out', text: text, time: now(), read: false });
+                            c.lastText = text;
+                            c.time = now();
+                            renderList();
+                            renderChat();
+                        }
+                    } else {
+                        alert("Failed to send message.");
                     }
-                    renderList(); renderChat();
-                }
+                })
+                .catch(function (err) { console.error("Send error:", err); });
             }
 
             $('composer').addEventListener('submit', function (e) {
-                e.preventDefault(); var input = $('msg-input'), text = input.value.trim();
-                if (!text) return; input.value = '';
-                push({ from: 'out', text: text, time: now(), read: false });
+                e.preventDefault();
+                var input = $('msg-input'), text = input.value.trim();
+                if (!text) return;
+                input.value = '';
+                sendMessage(text);
             });
 
-            /* Plus menu (Only initialized if isTrainer is true) */
-            var plusBtn = $('plus-btn'), plusMenu = $('plus-menu');
-            if (plusBtn && plusMenu) {
-                function setPlus(open) {
-                    plusMenu.classList.toggle('hidden', !open);
-                    plusBtn.setAttribute('aria-expanded', String(open));
-                    plusBtn.classList.toggle('bg-violet', open); plusBtn.classList.toggle('rotate-45', open);
-                }
-                plusBtn.addEventListener('click', function (e) { e.stopPropagation(); setPlus(plusMenu.classList.contains('hidden')); });
-                document.addEventListener('click', function (e) { if (!plusMenu.contains(e.target)) setPlus(false); });
-                document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { setPlus(false); closeInfo(); } });
-                plusMenu.addEventListener('click', function (e) {
-                    var item = e.target.closest('[data-action]'); if (!item) return;
-                    setPlus(false);
-                    if (item.dataset.action === 'workout') push({ from: 'out', workout: { title: 'Full Body Burn', duration: '30 min', level: 'Beginner' }, time: now(), read: false });
-                    else push({ from: 'out', text: 'Book your next session here: https://sporthub.example/book', time: now(), read: false });
-                });
+            // Ініціалізація першого активного чату при завантаженні
+            if (activeId) {
+                selectChat(activeId);
+            } else {
+                renderList();
             }
 
-            /* Info panel */
-            var infoCol = $('info-col'), infoOverlayClasses = ['fixed', 'inset-y-0', 'right-0', 'z-40', 'w-80', 'max-w-full', 'shadow-2xl', 'block'];
-            function openInfo() { infoCol.classList.remove('hidden'); infoOverlayClasses.forEach(function (c) { infoCol.classList.add(c); }); }
-            function closeInfo() { if (window.matchMedia('(min-width: 1280px)').matches) return; infoOverlayClasses.forEach(function (c) { infoCol.classList.remove(c); }); infoCol.classList.add('hidden'); }
-            $('info-btn').addEventListener('click', openInfo);
-            $('info-close').addEventListener('click', closeInfo);
-            window.matchMedia('(max-width: 1023px)').addEventListener('change', function (e) {
-                if (e.matches) { infoOverlayClasses.forEach(function (c) { infoCol.classList.remove(c); }); infoCol.classList.add('hidden', 'xl:block'); }
-            });
-
-            renderList(); renderChat();
             if (window.matchMedia('(max-width: 1023px)').matches) showList();
         })();
     </script>
