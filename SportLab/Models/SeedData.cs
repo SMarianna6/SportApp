@@ -166,7 +166,7 @@ namespace SportLab.Models
                 });
             }
 
-            // Records created before Lab 6 may still store the legacy "Admin" value.
+            
             foreach (var legacyAdmin in context.Users.Where(u => u.Role == Roles.AdminAlias).ToList())
             {
                 legacyAdmin.Role = Roles.Administrator;

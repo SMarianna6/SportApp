@@ -17,7 +17,7 @@ namespace SportLab.Controllers
             _context = context;
         }
 
-        // PUBLIC SCHEDULE — returns current-week valid slots only
+        // PUBLIC SCHEDULE � returns current-week valid slots only
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -57,7 +57,7 @@ namespace SportLab.Controllers
             return View(slots);
         }
 
-        // JSON endpoint — returns current-week slots for async Fetch
+        // JSON endpoint � returns current-week slots for async Fetch
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetWeekSlots()
@@ -125,7 +125,7 @@ namespace SportLab.Controllers
             return Json(result);
         }
 
-        // JSON BOOK — called via Fetch; no redirects
+        // JSON BOOK � called via Fetch; no redirects
         [Authorize(Roles = Roles.Client)]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -192,7 +192,7 @@ namespace SportLab.Controllers
             });
         }
 
-        // JSON CANCEL BOOKING — called via Fetch; no redirects
+        // JSON CANCEL BOOKING � called via Fetch; no redirects
         [Authorize(Roles = Roles.Client)]
         [HttpPost]
         [ValidateAntiForgeryToken]

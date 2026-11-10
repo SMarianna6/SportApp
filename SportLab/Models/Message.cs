@@ -31,5 +31,8 @@ namespace SportLab.Models
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}", ApplyFormatInEditMode = false)]
         public DateTime SentDate { get; set; } = DateTime.Now;
+
+        [Display(Name = "Is Read")]
+        public bool IsRead { get; set; }
     }
 }

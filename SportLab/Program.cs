@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using SportLab.Hubs;
 using Microsoft.EntityFrameworkCore;
 using SportLab.Data;
 using SportLab.Models;
@@ -6,7 +7,9 @@ using SportLab.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<SportLabContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("SportLabContext")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SportLabContext"))
+    .ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning)));
+    
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -18,6 +21,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 builder.Services.AddAuthorization();
+
+builder.Services.AddSignalR();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddDistributedMemoryCache();
@@ -55,5 +60,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
+
+app.MapHub<MessagesHub>("/messagesHub");
 
 app.Run();
