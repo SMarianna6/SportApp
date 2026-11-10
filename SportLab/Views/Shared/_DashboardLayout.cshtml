@@ -233,39 +233,40 @@
             }
 
             <div class="ml-auto flex items-center gap-3">
-                @if (userRole != Roles.Administrator)
-                {
-                    <a href="@Url.Action("Index", "Schedule")" class="rounded-md border border-neon bg-transparent px-4 py-2 text-xs font-bold uppercase tracking-widest text-neon transition-colors hover:bg-neon hover:text-ink">Schedule</a>
-                }
-
-                <button aria-label="Notifications" class="relative p-2 text-ink/70 transition-colors hover:text-neon">
-                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
-                    <span class="absolute right-1.5 top-1.5 h-2 w-2 bg-violet"></span>
-                </button>
+                    <div class="relative" id="notification-wrapper">
+                    <button id="notification-btn" aria-label="Notifications" class="relative p-2 text-ink/70 transition-colors hover:text-neon focus:outline-none focus:ring-2 focus:ring-neon rounded-full">
+                        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                        <span id="notification-badge" class="absolute right-1 top-1 hidden h-2.5 w-2.5 rounded-full bg-violet ring-2 ring-shell"></span>
+                    </button>
+                    
+                    <div id="notification-dropdown" class="absolute right-0 top-full mt-2 hidden w-80 flex-col border border-white/10 bg-surface shadow-2xl z-50 rounded-lg overflow-hidden">
+                        <div class="flex items-center justify-between border-b border-white/10 bg-[#222] px-4 py-3">
+                            <h3 class="text-sm font-bold uppercase tracking-wider text-ink">Notifications</h3>
+                            <span id="notification-count" class="text-xs font-bold text-neon"></span>
+                        </div>
+                        <div id="notification-list" class="max-h-80 overflow-y-auto divide-y divide-white/5">
+                            <div class="p-4 text-center text-sm text-ink/50 animate-pulse">Loading...</div>
+                        </div>
+                    </div>
+                </div>
 
                <div class="relative group">
-                    <button class="flex items-center gap-3 p-1 transition-colors hover:bg-white/5 focus:outline-none">
-                        @if (userRole == Roles.Administrator)
-                        {
-                            <span class="flex h-9 w-9 items-center justify-center bg-violet text-xs font-black text-white">AD</span>
-                            <span class="hidden text-left sm:block">
-                                <span class="block text-sm font-bold text-ink">Admin</span>
-                                <span class="block text-[11px] uppercase text-ink/50">Super Admin</span>
-                            </span>
-                        }
-                        else
-                        {
-                            <span class="flex h-9 w-9 items-center justify-center bg-violet text-xs font-black text-white">US</span>
-                        }
-                        <svg class="h-4 w-4 text-ink/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                    <button class="flex items-center gap-3 p-1 transition-colors hover:bg-white/5 focus:outline-none rounded-full lg:rounded-md">
+                        @await Component.InvokeAsync("UserAvatar")
+                        
+                        <div class="hidden text-left sm:block pr-2">
+                            <span class="block text-sm font-bold text-ink">@User.Identity?.Name?.Split('@')[0]</span>
+                            <span class="block text-[11px] uppercase text-ink/50">@userRole</span>
+                        </div>
+                        <svg class="hidden lg:block h-4 w-4 text-ink/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
                     </button>
     
-                    <div class="absolute right-0 top-full mt-2 hidden w-48 flex-col border border-white/10 bg-surface shadow-2xl group-focus-within:flex hover:flex z-50">
+                    <div class="absolute right-0 top-full mt-2 hidden w-48 flex-col border border-white/10 bg-surface shadow-2xl group-focus-within:flex hover:flex z-50 rounded-lg overflow-hidden">
                         <a href="@Url.Action("Settings", userRole == Roles.Administrator ? "Admin" : "Profile")" class="flex w-full items-center gap-2 px-3 py-2.5 text-sm text-ink hover:bg-white/5 transition-colors">
                             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>
                             Settings
                         </a>
-                        <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
+                        <form asp-controller="Account" asp-action="Logout" method="post" class="m-0 border-t border-white/10">
                             <button type="submit" class="flex w-full items-center gap-2 px-3 py-2.5 text-sm text-ink hover:bg-white/5 transition-colors text-left">
                                 <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
                                 Log out
@@ -283,6 +284,82 @@
 
     <!-- Layout Scripts -->
     <script>
+                // --- NOTIFICATION SYSTEM ---
+        (function () {
+            const btn = document.getElementById('notification-btn');
+            const dropdown = document.getElementById('notification-dropdown');
+            const list = document.getElementById('notification-list');
+            const badge = document.getElementById('notification-badge');
+            const countEl = document.getElementById('notification-count');
+            
+            if(!btn) return;
+
+            btn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                dropdown.classList.toggle('hidden');
+                if (!dropdown.classList.contains('hidden')) {
+                    loadNotifications();
+                }
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!dropdown.contains(e.target) && !btn.contains(e.target)) {
+                    dropdown.classList.add('hidden');
+                }
+            });
+
+            async function loadNotifications() {
+                try {
+                    const res = await fetch('/Notification/GetNotifications');
+                    const data = await res.json();
+                    
+                    if (data.success && data.count > 0) {
+                        badge.classList.remove('hidden');
+                        countEl.textContent = data.count + ' new';
+
+                        list.innerHTML = data.items.map(item => {
+                            let icon = '<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>';
+                            let color = 'text-blue-400';
+                            
+                            if (item.type === 'workout') { 
+                                icon = '<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/></svg>'; 
+                                color = 'text-neon'; 
+                            }
+                            if (item.type === 'danger') { 
+                                icon = '<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>'; 
+                                color = 'text-[#FF5252]'; 
+                            }
+                            if (item.type === 'warning') { 
+                                icon = '<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/></svg>'; 
+                                color = 'text-yellow-400'; 
+                            }
+
+                            return `
+                                <a href="${item.url}" class="flex items-start gap-3 p-3 hover:bg-white/5 transition-colors group border-l-2 border-transparent hover:border-neon">
+                                    <div class="shrink-0 mt-0.5 ${color}">${icon}</div>
+                                    <div class="min-w-0 flex-1">
+                                        <p class="text-xs font-bold text-white mb-0.5">${item.title}</p>
+                                        <p class="text-[11px] text-ink/60 line-clamp-2">${item.text}</p>
+                                    </div>
+                                </a>
+                            `;
+                        }).join('');
+                    } else {
+                        badge.classList.add('hidden');
+                        list.innerHTML = '<div class="p-6 text-center text-sm text-ink/40"><svg class="mx-auto h-8 w-8 mb-2 opacity-50" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>All caught up!</div>';
+                    }
+                } catch(e) {
+                    console.error('Notification error', e);
+                }
+            }
+
+            fetch('/Notification/GetNotifications')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.count > 0) badge.classList.remove('hidden');
+                }).catch(()=>{});
+        })();
+
         (function () {
             'use strict';
             var body = document.body;

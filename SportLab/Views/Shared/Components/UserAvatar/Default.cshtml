@@ -1,0 +1,14 @@
+﻿@model SportLab.Models.User
+@{
+    var initials = Model?.Name?.Length >= 2 ? Model.Name.Substring(0, 2).ToUpper() : "US";
+    var imgUrl = string.IsNullOrWhiteSpace(Model?.AvatarUrl) ? "/images/default-avatar.png" : Model.AvatarUrl;
+}
+
+<div class="relative h-9 w-9 shrink-0">
+    <img src="@imgUrl" alt="Avatar" class="h-9 w-9 rounded-full object-cover border border-white/20 shadow-sm" 
+         onerror="this.style.display='none'; document.getElementById('fallback-@Model?.Id').style.display='flex';" />
+         
+    <span id="fallback-@Model?.Id" class="absolute inset-0 hidden h-9 w-9 items-center justify-center rounded-full bg-violet text-xs font-black text-white">
+        @initials
+    </span>
+</div>

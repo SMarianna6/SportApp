@@ -12,7 +12,7 @@ using SportLab.Data;
 namespace SportLab.Migrations
 {
     [DbContext(typeof(SportLabContext))]
-    [Migration("20261110180000_InitialCreate")]
+    [Migration("20261110205053_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
