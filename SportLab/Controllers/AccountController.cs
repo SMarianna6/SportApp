@@ -1,12 +1,14 @@
+using System.Security.Claims;
+using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MimeKit;
 using SportLab.Data;
 using SportLab.Models;
 using SportLab.Services;
-using System.Security.Claims;
-using MailKit.Net.Smtp;
-using MimeKit;
 
 namespace SportLab.Controllers
 {
@@ -87,6 +89,98 @@ namespace SportLab.Controllers
             }
         }
 
+        [HttpGet]
+        public IActionResult ExternalLogin(string provider)
+        {
+            var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Account");
+            var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
+            return Challenge(properties, provider);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ExternalLoginCallback()
+        {
+            var authenticateResult = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+
+            if (!authenticateResult.Succeeded || authenticateResult.Principal == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var email = authenticateResult.Principal.FindFirstValue(ClaimTypes.Email);
+            var name = authenticateResult.Principal.FindFirstValue(ClaimTypes.Name);
+
+            if (string.IsNullOrEmpty(email))
+            {
+                ModelState.AddModelError(string.Empty, "Email not received from Google.");
+                return RedirectToAction("Login");
+            }
+
+            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+            bool isNewUser = false;
+
+            if (user == null)
+            {
+                user = new User
+                {
+                    Email = email,
+                    Name = name ?? email.Split('@')[0],
+                    Password = PasswordHasher.Hash(Guid.NewGuid().ToString()),
+                    Role = Roles.Client,
+                    IsBlocked = false
+                };
+
+                _context.Users.Add(user);
+                _context.SaveChanges();
+                isNewUser = true;
+            }
+
+            if (user.IsBlocked)
+            {
+                return RedirectToAction("Login");
+            }
+
+            HttpContext.Session.SetInt32("UserId", user.Id);
+            HttpContext.Session.SetString("UserRole", Roles.Normalize(user.Role));
+
+            var role = Roles.Normalize(user.Role);
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Name ?? user.Email),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, role)
+            };
+
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+            if (isNewUser)
+            {
+                return RedirectToAction("CompleteProfile", "Account");
+            }
+
+            if (role == Roles.Administrator)
+            {
+                return RedirectToAction("Index", "Admin");
+            }
+            else if (role == Roles.Trainer)
+            {
+                return RedirectToAction("Trainer", "Profile");
+            }
+            else if (role == Roles.Moderator)
+            {
+                return RedirectToAction("Index", "Moderation");
+            }
+            else
+            {
+                return RedirectToAction("Client", "Profile");
+            }
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
@@ -109,7 +203,7 @@ namespace SportLab.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Register(string email, string password, string? code, string action)
+        public async Task<IActionResult> Register(string email, string password, string? code, string action)
         {
             ViewBag.Email = email;
             ViewBag.Password = password;
@@ -134,18 +228,18 @@ namespace SportLab.Controllers
                 try
                 {
                     var message = new MimeMessage();
-                    message.From.Add(new MailboxAddress("SportLab Support", "sporthubproject01@gmail.com"));
+                    message.From.Add(new MailboxAddress("SportHub Support", "sporthubproject01@gmail.com"));
                     message.To.Add(new MailboxAddress("", email));
-                    message.Subject = "Registration Verification Code - SportLab";
+                    message.Subject = "Registration Verification Code - SportHub";
 
                     message.Body = new TextPart("plain")
                     {
-                        Text = $"Welcome to SportLab!\n\nYour registration verification code is: {generatedCode}"
+                        Text = $"Welcome to SportHub!\n\nYour registration verification code is: {generatedCode}"
                     };
 
                     using (var client = new SmtpClient())
                     {
-                        client.Connect("smtp.gmail.com", 587, false);
+                        client.Connect("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
                         client.Authenticate("sporthubproject01@gmail.com", "zcfe yyad ezet tirb");
                         client.Send(message);
                         client.Disconnect(true);
@@ -196,10 +290,74 @@ namespace SportLab.Controllers
                 HttpContext.Session.Remove("RegEmail");
                 HttpContext.Session.Remove("RegPassword");
 
-                return RedirectToAction("Login");
+                HttpContext.Session.SetInt32("UserId", newUser.Id);
+                HttpContext.Session.SetString("UserRole", Roles.Client);
+
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.NameIdentifier, newUser.Id.ToString()),
+                    new Claim(ClaimTypes.Name, newUser.Name ?? newUser.Email),
+                    new Claim(ClaimTypes.Email, newUser.Email),
+                    new Claim(ClaimTypes.Role, Roles.Client)
+                };
+
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var principal = new ClaimsPrincipal(identity);
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+                return RedirectToAction("CompleteProfile", "Account");
             }
 
             return View();
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult CompleteProfile()
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var user = _context.Users.Find(userId);
+            return View(user);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult CompleteProfile(string? name, string? avatarUrl, float? initialWeight)
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var user = _context.Users.Find(userId);
+
+            if (user == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                user.Name = name.Trim();
+            }
+
+            if (!string.IsNullOrWhiteSpace(avatarUrl))
+            {
+                user.AvatarUrl = avatarUrl.Trim();
+            }
+
+            if (initialWeight.HasValue && initialWeight.Value >= 20 && initialWeight.Value <= 300)
+            {
+                var metricLog = new MetricLog
+                {
+                    UserId = user.Id,
+                    Weight = initialWeight.Value,
+                    RecordDate = DateTime.Now,
+                    Notes = "Initial weight"
+                };
+                _context.MetricLogs.Add(metricLog);
+            }
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Client", "Profile");
         }
     }
 }
