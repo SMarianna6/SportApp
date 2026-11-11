@@ -20,11 +20,6 @@ namespace SportLab.Controllers
         [AllowAnonymous]
         public IActionResult Index(int? filterRating)
         {
-            if (!_context.Reviews.Any())
-            {
-                SeedDefaultReviews();
-            }
-
             var query = _context.Reviews
                 .Include(r => r.User)
                 .Where(r => r.ModerationStatus == "Approved" || r.ModerationStatus == "Published");
@@ -83,79 +78,7 @@ namespace SportLab.Controllers
             TempData["SuccessMessage"] = "Thank you! Your review has been sent for moderation.";
             return RedirectToAction(nameof(Index));
         }
-
-        private void SeedDefaultReviews()
-        {
-            var user1 = _context.Users.FirstOrDefault(u => u.Email == "anton.p@example.com");
-            if (user1 == null)
-            {
-                user1 = new User { Name = "Anton Pavlenko", Email = "anton.p@example.com", Password = "Pass!", Role = Roles.Client };
-                _context.Users.Add(user1);
-            }
-
-            var user2 = _context.Users.FirstOrDefault(u => u.Email == "olena.m@example.com");
-            if (user2 == null)
-            {
-                user2 = new User { Name = "Olena Melnyk", Email = "olena.m@example.com", Password = "Pass!", Role = Roles.Client };
-                _context.Users.Add(user2);
-            }
-
-            var user3 = _context.Users.FirstOrDefault(u => u.Email == "dmytro.s@example.com");
-            if (user3 == null)
-            {
-                user3 = new User { Name = "Dmytro Shevchenko", Email = "dmytro.s@example.com", Password = "Pass!", Role = Roles.Client };
-                _context.Users.Add(user3);
-            }
-
-            var user4 = _context.Users.FirstOrDefault(u => u.Email == "kate.v@example.com");
-            if (user4 == null)
-            {
-                user4 = new User { Name = "Kateryna Vasylenko", Email = "kate.v@example.com", Password = "Pass!", Role = Roles.Client };
-                _context.Users.Add(user4);
-            }
-
-            _context.SaveChanges();
-
-            var defaultReviews = new List<Review>
-            {
-                new Review
-                {
-                    UserId = user1.Id,
-                    Rating = 5,
-                    Comment = "Best gym in town without a doubt! Outstanding equipment variety, pristine cleanliness, and super spacious even during peak hours. The sauna after workout is pure bliss.",
-                    CreatedDate = DateTime.UtcNow.AddDays(-3),
-                    ModerationStatus = "Approved"
-                },
-                new Review
-                {
-                    UserId = user2.Id,
-                    Rating = 5,
-                    Comment = "The personal trainers here are on another level. Iryna completely restructured my training regimen and helped me reach my deadlift PR safely. Highly recommend!",
-                    CreatedDate = DateTime.UtcNow.AddDays(-7),
-                    ModerationStatus = "Approved"
-                },
-                new Review
-                {
-                    UserId = user3.Id,
-                    Rating = 4,
-                    Comment = "Great fitness shop selection! I love that I can pick up high-grade whey protein, aminos, and pre-workout right at the front desk or order online with immediate pickup.",
-                    CreatedDate = DateTime.UtcNow.AddDays(-12),
-                    ModerationStatus = "Approved"
-                },
-                new Review
-                {
-                    UserId = user4.Id,
-                    Rating = 5,
-                    Comment = "The group Yoga and TRX sessions are incredible. Friendly instructors, positive athletic vibe, and smooth online booking. SportLab became my second home!",
-                    CreatedDate = DateTime.UtcNow.AddDays(-16),
-                    ModerationStatus = "Approved"
-                }
-            };
-
-            _context.Reviews.AddRange(defaultReviews);
-            _context.SaveChanges();
-        }
-
+        
         [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {

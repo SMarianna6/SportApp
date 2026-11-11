@@ -1,6 +1,14 @@
 ﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Elite Fitness Club";
+    var homeTrainers = ViewBag.Trainers as List<SportLab.Models.User> ?? new List<SportLab.Models.User>();
+    
+    // Arrange plans for the UI: Basic (Left), Popular (Center), Premium (Right)
+    var allPlans = ViewBag.Plans as List<SportLab.Models.Plan> ?? new List<SportLab.Models.Plan>();
+    var basicPlan = allPlans.FirstOrDefault(p => p.Type == "Basic");
+    var popularPlan = allPlans.FirstOrDefault(p => p.Type == "Popular");
+    var premiumPlan = allPlans.FirstOrDefault(p => p.Type == "Premium");
+    var displayPlans = new List<SportLab.Models.Plan> { basicPlan, popularPlan, premiumPlan }.Where(p => p != null).ToList();
 }
 
 <main id="top" class="relative bg-charcoal overflow-hidden">
@@ -10,33 +18,33 @@
 
     <!-- Hero Section -->
     <section class="grid-bg relative flex min-h-[calc(100vh-64px)] flex-col pt-12">
-    <div class="relative mx-auto w-full max-w-7xl flex-1 flex flex-col justify-center px-4 pb-16 sm:px-6">
-        <p class="mb-6 inline-flex w-fit items-center gap-2 rounded-md border border-neon/40 px-3 py-1.5 text-xs font-bold uppercase tracking-widest text-neon">
-            <span class="h-2 w-2 rounded-full bg-neon"></span> Khmelnytskyi &middot; Open 24/7
-        </p>
-        <h1 id="hero-title" class="max-w-5xl text-6xl font-black uppercase leading-[0.85] tracking-tighter sm:text-8xl lg:text-[8.5rem]">
-            You are<br />
-            <span class="outline-text">your own</span><br />
-            <span class="text-neon">limit.</span>
-        </h1>
-        <p class="mt-8 max-w-xl text-lg text-mono/70 sm:text-xl">2,400 m&sup2; of elite strength equipment in the heart of Khmelnytskyi.</p>
-        
-        <div class="mt-10 flex flex-col gap-6 sm:flex-row sm:gap-8">
-            <a href="@Url.Action("Register", "Account")" class="inline-flex items-center justify-center gap-2 rounded-md bg-neon px-8 py-4 text-sm font-extrabold uppercase tracking-widest text-charcoal transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-neon/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">
-                Join Now
-                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            </a>
-            <a href="#facility" class="inline-flex items-center justify-center rounded-md border-2 border-white/30 px-8 py-4 text-sm font-extrabold uppercase tracking-widest text-white transition-all duration-300 hover:border-neon hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon">See the Floor</a>
+        <div class="relative mx-auto w-full max-w-7xl flex-1 flex flex-col justify-center px-4 pb-16 sm:px-6">
+            <p class="mb-6 inline-flex w-fit items-center gap-2 rounded-md border border-neon/40 px-3 py-1.5 text-xs font-bold uppercase tracking-widest text-neon">
+                <span class="h-2 w-2 rounded-full bg-neon"></span> Khmelnytskyi &middot; Open 24/7
+            </p>
+            <h1 id="hero-title" class="max-w-5xl text-6xl font-black uppercase leading-[0.85] tracking-tighter sm:text-8xl lg:text-[8.5rem]">
+                You are<br />
+                <span class="outline-text">your own</span><br />
+                <span class="text-neon">limit.</span>
+            </h1>
+            <p class="mt-8 max-w-xl text-lg text-mono/70 sm:text-xl">2,400 m&sup2; of elite strength equipment in the heart of Khmelnytskyi.</p>
+            
+            <div class="mt-10 flex flex-col gap-6 sm:flex-row sm:gap-8">
+                <a href="@Url.Action("Register", "Account")" class="inline-flex items-center justify-center gap-2 rounded-md bg-neon px-8 py-4 text-sm font-extrabold uppercase tracking-widest text-charcoal transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-neon/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">
+                    Join Now
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </a>
+                <a href="#facility" class="inline-flex items-center justify-center rounded-md border-2 border-white/30 px-8 py-4 text-sm font-extrabold uppercase tracking-widest text-white transition-all duration-300 hover:border-neon hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon">See the Floor</a>
+            </div>
         </div>
-    </div>
 
-    <div class="mt-auto w-full border-y border-white/10 bg-dark py-4" aria-hidden="true">
-        <div class="flex w-max animate-marquee marquee-track whitespace-nowrap text-xl font-black uppercase tracking-tighter text-mono/60 sm:text-2xl">
-            <span class="px-6">&bull; No ego &bull; No shortcuts &bull; <span class="text-neon">24/7 members only</span> &bull; No ego &bull; No shortcuts &bull; <span class="text-violet">24/7 members only</span> &bull; No ego &bull; No shortcuts &bull; <span class="text-neon">24/7 members only</span> &bull;</span>
-            <span class="px-6">&bull; No ego &bull; No shortcuts &bull; <span class="text-neon">24/7 members only</span> &bull; No ego &bull; No shortcuts &bull; <span class="text-violet">24/7 members only</span> &bull; No ego &bull; No shortcuts &bull; <span class="text-neon">24/7 members only</span> &bull;</span>
+        <div class="mt-auto w-full border-y border-white/10 bg-dark py-4" aria-hidden="true">
+            <div class="flex w-max animate-marquee marquee-track whitespace-nowrap text-xl font-black uppercase tracking-tighter text-mono/60 sm:text-2xl">
+                <span class="px-6">&bull; No ego &bull; No shortcuts &bull; <span class="text-neon">24/7 members only</span> &bull; No ego &bull; No shortcuts &bull; <span class="text-violet">24/7 members only</span> &bull; No ego &bull; No shortcuts &bull; <span class="text-neon">24/7 members only</span> &bull;</span>
+                <span class="px-6">&bull; No ego &bull; No shortcuts &bull; <span class="text-neon">24/7 members only</span> &bull; No ego &bull; No shortcuts &bull; <span class="text-violet">24/7 members only</span> &bull; No ego &bull; No shortcuts &bull; <span class="text-neon">24/7 members only</span> &bull;</span>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 
     <!-- Stats & Facility Carousel -->
     <section id="facility" class="relative z-10 bg-dark py-12 sm:py-16" aria-labelledby="stats-title">
@@ -122,60 +130,37 @@
             </h2>
 
             <ul class="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                <!-- Card 1 -->
-                <li>
-                    <article class="group flex h-full flex-col overflow-hidden rounded-lg bg-charcoal transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-electric/20">
-                        <div class="relative aspect-[4/5] overflow-hidden bg-dark">
-                            <img src="https://images.unsplash.com/photo-1704223523303-a5ed14561b1f?q=80&w=800&auto=format&fit=crop" alt="Andrii Melnyk" class="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-105" loading="lazy" />
-                            <div class="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/60 to-transparent"></div>
-                            <span class="absolute left-4 top-4 rounded-md bg-electric px-3 py-1 text-[10px] font-extrabold uppercase tracking-widest text-white">CrossFit</span>
-                            
-                            <div class="absolute bottom-0 left-0 p-6 w-full">
-                                <h3 class="text-2xl font-black uppercase tracking-tighter text-white">Andrii Melnyk</h3>
-                                <p class="mt-2 text-sm leading-relaxed text-mono/70">Specializes in functional hypertrophy, speed, stamina.</p>
+                @foreach (var trainer in homeTrainers)
+                {
+                    var profile = trainer.TrainerProfile;
+                    var firstSpec = !string.IsNullOrEmpty(profile?.Specializations) ? profile.Specializations.Split(',')[0].Trim() : "Coach";
+                    
+                    var badgeColor = firstSpec.Contains("Yoga", StringComparison.OrdinalIgnoreCase) ? "bg-neon text-charcoal" :
+                                     firstSpec.Contains("Strength", StringComparison.OrdinalIgnoreCase) ? "bg-violet text-white" :
+                                     "bg-electric text-white";
+
+                    var photoUrl = !string.IsNullOrWhiteSpace(profile?.PhotoUrl) 
+                        ? profile.PhotoUrl 
+                        : trainer.AvatarUrl ?? "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600&h=800&fit=crop";
+
+                    <li>
+                        <article class="group flex h-full flex-col overflow-hidden rounded-lg bg-charcoal transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-electric/20">
+                            <div class="relative aspect-[4/5] overflow-hidden bg-dark">
+                                <img src="@photoUrl" alt="@trainer.Name" class="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+                                <div class="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/60 to-transparent"></div>
+                                <span class="absolute left-4 top-4 rounded-md px-3 py-1 text-[10px] font-extrabold uppercase tracking-widest @badgeColor">@firstSpec</span>
+                                
+                                <div class="absolute bottom-0 left-0 p-6 w-full">
+                                    <h3 class="text-2xl font-black uppercase tracking-tighter text-white">@trainer.Name</h3>
+                                    <p class="mt-2 text-sm leading-relaxed text-mono/70 line-clamp-2">@(profile?.About ?? "Dedicated fitness professional ready to help you achieve your goals.")</p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="p-6 pt-0 bg-charcoal mt-auto">
-                            <a href="@Url.Action("Index", "Trainer")" class="inline-flex w-full items-center justify-center rounded-md border-2 border-electric px-5 py-3 text-xs font-extrabold uppercase tracking-widest text-white transition-colors duration-300 hover:bg-electric focus:outline-none focus-visible:ring-2 focus-visible:ring-white">Book Session</a>
-                        </div>
-                    </article>
-                </li>
-                <!-- Card 2 -->
-                <li>
-                    <article class="group flex h-full flex-col overflow-hidden rounded-lg bg-charcoal transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-violet/20">
-                        <div class="relative aspect-[4/5] overflow-hidden bg-dark">
-                            <img src="https://images.unsplash.com/photo-1696564006617-1a85ba3a8f3e?q=80&w=800&auto=format&fit=crop" alt="Denys Kravchenko" class="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-105" loading="lazy" />
-                            <div class="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/60 to-transparent"></div>
-                            <span class="absolute left-4 top-4 rounded-md bg-violet px-3 py-1 text-[10px] font-extrabold uppercase tracking-widest text-white">Strength</span>
-                            
-                            <div class="absolute bottom-0 left-0 p-6 w-full">
-                                <h3 class="text-2xl font-black uppercase tracking-tighter text-white">Denys Kravchenko</h3>
-                                <p class="mt-2 text-sm leading-relaxed text-mono/70">Focuses on biomechanics, muscle mass growth.</p>
+                            <div class="p-6 pt-0 bg-charcoal mt-auto">
+                                <a href="@Url.Action("Index", "Trainer")" class="inline-flex w-full items-center justify-center rounded-md border-2 border-white/20 px-5 py-3 text-xs font-extrabold uppercase tracking-widest text-white transition-colors duration-300 hover:border-neon hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-white">Book Session</a>
                             </div>
-                        </div>
-                        <div class="p-6 pt-0 bg-charcoal mt-auto">
-                            <a href="@Url.Action("Index", "Trainer")" class="inline-flex w-full items-center justify-center rounded-md border-2 border-violet px-5 py-3 text-xs font-extrabold uppercase tracking-widest text-white transition-colors duration-300 hover:bg-violet focus:outline-none focus-visible:ring-2 focus-visible:ring-white">Book Session</a>
-                        </div>
-                    </article>
-                </li>
-                <!-- Card 3 -->
-                <li>
-                    <article class="group flex h-full flex-col overflow-hidden rounded-lg bg-charcoal transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-neon/20">
-                        <div class="relative aspect-[4/5] overflow-hidden bg-dark">
-                            <img src="https://images.unsplash.com/photo-1770026136765-2343c441b9cb?q=80&w=800&auto=format&fit=crop" alt="Tetiana Shevchenko" class="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-105" loading="lazy" />
-                            <div class="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/60 to-transparent"></div>
-                            <span class="absolute left-4 top-4 rounded-md bg-neon px-3 py-1 text-[10px] font-extrabold uppercase tracking-widest text-charcoal">Yoga</span>
-                            
-                            <div class="absolute bottom-0 left-0 p-6 w-full">
-                                <h3 class="text-2xl font-black uppercase tracking-tighter text-white">Tetiana Shevchenko</h3>
-                                <p class="mt-2 text-sm leading-relaxed text-mono/70">Promotes joint longevity, posture alignment.</p>
-                            </div>
-                        </div>
-                        <div class="p-6 pt-0 bg-charcoal mt-auto">
-                            <a href="@Url.Action("Index", "Trainer")" class="inline-flex w-full items-center justify-center rounded-md border-2 border-neon px-5 py-3 text-xs font-extrabold uppercase tracking-widest text-white transition-colors duration-300 hover:bg-neon hover:text-charcoal focus:outline-none focus-visible:ring-2 focus-visible:ring-white">Book Session</a>
-                        </div>
-                    </article>
-                </li>
+                        </article>
+                    </li>
+                }
             </ul>
 
             <div class="mt-14 flex justify-center">
@@ -200,45 +185,49 @@
             </div>
 
             <ul class="mt-16 grid items-stretch gap-6 lg:grid-cols-3">
-                <li>
-                    <article class="flex h-full flex-col rounded-lg border border-white/15 bg-dark p-8 transition-all duration-300 hover:-translate-y-1 hover:border-white/40">
-                        <h3 class="text-sm font-extrabold uppercase tracking-widest text-mono/70">Basic</h3>
-                        <p class="mt-1 text-sm text-mono/60">30 days</p>
-                        <p class="mt-6 text-6xl font-black tracking-tighter sm:text-7xl">&#8372;30</p>
-                        <ul class="mt-8 flex-1 space-y-4 text-sm text-mono/80">
-                            <li class="flex items-start gap-3"><svg class="mt-0.5 h-5 w-5 shrink-0 text-neon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="m5 12 5 5L20 7"/></svg>Gym access (8 AM - 10 PM)</li>
-                            <li class="flex items-start gap-3"><svg class="mt-0.5 h-5 w-5 shrink-0 text-neon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="m5 12 5 5L20 7"/></svg>Free locker</li>
-                        </ul>
-                        <a href="@Url.Action("Register", "Account")" class="mt-10 inline-flex items-center justify-center rounded-md border-2 border-white/30 px-5 py-4 text-xs font-extrabold uppercase tracking-widest text-white transition-colors duration-300 hover:border-neon hover:text-neon">Choose Basic</a>
-                    </article>
-                </li>
-                <li>
-                    <article class="relative flex h-full flex-col rounded-lg bg-neon p-8 text-charcoal transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-neon/30 lg:-my-4 lg:py-12">
-                        <span class="absolute right-6 top-6 rounded-md bg-charcoal px-3 py-1 text-[11px] font-extrabold uppercase tracking-widest text-neon">Most chosen</span>
-                        <h3 class="text-sm font-extrabold uppercase tracking-widest text-charcoal/70">Pro</h3>
-                        <p class="mt-1 text-sm font-medium text-charcoal/70">90 days</p>
-                        <p class="mt-6 text-6xl font-black tracking-tighter sm:text-7xl">&#8372;80</p>
-                        <ul class="mt-8 flex-1 space-y-4 text-sm font-semibold">
-                            <li class="flex items-start gap-3"><svg class="mt-0.5 h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="m5 12 5 5L20 7"/></svg>24/7 Gym access</li>
-                            <li class="flex items-start gap-3"><svg class="mt-0.5 h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="m5 12 5 5L20 7"/></svg>Group classes</li>
-                            <li class="flex items-start gap-3"><svg class="mt-0.5 h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="m5 12 5 5L20 7"/></svg>Diet plan</li>
-                        </ul>
-                        <a href="@Url.Action("Register", "Account")" class="mt-10 inline-flex items-center justify-center rounded-md bg-charcoal px-5 py-4 text-xs font-extrabold uppercase tracking-widest text-neon transition-colors duration-300 hover:bg-white hover:text-charcoal">Choose Pro</a>
-                    </article>
-                </li>
-                <li>
-                    <article class="flex h-full flex-col rounded-lg border-2 border-violet bg-dark p-8 shadow-[0_0_40px_rgba(125,81,254,0.25)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_60px_rgba(125,81,254,0.4)]">
-                        <h3 class="text-sm font-extrabold uppercase tracking-widest text-violet">Elite</h3>
-                        <p class="mt-1 text-sm text-mono/60">365 days</p>
-                        <p class="mt-6 text-6xl font-black tracking-tighter sm:text-7xl">&#8372;250</p>
-                        <ul class="mt-8 flex-1 space-y-4 text-sm text-mono/80">
-                            <li class="flex items-start gap-3"><svg class="mt-0.5 h-5 w-5 shrink-0 text-violet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="m5 12 5 5L20 7"/></svg>24/7 Gym &amp; Spa access</li>
-                            <li class="flex items-start gap-3"><svg class="mt-0.5 h-5 w-5 shrink-0 text-violet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="m5 12 5 5L20 7"/></svg>10 personal sessions</li>
-                            <li class="flex items-start gap-3"><svg class="mt-0.5 h-5 w-5 shrink-0 text-violet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="m5 12 5 5L20 7"/></svg>Free parking</li>
-                        </ul>
-                        <a href="@Url.Action("Register", "Account")" class="mt-10 inline-flex items-center justify-center rounded-md bg-violet px-5 py-4 text-xs font-extrabold uppercase tracking-widest text-white transition-all duration-300 hover:bg-electric">Choose Elite</a>
-                    </article>
-                </li>
+                @foreach (var plan in displayPlans)
+                {
+                    bool isPopular = plan.Type == "Popular";
+                    bool isPremium = plan.Type == "Premium";
+                    
+                    string cardClass = isPopular 
+                        ? "relative flex h-full flex-col rounded-lg bg-neon p-8 text-charcoal transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-neon/30 lg:-my-4 lg:py-12" 
+                        : isPremium 
+                            ? "flex h-full flex-col rounded-lg border-2 border-violet bg-dark p-8 shadow-[0_0_40px_rgba(125,81,254,0.25)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_60px_rgba(125,81,254,0.4)]"
+                            : "flex h-full flex-col rounded-lg border border-white/15 bg-dark p-8 transition-all duration-300 hover:-translate-y-1 hover:border-white/40";
+
+                    string btnClass = isPopular
+                        ? "mt-10 inline-flex items-center justify-center rounded-md bg-charcoal px-5 py-4 text-xs font-extrabold uppercase tracking-widest text-neon transition-colors duration-300 hover:bg-white hover:text-charcoal"
+                        : isPremium
+                            ? "mt-10 inline-flex items-center justify-center rounded-md bg-violet px-5 py-4 text-xs font-extrabold uppercase tracking-widest text-white transition-all duration-300 hover:bg-electric"
+                            : "mt-10 inline-flex items-center justify-center rounded-md border-2 border-white/30 px-5 py-4 text-xs font-extrabold uppercase tracking-widest text-white transition-colors duration-300 hover:border-neon hover:text-neon";
+
+                    <li>
+                        <article class="@cardClass">
+                            @if (isPopular)
+                            {
+                                <span class="absolute right-6 top-6 rounded-md bg-charcoal px-3 py-1 text-[11px] font-extrabold uppercase tracking-widest text-neon">Most chosen</span>
+                            }
+                            <h3 class="text-sm font-extrabold uppercase tracking-widest @(isPopular ? "text-charcoal/70" : isPremium ? "text-violet" : "text-mono/70")">@plan.Type</h3>
+                            <p class="mt-1 text-sm @(isPopular ? "text-charcoal/70" : "text-mono/60")">@plan.Duration days</p>
+                            <p class="mt-6 text-6xl font-black tracking-tighter sm:text-7xl">₴@plan.Price.ToString("N0")</p>
+                            
+                            <ul class="mt-8 flex-1 space-y-4 text-sm @(isPopular ? "font-semibold" : "text-mono/80")">
+                                @{
+                                    var features = plan.Description.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries).Select(f => f.Trim()).Where(f => !string.IsNullOrEmpty(f)).ToList();
+                                }
+                                @foreach (var feature in features)
+                                {
+                                    <li class="flex items-start gap-3">
+                                        <svg class="mt-0.5 h-5 w-5 shrink-0 @(isPopular ? "" : isPremium ? "text-violet" : "text-neon")" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="m5 12 5 5L20 7"/></svg>
+                                        @feature
+                                    </li>
+                                }
+                            </ul>
+                            <a href="@Url.Action("Index", "Tariff")" class="@btnClass">Choose @plan.Type</a>
+                        </article>
+                    </li>
+                }
             </ul>
         </div>
     </section>

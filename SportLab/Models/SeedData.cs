@@ -21,6 +21,21 @@ namespace SportLab.Models
             // Staff accounts (admin / moderator / legacy "Admin" → "Administrator")
             EnsureStaffAccounts(context);
 
+            // ---- FAQs -------------------------------------------------
+            if (!context.FAQs.Any())
+            {
+                var faqs = new List<FAQ>
+                {
+                    new FAQ { Question = "What are the gym's opening hours?", Answer = "Our main gym floor is open 24/7 for Unlimited Pro members. Standard hours for all other members are 07:00 to 22:00 on weekdays, and 08:00 to 20:00 on weekends.", SortOrder = 1, IsActive = true },
+                    new FAQ { Question = "Can I freeze my membership?", Answer = "Yes, you can freeze your membership for up to 30 days per year. Please contact the front desk or send us a message through the app at least 24 hours in advance.", SortOrder = 2, IsActive = true },
+                    new FAQ { Question = "Do I need to bring my own towel?", Answer = "We provide clean towels in the locker rooms for all Premium tier members. Basic and Student tier members should bring their own.", SortOrder = 3, IsActive = true },
+                    new FAQ { Question = "How do I book a personal training session?", Answer = "You can book a session directly through our app by navigating to the Schedule page and selecting an available slot under your preferred trainer.", SortOrder = 4, IsActive = true },
+                    new FAQ { Question = "Is there a dress code?", Answer = "We require athletic clothing and clean indoor training shoes. Jeans, sandals, and open-toed shoes are not permitted on the gym floor.", SortOrder = 5, IsActive = true }
+                };
+                context.FAQs.AddRange(faqs);
+                context.SaveChanges();
+            }
+
             // ---- Core Users ---------------------------------------------------
             if (!context.Users.Any(u => u.Email == "alex.trainer@sportlab.ua"))
             {
@@ -101,10 +116,86 @@ namespace SportLab.Models
             {
                 var products = new List<Product>
                 {
-                    new Product { Name = "Optimum 100% Whey Gold Standard", Category = "Nutrition",   Description = "24g of high-quality whey protein per serving with whey protein isolate as the primary ingredient. Double Rich Chocolate flavor, 2.27kg tub.", Price = 1850.00m, StockQuantity = 28, Rating = "5.0", PhotoUrl = "https://images.unsplash.com/photo-1579722821273-0f6c7d44362f?w=600&h=450&fit=crop" },
-                    new Product { Name = "Essential BCAA Energy 2:1:1",    Category = "Nutrition",   Description = "Instantized Branched Chain Amino Acids with electrolytes for sustained muscle endurance and post-workout recovery. Green Apple flavor, 400g.", Price = 720.00m,  StockQuantity = 35, Rating = "4.8", PhotoUrl = "https://images.unsplash.com/photo-1593095948071-474c5cc2989d?w=600&h=450&fit=crop" },
-                    new Product { Name = "SportLab Pro Shaker 750ml",      Category = "Accessories", Description = "BPA-free leak-proof fitness shaker with stainless steel blending ball and dual measurement scales (ml/oz).", Price = 380.00m,  StockQuantity = 60, Rating = "4.9", PhotoUrl = "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&h=450&fit=crop" },
-                    new Product { Name = "SportLab Performance Hoodie",    Category = "Apparel",     Description = "Breathable athletic fleece pullover engineered for pre-workout warm-ups and everyday athletic comfort. Unisex fit.", Price = 1650.00m, StockQuantity = 20, Rating = "4.9", PhotoUrl = "https://images.unsplash.com/photo-1556906781-9a412961c28c?w=600&h=450&fit=crop" }
+                    new Product
+                    {
+                        Name = "Optimum 100% Whey Gold Standard",
+                        Category = "Nutrition",
+                        Rating = "5.0",
+                        Description = "24g of high-quality whey protein per serving with whey protein isolate as the primary ingredient. Double Rich Chocolate flavor, 2.27kg tub.",
+                        Price = 1850.00m,
+                        StockQuantity = 28,
+                        PhotoUrl = "https://images.unsplash.com/photo-1579722821273-0f6c7d44362f?w=600&h=450&fit=crop"
+                    },
+                    new Product
+                    {
+                        Name = "Essential BCAA Energy 2:1:1",
+                        Category = "Nutrition",
+                        Rating = "4.8",
+                        Description = "Instantized Branched Chain Amino Acids with electrolytes for sustained muscle endurance and post-workout recovery. Green Apple flavor, 400g.",
+                        Price = 720.00m,
+                        StockQuantity = 35,
+                        PhotoUrl = "https://images.unsplash.com/photo-1593095948071-474c5cc2989d?w=600&h=450&fit=crop"
+                    },
+                    new Product
+                    {
+                        Name = "SportLab Pro Shaker 750ml",
+                        Category = "Accessories",
+                        Rating = "4.9",
+                        Description = "BPA-free premium matte shaker bottle with surgical stainless steel blending ball, leak-proof flip cap, and measurement markings.",
+                        Price = 320.00m,
+                        StockQuantity = 65,
+                        PhotoUrl = "https://images.unsplash.com/photo-1693996045838-980674653385?w=600&h=450&fit=crop"
+                    },
+                    new Product
+                    {
+                        Name = "Elite Duffel Sport Bag",
+                        Category = "Apparel",
+                        Rating = "4.9",
+                        Description = "Spacious water-resistant training bag with separate ventilated shoe compartment, padded shoulder strap, and multiple accessory pockets.",
+                        Price = 1250.00m,
+                        StockQuantity = 18,
+                        PhotoUrl = "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&h=450&fit=crop"
+                    },
+                    new Product
+                    {
+                        Name = "Creatine Monohydrate Ultra Pure",
+                        Category = "Nutrition",
+                        Rating = "5.0",
+                        Description = "100% pure micronized creatine monohydrate powder to increase strength, power, and lean muscle mass. Unflavored, 500g (100 servings).",
+                        Price = 680.00m,
+                        StockQuantity = 42,
+                        PhotoUrl = "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&h=450&fit=crop"
+                    },
+                    new Product
+                    {
+                        Name = "SportLab Dry-Fit Performance T-Shirt",
+                        Category = "Apparel",
+                        Rating = "4.7",
+                        Description = "Breathable moisture-wicking athletic shirt designed for intense workout sessions. Ergonomic athletic cut with anti-chafing seams.",
+                        Price = 650.00m,
+                        StockQuantity = 25,
+                        PhotoUrl = "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=600&h=450&fit=crop"
+                    },
+                    new Product
+                    {
+                        Name = "Resistance Loop Bands Set (5 Levels)",
+                        Category = "Equipment",
+                        Rating = "4.8",
+                        Description = "Set of 5 natural latex loop resistance bands with carry pouch and exercise guide for stretching, mobility, and glute activation workouts.",
+                        Price = 420.00m,
+                        StockQuantity = 55,
+                        PhotoUrl = "https://images.unsplash.com/photo-1598289431512-b97b0917affc?w=600&h=450&fit=crop"
+                    },
+                    new Product
+                    {
+                        Name = "Deep Tissue High-Density Foam Roller",
+                        Category = "Equipment",
+                        Rating = "4.9",
+                        Description = "Trigger point myofascial release foam roller for muscle recovery, soreness relief, and mobility workouts. 33 cm length.",
+                        Price = 590.00m,
+                        StockQuantity = 22,
+                        PhotoUrl = "https://images.unsplash.com/photo-1601422407692-ec4eeec1d9b3?w=600&h=450&fit=crop"
+                    }
                 };
                 context.Products.AddRange(products);
                 context.SaveChanges();
@@ -113,10 +204,33 @@ namespace SportLab.Models
             // Runs on every startup, idempotent. Ensures every Trainer has a profile row.
             EnsureTrainerProfiles(context);
 
-            // ---- EXTENDED DEMO DATA (NEW) ---------------------------------
-            // Adds a rich set of clients, trainers, history logs, and future bookings
-            // to make the application look heavily used and populated.
+            // ---- EXTENDED DEMO DATA ---------------------------------
             SeedExtendedDemoData(context);
+
+            // ---- Reviews (MOVED TO THE VERY END) --------------------
+            if (!context.Reviews.Any())
+            {
+                var user1 = context.Users.FirstOrDefault(u => u.Email == "ivan.client@sportlab.ua");
+                var user2 = context.Users.FirstOrDefault(u => u.Email == "olena.client@sportlab.ua");
+                var user3 = context.Users.FirstOrDefault(u => u.Email == "john.doe@sportlab.ua"); // Created in Extended Demo Data
+                var user4 = context.Users.FirstOrDefault(u => u.Email == "emma.smith@sportlab.ua"); // Created in Extended Demo Data
+
+                if (user1 != null && user2 != null && user3 != null && user4 != null)
+                {
+                    var reviews = new List<Review>
+                    {
+                        new Review { UserId = user1.Id, Rating = 5, Comment = "Best gym in town without a doubt! Outstanding equipment variety, pristine cleanliness, and super spacious even during peak hours. The sauna after workout is pure bliss.", CreatedDate = DateTime.Now.AddDays(-3), ModerationStatus = "Approved" },
+                        new Review { UserId = user2.Id, Rating = 5, Comment = "The personal trainers here are on another level. Iryna completely restructured my training regimen and helped me reach my deadlift PR safely. Highly recommend!", CreatedDate = DateTime.Now.AddDays(-7), ModerationStatus = "Approved" },
+                        new Review { UserId = user3.Id, Rating = 4, Comment = "Great fitness shop selection! I love that I can pick up high-grade whey protein, aminos, and pre-workout right at the front desk or order online with immediate pickup.", CreatedDate = DateTime.Now.AddDays(-12), ModerationStatus = "Approved" },
+                        new Review { UserId = user4.Id, Rating = 5, Comment = "The group Yoga and TRX sessions are incredible. Friendly instructors, positive athletic vibe, and smooth online booking. SportLab became my second home!", CreatedDate = DateTime.Now.AddDays(-16), ModerationStatus = "Approved" },
+                        new Review { UserId = user1.Id, Rating = 2, Comment = "The wi-fi is too slow and I couldn't connect my headphones to the cardio machines. Fix this please!", CreatedDate = DateTime.Now, ModerationStatus = "Pending" },
+                        new Review { UserId = user2.Id, Rating = 4, Comment = "Great atmosphere, but it gets a bit crowded in the evenings. Still highly recommend the facilities.", CreatedDate = DateTime.Now.AddHours(-2), ModerationStatus = "Pending" }
+                    };
+
+                    context.Reviews.AddRange(reviews);
+                    context.SaveChanges();
+                }
+            }
         }
 
         // ------------------------------------------------------------------
@@ -225,14 +339,9 @@ namespace SportLab.Models
             for (int i = 5; i >= 0; i--)
             {
                 var date = today.AddDays(-i * 7);
-
-                // John (Losing weight)
                 context.MetricLogs.Add(new MetricLog { UserId = john.Id, Weight = 92.0f - ((5 - i) * 1.2f), RecordDate = date, Notes = "Weekly check-in" });
-                // Emma (Gaining weight)
                 context.MetricLogs.Add(new MetricLog { UserId = emma.Id, Weight = 58.0f + ((5 - i) * 0.8f), RecordDate = date, Notes = "Bulking phase" });
-                // David (Maintaining)
                 context.MetricLogs.Add(new MetricLog { UserId = david.Id, Weight = 75.0f + (float)(random.NextDouble() * 0.5 - 0.25), RecordDate = date, Notes = "Feeling good" });
-                // Lisa (Slight loss)
                 context.MetricLogs.Add(new MetricLog { UserId = lisa.Id, Weight = 55.0f - ((5 - i) * 0.3f), RecordDate = date, Notes = "Yoga & pilates focus" });
             }
 
@@ -276,7 +385,6 @@ namespace SportLab.Models
             context.Orders.AddRange(order1, order2);
             context.SaveChanges();
 
-            // Note: Ensure you pick products from the actual context list
             var whey = products.First(p => p.Name.Contains("Whey"));
             var shaker = products.First(p => p.Name.Contains("Shaker"));
 

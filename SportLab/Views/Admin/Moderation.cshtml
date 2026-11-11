@@ -1,0 +1,213 @@
+﻿@model List<SportLab.Models.Review>
+@{
+    ViewData["Title"] = "Review Moderation";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    var pending = Model.Count(r => r.ModerationStatus == "Pending");
+    var published = Model.Count(r => r.ModerationStatus == "Approved" || r.ModerationStatus == "Published");
+    var hidden = Model.Count(r => r.ModerationStatus == "Hidden");
+}
+
+@Html.AntiForgeryToken()
+
+<div class="min-h-screen bg-[#111] text-white px-4 py-8 sm:px-8">
+    <div class="mx-auto max-w-5xl">
+
+        <div class="mb-8">
+            <p class="text-xs font-extrabold uppercase tracking-widest text-neon">Moderator Panel</p>
+            <h1 class="mt-1 text-4xl font-black uppercase tracking-tighter">Review Moderation</h1>
+            <p class="mt-1 text-sm text-white/50">Approve, hide or delete reviews submitted by clients.</p>
+        </div>
+
+        <!-- Counters (Added IDs for JS updates) -->
+        <div class="mb-8 grid gap-4 sm:grid-cols-3">
+            <div class="rounded-lg border border-white/10 bg-[#1a1a1a] p-5">
+                <p class="text-xs font-bold uppercase tracking-widest text-white/40">Pending</p>
+                <p id="count-pending" class="mt-1 text-3xl font-black text-neon">@pending</p>
+            </div>
+            <div class="rounded-lg border border-white/10 bg-[#1a1a1a] p-5">
+                <p class="text-xs font-bold uppercase tracking-widest text-white/40">Published</p>
+                <p id="count-published" class="mt-1 text-3xl font-black text-green-400">@published</p>
+            </div>
+            <div class="rounded-lg border border-white/10 bg-[#1a1a1a] p-5">
+                <p class="text-xs font-bold uppercase tracking-widest text-white/40">Hidden</p>
+                <p id="count-hidden" class="mt-1 text-3xl font-black text-red-400">@hidden</p>
+            </div>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div id="empty-state" class="rounded-lg border border-dashed border-white/10 p-12 text-center">
+                <svg class="mx-auto mb-4 h-12 w-12 text-white/20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg>
+                <p class="text-sm font-semibold text-white/40">No reviews to moderate yet.</p>
+            </div>
+        }
+        else
+        {
+            <div id="reviews-container" class="space-y-4">
+                @foreach (var review in Model)
+                {
+                    var statusClass = review.ModerationStatus == "Pending" ? "bg-yellow-500/20 text-yellow-300" :
+                                      review.ModerationStatus == "Hidden" ? "bg-red-500/20 text-red-400" :
+                                      "bg-green-500/20 text-green-400";
+
+                    <div id="review-@review.Id" class="review-card rounded-lg border border-white/10 bg-[#1a1a1a] p-5">
+                        <div class="flex flex-wrap items-start justify-between gap-3">
+                            <div>
+                                <p class="font-black uppercase tracking-tight">@(review.User?.Name ?? "Unknown client")</p>
+                                <p class="text-xs text-white/40">@review.User?.Email</p>
+                                <p class="mt-2 text-xs text-white/40">@review.CreatedDate.ToString("dd.MM.yyyy HH:mm")</p>
+                            </div>
+                            <div class="text-right">
+                                <!-- Status Badge -->
+                                <span class="status-badge rounded-md px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-widest @statusClass" data-status="@review.ModerationStatus">
+                                    @review.ModerationStatus
+                                </span>
+                                <p class="mt-2 text-sm font-bold text-yellow-300">
+                                    @for (var i = 1; i <= 5; i++)
+                                    {
+                                        <span class="@(i <= review.Rating ? "" : "text-white/20")">&#9733;</span>
+                                    }
+                                </p>
+                            </div>
+                        </div>
+
+                        <p class="mt-4 whitespace-pre-line border-l-2 border-white/10 pl-4 text-sm text-white/70">@review.Comment</p>
+
+                        <!-- Async Buttons -->
+                        <div class="mt-5 flex flex-wrap gap-2">
+                            <button type="button" 
+                                    class="btn-approve @(review.ModerationStatus == "Approved" || review.ModerationStatus == "Published" ? "hidden" : "") rounded-md bg-green-500/20 px-4 py-2 text-xs font-bold uppercase tracking-widest text-green-400 transition-colors hover:bg-green-500/30"
+                                    data-id="@review.Id">
+                                Approve
+                            </button>
+                            
+                            <button type="button" 
+                                    class="btn-hide @(review.ModerationStatus == "Hidden" ? "hidden" : "") rounded-md bg-yellow-500/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-yellow-300 transition-colors hover:bg-yellow-500/20"
+                                    data-id="@review.Id">
+                                Hide
+                            </button>
+                            
+                            <button type="button" 
+                                    class="btn-delete rounded-md bg-red-500/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-red-400 transition-colors hover:bg-red-500/20"
+                                    data-id="@review.Id">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Toast Notification for async feedback -->
+<div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-10 opacity-0 rounded-lg bg-[#1a1a1a] px-5 py-3 text-sm font-bold shadow-2xl border border-white/10 transition-all duration-300 pointer-events-none">
+    <span id="toast-text" class="text-white"></span>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+        const container = document.getElementById('reviews-container');
+        const toast = document.getElementById('toast');
+        const toastText = document.getElementById('toast-text');
+
+        function showToast(msg, isError = false) {
+            toastText.textContent = msg;
+            toastText.className = isError ? 'text-[#FF5252]' : 'text-neon';
+            toast.classList.remove('translate-y-10', 'opacity-0');
+            setTimeout(() => toast.classList.add('translate-y-10', 'opacity-0'), 3000);
+        }
+
+        if(!container) return;
+
+        container.addEventListener('click', async function(e) {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+
+            const id = btn.dataset.id;
+            const card = document.getElementById('review-' + id);
+            const badge = card.querySelector('.status-badge');
+            
+            let action = '';
+            if (btn.classList.contains('btn-approve')) action = 'ApproveReview';
+            if (btn.classList.contains('btn-hide')) action = 'HideReview';
+            if (btn.classList.contains('btn-delete')) action = 'DeleteReview';
+
+            if (!action) return;
+
+            if (action === 'DeleteReview' && !confirm('Delete this review permanently?')) return;
+
+            // Visual loading state
+            const originalText = btn.textContent;
+            btn.textContent = '...';
+            btn.disabled = true;
+
+            try {
+                const formData = new URLSearchParams();
+                formData.append('id', id);
+                formData.append('__RequestVerificationToken', token);
+
+                const res = await fetch(`/Admin/${action}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData.toString()
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    // Update Counters
+                    const currentStatus = badge.dataset.status;
+                    const countPending = document.getElementById('count-pending');
+                    const countPub = document.getElementById('count-published');
+                    const countHid = document.getElementById('count-hidden');
+
+                    // Decrement old status count
+                    if (currentStatus === 'Pending') countPending.textContent = Math.max(0, parseInt(countPending.textContent) - 1);
+                    if (currentStatus === 'Approved' || currentStatus === 'Published') countPub.textContent = Math.max(0, parseInt(countPub.textContent) - 1);
+                    if (currentStatus === 'Hidden') countHid.textContent = Math.max(0, parseInt(countHid.textContent) - 1);
+
+                    if (action === 'DeleteReview') {
+                        card.remove();
+                        showToast('Review deleted.');
+                        if(container.children.length === 0) window.location.reload(); // reload to show empty state
+                    } 
+                    else {
+                        const newStatus = data.status;
+                        // Increment new status count
+                        if (newStatus === 'Approved') countPub.textContent = parseInt(countPub.textContent) + 1;
+                        if (newStatus === 'Hidden') countHid.textContent = parseInt(countHid.textContent) + 1;
+
+                        // Update DOM
+                        badge.textContent = newStatus;
+                        badge.dataset.status = newStatus;
+                        
+                        // Reset badge colors
+                        badge.className = 'status-badge rounded-md px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-widest ' + 
+                            (newStatus === 'Hidden' ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400');
+
+                        // Toggle buttons
+                        const btnApprove = card.querySelector('.btn-approve');
+                        const btnHide = card.querySelector('.btn-hide');
+                        
+                        if (newStatus === 'Approved') btnApprove.classList.add('hidden');
+                        else btnApprove.classList.remove('hidden');
+
+                        if (newStatus === 'Hidden') btnHide.classList.add('hidden');
+                        else btnHide.classList.remove('hidden');
+
+                        showToast(data.message);
+                    }
+                } else {
+                    showToast(data.message || 'Action failed.', true);
+                }
+            } catch (err) {
+                showToast('Network error.', true);
+            } finally {
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }
+        });
+    });
+</script>

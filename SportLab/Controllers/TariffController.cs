@@ -122,7 +122,7 @@ namespace SportLab.Controllers
                 var mailMessage = new MailMessage
                 {
                     From = new MailAddress("sporthubproject01@gmail.com", "SportHub Fitness Club"),
-                    Subject = $"Thank you for choosing {tariff.Name}! 🏋️‍♂️",
+                    Subject = $"Thank you for choosing {tariff.Name}! 🏋️‍♂",
                     IsBodyHtml = true,
                 };
 

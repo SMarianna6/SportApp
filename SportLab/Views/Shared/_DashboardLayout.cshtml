@@ -85,6 +85,12 @@
                         </a>
                     </li>
                     <li>
+                        <a href="@Url.Action("Index", "Messages")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon" title="Messages">
+                            <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg>
+                            <span class="nav-label">Messages</span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="@Url.Action("Users", "Admin")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon @(ViewContext.RouteData.Values["action"]?.ToString() == "Users" ? "text-neon bg-[#1c1c1c] shadow-[inset_4px_0_0_#AAFF00]" : "")" title="Users">
                             <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                             <span class="nav-label">Users</span>
@@ -119,15 +125,9 @@
                         </a>
                     </li>
                     <li>
-                        <a href="@Url.Action("Index", "Moderation")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon" title="Review Moderation">
+                        <a href="@Url.Action("Moderation", "Admin")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon" title="Review Moderation">
                             <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
                             <span class="nav-label">Moderation</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="@Url.Action("Index", "Messages")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon" title="Messages">
-                            <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg>
-                            <span class="nav-label">Messages</span>
                         </a>
                     </li>
                     <li>

@@ -24,11 +24,19 @@ namespace SportLab.Controllers
 
         // PUBLIC TRAINERS PAGE
 
+        // PUBLIC TRAINERS PAGE
         [AllowAnonymous]
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            // Fetch all trainers and their profile details from the DB
+            var trainers = await _context.Users
+                .Include(u => u.TrainerProfile)
+                .Where(u => u.Role == Roles.Trainer)
+                .OrderBy(u => u.Name)
+                .ToListAsync();
+
+            return View(trainers);
         }
 
         // TRAINER DASHBOARD

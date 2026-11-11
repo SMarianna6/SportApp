@@ -1,4 +1,4 @@
-@using Microsoft.EntityFrameworkCore
+﻿@using Microsoft.EntityFrameworkCore
 @using SportLab.Data
 @using System.Security.Claims
 @inject SportLabContext DbContext
@@ -9,8 +9,7 @@
     bool isDarkPage = (ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Index") ||
         (ViewContext.RouteData.Values["controller"]?.ToString() == "Account" && ViewContext.RouteData.Values["action"]?.ToString() == "AccessDenied");
 
-    bool canUseQuickBook = User.Identity?.IsAuthenticated == true &&
-        (User.IsInRole(Roles.Client) || User.IsInRole(Roles.Trainer));
+    bool canUseQuickBook = User.Identity?.IsAuthenticated == true && User.IsInRole(Roles.Client);
 
     var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
     var currentUser = int.TryParse(userIdClaim, out var currentUserId)
@@ -20,6 +19,24 @@
     var avatarUrl = !string.IsNullOrWhiteSpace(currentUser?.AvatarUrl)
         ? currentUser.AvatarUrl
         : Url.Content("~/images/default-avatar.png");
+
+    // Fetch dynamic data only if the Quick Book modal is visible to the user
+    List<SportLab.Models.User> layoutTrainers = new();
+    List<SportLab.Models.Plan> layoutTariffs = new();
+
+    if (canUseQuickBook)
+    {
+        layoutTrainers = await DbContext.Users
+            .Where(u => u.Role == Roles.Trainer)
+            .OrderBy(u => u.Name)
+            .Take(5)
+            .ToListAsync();
+
+        layoutTariffs = await DbContext.Plans
+            .OrderBy(p => p.Price)
+            .Take(4)
+            .ToListAsync();
+    }
 }
 
 <html lang="en" class="scroll-smooth">
@@ -109,12 +126,6 @@
                 <li><a asp-controller="Tariff" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">Tariffs</a></li>
                 <li><a asp-controller="Trainer" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">Trainers</a></li>
                 <li><a asp-controller="Shop" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">Shop</a></li>
-                <li>
-                    <a asp-controller="Cart" asp-action="Index" class="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon" id="navCartLink">
-                        <i class="bi bi-cart3"></i> Cart
-                        <span id="navCartBadge" class="hidden rounded-full bg-red-600 px-1.5 py-0.5 text-[10px] font-bold text-white">0</span>
-                    </a>
-                </li>
                 <li><a asp-controller="Review" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">Reviews</a></li>
             </ul>
 
@@ -123,6 +134,11 @@
                 {
                     var fullName = User.FindFirst("FullName")?.Value ?? User.Identity?.Name ?? "Athlete";
                     var firstName = fullName.Split(' ', '@')[0];
+
+                    <a asp-controller="Cart" asp-action="Index" class="relative flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-mono/80 transition-all duration-300 hover:border-neon/60 hover:bg-white/10 hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon mr-1" title="Cart" id="navCartLink">
+                        <i class="bi bi-cart3 text-lg"></i>
+                        <span id="navCartBadge" class="hidden absolute -right-1.5 -top-1.5 rounded-full bg-red-600 px-1.5 py-0.5 text-[10px] font-bold text-white shadow-sm">0</span>
+                    </a>
 
                     <div id="user-menu" class="group relative">
                         <button id="user-menu-toggle" type="button" aria-haspopup="menu" aria-controls="user-menu-panel" aria-expanded="false" class="flex items-center gap-2.5 rounded-full border border-white/10 bg-white/5 py-1 pl-1 pr-3 text-white transition-all duration-300 hover:border-neon/60 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-neon">
@@ -196,7 +212,6 @@
                     <li><a asp-controller="Tariff" asp-action="Index" class="block border-b border-white/5 py-3.5 text-sm font-semibold uppercase tracking-widest text-mono transition-colors hover:text-neon">Tariffs</a></li>
                     <li><a asp-controller="Trainer" asp-action="Index" class="block border-b border-white/5 py-3.5 text-sm font-semibold uppercase tracking-widest text-mono transition-colors hover:text-neon">Trainers</a></li>
                     <li><a asp-controller="Shop" asp-action="Index" class="block border-b border-white/5 py-3.5 text-sm font-semibold uppercase tracking-widest text-mono transition-colors hover:text-neon">Shop</a></li>
-                    <li><a asp-controller="Cart" asp-action="Index" class="block border-b border-white/5 py-3.5 text-sm font-semibold uppercase tracking-widest text-mono transition-colors hover:text-neon">Cart</a></li>
                     <li><a asp-controller="Review" asp-action="Index" class="block py-3.5 text-sm font-semibold uppercase tracking-widest text-mono transition-colors hover:text-neon">Reviews</a></li>
 
                     <li class="flex flex-col gap-3 border-t border-white/10 pb-3 pt-4">
@@ -216,6 +231,13 @@
                                 </div>
 
                                 <div class="flex flex-col gap-2.5 border-t border-white/10 p-4">
+                                    <a asp-controller="Cart" asp-action="Index" class="flex w-full items-center justify-center gap-2 rounded-md border border-white/20 bg-white/5 py-3 text-xs font-bold uppercase tracking-widest text-white transition-all duration-300 hover:border-neon hover:bg-neon/10 hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon active:scale-[0.98]">
+                                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" /><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                                        </svg>
+                                        My Cart
+                                        <span id="mobileCartBadge" class="hidden rounded-full bg-red-600 px-1.5 py-0.5 text-[10px] font-bold text-white ml-1">0</span>
+                                    </a>
                                     <a asp-controller="Profile" asp-action="Client" class="flex w-full items-center justify-center gap-2 rounded-md border border-white/20 py-3 text-xs font-bold uppercase tracking-widest text-white transition-all duration-300 hover:border-neon hover:bg-neon/10 hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon active:scale-[0.98]">
                                         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                             <circle cx="12" cy="8" r="4" />
@@ -284,12 +306,14 @@
 
                     <form id="qb-booking-form" class="mt-6 space-y-4" novalidate>
                         <div>
-                            <label for="qb-type" class="mb-1.5 block text-xs font-bold uppercase tracking-wider text-mono/70">Type</label>
+                            <label for="qb-type" class="mb-1.5 block text-xs font-bold uppercase tracking-wider text-mono/70">Tariff / Type</label>
                             <div class="relative">
                                 <select id="qb-type" class="w-full appearance-none rounded-md border border-white/10 bg-card px-4 py-3 pr-10 text-sm font-semibold text-white transition-colors focus:border-neon focus:outline-none focus:ring-2 focus:ring-neon/30">
-                                    <option value="">Select type</option>
-                                    <option>Group Class</option>
-                                    <option>Personal Training</option>
+                                    <option value="">Select plan</option>
+                                    @foreach (var tariff in layoutTariffs)
+                                    {
+                                        <option value="@tariff.Id" data-name="@tariff.Name">@tariff.Name - ₴@tariff.Price</option>
+                                    }
                                 </select>
                                 <svg class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
                                     <path d="m6 9 6 6 6-6" />
@@ -311,7 +335,13 @@
                             <div>
                                 <label for="qb-trainer" class="mb-1.5 block text-xs font-bold uppercase tracking-wider text-mono/70">Trainer</label>
                                 <div class="relative">
-                                    <select id="qb-trainer" class="w-full appearance-none rounded-md border border-white/10 bg-card px-4 py-3 pr-10 text-sm font-semibold text-white transition-colors focus:border-neon focus:outline-none focus:ring-2 focus:ring-neon/30"></select>
+                                    <select id="qb-trainer" class="w-full appearance-none rounded-md border border-white/10 bg-card px-4 py-3 pr-10 text-sm font-semibold text-white transition-colors focus:border-neon focus:outline-none focus:ring-2 focus:ring-neon/30">
+                                        <option value="">Any available</option>
+                                        @foreach (var trainer in layoutTrainers)
+                                        {
+                                            <option value="@trainer.Id">@trainer.Name</option>
+                                        }
+                                    </select>
                                     <svg class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
                                         <path d="m6 9 6 6 6-6" />
                                     </svg>
@@ -422,7 +452,7 @@
         </div>
 
         <p class="relative border-t border-white/10 py-5 text-center text-xs text-mono/50">
-            � 2026 SportHUB. Built for strength.
+            © 2026 SportHUB. Built for strength.
         </p>
     </footer>
 
@@ -529,6 +559,59 @@
                 }
             });
         })();
+        
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch('/Cart/GetCartSummary')
+                .then(r => r.json())
+                .then(data => {
+                    if (data && data.totalCount > 0) {
+                        const desktopBadge = document.getElementById("navCartBadge");
+                        const mobileBadge = document.getElementById("mobileCartBadge");
+
+                        if (desktopBadge) {
+                            desktopBadge.textContent = data.totalCount;
+                            desktopBadge.classList.remove("hidden");
+                        }
+                        if (mobileBadge) {
+                            mobileBadge.textContent = data.totalCount;
+                            mobileBadge.classList.remove("hidden");
+                        }
+                    }
+                })
+                .catch(() => {});
+        });
+
+        // --- QUICK BOOK LOGIC ---
+        document.getElementById('qb-submit-btn')?.addEventListener('click', function() {
+            const typeSelect = document.getElementById('qb-type');
+            const selectedPlanId = typeSelect.value;
+            
+            if (!selectedPlanId) {
+                alert("Please select a membership tariff first.");
+                return;
+            }
+
+            window.location.href = `/Tariff/ConfirmPurchase?id=${selectedPlanId}`;
+        });
+
+        // Update preview card with Plan Name instead of ID
+        document.getElementById('qb-type')?.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const planName = selectedOption.getAttribute('data-name') || '';
+            const slotTypeLabel = document.getElementById('qb-slot-type');
+            
+            if (slotTypeLabel) {
+                if (planName) {
+                    slotTypeLabel.textContent = planName;
+                    slotTypeLabel.classList.remove('text-white/30');
+                    slotTypeLabel.classList.add('text-white');
+                } else {
+                    slotTypeLabel.textContent = 'Your slot';
+                    slotTypeLabel.classList.remove('text-white');
+                    slotTypeLabel.classList.add('text-white/30');
+                }
+            }
+        });
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)

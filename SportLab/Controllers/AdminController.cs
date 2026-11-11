@@ -34,7 +34,10 @@ namespace SportLab.Controllers
 
         public IActionResult Users()
         {
-            ViewBag.TariffNames = _context.Plans.Select(p => p.Name).ToList();
+            var tariffNames = _context.Plans.Select(p => p.Name).ToList();
+            tariffNames.Insert(0, "No plan selected");
+
+            ViewBag.TariffNames = tariffNames;
             return View();
         }
 
@@ -223,6 +226,15 @@ namespace SportLab.Controllers
                         IsActive = true
                     };
                     _context.Set<Subscription>().Add(newSubscription);
+                }
+            }
+            else if (string.IsNullOrWhiteSpace(userDto.Tariff) || userDto.Tariff == "No plan selected")
+            {
+                // If Admin selected "No plan", deactivate all active subscriptions
+                foreach (var sub in user.Subscriptions.Where(s => s.IsActive))
+                {
+                    sub.IsActive = false;
+                    _context.Update(sub);
                 }
             }
 
@@ -600,6 +612,59 @@ namespace SportLab.Controllers
             await _context.SaveChangesAsync();
 
             return Ok();
+        }
+
+        // Add this inside AdminController
+
+        [HttpGet]
+        public async Task<IActionResult> Moderation()
+        {
+            var reviews = await _context.Reviews
+                .Include(r => r.User)
+                .OrderBy(r => r.ModerationStatus == "Pending" ? 0 : 1)
+                .ThenByDescending(r => r.CreatedDate)
+                .ToListAsync();
+
+            return View(reviews);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ApproveReview(int id)
+        {
+            var review = await _context.Reviews.FindAsync(id);
+            if (review == null) return NotFound(new { success = false, message = "Review not found." });
+
+            review.ModerationStatus = "Approved";
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, status = "Approved", message = "Review approved." });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> HideReview(int id)
+        {
+            var review = await _context.Reviews.FindAsync(id);
+            if (review == null) return NotFound(new { success = false, message = "Review not found." });
+
+            review.ModerationStatus = "Hidden";
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, status = "Hidden", message = "Review hidden." });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteReview(int id)
+        {
+            var review = await _context.Reviews.FindAsync(id);
+            if (review == null) return NotFound(new { success = false, message = "Review not found." });
+
+            _context.Reviews.Remove(review);
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, message = "Review deleted." });
         }
     }
 
