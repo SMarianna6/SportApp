@@ -3,14 +3,256 @@
     ViewData["Title"] = "Our Trainers";
 }
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+    body {
+        background-color: #141414;
+    }
+
+    .trainers-page {
+        --tp-surface: #1E1E1E;
+        --tp-surface-2: #262626;
+        --tp-border: rgba(255, 255, 255, 0.08);
+        --tp-border-strong: rgba(255, 255, 255, 0.28);
+        --tp-text: #FFFFFF;
+        --tp-muted: #A3A3A3;
+        --tp-accent: #CCFF00;
+        --tp-accent-hover: #B8E600;
+        --tp-accent-ink: #141414;
+        font-family: 'Inter', 'Roboto', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        color: var(--tp-text);
+    }
+
+    .trainers-page .tp-title {
+        font-size: clamp(1.75rem, 1.2rem + 2vw, 2.5rem);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        color: var(--tp-text);
+    }
+
+    .trainers-page .tp-accent {
+        color: var(--tp-accent);
+    }
+
+    .trainers-page .tp-muted {
+        color: var(--tp-muted);
+    }
+
+    /* Buttons */
+    .trainers-page .tp-btn {
+        border: 1px solid transparent;
+        border-radius: 10px;
+        font-weight: 600;
+        box-shadow: none;
+        transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+    }
+
+    .trainers-page .tp-btn-primary,
+    .trainers-page .tp-btn-primary:focus {
+        background-color: var(--tp-accent);
+        border-color: var(--tp-accent);
+        color: var(--tp-accent-ink);
+    }
+
+    .trainers-page .tp-btn-primary:hover,
+    .trainers-page .tp-btn-primary:active {
+        background-color: var(--tp-accent-hover);
+        border-color: var(--tp-accent-hover);
+        color: var(--tp-accent-ink);
+    }
+
+    .trainers-page .tp-btn-outline,
+    .trainers-page .tp-btn-outline:focus {
+        background-color: transparent;
+        border-color: var(--tp-border-strong);
+        color: var(--tp-text);
+    }
+
+    .trainers-page .tp-btn-outline:hover,
+    .trainers-page .tp-btn-outline:active {
+        background-color: rgba(204, 255, 0, 0.08);
+        border-color: var(--tp-accent);
+        color: var(--tp-accent);
+    }
+
+    .trainers-page .tp-btn:focus-visible,
+    .trainers-page .btn.filter-btn:focus-visible {
+        outline: 2px solid var(--tp-accent);
+        outline-offset: 2px;
+        box-shadow: none;
+    }
+
+    /* Filter pills (the script toggles .active / .btn-dark / .btn-outline-dark) */
+    .trainers-page .btn.filter-btn {
+        padding: .5rem 1.1rem;
+        border: 1px solid var(--tp-border);
+        border-radius: 999px;
+        background-color: var(--tp-surface);
+        color: #D4D4D4;
+        font-size: .875rem;
+        font-weight: 600;
+        box-shadow: none;
+        transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+    }
+
+    .trainers-page .btn.filter-btn:hover {
+        background-color: var(--tp-surface);
+        border-color: var(--tp-accent);
+        color: var(--tp-accent);
+    }
+
+    .trainers-page .btn.filter-btn.active,
+    .trainers-page .btn.filter-btn.active:hover,
+    .trainers-page .btn.filter-btn:active {
+        background-color: var(--tp-accent);
+        border-color: var(--tp-accent);
+        color: var(--tp-accent-ink);
+    }
+
+    /* Trainer cards */
+    .trainers-page .trainer-card {
+        background-color: var(--tp-surface);
+        border: 1px solid var(--tp-border);
+        border-radius: 20px;
+        color: var(--tp-text);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        overflow: hidden;
+        transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+    }
+
+    .trainers-page .trainer-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(204, 255, 0, 0.45);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .trainers-page .trainer-photo {
+        margin: .75rem .75rem 0;
+        border-radius: 14px;
+        background-color: var(--tp-surface-2);
+        overflow: hidden;
+    }
+
+    .trainers-page .trainer-photo img {
+        display: block;
+        width: 100%;
+        height: 280px;
+        border-radius: 0;
+        object-fit: cover;
+        transition: transform .4s ease;
+    }
+
+    .trainers-page .trainer-card:hover .trainer-photo img {
+        transform: scale(1.04);
+    }
+
+    .trainers-page .trainer-name {
+        font-size: 1.2rem;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+        color: var(--tp-text);
+    }
+
+    .trainers-page .trainer-specs {
+        color: var(--tp-muted);
+        font-weight: 500;
+    }
+
+    .trainers-page .trainer-about {
+        color: var(--tp-muted);
+        line-height: 1.6;
+    }
+
+    .trainers-page .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        overflow: hidden;
+    }
+
+    .trainers-page .trainer-actions {
+        border-top: 1px solid var(--tp-border);
+    }
+
+    /* Specialty badges: restyles the Bootstrap bg-* classes set by badgeColor */
+    .trainers-page .spec-badge {
+        flex-shrink: 0;
+        max-width: 55%;
+        padding: .45em .8em;
+        border: 1px solid transparent;
+        border-radius: 999px;
+        font-size: .72rem;
+        font-weight: 600;
+        letter-spacing: .02em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .trainers-page .spec-badge.bg-dark {
+        background-color: rgba(255, 255, 255, 0.08) !important;
+        border-color: rgba(255, 255, 255, 0.2);
+        color: #FFFFFF;
+    }
+
+    .trainers-page .spec-badge.bg-success {
+        background-color: rgba(204, 255, 0, 0.12) !important;
+        border-color: rgba(204, 255, 0, 0.35);
+        color: #CCFF00;
+    }
+
+    .trainers-page .spec-badge.bg-danger {
+        background-color: rgba(255, 92, 92, 0.12) !important;
+        border-color: rgba(255, 92, 92, 0.35);
+        color: #FF8080;
+    }
+
+    .trainers-page .spec-badge.bg-primary {
+        background-color: rgba(77, 163, 255, 0.12) !important;
+        border-color: rgba(77, 163, 255, 0.35);
+        color: #7ABDFF;
+    }
+
+    /* Alert + empty state */
+    .trainers-page .alert-danger {
+        background-color: rgba(255, 92, 92, 0.1);
+        border: 1px solid rgba(255, 92, 92, 0.35);
+        border-radius: 12px;
+        color: #FFB3B3;
+    }
+
+    .trainers-page .tp-empty {
+        border: 1px dashed var(--tp-border-strong);
+        border-radius: 20px;
+        color: var(--tp-muted);
+    }
+
+    @@media (prefers-reduced-motion: reduce) {
+        .trainers-page .trainer-card,
+        .trainers-page .trainer-photo img,
+        .trainers-page .tp-btn,
+        .trainers-page .btn.filter-btn {
+            transition: none;
+        }
+
+        .trainers-page .trainer-card:hover,
+        .trainers-page .trainer-card:hover .trainer-photo img {
+            transform: none;
+        }
+    }
+</style>
+
+<div class="container mt-4 pb-5 trainers-page">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div>
-            <h2 class="fw-bold mb-1">Meet Our Trainers</h2>
-            <p class="text-muted mb-0">Certified fitness coaches ready to guide you toward your personal goals.</p>
+            <h2 class="tp-title mb-1">Meet Our <span class="tp-accent">Trainers</span></h2>
+            <p class="tp-muted mb-0">Certified fitness coaches ready to guide you toward your personal goals.</p>
         </div>
         <div>
-            <a asp-controller="Schedule" asp-action="Index" class="btn btn-outline-primary">
+            <a asp-controller="Schedule" asp-action="Index" class="btn tp-btn tp-btn-outline">
                 View Schedule
             </a>
         </div>
@@ -20,28 +262,37 @@
     {
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             @TempData["ErrorMessage"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     }
 
     <!-- Filter Buttons -->
-    <div class="mb-4 d-flex gap-2 flex-wrap">
-        <button class="btn btn-sm btn-dark filter-btn active" onclick="filterTrainers('all', this)">All Specialties</button>
-        <button class="btn btn-sm btn-outline-dark filter-btn" onclick="filterTrainers('strength', this)">Strength & Bodybuilding</button>
-        <button class="btn btn-sm btn-outline-dark filter-btn" onclick="filterTrainers('functional', this)">CrossFit & Functional</button>
-        <button class="btn btn-sm btn-outline-dark filter-btn" onclick="filterTrainers('yoga', this)">Yoga & Mobility</button>
-        <button class="btn btn-sm btn-outline-dark filter-btn" onclick="filterTrainers('combat', this)">Combat & Boxing</button>
+    <div class="mb-4 d-flex gap-2 flex-wrap" role="group" aria-label="Filter trainers by specialty">
+        <button type="button" class="btn btn-sm btn-dark filter-btn active" onclick="filterTrainers('all', this)">All Specialties</button>
+        <button type="button" class="btn btn-sm btn-outline-dark filter-btn" onclick="filterTrainers('strength', this)">Strength & Bodybuilding</button>
+        <button type="button" class="btn btn-sm btn-outline-dark filter-btn" onclick="filterTrainers('functional', this)">CrossFit & Functional</button>
+        <button type="button" class="btn btn-sm btn-outline-dark filter-btn" onclick="filterTrainers('yoga', this)">Yoga & Mobility</button>
+        <button type="button" class="btn btn-sm btn-outline-dark filter-btn" onclick="filterTrainers('combat', this)">Combat & Boxing</button>
     </div>
 
     <div class="row g-4" id="trainersList">
         @if (!Model.Any())
         {
-            <div class="col-12 text-center text-muted py-5">
-                <h5>No trainers available at the moment.</h5>
+            <div class="col-12">
+                <div class="tp-empty text-center py-5">
+                    <h5 class="mb-0">No trainers available at the moment.</h5>
+                </div>
             </div>
         }
         else
         {
+            <!-- Client-side empty state (hidden by default) -->
+            <div id="noResultsMessage" class="col-12" style="display: none;">
+                <div class="tp-empty text-center py-5">
+                    <h5 class="mb-0">No trainers found in this category.</h5>
+                </div>
+            </div>
+
             @foreach (var trainer in Model)
             {
                 var profile = trainer.TrainerProfile;
@@ -65,30 +316,32 @@
 
                 var photoUrl = !string.IsNullOrWhiteSpace(profile?.PhotoUrl) 
                     ? profile.PhotoUrl 
-                    : (trainer.AvatarUrl ?? "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600&auto=format&fit=crop&q=80");
+                    : (trainer.AvatarUrl ?? "https://images.unsplash.com/photo-1769134277133-4d26989a7783?w=600&auto=format&fit=crop&q=80");
 
-                <div class="col-md-4 trainer-item" data-specialty="@dataSpecialty">
-                    <div class="card h-100 shadow-sm border-0">
-                        <img src="@photoUrl" 
-                             class="card-img-top object-fit-cover" 
-                             alt="@trainer.Name" 
-                             style="height: 280px;">
+                <div class="col-sm-6 col-lg-4 trainer-item" data-specialty="@dataSpecialty">
+                    <div class="card h-100 trainer-card">
+                        <div class="trainer-photo">
+                            <img src="@photoUrl" 
+                                 class="card-img-top" 
+                                 alt="@trainer.Name" 
+                                 loading="lazy">
+                        </div>
                         <div class="card-body d-flex flex-column">
-                            <div class="d-flex justify-content-between align-items-start mb-1">
-                                <h5 class="card-title fw-bold mb-0">@trainer.Name</h5>
-                                <span class="badge @badgeColor">@firstSpec</span>
+                            <div class="d-flex justify-content-between align-items-start gap-2 mb-1">
+                                <h5 class="card-title trainer-name mb-0">@trainer.Name</h5>
+                                <span class="badge spec-badge @badgeColor">@firstSpec</span>
                             </div>
-                            <h6 class="card-subtitle text-muted mb-3 small">@allSpecs</h6>
-                            <p class="card-text text-muted small line-clamp-3">
+                            <h6 class="card-subtitle trainer-specs mb-3 small">@allSpecs</h6>
+                            <p class="card-text trainer-about small line-clamp-3">
                                 @(profile?.About ?? "Dedicated fitness professional ready to help you achieve your goals.")
                             </p>
-                            <div class="mt-auto pt-3 border-top d-flex gap-2">
-                                <a asp-controller="Schedule" asp-action="Index" class="btn btn-outline-dark btn-sm flex-fill">Schedule</a>
+                            <div class="mt-auto pt-3 trainer-actions d-flex gap-2">
+                                <a asp-controller="Schedule" asp-action="Index" class="btn btn-sm tp-btn tp-btn-outline flex-fill">Schedule</a>
                                 
                                 <form asp-controller="Trainer" asp-action="BookTrainer" method="post" class="flex-fill m-0">
                                     @Html.AntiForgeryToken()
                                     <input type="hidden" name="trainerId" value="@trainer.Id" />
-                                    <button type="submit" class="btn btn-primary btn-sm w-100">Book Session</button>
+                                    <button type="submit" class="btn btn-sm tp-btn tp-btn-primary w-100">Book Session</button>
                                 </form>
                             </div>
                         </div>
@@ -110,13 +363,25 @@
             btn.classList.remove('btn-outline-dark');
 
             const items = document.querySelectorAll('.trainer-item');
+            let visibleCount = 0;
+
             items.forEach(item => {
                 if (specialty === 'all' || item.getAttribute('data-specialty') === specialty) {
                     item.style.display = 'block';
+                    visibleCount++;
                 } else {
                     item.style.display = 'none';
                 }
             });
+
+            const noResultsMessage = document.getElementById('noResultsMessage');
+            if (noResultsMessage) {
+                if (visibleCount === 0) {
+                    noResultsMessage.style.display = 'block';
+                } else {
+                    noResultsMessage.style.display = 'none';
+                }
+            }
         }
     </script>
 }

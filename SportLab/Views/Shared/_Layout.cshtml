@@ -6,8 +6,9 @@
 <!DOCTYPE html>
 
 @{
-    bool isDarkPage = (ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Index") ||
-        (ViewContext.RouteData.Values["controller"]?.ToString() == "Account" && ViewContext.RouteData.Values["action"]?.ToString() == "AccessDenied");
+     bool isDarkPage = (ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Index") ||
+                      (ViewContext.RouteData.Values["controller"]?.ToString() == "Account" && ViewContext.RouteData.Values["action"]?.ToString() == "AccessDenied") ||
+                      (ViewContext.RouteData.Values["controller"]?.ToString() == "Trainer" && ViewContext.RouteData.Values["action"]?.ToString() == "Index");
 
     bool canUseQuickBook = User.Identity?.IsAuthenticated == true && User.IsInRole(Roles.Client);
 
