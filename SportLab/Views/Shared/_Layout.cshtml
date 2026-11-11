@@ -594,22 +594,44 @@
             window.location.href = `/Tariff/ConfirmPurchase?id=${selectedPlanId}`;
         });
 
-        // Update preview card with Plan Name instead of ID
-        document.getElementById('qb-type')?.addEventListener('change', function() {
-            const selectedOption = this.options[this.selectedIndex];
-            const planName = selectedOption.getAttribute('data-name') || '';
+        document.addEventListener('DOMContentLoaded', function() {
+            const typeSelect = document.getElementById('qb-type');
             const slotTypeLabel = document.getElementById('qb-slot-type');
-            
-            if (slotTypeLabel) {
-                if (planName) {
-                    slotTypeLabel.textContent = planName;
-                    slotTypeLabel.classList.remove('text-white/30');
-                    slotTypeLabel.classList.add('text-white');
-                } else {
-                    slotTypeLabel.textContent = 'Your slot';
-                    slotTypeLabel.classList.remove('text-white');
-                    slotTypeLabel.classList.add('text-white/30');
-                }
+
+            if (typeSelect && slotTypeLabel) {
+                // Функція для встановлення правильної назви
+                const updateName = () => {
+                    const selectedOption = typeSelect.options[typeSelect.selectedIndex];
+                    if (selectedOption && selectedOption.value) {
+                        const planName = selectedOption.getAttribute('data-name');
+                        slotTypeLabel.textContent = planName;
+                        slotTypeLabel.classList.remove('text-white/30');
+                        slotTypeLabel.classList.add('text-white');
+                    } else {
+                        slotTypeLabel.textContent = 'Your slot';
+                        slotTypeLabel.classList.remove('text-white');
+                        slotTypeLabel.classList.add('text-white/30');
+                    }
+                };
+
+                typeSelect.addEventListener('change', updateName);
+
+                const observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        const selectedOption = typeSelect.options[typeSelect.selectedIndex];
+                        if (selectedOption && selectedOption.value) {
+                            const correctName = selectedOption.getAttribute('data-name');
+                            
+                            if (slotTypeLabel.textContent.trim() === selectedOption.value) {
+                                slotTypeLabel.textContent = correctName;
+                            }
+                        }
+                    });
+                });
+                
+                observer.observe(slotTypeLabel, { childList: true, characterData: true, subtree: true });
+
+                updateName();
             }
         });
     </script>

@@ -546,7 +546,7 @@
                 var inp = document.querySelector('input[name="__RequestVerificationToken"]');
                 return inp ? inp.value : '';
             }
-
+            
             els.confirm.addEventListener('click', async function () {
                 if (!activeSlot) return;
 
@@ -570,8 +570,16 @@
                         els.success.textContent = result.message || 'Booking failed.';
                         els.success.classList.remove('hidden');
                         els.success.style.color = '#991B1B';
+                        
                         els.confirm.disabled = false;
                         els.confirm.textContent = 'Confirm Booking';
+
+                        if (result.requireSubscription) {
+                            setTimeout(function() {
+                                window.location.href = '/Tariff';
+                            }, 2500);
+                        }
+                        
                         return;
                     }
 

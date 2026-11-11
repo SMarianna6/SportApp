@@ -50,7 +50,7 @@
                                       review.ModerationStatus == "Hidden" ? "bg-red-500/20 text-red-400" :
                                       "bg-green-500/20 text-green-400";
 
-                    <div id="review-@review.Id" class="review-card rounded-lg border border-white/10 bg-[#1a1a1a] p-5">
+                    <div id="review-@review.Id" data-id="@review.Id" class="review-card rounded-lg border border-white/10 bg-[#1a1a1a] p-5">
                         <div class="flex flex-wrap items-start justify-between gap-3">
                             <div>
                                 <p class="font-black uppercase tracking-tight">@(review.User?.Name ?? "Unknown client")</p>

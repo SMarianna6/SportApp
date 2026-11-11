@@ -136,6 +136,20 @@ namespace SportLab.Controllers
 
             int userId = CurrentUserId();
 
+            var hasActiveSubscription = await _context.Subscriptions
+                .AnyAsync(s => s.UserId == userId && s.IsActive && s.EndDate >= DateTime.Today);
+
+            if (!hasActiveSubscription)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    requireSubscription = true,
+                    message = "You need an active membership to book a session. Please choose a plan."
+                });
+            }
+            // -------------------------------
+
             await using var transaction = await _context.Database.BeginTransactionAsync(IsolationLevel.Serializable);
 
             var slot = await _context.WorkoutSlots

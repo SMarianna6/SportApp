@@ -172,7 +172,6 @@
             loadUsers();
         });
 
-        // VALIDATE FIELDS ON BLUR AND CHANGE
         if (typeof $ !== 'undefined') {
             $(form).on('input change focusout', 'input, textarea, select', function () {
                 $(this).valid();
@@ -189,7 +188,6 @@
         var userToEdit = users.filter(function (u) { return u.id == openUserId; })[0];
 
         if (userToEdit) {
-            openForm(userToEdit);
 
             window.history.replaceState({}, document.title, window.location.pathname);
         }

@@ -15,8 +15,8 @@
     <title>@ViewData["Title"] - SportHUB</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Tailwind CDN (Тільки один раз) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -37,6 +37,7 @@
             }
         };
     </script>
+    
     <style>
         html { color-scheme: dark; }
         * { scrollbar-width: thin; scrollbar-color: #444 #141414; }
@@ -48,11 +49,25 @@
         body.collapsed .nav-label, body.collapsed .brand-text { display: none; }
         body.collapsed .nav-link { justify-content: center; padding-left: 0; padding-right: 0; }
         .nav-link[aria-current="page"] { color: #AAFF00; background: #1c1c1c; box-shadow: inset 4px 0 0 #AAFF00; }
+
+        /* Highlight Animation */
+        .sh-highlight-flash {
+            animation: highlightFlash 3s ease-out;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* ВИПРАВЛЕНО: подвійний @@ для Razor */
+        @@keyframes highlightFlash {
+            0% { background-color: rgba(170, 255, 0, 0.4); box-shadow: 0 0 0 4px rgba(170, 255, 0, 0.4); }
+            100% { background-color: transparent; box-shadow: none; }
+        }
     </style>
     
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body class="bg-main font-sans text-white antialiased">
@@ -112,6 +127,12 @@
                         <a href="@Url.Action("Schedule", "Admin")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon @(ViewContext.RouteData.Values["action"]?.ToString() == "Schedule" && ViewContext.RouteData.Values["controller"]?.ToString() == "Admin" ? "text-neon bg-[#1c1c1c] shadow-[inset_4px_0_0_#AAFF00]" : "")" title="Schedule">
                             <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
                             <span class="nav-label">Schedule</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Orders", "Admin")" class="nav-link flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-mono transition-colors hover:text-neon @(ViewContext.RouteData.Values["action"]?.ToString() == "Orders" ? "text-neon bg-[#1c1c1c] shadow-[inset_4px_0_0_#AAFF00]" : "")" title="Orders">
+                            <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                            <span class="nav-label">Orders</span>
                         </a>
                     </li>
                     <li>
@@ -233,7 +254,7 @@
             }
 
             <div class="ml-auto flex items-center gap-3">
-                    <div class="relative" id="notification-wrapper">
+                <div class="relative" id="notification-wrapper">
                     <button id="notification-btn" aria-label="Notifications" class="relative p-2 text-ink/70 transition-colors hover:text-neon focus:outline-none focus:ring-2 focus:ring-neon rounded-full">
                         <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
                         <span id="notification-badge" class="absolute right-1 top-1 hidden h-2.5 w-2.5 rounded-full bg-violet ring-2 ring-shell"></span>
@@ -284,7 +305,7 @@
 
     <!-- Layout Scripts -->
     <script>
-                // --- NOTIFICATION SYSTEM ---
+        // --- NOTIFICATION SYSTEM ---
         (function () {
             const btn = document.getElementById('notification-btn');
             const dropdown = document.getElementById('notification-dropdown');
@@ -360,6 +381,7 @@
                 }).catch(()=>{});
         })();
 
+        // --- SIDEBAR COLLAPSE ---
         (function () {
             'use strict';
             var body = document.body;
@@ -391,6 +413,112 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // --- GLOBAL SEARCH LOGIC ---
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('global-search-input');
+            const resultsContainer = document.getElementById('search-results');
+
+            if (!searchInput || !resultsContainer) return;
+
+            let debounceTimer;
+
+            searchInput.addEventListener('input', function () {
+                clearTimeout(debounceTimer);
+                const query = this.value.trim();
+
+                if (query.length < 2) {
+                    resultsContainer.classList.add('hidden');
+                    return;
+                }
+
+                debounceTimer = setTimeout(() => {
+                    fetch(`/Admin/GlobalSearch?q=${encodeURIComponent(query)}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            let html = '';
+                        
+                            const renderSection = (title, items, iconSvg) => {
+                                if (!items || items.length === 0) return '';
+                                let section = `<div class="px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-ink/40 bg-white/5">${title}</div>`;
+                                items.forEach(item => {
+                                    section += `
+                                        <a href="${item.url}" class="flex items-start gap-3 px-4 py-2.5 hover:bg-white/10 transition-colors border-b border-white/5 last:border-0">
+                                            <div class="mt-0.5 text-neon shrink-0">${iconSvg}</div>
+                                            <div class="min-w-0">
+                                                <p class="text-sm font-bold text-ink truncate">${item.name}</p>
+                                                <p class="text-[11px] text-ink/60 truncate">${item.subtitle || ''}</p>
+                                            </div>
+                                        </a>
+                                    `;
+                                });
+                                return section;
+                            };
+
+                            const icons = {
+                                user: '<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>',
+                                box: '<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 8v8a2 2 0 0 1-1 1.7l-7 4a2 2 0 0 1-2 0l-7-4A2 2 0 0 1 3 16V8a2 2 0 0 1 1-1.7l7-4a2 2 0 0 1 2 0l7 4A2 2 0 0 1 21 8z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>',
+                                tag: '<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2H2v10l9.3 9.3a2 2 0 0 0 2.8 0l7.2-7.2a2 2 0 0 0 0-2.8L12 2z"/><circle cx="7" cy="7" r="1"/></svg>',
+                                faq: '<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+                                review: '<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg>'
+                            };
+
+                            html += renderSection('Users', data.users, icons.user);
+                            html += renderSection('Products', data.products, icons.box);
+                            html += renderSection('Tariffs', data.tariffs, icons.tag);
+                            html += renderSection('FAQs', data.faqs, icons.faq);
+                            html += renderSection('Reviews', data.reviews, icons.review);
+
+                            if (html === '') {
+                                html = '<div class="p-4 text-center text-sm text-ink/50">No results found for "' + query + '"</div>';
+                            }
+
+                            resultsContainer.innerHTML = html;
+                            resultsContainer.classList.remove('hidden');
+                        })
+                        .catch(err => console.error("Search error:", err));
+                }, 300);
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!searchInput.contains(e.target) && !resultsContainer.contains(e.target)) {
+                    resultsContainer.classList.add('hidden');
+                }
+            });
+        });
+
+        // --- HIGHLIGHT LOGIC ---
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+        
+            const openParams = ['openUser', 'openProduct', 'openTariff', 'openFAQ', 'openReview'];
+            let idToHighlight = null;
+
+            for (const param of openParams) {
+                if (urlParams.has(param)) {
+                    idToHighlight = urlParams.get(param);
+                    break;
+                }
+            }
+
+            if (!idToHighlight) return;
+
+            setTimeout(() => {
+                const selector = `#review-${idToHighlight}, [data-id="${idToHighlight}"], [data-user-id="${idToHighlight}"], [data-product-id="${idToHighlight}"], [data-tariff-id="${idToHighlight}"], [data-faq-id="${idToHighlight}"], #row-${idToHighlight}, #item-${idToHighlight}`;
+            
+                const element = document.querySelector(selector);
+            
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    element.classList.add('sh-highlight-flash');
+                    setTimeout(() => {
+                        element.classList.remove('sh-highlight-flash');
+                    }, 3000);
+                }
+            }, 500);
+        });
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

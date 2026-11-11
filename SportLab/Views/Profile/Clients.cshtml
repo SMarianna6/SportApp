@@ -45,10 +45,10 @@
                 if (!val) return 'Never';
                 return new Date(val).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
             }
-
+            
             async function loadClients() {
                 try {
-                    const res = await fetch('/Trainer/GetClients');
+                    const res = await fetch('/Profile/GetClients');
                     const data = await res.json();
                     if (data.success) {
                         CLIENTS = data.clients;

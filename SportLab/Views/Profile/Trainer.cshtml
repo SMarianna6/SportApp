@@ -149,7 +149,7 @@
 
 <!-- Create slot modal -->
 <div id="modal-slot" class="modal fixed inset-0 z-[100] hidden items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="slot-title">
-    <div class="modal-overlay absolute inset-0 bg-black/90"></div>
+    <div class="modal-overlay absolute inset-0 bg-[#141414]"></div>
     <div class="relative w-full max-w-md transform-gpu rounded-lg bg-card p-6 shadow-2xl">
         <button type="button" data-close class="absolute right-3 top-3 rounded-md p-2 text-mono/60 hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon">
             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
@@ -215,6 +215,21 @@
 
             function getJsonHeaders() {
                 return { 'Content-Type': 'application/json' };
+            }
+
+            /* ---------- Specializations ---------- */
+            var SPECS = ['CrossFit', 'Pilates', 'Yoga', 'Strength', 'HIIT', 'Boxing', 'Mobility', 'Nutrition'];
+            var selected = {};
+            var trigger = $('spec-trigger'), menu = $('spec-menu'), pills = $('spec-pills');
+
+            function renderPills() {
+                if (!pills || !trigger) return;
+                var keys = SPECS.filter(function (s) { return selected[s]; });
+                pills.innerHTML = keys.length ? keys.map(function (s) {
+                    return '<li class="inline-flex items-center gap-1.5 rounded-full border border-neon/30 bg-neon/10 py-1 pl-3 pr-1.5 text-[11px] font-bold uppercase tracking-wider text-neon">' + s +
+'<button type="button" data-remove="' + s + '" aria-label="Remove ' + s + '" class="flex h-4 w-4 items-center justify-center rounded-full text-neon/70 transition-colors duration-150 hover:bg-neon hover:text-shell focus:outline-none focus-visible:ring-2 focus-visible:ring-neon"><svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></li>';
+                }).join('') : '<li class="rounded-full border border-dashed border-white/10 px-3 py-1 text-[11px] font-semibold text-mono/50">None selected</li>';
+                trigger.firstElementChild.textContent = keys.length ? keys.length + ' selected' : 'Select specializations';
             }
 
             /* ---------- Fetch Profile Data ---------- */
@@ -352,26 +367,13 @@
                 }
             });
 
-            /* ---------- Specializations ---------- */
-            var SPECS = ['CrossFit', 'Pilates', 'Yoga', 'Strength', 'HIIT', 'Boxing', 'Mobility', 'Nutrition'];
-            var selected = {};
-            var trigger = $('spec-trigger'), menu = $('spec-menu'), pills = $('spec-pills');
-            
+            /* ---------- Specializations Setup ---------- */
             if (menu && trigger && pills) {
                 menu.innerHTML = SPECS.map(function (s) {
                     return '<li><label class="flex cursor-pointer items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-mono transition-colors duration-150 hover:bg-white/5 hover:text-white">' +
                         '<input type="checkbox" value="' + s + '" class="h-4 w-4 shrink-0 cursor-pointer accent-[#AAFF00]" />' + s + '</label></li>';
                 }).join('');
                 
-                function renderPills() {
-                    var keys = SPECS.filter(function (s) { return selected[s]; });
-                    pills.innerHTML = keys.length ? keys.map(function (s) {
-                        return '<li class="inline-flex items-center gap-1.5 rounded-full border border-neon/30 bg-neon/10 py-1 pl-3 pr-1.5 text-[11px] font-bold uppercase tracking-wider text-neon">' + s +
-'<button type="button" data-remove="' + s + '" aria-label="Remove ' + s + '" class="flex h-4 w-4 items-center justify-center rounded-full text-neon/70 transition-colors duration-150 hover:bg-neon hover:text-shell focus:outline-none focus-visible:ring-2 focus-visible:ring-neon"><svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></li>';
-                    }).join('') : '<li class="rounded-full border border-dashed border-white/10 px-3 py-1 text-[11px] font-semibold text-mono/50">None selected</li>';
-                    trigger.firstElementChild.textContent = keys.length ? keys.length + ' selected' : 'Select specializations';
-                }
-
                 async function saveSpecs() {
                     var keys = SPECS.filter(function (s) { return selected[s]; });
                     var payload = { 
@@ -433,10 +435,10 @@
 
             async function loadDashboard() {
                 try {
-                    const res = await fetch('/Trainer/GetDashboardData');
+                    const res = await fetch('/Profile/GetTrainerDashboardData');
                     const data = await res.json();
                     if (data.success) {
-                        DASHBOARD_SLOTS = data.slots; // FIXED FROM ********
+                        DASHBOARD_SLOTS = data.slots;
                         renderSchedule(currentDay);
                     }
                 } catch(e) { console.error('Failed to load schedule', e); }
@@ -464,7 +466,6 @@
                     const accent = i % 2 ? '#7D51FE' : '#AAFF00';
                     const fill = s.capacity > 0 ? Math.min(100, Math.round(s.booked / s.capacity * 100)) : 0;
                     
-                    // Uses File 2's beautiful timeline card layout
                     return '<li>' +
                         '<button type="button" data-id="' + s.id + '" class="slot-btn group relative flex w-full items-center gap-3 overflow-hidden rounded-xl border border-white/5 bg-shell py-3.5 pl-5 pr-3.5 text-left transition-colors duration-200 hover:border-white/20 hover:bg-black focus:outline-none focus-visible:ring-2 focus-visible:ring-neon sm:gap-4">' +
                         '<span aria-hidden="true" class="absolute inset-y-3 left-0 w-1 rounded-r-full" style="background:' + accent + '"></span>' +
@@ -491,57 +492,50 @@
             
             if($('slot-form')) $('slot-form').addEventListener('submit', async function (e) {
                 e.preventDefault();
-                var err = $('slot-error');
+                var errorEl = $('slot-error');
+                errorEl.classList.add('hidden');
+                
+                if ($('slot-start').value >= $('slot-end').value) {
+                    errorEl.textContent = "End time must be later than start time.";
+                    errorEl.classList.remove('hidden');
+                    return;
+                }
+
                 var payload = new URLSearchParams();
-                payload.append('ActivityName', $('slot-type').value);
+                payload.append('Type', $('slot-type').value);
                 payload.append('Date', $('slot-date').value);
-                payload.append('StartTime', $('slot-start').value);
-                payload.append('EndTime', $('slot-end').value);
+                payload.append('TimeStart', $('slot-start').value);
+                payload.append('TimeEnd', $('slot-end').value); 
                 payload.append('Capacity', $('slot-capacity').value);
                 payload.append('__RequestVerificationToken', token);
 
                 try {
-                    const res = await fetch('/Trainer/CreateSlotApi', {
+                    const res = await fetch('/Profile/SaveScheduleApi', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                         body: payload.toString()
                     });
-                    const data = await res.json();
-                    if (data.success) {
-                        closeModal(); $('slot-form').reset();
+ 
+                    const text = await res.text();
+                    let data;
+                    try {
+                        data = JSON.parse(text);
+                    } catch {
+                        throw new Error("Server returned an invalid response. Check if times are correct.");
+                    }
+
+                    if (res.ok && data.success) {
+                        closeModal(); 
+                        $('slot-form').reset();
                         await loadDashboard();
                     } else {
-                        err.textContent = data.message; err.classList.remove('hidden');
+                        errorEl.textContent = data.message || "Error saving slot"; 
+                        errorEl.classList.remove('hidden');
                     }
-                } catch(err) {
-                    err.textContent = 'Network error.'; err.classList.remove('hidden');
+                } catch(error) {
+                    errorEl.textContent = error.message || 'Network error.'; 
+                    errorEl.classList.remove('hidden');
                 }
-            });
-
-            if($('timeline')) $('timeline').addEventListener('click', function (e) {
-                var btn = e.target.closest('.slot-btn'); if (!btn) return;
-                pendingCancelId = btn.dataset.id;
-                $('cancel-summary').textContent = 'Session ID: ' + pendingCancelId;
-                openModal('modal-cancel');
-            });
-
-            if($('cancel-confirm')) $('cancel-confirm').addEventListener('click', async function () {
-                if (!pendingCancelId) return;
-                const payload = new URLSearchParams();
-                payload.append('id', pendingCancelId);
-                payload.append('__RequestVerificationToken', token);
-                
-                try {
-                    const res = await fetch('/Trainer/CancelSlotApi', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                        body: payload.toString()
-                    });
-                    const data = await res.json();
-                    if (data.success) {
-                        pendingCancelId = null; closeModal(); await loadDashboard();
-                    } else { alert(data.message); }
-                } catch(e) { alert('Network error.'); }
             });
 
             /* ---------- Clients Grid ---------- */
@@ -579,10 +573,10 @@
             
             async function loadClients() {
                 try {
-                    const res = await fetch('/Trainer/GetClients');
+                    const res = await fetch('/Profile/GetClients');
                     const data = await res.json();
                     if (data.success) {
-                        REAL_CLIENTS = data.clients; // FIXED FROM ********
+                        REAL_CLIENTS = data.clients;
                         renderClients();
                     }
                 } catch(e) { console.error('Failed to load clients', e); }
@@ -603,14 +597,14 @@
                 if (emptyEl) emptyEl.classList.toggle('hidden', list.length > 0);
                 
                 gridEl.innerHTML = list.map(function (c, idx) {
-                    var deltaVal = c.weights.length > 0 ? (c.weights[c.weights.length - 1] - c.weights[0]).toFixed(1) : '0.0';
+                    var deltaVal = c.weights && c.weights.length > 0 ? (c.weights[c.weights.length - 1] - c.weights[0]).toFixed(1) : '0.0';
                     
                     return '<article class="flex flex-col gap-4 rounded-lg bg-shell p-4 transition-transform duration-200 hover:-translate-y-0.5">' +
                         '<div class="flex items-center gap-3"><div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-sm font-extrabold ' + (colors[idx % colors.length] === '#AAFF00' ? 'bg-neon text-shell' : 'bg-violet text-white') + '">' + initials(c.name) + '</div>' +
                         '<div class="min-w-0"><h4 class="truncate text-base font-extrabold tracking-tight">' + c.name + '</h4><p class="text-xs text-mono/50">Weight ' + (deltaVal > 0 ? '+' : '') + deltaVal + ' kg</p></div></div>' +
-                        '<div class="rounded-md bg-card px-3 py-2">' + spark(c.weights) + '</div>' +
+                        '<div class="rounded-md bg-card px-3 py-2">' + spark(c.weights || []) + '</div>' +
                         '<div class="flex items-center justify-between">' +
-                            '<p class="text-sm text-mono">Sessions: <span class="font-extrabold text-neon">' + c.workouts + '</span></p>' +
+                            '<p class="text-sm text-mono">Sessions: <span class="font-extrabold text-neon">' + (c.workouts || 0) + '</span></p>' +
                             '<a href="/Profile/ClientHistory?id=' + c.id + '" class="flex h-9 px-3 items-center justify-center rounded-md bg-card text-xs font-bold text-white transition-colors hover:bg-violet hover:text-white">History</a>' +
                         '</div></article>';
                 }).join('');

@@ -1286,6 +1286,129 @@ namespace SportLab.Controllers
                 message = "Your booking has been cancelled."
             });
         }
+
+        [HttpGet]
+        [Authorize(Roles = Roles.TrainerRoles)]
+        public async Task<IActionResult> GetClients()
+        {
+            int trainerId = CurrentUserId;
+            var today = DateTime.Today;
+            var now = DateTime.Now;
+
+            var bookings = await _context.WorkoutBookings
+                .AsNoTracking()
+                .Where(b => b.WorkoutSlot.TrainerId == trainerId)
+                .Select(b => new
+                {
+                    b.UserId,
+                    name = b.User.Name,
+                    email = b.User.Email,
+                    goal = b.User.Goal,
+                    startTime = b.WorkoutSlot.StartTime,
+                    status = b.WorkoutSlot.Status,
+                    b.BookingDate
+                })
+                .ToListAsync();
+
+            var userIds = bookings.Select(b => b.UserId).Distinct().ToList();
+
+            // Отримуємо ваги клієнтів
+            var weights = await _context.MetricLogs
+                .AsNoTracking()
+                .Where(m => userIds.Contains(m.UserId))
+                .OrderBy(m => m.RecordDate)
+                .Select(m => new { m.UserId, m.Weight })
+                .ToListAsync();
+
+            var subscriptions = await _context.Subscriptions
+                .AsNoTracking()
+                .Where(s => userIds.Contains(s.UserId))
+                .Select(s => new { s.UserId, s.IsActive, s.EndDate })
+                .ToListAsync();
+
+            var clients = bookings
+                .GroupBy(b => b.UserId)
+                .Select(g =>
+                {
+                    var first = g.First();
+                    var past = g.Where(b => b.startTime < now && b.status != "Cancelled").ToList();
+                    var lastWorkout = (past.Count > 0 ? past : g.ToList()).Max(b => b.startTime);
+
+                    var sub = subscriptions
+                        .Where(s => s.UserId == g.Key)
+                        .OrderByDescending(s => s.EndDate)
+                        .FirstOrDefault();
+
+                    string membership = "Inactive";
+                    if (sub != null && sub.IsActive && sub.EndDate.Date >= today)
+                    {
+                        membership = sub.EndDate.Date <= today.AddDays(7) ? "Expiring" : "Active";
+                    }
+
+                    return new
+                    {
+                        id = g.Key,
+                        name = first.name,
+                        email = first.email,
+                        goal = string.IsNullOrWhiteSpace(first.goal) ? "Not set" : first.goal,
+                        workouts = g.Count(b => b.status != "Cancelled"), // ДОДАНО
+                        lastWorkout,
+                        status = membership,
+                        weights = weights.Where(w => w.UserId == g.Key).Select(w => w.Weight).ToList() // ДОДАНО
+                    };
+                })
+                .OrderByDescending(c => c.lastWorkout)
+                .ToList();
+
+            return Json(new { success = true, clients });
+        }
+
+        [HttpGet]
+        [Authorize(Roles = Roles.TrainerRoles)]
+        public async Task<IActionResult> GetTrainerDashboardData()
+        {
+            int trainerId = CurrentUserId;
+
+            DateTime today = DateTime.Today;
+            DateTime dayAfterTomorrow = today.AddDays(2);
+
+            var slots = await _context.WorkoutSlots
+                .AsNoTracking()
+                .Include(w => w.Bookings)
+                    .ThenInclude(b => b.User)
+                .Where(w =>
+                    w.TrainerId == trainerId &&
+                    w.StartTime >= today &&
+                    w.StartTime < dayAfterTomorrow &&
+                    w.Status != "Cancelled")
+                .OrderBy(w => w.StartTime)
+                .ToListAsync();
+
+            var result = slots.Select(slot => new
+            {
+                id = slot.Id,
+                activityName = slot.ActivityName,
+                date = slot.StartTime.ToString("yyyy-MM-dd"),
+                startTime = slot.StartTime.ToString("HH:mm"),
+                endTime = slot.EndTime.ToString("HH:mm"),
+                status = slot.Status,
+                capacity = slot.Capacity,
+                booked = slot.Bookings.Count,
+                clients = slot.Bookings
+                    .Select(b => new
+                    {
+                        id = b.UserId,
+                        name = b.User.Name
+                    })
+                    .ToList()
+            });
+
+            return Json(new
+            {
+                success = true,
+                slots = result
+            });
+        }
     }
 
     // REQUEST MODELS

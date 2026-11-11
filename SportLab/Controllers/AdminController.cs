@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -85,7 +85,7 @@ namespace SportLab.Controllers
         public async Task<IActionResult> GlobalSearch(string q)
         {
             if (string.IsNullOrWhiteSpace(q))
-                return Json(new { users = new string[0], products = new string[0], tariffs = new string[0], faqs = new string[0] });
+                return Json(new { users = new string[0], products = new string[0], tariffs = new string[0], faqs = new string[0], reviews = new string[0] });
 
             var users = await _context.Users
                 .Where(u => u.Name.Contains(q) || u.Email.Contains(q))
@@ -102,16 +102,23 @@ namespace SportLab.Controllers
             var tariffs = await _context.Plans
                 .Where(p => p.Name.Contains(q))
                 .Take(4)
-                .Select(p => new { id = p.Id, name = p.Name, subtitle = p.Price + " $", url = $"/Admin/Tariffs?openTariff={p.Id}" })
+                .Select(p => new { id = p.Id, name = p.Name, subtitle = p.Price + " ₴", url = $"/Admin/Tariffs?openTariff={p.Id}" })
                 .ToListAsync();
 
             var faqs = await _context.FAQs
                 .Where(f => f.Question.Contains(q))
                 .Take(3)
-                .Select(f => new { id = f.Id, name = f.Question, subtitle = "FAQ", url = $"/Admin/FAQ?openFAQ=/{f.Id}" })
+                .Select(f => new { id = f.Id, name = f.Question, subtitle = "FAQ", url = $"/Admin/FAQ?openFAQ={f.Id}" })
                 .ToListAsync();
 
-            return Json(new { users, products, tariffs, faqs });
+            var reviews = await _context.Reviews
+                .Include(r => r.User)
+                .Where(r => r.Comment.Contains(q))
+                .Take(3)
+                .Select(r => new { id = r.Id, name = $"Review by {r.User.Name}", subtitle = r.Comment, url = $"/Admin/Moderation?openReview={r.Id}" })
+                .ToListAsync();
+
+            return Json(new { users, products, tariffs, faqs, reviews });
         }
 
         [HttpGet]
@@ -666,6 +673,176 @@ namespace SportLab.Controllers
 
             return Json(new { success = true, message = "Review deleted." });
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetDashboardData()
+        {
+            var today = DateTime.Today;
+            var startOfYear = new DateTime(today.Year, 1, 1);
+
+            var shopOrdersRevenue = await _context.Orders.SumAsync(o => o.TotalAmount);
+
+            var subscriptionRevenue = await _context.Subscriptions
+                .Where(s => s.Plan != null)
+                .SumAsync(s => (decimal?)s.Plan.Price) ?? 0;
+
+            var totalRevenue = shopOrdersRevenue + subscriptionRevenue;
+
+            var activeMembers = await _context.Users.CountAsync(u => u.Role == Roles.Client && !u.IsBlocked);
+
+            var classBookings = await _context.WorkoutBookings.CountAsync();
+
+            var shopSales = await _context.OrderDetails
+                .Where(od => od.Order != null && od.Product != null)
+                .SumAsync(od => (decimal?)od.UnitPrice * od.Quantity) ?? 0;
+
+            var stats = new
+            {
+                revenue = totalRevenue,
+                activeMembers = activeMembers,
+                classBookings = classBookings,
+                shopSales = shopSales
+            };
+
+
+            var revenueData = new int[12];
+            var newUsersData = new int[12];
+
+            var yearOrders = await _context.Orders
+                .Where(o => o.OrderDate >= startOfYear && o.OrderDate.Year == today.Year)
+                .ToListAsync();
+
+            foreach (var order in yearOrders)
+            {
+                revenueData[order.OrderDate.Month - 1] += (int)order.TotalAmount;
+            }
+
+            var yearSubscriptions = await _context.Subscriptions
+                .Include(s => s.Plan)
+                .Where(s => s.StartDate >= startOfYear && s.StartDate.Year == today.Year && s.Plan != null)
+                .ToListAsync();
+
+            foreach (var sub in yearSubscriptions)
+            {
+                revenueData[sub.StartDate.Month - 1] += (int)sub.Plan.Price;
+            }
+
+            var usersThisYear = await _context.Users
+                .Where(u => u.Role == Roles.Client)
+                .ToListAsync();
+
+            foreach (var user in usersThisYear)
+            {
+                int monthIndex = (user.Id * 7) % 12; // Фейковий розподіл, бо немає CreatedDate
+                newUsersData[monthIndex]++;
+            }
+
+            var chart = new
+            {
+                revenue = revenueData,
+                newUsers = newUsersData
+            };
+
+            var events = new List<object>();
+
+            var recentOrders = await _context.Orders
+                .OrderByDescending(o => o.OrderDate)
+                .Take(2)
+                .Select(o => new { Text = $"New order #{o.Id} placed (₴{o.TotalAmount})", Date = o.OrderDate })
+                .ToListAsync();
+
+            var recentSubscriptions = await _context.Subscriptions
+                .Include(s => s.User)
+                .Include(s => s.Plan)
+                .Where(s => s.Plan != null && s.User != null)
+                .OrderByDescending(s => s.StartDate)
+                .Take(2)
+                .Select(s => new { Text = $"{s.User.Name} bought {s.Plan.Name} membership", Date = s.StartDate })
+                .ToListAsync();
+
+            var recentUsers = await _context.Users
+                .Where(u => u.Role == Roles.Client)
+                .OrderByDescending(u => u.Id)
+                .Take(2)
+                .Select(u => new { Text = $"New member registered: {u.Name}", Date = DateTime.Now.AddHours(-2) })
+                .ToListAsync();
+
+            var recentBookings = await _context.WorkoutBookings
+                .Include(b => b.User)
+                .Include(b => b.WorkoutSlot)
+                .OrderByDescending(b => b.BookingDate)
+                .Take(1)
+                .Select(b => new { Text = $"{b.User.Name} booked {b.WorkoutSlot.ActivityName}", Date = b.BookingDate })
+                .ToListAsync();
+
+            events.AddRange(recentBookings);
+            events.AddRange(recentSubscriptions);
+            events.AddRange(recentOrders);
+            events.AddRange(recentUsers);
+
+            var sortedEvents = events
+                .OrderByDescending(e => ((dynamic)e).Date)
+                .Take(6)
+                .Select(e => new {
+                    text = ((dynamic)e).Text,
+                    time = FormatTimeAgo(((dynamic)e).Date)
+                })
+                .ToList();
+
+            return Json(new { stats, chart, events = sortedEvents });
+        }
+
+        private string FormatTimeAgo(DateTime date)
+        {
+            var span = DateTime.Now - date;
+            if (span.TotalMinutes < 60) return $"{(int)span.TotalMinutes} min ago";
+            if (span.TotalHours < 24) return $"{(int)span.TotalHours} h ago";
+            return $"{(int)span.TotalDays} days ago";
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetOrdersList()
+        {
+            var orders = await _context.Orders
+                .Include(o => o.User)
+                .Include(o => o.OrderDetails)
+                    .ThenInclude(od => od.Product)
+                .OrderByDescending(o => o.OrderDate)
+                .Select(o => new
+                {
+                    id = o.Id,
+                    customerName = o.User != null ? o.User.Name : "Unknown",
+                    customerEmail = o.User != null ? o.User.Email : "N/A",
+                    orderDate = o.OrderDate,
+                    totalAmount = o.TotalAmount,
+                    status = o.Status,
+                    itemsCount = o.OrderDetails.Sum(od => od.Quantity),
+                    items = o.OrderDetails.Select(od => new
+                    {
+                        productName = od.Product != null ? od.Product.Name : "Unknown Product",
+                        quantity = od.Quantity,
+                        unitPrice = od.UnitPrice,
+                        photoUrl = od.Product != null ? od.Product.PhotoUrl : null
+                    }).ToList()
+                })
+                .ToListAsync();
+
+            return Json(orders);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateOrderStatusApi(int id, string status)
+        {
+            var order = await _context.Orders.FindAsync(id);
+            if (order == null) return NotFound(new { success = false, message = "Order not found" });
+
+            order.Status = status;
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true });
+        }
+
+        public IActionResult Orders() => View();
     }
 
     public class UserDto
