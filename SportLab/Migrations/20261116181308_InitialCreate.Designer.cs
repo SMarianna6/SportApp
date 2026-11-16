@@ -12,7 +12,11 @@ using SportLab.Data;
 namespace SportLab.Migrations
 {
     [DbContext(typeof(SportLabContext))]
+<<<<<<<< HEAD:SportLab/Migrations/20261116181308_InitialCreate.Designer.cs
     [Migration("20261116181308_InitialCreate")]
+========
+    [Migration("20261116180707_InitialCreate")]
+>>>>>>>> cd1214282d19972075cf1585c4c70836517ad0ba:SportLab/Migrations/20261116180707_InitialCreate.Designer.cs
     partial class InitialCreate
     {
         /// <inheritdoc />
