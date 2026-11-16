@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Globalization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
@@ -25,6 +27,24 @@ namespace SportLab.Controllers
 
         private int CurrentUserId =>
             int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+        private async Task RefreshUserCookieAsync(User user)
+        {
+            var role = Roles.Normalize(user.Role);
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Name ?? user.Email),
+                new Claim("FullName", user.Name ?? user.Email),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, role)
+            };
+
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+        }
 
         public IActionResult Index()
         {
@@ -209,6 +229,8 @@ namespace SportLab.Controllers
             user.Name = name;
 
             await _context.SaveChangesAsync();
+
+            await RefreshUserCookieAsync(user);
 
             return Json(new
             {
@@ -854,6 +876,8 @@ namespace SportLab.Controllers
             user.Email = email;
 
             await _context.SaveChangesAsync();
+
+            await RefreshUserCookieAsync(user);
 
             return Json(new { success = true, name = user.Name, email = user.Email });
         }

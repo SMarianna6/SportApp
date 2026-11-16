@@ -1,11 +1,25 @@
 ﻿@using SportLab.Models
+@using Microsoft.EntityFrameworkCore
+@using SportLab.Data
+@using System.Security.Claims
+@inject SportLabContext DbContext
+
 @{
     string userRole =
         User.IsAdmin() ? Roles.Administrator :
         User.IsInRole(Roles.Trainer) ? Roles.Trainer :
         User.IsInRole(Roles.Moderator) ? Roles.Moderator :
         Roles.Client;
+
+    var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    var currentUser = int.TryParse(userIdClaim, out var currentUserId)
+        ? await DbContext.Users.FirstOrDefaultAsync(u => u.Id == currentUserId)
+        : null;
+
+    var displayName = currentUser?.Name ?? User.FindFirst("FullName")?.Value ?? User.Identity?.Name?.Split('@')[0];
 }
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -276,7 +290,7 @@
                         @await Component.InvokeAsync("UserAvatar")
                         
                         <div class="hidden text-left sm:block pr-2">
-                            <span class="block text-sm font-bold text-ink">@User.Identity?.Name?.Split('@')[0]</span>
+                            <span class="block text-sm font-bold text-ink">@displayName</span>
                             <span class="block text-[11px] uppercase text-ink/50">@userRole</span>
                         </div>
                         <svg class="hidden lg:block h-4 w-4 text-ink/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>

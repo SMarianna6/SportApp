@@ -62,6 +62,7 @@ namespace SportLab.Controllers
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Name ?? user.Email),
+                new Claim("FullName", user.Name ?? user.Email),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, role)
             };
@@ -149,6 +150,7 @@ namespace SportLab.Controllers
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Name ?? user.Email),
+                new Claim("FullName", user.Name ?? user.Email),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, role)
             };
@@ -297,6 +299,7 @@ namespace SportLab.Controllers
                 {
                     new Claim(ClaimTypes.NameIdentifier, newUser.Id.ToString()),
                     new Claim(ClaimTypes.Name, newUser.Name ?? newUser.Email),
+                    new Claim("FullName", newUser.Name ?? newUser.Email),
                     new Claim(ClaimTypes.Email, newUser.Email),
                     new Claim(ClaimTypes.Role, Roles.Client)
                 };

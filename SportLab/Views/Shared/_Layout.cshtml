@@ -133,7 +133,7 @@
             <div class="hidden items-center gap-3 md:flex">
                 @if (User.Identity?.IsAuthenticated == true)
                 {
-                    var fullName = User.FindFirst("FullName")?.Value ?? User.Identity?.Name ?? "Athlete";
+                    var fullName = currentUser?.Name ?? User.FindFirst("FullName")?.Value ?? User.Identity?.Name ?? "Athlete";
                     var firstName = fullName.Split(' ', '@')[0];
 
                     <a asp-controller="Cart" asp-action="Index" class="relative flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-mono/80 transition-all duration-300 hover:border-neon/60 hover:bg-white/10 hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon mr-1" title="Cart" id="navCartLink">
