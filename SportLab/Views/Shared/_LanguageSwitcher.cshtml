@@ -2,24 +2,29 @@
 @using Microsoft.AspNetCore.Localization
 @using Microsoft.Extensions.Options
 @inject IOptions<RequestLocalizationOptions> LocOptions
-
 @{
     var requestCulture = Context.Features.Get<IRequestCultureFeature>();
     var cultureItems = LocOptions.Value.SupportedUICultures
         .Select(c => new SelectListItem { Value = c.Name, Text = c.DisplayName })
         .ToList();
     var returnUrl = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}{Context.Request.QueryString}";
+    var currentCulture = requestCulture?.RequestCulture.UICulture.Name;
 }
+<form asp-controller="Language" asp-action="SetLanguage" asp-route-returnUrl="@returnUrl" method="post" class="m-0 shrink-0">
+    <div role="group" aria-label="Switch language" class="inline-flex items-center gap-0.5 rounded-full border border-white/10 bg-white/5 p-1">
+        @foreach (var item in cultureItems)
+        {
+            var code = item.Value == "uk" ? "UA" : "EN";
+            var name = item.Value == "uk" ? "Українська" : "English";
 
-<div class="language-switcher">
-    <form asp-controller="Language" asp-action="SetLanguage" asp-route-returnUrl="@returnUrl" method="post" class="form-inline">
-        <select name="culture" onchange="this.form.submit();" class="form-select form-select-sm" style="width: auto; display: inline-block;">
-            @foreach (var item in cultureItems)
+            if (currentCulture == item.Value)
             {
-                <option value="@item.Value" selected="@(requestCulture?.RequestCulture.UICulture.Name == item.Value)">
-                    @(item.Value == "uk" ? "Українська" : "English")
-                </option>
+                <span aria-current="true" title="@name" class="inline-flex h-7 w-9 cursor-default select-none items-center justify-center rounded-full bg-neon text-[11px] font-extrabold uppercase leading-none tracking-widest text-charcoal shadow-sm">@code</span>
             }
-        </select>
-    </form>
-</div>
+            else
+            {
+                <button type="submit" name="culture" value="@item.Value" title="@name" class="inline-flex h-7 w-9 items-center justify-center rounded-full text-[11px] font-bold uppercase leading-none tracking-widest text-mono/60 transition-colors duration-300 hover:bg-white/10 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-neon">@code</button>
+            }
+        }
+    </div>
+</form>

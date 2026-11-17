@@ -17,6 +17,7 @@
         : null;
 
     var displayName = currentUser?.Name ?? User.FindFirst("FullName")?.Value ?? User.Identity?.Name?.Split('@')[0];
+    var firstName = displayName.Split(' ')[0];
 }
 
 
@@ -288,7 +289,7 @@
                         @await Component.InvokeAsync("UserAvatar")
                         
                         <div class="hidden text-left sm:block pr-2">
-                            <span id="nav-user-name" class="block text-sm font-bold text-ink">@displayName</span>
+                            <span id="nav-user-name" class="block text-sm font-bold text-ink">@firstName</span>
                             <span class="block text-[11px] uppercase text-ink/50">@userRole</span>
                         </div>
                         <svg class="hidden lg:block h-4 w-4 text-ink/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>

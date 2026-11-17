@@ -406,6 +406,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
             nameInput.value = result.name;
             document.getElementById('profile-name').textContent = result.name;
+
+            const firstName = result.name.split(' ')[0];
+            const navNameEl = document.getElementById('nav-user-name');
+            if (navNameEl) navNameEl.textContent = firstName;
+            
+            const dropdownNameEl = document.getElementById('nav-user-name-dropdown');
+            if (dropdownNameEl) dropdownNameEl.textContent = firstName;
+            
+            const mobileNameEl = document.getElementById('mobile-user-name');
+            if (mobileNameEl) mobileNameEl.textContent = firstName;
+
             closeNameEditor();
             showMessage(nameMessage, 'Name updated successfully.', true);
             setTimeout(() => { nameMessage.textContent = ''; }, 3000);

@@ -176,14 +176,19 @@
                         showMsg('account-msg', 'Account updated successfully.', true);
 
                         const newName = data.name;
+                        const firstName = newName.split(' ')[0];
+
                         const dashNameEl = document.getElementById('nav-user-name');
-                        if (dashNameEl) dashNameEl.textContent = newName;
+                        if (dashNameEl) dashNameEl.textContent = firstName;
+
                         const mainNameEl = document.getElementById('nav-user-name');
-                        if (mainNameEl) mainNameEl.textContent =newName;
+                        if (mainNameEl) mainNameEl.textContent = firstName;
+
                         const dropdownNameEl = document.getElementById('nav-user-name-dropdown');
-                        if (dropdownNameEl) dropdownNameEl.textContent = newName;
+                        if (dropdownNameEl) dropdownNameEl.textContent = firstName;
+
                         const mobileNameEl = document.getElementById('mobile-user-name');
-                        if (mobileNameEl) mobileNameEl.textContent = newName;
+                        if (mobileNameEl) mobileNameEl.textContent = firstName;
                     } else {
                         showMsg('account-msg', data.message || 'Failed to update account.', false);
                     }
@@ -232,8 +237,8 @@
                 }
             });
 
-            // --- DELETE ACCOUNT LOGIC ---
-                        document.getElementById('btn-delete-account').addEventListener('click', async function() {
+            // --- DELETE ACCOUNT LOGIC 
+               document.getElementById('btn-delete-account').addEventListener('click', async function() {
                 if (!confirm('Are you absolutely sure you want to delete your account? This action cannot be undone.')) return;
 
                 const btn = this;
