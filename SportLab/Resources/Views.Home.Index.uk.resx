@@ -98,4 +98,133 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="PageTitle" xml:space="preserve">
+    <value>Елітний Фітнес Клуб</value>
+  </data>
+	<data name="HeroBadge" xml:space="preserve">
+    <value>Хмельницький &amp;middot; Відчинено 24/7</value>
+  </data>
+	<data name="HeroTitlePart1" xml:space="preserve">
+    <value>Ти сам є</value>
+  </data>
+	<data name="HeroTitlePart2" xml:space="preserve">
+    <value>своїм</value>
+  </data>
+	<data name="HeroTitlePart3" xml:space="preserve">
+    <value>лімітом.</value>
+  </data>
+	<data name="HeroSubtitle" xml:space="preserve">
+    <value>2 400 м&amp;sup2; елітного силового обладнання в центрі Хмельницького.</value>
+  </data>
+	<data name="BtnJoinNow" xml:space="preserve">
+    <value>Приєднатися</value>
+  </data>
+	<data name="BtnSeeFloor" xml:space="preserve">
+    <value>Побачити зал</value>
+  </data>
+	<data name="MarqueeNoEgo" xml:space="preserve">
+    <value>Без его &amp;bull; Без компромісів</value>
+  </data>
+	<data name="MarqueeMembers" xml:space="preserve">
+    <value>тільки для членів 24/7</value>
+  </data>
+	<data name="StatsSectionTag" xml:space="preserve">
+    <value>01 &amp;mdash; Інфраструктура</value>
+  </data>
+	<data name="StatsTitlePart1" xml:space="preserve">
+    <value>Створено для</value>
+  </data>
+	<data name="StatsTitlePart2" xml:space="preserve">
+    <value>досконалості.</value>
+  </data>
+	<data name="Stat1Desc" xml:space="preserve">
+    <value>Тренувальна зона</value>
+  </data>
+	<data name="Stat2Desc" xml:space="preserve">
+    <value>Занять щотижня</value>
+  </data>
+	<data name="Stat3Desc" xml:space="preserve">
+    <value>Доступ для членів</value>
+  </data>
+	<data name="Stat4Desc" xml:space="preserve">
+    <value>Тренерів у штаті</value>
+  </data>
+	<data name="SwipeToExplore" xml:space="preserve">
+    <value>Свайп для огляду</value>
+  </data>
+	<data name="Carousel1Title" xml:space="preserve">
+    <value>Силова зона</value>
+  </data>
+	<data name="Carousel1Desc" xml:space="preserve">
+    <value>Сорок два стелажі і жодних черг.</value>
+  </data>
+	<data name="Carousel2Title" xml:space="preserve">
+    <value>Бойова студія</value>
+  </data>
+	<data name="Carousel2Desc" xml:space="preserve">
+    <value>Два ринги, дванадцять мішків, безкінечна техніка.</value>
+  </data>
+	<data name="Carousel3Title" xml:space="preserve">
+    <value>Лабораторія відновлення</value>
+  </data>
+	<data name="Carousel3Desc" xml:space="preserve">
+    <value>Контрастна терапія та керована мобільність.</value>
+  </data>
+	<data name="CoachesTag" xml:space="preserve">
+    <value>02 &amp;mdash; Тренери</value>
+  </data>
+	<data name="CoachesTitlePart1" xml:space="preserve">
+    <value>Люди, які рахують</value>
+  </data>
+	<data name="CoachesTitlePart2" xml:space="preserve">
+    <value>твої повтори.</value>
+  </data>
+	<data name="TrainerFallbackDesc" xml:space="preserve">
+    <value>Відданий фітнес-професіонал, готовий допомогти вам досягти цілей.</value>
+  </data>
+	<data name="BtnBookSession" xml:space="preserve">
+    <value>Забронювати сесію</value>
+  </data>
+	<data name="BtnViewAllCoaches" xml:space="preserve">
+    <value>Всі тренери</value>
+  </data>
+	<data name="PricingTag" xml:space="preserve">
+    <value>03 &amp;mdash; Членство</value>
+  </data>
+	<data name="PricingTitlePart1" xml:space="preserve">
+    <value>Без контрактів.</value>
+  </data>
+	<data name="PricingTitlePart2" xml:space="preserve">
+    <value>Без відмовок.</value>
+  </data>
+	<data name="PricingSubtitle" xml:space="preserve">
+    <value>Без вступного внеску / 16+ / Скасування будь-коли</value>
+  </data>
+	<data name="MostChosen" xml:space="preserve">
+    <value>Найпопулярніший</value>
+  </data>
+	<data name="DaysCount" xml:space="preserve">
+    <value>{0} днів</value>
+  </data>
+	<data name="ChoosePlan" xml:space="preserve">
+    <value>Обрати {0}</value>
+  </data>
+	<data name="CtaTag" xml:space="preserve">
+    <value>04 &amp;mdash; Вступ</value>
+  </data>
+	<data name="CtaTitlePart1" xml:space="preserve">
+    <value>Перше заняття</value>
+  </data>
+	<data name="CtaTitlePart2" xml:space="preserve">
+    <value>за</value>
+  </data>
+	<data name="CtaTitlePart3" xml:space="preserve">
+    <value>наш рахунок.</value>
+  </data>
+	<data name="CtaDesc" xml:space="preserve">
+    <value>Дві години з тренером, повний інструктаж на кожному поверсі та сесія відновлення на завершення. Без картки, без контракту, без зобов'язань.</value>
+  </data>
+	<data name="BtnClaimSession" xml:space="preserve">
+    <value>Отримати перше заняття</value>
+  </data>
 </root>

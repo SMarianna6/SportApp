@@ -98,4 +98,133 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="PageTitle" xml:space="preserve">
+    <value>Elite Fitness Club</value>
+  </data>
+	<data name="HeroBadge" xml:space="preserve">
+    <value>Khmelnytskyi &amp;middot; Open 24/7</value>
+  </data>
+	<data name="HeroTitlePart1" xml:space="preserve">
+    <value>You are</value>
+  </data>
+	<data name="HeroTitlePart2" xml:space="preserve">
+    <value>your own</value>
+  </data>
+	<data name="HeroTitlePart3" xml:space="preserve">
+    <value>limit.</value>
+  </data>
+	<data name="HeroSubtitle" xml:space="preserve">
+    <value>2,400 m&amp;sup2; of elite strength equipment in the heart of Khmelnytskyi.</value>
+  </data>
+	<data name="BtnJoinNow" xml:space="preserve">
+    <value>Join Now</value>
+  </data>
+	<data name="BtnSeeFloor" xml:space="preserve">
+    <value>See the Floor</value>
+  </data>
+	<data name="MarqueeNoEgo" xml:space="preserve">
+    <value>No ego &amp;bull; No shortcuts</value>
+  </data>
+	<data name="MarqueeMembers" xml:space="preserve">
+    <value>24/7 members only</value>
+  </data>
+	<data name="StatsSectionTag" xml:space="preserve">
+    <value>01 &amp;mdash; Infrastructure</value>
+  </data>
+	<data name="StatsTitlePart1" xml:space="preserve">
+    <value>Engineered for</value>
+  </data>
+	<data name="StatsTitlePart2" xml:space="preserve">
+    <value>excellence.</value>
+  </data>
+	<data name="Stat1Desc" xml:space="preserve">
+    <value>Training floor</value>
+  </data>
+	<data name="Stat2Desc" xml:space="preserve">
+    <value>Classes every week</value>
+  </data>
+	<data name="Stat3Desc" xml:space="preserve">
+    <value>Member access</value>
+  </data>
+	<data name="Stat4Desc" xml:space="preserve">
+    <value>Coaches on staff</value>
+  </data>
+	<data name="SwipeToExplore" xml:space="preserve">
+    <value>Swipe to explore</value>
+  </data>
+	<data name="Carousel1Title" xml:space="preserve">
+    <value>The Strength Floor</value>
+  </data>
+	<data name="Carousel1Desc" xml:space="preserve">
+    <value>Forty-two racks and no queue.</value>
+  </data>
+	<data name="Carousel2Title" xml:space="preserve">
+    <value>Combat Studio</value>
+  </data>
+	<data name="Carousel2Desc" xml:space="preserve">
+    <value>Two rings, twelve bags, endless technique.</value>
+  </data>
+	<data name="Carousel3Title" xml:space="preserve">
+    <value>Recovery Lab</value>
+  </data>
+	<data name="Carousel3Desc" xml:space="preserve">
+    <value>Contrast therapy and guided mobility.</value>
+  </data>
+	<data name="CoachesTag" xml:space="preserve">
+    <value>02 &amp;mdash; Coaches</value>
+  </data>
+	<data name="CoachesTitlePart1" xml:space="preserve">
+    <value>The people who count</value>
+  </data>
+	<data name="CoachesTitlePart2" xml:space="preserve">
+    <value>your reps.</value>
+  </data>
+	<data name="TrainerFallbackDesc" xml:space="preserve">
+    <value>Dedicated fitness professional ready to help you achieve your goals.</value>
+  </data>
+	<data name="BtnBookSession" xml:space="preserve">
+    <value>Book Session</value>
+  </data>
+	<data name="BtnViewAllCoaches" xml:space="preserve">
+    <value>View All Coaches</value>
+  </data>
+	<data name="PricingTag" xml:space="preserve">
+    <value>03 &amp;mdash; Membership</value>
+  </data>
+	<data name="PricingTitlePart1" xml:space="preserve">
+    <value>No contracts.</value>
+  </data>
+	<data name="PricingTitlePart2" xml:space="preserve">
+    <value>No excuses.</value>
+  </data>
+	<data name="PricingSubtitle" xml:space="preserve">
+    <value>No joining fee / 16+ / Cancel anytime</value>
+  </data>
+	<data name="MostChosen" xml:space="preserve">
+    <value>Most chosen</value>
+  </data>
+	<data name="DaysCount" xml:space="preserve">
+    <value>{0} days</value>
+  </data>
+	<data name="ChoosePlan" xml:space="preserve">
+    <value>Choose {0}</value>
+  </data>
+	<data name="CtaTag" xml:space="preserve">
+    <value>04 &amp;mdash; Intake</value>
+  </data>
+	<data name="CtaTitlePart1" xml:space="preserve">
+    <value>The first session</value>
+  </data>
+	<data name="CtaTitlePart2" xml:space="preserve">
+    <value>is</value>
+  </data>
+	<data name="CtaTitlePart3" xml:space="preserve">
+    <value>on us.</value>
+  </data>
+	<data name="CtaDesc" xml:space="preserve">
+    <value>Two hours with a coach, a full induction across every floor, and a recovery slot to close it out. No card, no contract, no commitment.</value>
+  </data>
+	<data name="BtnClaimSession" xml:space="preserve">
+    <value>Claim Your First Session</value>
+  </data>
 </root>

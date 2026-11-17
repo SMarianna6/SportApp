@@ -117,22 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Nav.Home" xml:space="preserve">
-    <value>Home</value>
-  </data>
-  <data name="Nav.Schedule" xml:space="preserve">
-    <value>Schedule</value>
-  </data>
-  <data name="Nav.Tariffs" xml:space="preserve">
-    <value>Tariffs</value>
-  </data>
-  <data name="Nav.Trainers" xml:space="preserve">
-    <value>Trainers</value>
-  </data>
-  <data name="Nav.Reviews" xml:space="preserve">
-    <value>Reviews</value>
-  </data>
-  <data name="Nav.Shop" xml:space="preserve">
-    <value>Shop</value>
-  </data>
 </root>

@@ -117,22 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Nav.Home" xml:space="preserve">
-    <value>Головна</value>
-  </data>
-  <data name="Nav.Schedule" xml:space="preserve">
-    <value>Розклад</value>
-  </data>
-  <data name="Nav.Tariffs" xml:space="preserve">
-    <value>Тарифи</value>
-  </data>
-  <data name="Nav.Trainers" xml:space="preserve">
-    <value>Тренери</value>
-  </data>
-  <data name="Nav.Reviews" xml:space="preserve">
-    <value>Відгуки</value>
-  </data>
-  <data name="Nav.Shop" xml:space="preserve">
-    <value>Магазин</value>
-  </data>
 </root>

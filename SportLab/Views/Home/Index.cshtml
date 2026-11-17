@@ -1,6 +1,8 @@
-﻿@{
+﻿@inject IViewLocalizer Localizer
+
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["Title"] = "Elite Fitness Club";
+    ViewData["Title"] = Localizer["PageTitle"];
     var homeTrainers = ViewBag.Trainers as List<SportLab.Models.User> ?? new List<SportLab.Models.User>();
     
     // Arrange plans for the UI: Basic (Left), Popular (Center), Premium (Right)
@@ -20,28 +22,28 @@
     <section class="grid-bg relative flex min-h-[calc(100vh-64px)] flex-col pt-12">
         <div class="relative mx-auto w-full max-w-7xl flex-1 flex flex-col justify-center px-4 pb-16 sm:px-6">
             <p class="mb-6 inline-flex w-fit items-center gap-2 rounded-md border border-neon/40 px-3 py-1.5 text-xs font-bold uppercase tracking-widest text-neon">
-                <span class="h-2 w-2 rounded-full bg-neon"></span> Khmelnytskyi &middot; Open 24/7
+                <span class="h-2 w-2 rounded-full bg-neon"></span> @Localizer["HeroBadge"]
             </p>
             <h1 id="hero-title" class="max-w-5xl text-6xl font-black uppercase leading-[0.85] tracking-tighter sm:text-8xl lg:text-[8.5rem]">
-                You are<br />
-                <span class="outline-text">your own</span><br />
-                <span class="text-neon">limit.</span>
+                @Localizer["HeroTitlePart1"]<br />
+                <span class="outline-text">@Localizer["HeroTitlePart2"]</span><br />
+                <span class="text-neon">@Localizer["HeroTitlePart3"]</span>
             </h1>
-            <p class="mt-8 max-w-xl text-lg text-mono/70 sm:text-xl">2,400 m&sup2; of elite strength equipment in the heart of Khmelnytskyi.</p>
+            <p class="mt-8 max-w-xl text-lg text-mono/70 sm:text-xl">@Localizer["HeroSubtitle"]</p>
             
             <div class="mt-10 flex flex-col gap-6 sm:flex-row sm:gap-8">
                 <a href="@Url.Action("Register", "Account")" class="inline-flex items-center justify-center gap-2 rounded-md bg-neon px-8 py-4 text-sm font-extrabold uppercase tracking-widest text-charcoal transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-neon/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">
-                    Join Now
+                    @Localizer["BtnJoinNow"]
                     <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                 </a>
-                <a href="#facility" class="inline-flex items-center justify-center rounded-md border-2 border-white/30 px-8 py-4 text-sm font-extrabold uppercase tracking-widest text-white transition-all duration-300 hover:border-neon hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon">See the Floor</a>
+                <a href="#facility" class="inline-flex items-center justify-center rounded-md border-2 border-white/30 px-8 py-4 text-sm font-extrabold uppercase tracking-widest text-white transition-all duration-300 hover:border-neon hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon">@Localizer["BtnSeeFloor"]</a>
             </div>
         </div>
 
         <div class="mt-auto w-full border-y border-white/10 bg-dark py-4" aria-hidden="true">
             <div class="flex w-max animate-marquee marquee-track whitespace-nowrap text-xl font-black uppercase tracking-tighter text-mono/60 sm:text-2xl">
-                <span class="px-6">&bull; No ego &bull; No shortcuts &bull; <span class="text-neon">24/7 members only</span> &bull; No ego &bull; No shortcuts &bull; <span class="text-violet">24/7 members only</span> &bull; No ego &bull; No shortcuts &bull; <span class="text-neon">24/7 members only</span> &bull;</span>
-                <span class="px-6">&bull; No ego &bull; No shortcuts &bull; <span class="text-neon">24/7 members only</span> &bull; No ego &bull; No shortcuts &bull; <span class="text-violet">24/7 members only</span> &bull; No ego &bull; No shortcuts &bull; <span class="text-neon">24/7 members only</span> &bull;</span>
+                <span class="px-6">&bull; @Localizer["MarqueeNoEgo"] &bull; <span class="text-neon">@Localizer["MarqueeMembers"]</span> &bull; @Localizer["MarqueeNoEgo"] &bull; <span class="text-violet">@Localizer["MarqueeMembers"]</span> &bull; @Localizer["MarqueeNoEgo"] &bull; <span class="text-neon">@Localizer["MarqueeMembers"]</span> &bull;</span>
+                <span class="px-6">&bull; @Localizer["MarqueeNoEgo"] &bull; <span class="text-neon">@Localizer["MarqueeMembers"]</span> &bull; @Localizer["MarqueeNoEgo"] &bull; <span class="text-violet">@Localizer["MarqueeMembers"]</span> &bull; @Localizer["MarqueeNoEgo"] &bull; <span class="text-neon">@Localizer["MarqueeMembers"]</span> &bull;</span>
             </div>
         </div>
     </section>
@@ -49,34 +51,34 @@
     <!-- Stats & Facility Carousel -->
     <section id="facility" class="relative z-10 bg-dark py-12 sm:py-16" aria-labelledby="stats-title">
         <div class="mx-auto max-w-7xl px-4 sm:px-6">
-            <p class="mb-4 text-[10px] font-bold uppercase tracking-widest text-mono/60">01 &mdash; Infrastructure</p>
+            <p class="mb-4 text-[10px] font-bold uppercase tracking-widest text-mono/60">@Localizer["StatsSectionTag"]</p>
             <h2 id="stats-title" class="max-w-4xl text-5xl font-black uppercase leading-[0.9] tracking-tighter sm:text-7xl lg:text-8xl">
-                Engineered for <span class="text-neon">excellence.</span>
+                @Localizer["StatsTitlePart1"] <span class="text-neon">@Localizer["StatsTitlePart2"]</span>
             </h2>
             
             <dl class="mt-16 grid grid-cols-1 gap-px overflow-hidden rounded-lg bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
                 <div class="bg-dark p-8 transition-colors duration-300 hover:bg-graphite">
                     <dd class="text-6xl font-black tracking-tighter text-violet sm:text-7xl">2,400<span class="text-3xl"> m&sup2;</span></dd>
-                    <dt class="mt-3 text-sm font-semibold uppercase tracking-widest text-mono/70">Training floor</dt>
+                    <dt class="mt-3 text-sm font-semibold uppercase tracking-widest text-mono/70">@Localizer["Stat1Desc"]</dt>
                 </div>
                 <div class="bg-dark p-8 transition-colors duration-300 hover:bg-graphite">
                     <dd class="text-6xl font-black tracking-tighter text-violet sm:text-7xl">180+</dd>
-                    <dt class="mt-3 text-sm font-semibold uppercase tracking-widest text-mono/70">Classes every week</dt>
+                    <dt class="mt-3 text-sm font-semibold uppercase tracking-widest text-mono/70">@Localizer["Stat2Desc"]</dt>
                 </div>
                 <div class="bg-dark p-8 transition-colors duration-300 hover:bg-graphite">
                     <dd class="text-6xl font-black tracking-tighter text-violet sm:text-7xl">24/7</dd>
-                    <dt class="mt-3 text-sm font-semibold uppercase tracking-widest text-mono/70">Member access</dt>
+                    <dt class="mt-3 text-sm font-semibold uppercase tracking-widest text-mono/70">@Localizer["Stat3Desc"]</dt>
                 </div>
                 <div class="bg-dark p-8 transition-colors duration-300 hover:bg-graphite">
                     <dd class="text-6xl font-black tracking-tighter text-violet sm:text-7xl">14</dd>
-                    <dt class="mt-3 text-sm font-semibold uppercase tracking-widest text-mono/70">Coaches on staff</dt>
+                    <dt class="mt-3 text-sm font-semibold uppercase tracking-widest text-mono/70">@Localizer["Stat4Desc"]</dt>
                 </div>
             </dl>
 
             <!-- Photo Carousel -->
             <div class="mt-16">
                 <div class="flex items-end justify-between mb-6">
-                    <p class="text-[10px] font-bold uppercase tracking-widest text-mono/50">Swipe to explore</p>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-mono/50">@Localizer["SwipeToExplore"]</p>
                     <div class="hidden gap-2 sm:flex">
                         <button class="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white transition-colors hover:border-neon hover:text-neon focus:outline-none" onclick="document.getElementById('facility-scroll').scrollBy({left: -400, behavior: 'smooth'})">
                             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
@@ -93,27 +95,27 @@
                 </style>
                 <div id="facility-scroll" class="hide-scrollbar flex gap-6 overflow-x-auto snap-x snap-mandatory pb-4">
                     <div class="relative aspect-[16/9] min-w-[85vw] sm:min-w-[60vw] lg:min-w-[45vw] snap-center overflow-hidden rounded-xl bg-graphite">
-                        <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1470&auto=format&fit=crop" alt="Strength Floor" class="h-full w-full object-cover" loading="lazy" />
+                        <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1470&auto=format&fit=crop" alt="@Localizer["Carousel1Title"]" class="h-full w-full object-cover" loading="lazy" />
                         <div class="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-transparent to-transparent"></div>
                         <div class="absolute bottom-6 left-6 pr-6">
-                            <p class="text-2xl font-black uppercase tracking-tighter text-white">The Strength Floor</p>
-                            <p class="mt-1 text-sm text-mono/70">Forty-two racks and no queue.</p>
+                            <p class="text-2xl font-black uppercase tracking-tighter text-white">@Localizer["Carousel1Title"]</p>
+                            <p class="mt-1 text-sm text-mono/70">@Localizer["Carousel1Desc"]</p>
                         </div>
                     </div>
                     <div class="relative aspect-[16/9] min-w-[85vw] sm:min-w-[60vw] lg:min-w-[45vw] snap-center overflow-hidden rounded-xl bg-graphite">
-                        <img src="https://images.unsplash.com/photo-1716307043003-dbe6a5cc496e?q=80&w=1470&auto=format&fit=crop" alt="Combat Studio" class="h-full w-full object-cover" loading="lazy" />
+                        <img src="https://images.unsplash.com/photo-1716307043003-dbe6a5cc496e?q=80&w=1470&auto=format&fit=crop" alt="@Localizer["Carousel2Title"]" class="h-full w-full object-cover" loading="lazy" />
                         <div class="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-transparent to-transparent"></div>
                         <div class="absolute bottom-6 left-6 pr-6">
-                            <p class="text-2xl font-black uppercase tracking-tighter text-white">Combat Studio</p>
-                            <p class="mt-1 text-sm text-mono/70">Two rings, twelve bags, endless technique.</p>
+                            <p class="text-2xl font-black uppercase tracking-tighter text-white">@Localizer["Carousel2Title"]</p>
+                            <p class="mt-1 text-sm text-mono/70">@Localizer["Carousel2Desc"]</p>
                         </div>
                     </div>
                     <div class="relative aspect-[16/9] min-w-[85vw] sm:min-w-[60vw] lg:min-w-[45vw] snap-center overflow-hidden rounded-xl bg-graphite">
-                        <img src="https://images.unsplash.com/photo-1672983666814-a0e43bd3b1b9?q=80&w=1469&auto=format&fit=crop" alt="Recovery Lab" class="h-full w-full object-cover" loading="lazy" />
+                        <img src="https://images.unsplash.com/photo-1672983666814-a0e43bd3b1b9?q=80&w=1469&auto=format&fit=crop" alt="@Localizer["Carousel3Title"]" class="h-full w-full object-cover" loading="lazy" />
                         <div class="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-transparent to-transparent"></div>
                         <div class="absolute bottom-6 left-6 pr-6">
-                            <p class="text-2xl font-black uppercase tracking-tighter text-white">Recovery Lab</p>
-                            <p class="mt-1 text-sm text-mono/70">Contrast therapy and guided mobility.</p>
+                            <p class="text-2xl font-black uppercase tracking-tighter text-white">@Localizer["Carousel3Title"]</p>
+                            <p class="mt-1 text-sm text-mono/70">@Localizer["Carousel3Desc"]</p>
                         </div>
                     </div>
                 </div>
@@ -124,9 +126,9 @@
     <!-- Trainers -->
     <section id="coaches" class="relative z-10 bg-graphite py-12 sm:py-26" aria-labelledby="coaches-title">
         <div class="mx-auto max-w-7xl px-4 sm:px-6">
-            <p class="mb-4 text-[10px] font-bold uppercase tracking-widest text-mono/60">02 &mdash; Coaches</p>
+            <p class="mb-4 text-[10px] font-bold uppercase tracking-widest text-mono/60">@Localizer["CoachesTag"]</p>
             <h2 id="coaches-title" class="max-w-4xl text-5xl font-black uppercase leading-[0.9] tracking-tighter sm:text-7xl lg:text-8xl">
-                The people who count <span class="text-neon">your reps.</span>
+                @Localizer["CoachesTitlePart1"] <span class="text-neon">@Localizer["CoachesTitlePart2"]</span>
             </h2>
 
             <ul class="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -152,11 +154,11 @@
                                 
                                 <div class="absolute bottom-0 left-0 p-6 w-full">
                                     <h3 class="text-2xl font-black uppercase tracking-tighter text-white">@trainer.Name</h3>
-                                    <p class="mt-2 text-sm leading-relaxed text-mono/70 line-clamp-2">@(profile?.About ?? "Dedicated fitness professional ready to help you achieve your goals.")</p>
+                                    <p class="mt-2 text-sm leading-relaxed text-mono/70 line-clamp-2">@(profile?.About ?? Localizer["TrainerFallbackDesc"].Value)</p>
                                 </div>
                             </div>
                             <div class="p-6 pt-0 bg-charcoal mt-auto">
-                                <a href="@Url.Action("Index", "Trainer")" class="inline-flex w-full items-center justify-center rounded-md border-2 border-white/20 px-5 py-3 text-xs font-extrabold uppercase tracking-widest text-white transition-colors duration-300 hover:border-neon hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-white">Book Session</a>
+                                <a href="@Url.Action("Index", "Trainer")" class="inline-flex w-full items-center justify-center rounded-md border-2 border-white/20 px-5 py-3 text-xs font-extrabold uppercase tracking-widest text-white transition-colors duration-300 hover:border-neon hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-white">@Localizer["BtnBookSession"]</a>
                             </div>
                         </article>
                     </li>
@@ -165,7 +167,7 @@
 
             <div class="mt-14 flex justify-center">
                 <a href="@Url.Action("Index", "Trainer")" class="inline-flex items-center gap-3 rounded-md border-2 border-white/20 px-10 py-5 text-sm font-extrabold uppercase tracking-widest text-white transition-colors duration-300 hover:border-neon hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon">
-                    View All Coaches
+                    @Localizer["BtnViewAllCoaches"]
                 </a>
             </div>
         </div>
@@ -174,13 +176,13 @@
     <!-- Pricing -->
     <section id="memberships" class="relative z-10 bg-charcoal py-24 sm:py-32" aria-labelledby="pricing-title">
         <div class="mx-auto max-w-7xl px-4 sm:px-6">
-            <p class="mb-4 text-[10px] font-bold uppercase tracking-widest text-mono/60">03 &mdash; Membership</p>
+            <p class="mb-4 text-[10px] font-bold uppercase tracking-widest text-mono/60">@Localizer["PricingTag"]</p>
             <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
                 <h2 id="pricing-title" class="max-w-3xl text-5xl font-black uppercase leading-[0.9] tracking-tighter sm:text-7xl lg:text-8xl">
-                    No contracts. <span class="text-neon">No excuses.</span>
+                    @Localizer["PricingTitlePart1"] <span class="text-neon">@Localizer["PricingTitlePart2"]</span>
                 </h2>
                 <p class="text-[10px] font-bold uppercase tracking-widest text-mono/50 md:text-right">
-                    No joining fee / 16+ / Cancel anytime
+                    @Localizer["PricingSubtitle"]
                 </p>
             </div>
 
@@ -206,10 +208,10 @@
                         <article class="@cardClass">
                             @if (isPopular)
                             {
-                                <span class="absolute right-6 top-6 rounded-md bg-charcoal px-3 py-1 text-[11px] font-extrabold uppercase tracking-widest text-neon">Most chosen</span>
+                                <span class="absolute right-6 top-6 rounded-md bg-charcoal px-3 py-1 text-[11px] font-extrabold uppercase tracking-widest text-neon">@Localizer["MostChosen"]</span>
                             }
                             <h3 class="text-sm font-extrabold uppercase tracking-widest @(isPopular ? "text-charcoal/70" : isPremium ? "text-violet" : "text-mono/70")">@plan.Type</h3>
-                            <p class="mt-1 text-sm @(isPopular ? "text-charcoal/70" : "text-mono/60")">@plan.Duration days</p>
+                            <p class="mt-1 text-sm @(isPopular ? "text-charcoal/70" : "text-mono/60")">@Localizer["DaysCount", plan.Duration]</p>
                             <p class="mt-6 text-6xl font-black tracking-tighter sm:text-7xl">₴@plan.Price.ToString("N0")</p>
                             
                             <ul class="mt-8 flex-1 space-y-4 text-sm @(isPopular ? "font-semibold" : "text-mono/80")">
@@ -224,7 +226,7 @@
                                     </li>
                                 }
                             </ul>
-                            <a href="@Url.Action("Index", "Tariff")" class="@btnClass">Choose @plan.Type</a>
+                            <a href="@Url.Action("Index", "Tariff")" class="@btnClass">@Localizer["ChoosePlan", plan.Type]</a>
                         </article>
                     </li>
                 }
@@ -235,15 +237,15 @@
     <!-- Final CTA -->
     <section class="relative overflow-hidden bg-gradient-to-b from-charcoal via-dark to-graphite pt-24 pb-12 sm:pt-32 sm:pb-16" aria-labelledby="cta-title">
         <div class="relative z-10 mx-auto max-w-7xl px-4 text-center sm:px-6">
-            <p class="mb-4 text-[10px] font-bold uppercase tracking-widest text-mono/60">04 &mdash; Intake</p>
+            <p class="mb-4 text-[10px] font-bold uppercase tracking-widest text-mono/60">@Localizer["CtaTag"]</p>
             <h2 id="cta-title" class="mx-auto max-w-4xl text-5xl font-black uppercase leading-[0.88] tracking-tighter sm:text-7xl lg:text-8xl">
-                The first session<br />is <span class="text-neon">on us.</span>
+                @Localizer["CtaTitlePart1"]<br />@Localizer["CtaTitlePart2"] <span class="text-neon">@Localizer["CtaTitlePart3"]</span>
             </h2>
             <p class="mx-auto mt-6 max-w-xl text-sm text-mono/70 sm:text-base">
-                Two hours with a coach, a full induction across every floor, and a recovery slot to close it out. No card, no contract, no commitment.
+                @Localizer["CtaDesc"]
             </p>
             <a href="@Url.Action("Register", "Account")" class="mt-10 inline-flex items-center gap-4 rounded-md bg-neon px-8 py-6 text-lg font-black uppercase tracking-widest text-charcoal shadow-2xl shadow-neon/20 transition-all duration-300 hover:-translate-y-1 hover:shadow-neon/40 sm:px-12 sm:py-7 sm:text-xl">
-                Claim Your First Session
+                @Localizer["BtnClaimSession"]
                 <svg class="h-6 w-6 sm:h-7 sm:w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
         </div>
