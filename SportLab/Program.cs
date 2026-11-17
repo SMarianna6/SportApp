@@ -3,6 +3,8 @@ using SportLab.Hubs;
 using Microsoft.EntityFrameworkCore;
 using SportLab.Data;
 using SportLab.Models;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +45,31 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+// Localization
+
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+builder.Services.AddControllersWithViews()
+    .AddViewLocalization(Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpanderFormat.Suffix)
+    .AddDataAnnotationsLocalization(options =>
+    {
+        options.DataAnnotationLocalizerProvider = (type, factory) =>
+            factory.Create(typeof(SportLab.SharedResource));
+    });
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[]
+    {
+        new CultureInfo("en"),
+        new CultureInfo("uk")
+    };
+
+    options.DefaultRequestCulture = new RequestCulture("en");
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+});
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -63,6 +90,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Localization
+app.UseRequestLocalization();
 
 app.UseHttpsRedirection();
 app.UseRouting();

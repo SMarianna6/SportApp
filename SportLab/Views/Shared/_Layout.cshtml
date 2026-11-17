@@ -2,6 +2,7 @@
 @using SportLab.Data
 @using System.Security.Claims
 @inject SportLabContext DbContext
+@inject IStringLocalizer<SportLab.SharedResource> SharedLocalizer
 
 <!DOCTYPE html>
 
@@ -122,12 +123,12 @@
             </a>
 
             <ul class="hidden items-center gap-8 md:flex">
-                <li><a asp-controller="Home" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">Home</a></li>
-                <li><a asp-controller="Schedule" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">Schedule</a></li>
-                <li><a asp-controller="Tariff" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">Tariffs</a></li>
-                <li><a asp-controller="Trainer" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">Trainers</a></li>
-                <li><a asp-controller="Shop" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">Shop</a></li>
-                <li><a asp-controller="Review" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">Reviews</a></li>
+                <li><a asp-controller="Home" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">@SharedLocalizer["Nav.Home"]</a></li>
+                <li><a asp-controller="Schedule" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">@SharedLocalizer["Nav.Schedule"]</a></li>
+                <li><a asp-controller="Tariff" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">@SharedLocalizer["Nav.Tariffs"]</a></li>
+                <li><a asp-controller="Trainer" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">@SharedLocalizer["Nav.Trainers"]</a></li>
+                <li><a asp-controller="Shop" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">@SharedLocalizer["Nav.Shop"]</a></li>
+                <li><a asp-controller="Review" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">@SharedLocalizer["Nav.Reviews"]</a></li>
             </ul>
 
             <div class="hidden items-center gap-3 md:flex">
@@ -192,6 +193,7 @@
                     <a asp-controller="Account" asp-action="Login" class="px-3 py-2 text-xs font-semibold uppercase tracking-widest text-white transition-colors duration-300 hover:text-neon">Sign In</a>
                     <a asp-controller="Account" asp-action="Register" class="rounded-md bg-neon px-4 py-2.5 text-xs font-extrabold uppercase tracking-widest text-charcoal transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-neon/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">Sign Up</a>
                 }
+                @await Html.PartialAsync("_LanguageSwitcher")
             </div>
 
             <button id="nav-toggle" type="button" class="flex h-10 w-10 items-center justify-center rounded-md text-white transition-colors hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon md:hidden" aria-controls="mobile-menu" aria-expanded="false" aria-label="Open menu">

@@ -1,0 +1,25 @@
+﻿@using Microsoft.AspNetCore.Builder
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.Extensions.Options
+@inject IOptions<RequestLocalizationOptions> LocOptions
+
+@{
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    var cultureItems = LocOptions.Value.SupportedUICultures
+        .Select(c => new SelectListItem { Value = c.Name, Text = c.DisplayName })
+        .ToList();
+    var returnUrl = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}{Context.Request.QueryString}";
+}
+
+<div class="language-switcher">
+    <form asp-controller="Language" asp-action="SetLanguage" asp-route-returnUrl="@returnUrl" method="post" class="form-inline">
+        <select name="culture" onchange="this.form.submit();" class="form-select form-select-sm" style="width: auto; display: inline-block;">
+            @foreach (var item in cultureItems)
+            {
+                <option value="@item.Value" selected="@(requestCulture?.RequestCulture.UICulture.Name == item.Value)">
+                    @(item.Value == "uk" ? "Українська" : "English")
+                </option>
+            }
+        </select>
+    </form>
+</div>
