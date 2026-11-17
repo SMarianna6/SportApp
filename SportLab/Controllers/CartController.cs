@@ -339,7 +339,6 @@ namespace SportLab.Controllers
                
             }
 
-            // 3. Далі йде очистка кошика та редирект
             HttpContext.Session.Remove(CartSessionKey);
 
             TempData["CustomerName"] = model.FullName;

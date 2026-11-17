@@ -30,7 +30,6 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     
-    <!-- Tailwind CDN (Тільки один раз) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -71,7 +70,6 @@
             z-index: 10;
         }
 
-        /* ВИПРАВЛЕНО: подвійний @@ для Razor */
         @@keyframes highlightFlash {
             0% { background-color: rgba(170, 255, 0, 0.4); box-shadow: 0 0 0 4px rgba(170, 255, 0, 0.4); }
             100% { background-color: transparent; box-shadow: none; }
@@ -290,7 +288,7 @@
                         @await Component.InvokeAsync("UserAvatar")
                         
                         <div class="hidden text-left sm:block pr-2">
-                            <span class="block text-sm font-bold text-ink">@displayName</span>
+                            <span id="nav-user-name" class="block text-sm font-bold text-ink">@displayName</span>
                             <span class="block text-[11px] uppercase text-ink/50">@userRole</span>
                         </div>
                         <svg class="hidden lg:block h-4 w-4 text-ink/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>

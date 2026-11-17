@@ -733,7 +733,7 @@ namespace SportLab.Controllers
 
             foreach (var user in usersThisYear)
             {
-                int monthIndex = (user.Id * 7) % 12; // Фейковий розподіл, бо немає CreatedDate
+                int monthIndex = (user.Id * 7) % 12;
                 newUsersData[monthIndex]++;
             }
 

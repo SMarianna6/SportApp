@@ -6,7 +6,6 @@ namespace SportLab.Tests
 {
     public class SimpleTests
     {
-        // 1. Перевірка, що Email користувача не порожній і зберігається правильно
         [Fact]
         public void User_Email_ShouldNotBeEmpty()
         {
@@ -24,7 +23,6 @@ namespace SportLab.Tests
             Assert.Equal("john@example.com", user.Email);
         }
 
-        // 2. Перевірка розрахунку тривалості підписки (різниця днів)
         [Fact]
         public void Subscription_Duration_ShouldCalculateCorrectly()
         {
@@ -44,7 +42,6 @@ namespace SportLab.Tests
             Assert.Equal(30, actualDays);
         }
 
-        // 3. Перевірка, що новий тариф створюється з правильною ціною
         [Fact]
         public void Plan_Price_ShouldBeSetCorrectly()
         {
@@ -63,7 +60,6 @@ namespace SportLab.Tests
             Assert.True(plan.Price > 0);
         }
 
-        // 4. Перевірка, що за замовчуванням бронювання має статус "Booked"
         [Fact]
         public void WorkoutBooking_DefaultStatus_ShouldBeBooked()
         {
@@ -72,10 +68,9 @@ namespace SportLab.Tests
 
             // Act & Assert
             Assert.Equal(BookingStatuses.Booked, booking.Status);
-            Assert.True(booking.BookingDate <= DateTime.Now); // Дата створення не в майбутньому
+            Assert.True(booking.BookingDate <= DateTime.Now);
         }
 
-        // 5. Перевірка, що підписка за замовчуванням є активною
         [Fact]
         public void Subscription_IsActive_ShouldBeTrueByDefault()
         {
@@ -84,7 +79,7 @@ namespace SportLab.Tests
 
             // Act & Assert
             Assert.True(subscription.IsActive);
-            Assert.Equal(true, subscription.IsActive); // Додаткова перевірка через Equal
+            Assert.Equal(true, subscription.IsActive);
         }
     }
 }
