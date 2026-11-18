@@ -98,4 +98,91 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="PageTitle" xml:space="preserve">
+	<value>Settings</value>
+</data>
+	<data name="Header.Subtitle" xml:space="preserve">
+	<value>Manage your account, security and alerts.</value>
+</data>
+	<data name="Aria.SettingsSections" xml:space="preserve">
+	<value>Settings sections</value>
+</data>
+	<data name="Tab.Account" xml:space="preserve">
+	<value>Account</value>
+</data>
+	<data name="Tab.Security" xml:space="preserve">
+	<value>Security</value>
+</data>
+	<data name="Tab.Notifications" xml:space="preserve">
+	<value>Notifications</value>
+</data>
+	<data name="Account.Desc" xml:space="preserve">
+	<value>Your public profile details.</value>
+</data>
+	<data name="DangerZone.Title" xml:space="preserve">
+	<value>Danger Zone</value>
+</data>
+	<data name="DangerZone.Desc" xml:space="preserve">
+	<value>Once you delete your account, there is no going back. All your data, bookings, and history will be permanently removed. Please be certain.</value>
+</data>
+	<data name="Btn.DeleteAccount" xml:space="preserve">
+	<value>Delete Account</value>
+</data>
+	<data name="Security.Desc" xml:space="preserve">
+	<value>Change your password regularly to keep your account safe.</value>
+</data>
+	<data name="Field.CurrentPassword" xml:space="preserve">
+	<value>Current password</value>
+</data>
+	<data name="Field.NewPassword" xml:space="preserve">
+	<value>New password</value>
+</data>
+	<data name="Field.ConfirmPassword" xml:space="preserve">
+	<value>Confirm password</value>
+</data>
+	<data name="Btn.UpdatePassword" xml:space="preserve">
+	<value>Update password</value>
+</data>
+	<data name="Notifications.Desc" xml:space="preserve">
+	<value>Choose how you want to hear from us.</value>
+</data>
+	<data name="Notification.EmailAlerts" xml:space="preserve">
+	<value>Email alerts for new bookings</value>
+</data>
+	<data name="Notification.EmailAlertsDesc" xml:space="preserve">
+	<value>Get an email whenever a client books a session.</value>
+</data>
+	<data name="Notification.ChatMessages" xml:space="preserve">
+	<value>In-app chat messages</value>
+</data>
+	<data name="Notification.ChatMessagesDesc" xml:space="preserve">
+	<value>Show a badge when a client sends you a message.</value>
+</data>
+	<data name="Msg.AccountUpdated" xml:space="preserve">
+	<value>Account updated successfully.</value>
+</data>
+	<data name="Msg.AccountFailed" xml:space="preserve">
+	<value>Failed to update account.</value>
+</data>
+	<data name="Msg.NetworkError" xml:space="preserve">
+	<value>Network error.</value>
+</data>
+	<data name="Msg.PasswordsMismatch" xml:space="preserve">
+	<value>Passwords do not match.</value>
+</data>
+	<data name="Msg.PasswordUpdated" xml:space="preserve">
+	<value>Password updated successfully.</value>
+</data>
+	<data name="Msg.PasswordFailed" xml:space="preserve">
+	<value>Failed to update password.</value>
+</data>
+	<data name="Msg.ConfirmDelete" xml:space="preserve">
+	<value>Are you absolutely sure you want to delete your account? This action cannot be undone.</value>
+</data>
+	<data name="Btn.Deleting" xml:space="preserve">
+	<value>Deleting...</value>
+</data>
+	<data name="Msg.DeleteFailed" xml:space="preserve">
+	<value>Failed to delete account.</value>
+</data>
 </root>

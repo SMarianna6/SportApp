@@ -1,9 +1,11 @@
 ﻿@using System.Text.Json
 @model IEnumerable<SportLab.Models.WorkoutSlot>
+@inject IViewLocalizer Localizer
+@inject IStringLocalizer<SportLab.SharedResource> SharedLocalizer
 
 @{
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
-    ViewData["Title"] = "Schedule";
+    ViewData["Title"] = Localizer["PageTitle"].Value;
 
     bool isTrainer = User.IsInRole(SportLab.Models.Roles.Trainer);
     bool isClient = User.IsInRole(SportLab.Models.Roles.Client);
@@ -17,13 +19,13 @@
             : (int)slot.StartTime.DayOfWeek,
         timeStart = slot.StartTime.ToString("HH:mm"),
         timeEnd = slot.EndTime.ToString("HH:mm"),
-        type = slot.ActivityName ?? "Workout",
-        coach = slot.Trainer?.Name ?? "TBA",
+        type = slot.ActivityName ?? Localizer["Fallback.Workout"].Value,
+        coach = slot.Trainer?.Name ?? Localizer["Fallback.TBA"].Value,
         booked = slot.Bookings.Count,
         capacity = slot.Capacity,
         status = slot.Status,
         clients = isTrainer
-            ? slot.Bookings.Select(b => b.User?.Name ?? "Unknown client").ToList()
+            ? slot.Bookings.Select(b => b.User?.Name ?? Localizer["Fallback.UnknownClient"].Value).ToList()
             : new List<string>()
     }).ToList();
 }
@@ -33,15 +35,15 @@
 <div class="sh-page" data-sh-page="profile-schedule">
     <div class="sh-head">
         <div>
-            <h1 class="sh-title">Schedule</h1>
+            <h1 class="sh-title">@Localizer["PageTitle"]</h1>
             <p class="sh-sub">
                 @if (isTrainer)
                 {
-                    <text>Manage your workouts and view registered clients.</text>
+                    <text>@Localizer["Desc.Trainer"]</text>
                 }
                 else
                 {
-                    <text>View the workouts you have booked.</text>
+                    <text>@Localizer["Desc.Client"]</text>
                 }
             </p>
         </div>
@@ -49,12 +51,12 @@
         @if (isTrainer)
         {
             <button type="button" class="sh-btn sh-btn-primary" id="sh-schedule-add">
-                <span>+</span> Create workout
+                <span>+</span> @Localizer["Btn.CreateWorkout"]
             </button>
         }
     </div>
 
-    <div class="sh-legend" id="sh-schedule-legend" role="group" aria-label="Filter workouts by type"></div>
+    <div class="sh-legend" id="sh-schedule-legend" role="group" aria-label="@Localizer["Aria.FilterWorkouts"]"></div>
 
     <div class="sh-card sh-scroll-x">
         <div class="sh-cal" id="sh-cal"></div>
@@ -65,8 +67,8 @@
     <div class="sh-modal" role="dialog" aria-modal="true" aria-labelledby="sh-schedule-modal-title">
         <div class="sh-modal-bar"></div>
         <div class="sh-modal-head">
-            <h2 class="sh-modal-title" id="sh-schedule-modal-title">Workout details</h2>
-            <button type="button" class="sh-modal-close" data-sh-close aria-label="Close">
+            <h2 class="sh-modal-title" id="sh-schedule-modal-title">@Localizer["Modal.DetailsTitle"]</h2>
+            <button type="button" class="sh-modal-close" data-sh-close aria-label="@SharedLocalizer["Common.Close"]">
                 <svg class="sh-ico sh-ico-lg" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M18 6 6 18" />
                     <path d="m6 6 12 12" />
@@ -80,38 +82,38 @@
                 <input type="hidden" name="Id" value="0" />
                 <div class="sh-form-grid">
                     <label class="sh-field">
-                        Activity Type
+                        @Localizer["Field.ActivityType"]
                         <div class="sh-field-body">
                             <select class="sh-input" name="Type" id="sh-schedule-type" required>
-                                <option value="HIIT">HIIT</option>
-                                <option value="Pilates">Pilates</option>
-                                <option value="Yoga">Yoga</option>
-                                <option value="Strength">Strength</option>
-                                <option value="Cycling">Cycling</option>
-                                <option value="Boxing">Boxing</option>
+                                <option value="HIIT">@Localizer["Workout.HIIT"]</option>
+                                <option value="Pilates">@Localizer["Workout.Pilates"]</option>
+                                <option value="Yoga">@Localizer["Workout.Yoga"]</option>
+                                <option value="Strength">@Localizer["Workout.Strength"]</option>
+                                <option value="Cycling">@Localizer["Workout.Cycling"]</option>
+                                <option value="Boxing">@Localizer["Workout.Boxing"]</option>
                             </select>
                         </div>
                     </label>
                     <label class="sh-field">
-                        Date
+                        @Localizer["Field.Date"]
                         <div class="sh-field-body">
                             <input class="sh-input" type="date" name="Date" id="sh-schedule-date" required />
                         </div>
                     </label>
                     <label class="sh-field">
-                        Start Time
+                        @Localizer["Field.StartTime"]
                         <div class="sh-field-body">
                             <input class="sh-input" type="time" name="TimeStart" id="sh-schedule-start" min="08:00" max="20:00" step="900" required />
                         </div>
                     </label>
                     <label class="sh-field">
-                        End Time
+                        @Localizer["Field.EndTime"]
                         <div class="sh-field-body">
                             <input class="sh-input" type="time" name="TimeEnd" id="sh-schedule-end" min="08:00" max="20:00" step="900" required />
                         </div>
                     </label>
                     <label class="sh-field">
-                        Capacity
+                        @Localizer["Field.Capacity"]
                         <div class="sh-field-body">
                             <input class="sh-input" type="number" name="Capacity" id="sh-schedule-capacity" min="1" max="1000" value="15" required />
                         </div>
@@ -119,10 +121,10 @@
                 </div>
                 <p class="sh-form-error" id="sh-schedule-error" role="alert" hidden></p>
                 <div class="sh-form-actions sh-between">
-                    <button type="button" class="sh-btn sh-btn-outline-danger" id="sh-schedule-delete" hidden>Delete</button>
+                    <button type="button" class="sh-btn sh-btn-outline-danger" id="sh-schedule-delete" hidden>@SharedLocalizer["Common.Delete"]</button>
                     <div class="sh-form-actions-right">
-                        <button type="button" class="sh-btn sh-btn-ghost" data-sh-close>Close</button>
-                        <button type="submit" class="sh-btn sh-btn-primary">Save</button>
+                        <button type="button" class="sh-btn sh-btn-ghost" data-sh-close>@SharedLocalizer["Common.Close"]</button>
+                        <button type="submit" class="sh-btn sh-btn-primary">@SharedLocalizer["Common.Save"]</button>
                     </div>
                 </div>
             </form>
@@ -131,27 +133,27 @@
                 <!-- Added flex classes to fix the clumping text issue -->
                 <div class="grid grid-cols-2 gap-y-5 gap-x-4">
                     <div class="flex flex-col gap-1">
-                        <span class="text-[10px] font-bold uppercase tracking-widest text-mono/50">Activity</span>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-mono/50">@Localizer["Field.Activity"]</span>
                         <strong id="sh-detail-type" class="text-sm font-extrabold text-white"></strong>
                     </div>
                     <div class="flex flex-col gap-1">
-                        <span class="text-[10px] font-bold uppercase tracking-widest text-mono/50">Date</span>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-mono/50">@Localizer["Field.Date"]</span>
                         <strong id="sh-detail-date" class="text-sm font-extrabold text-white"></strong>
                     </div>
                     <div class="flex flex-col gap-1">
-                        <span class="text-[10px] font-bold uppercase tracking-widest text-mono/50">Time</span>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-mono/50">@Localizer["Field.Time"]</span>
                         <strong id="sh-detail-time" class="text-sm font-extrabold text-white"></strong>
                     </div>
                     <div class="flex flex-col gap-1">
-                        <span class="text-[10px] font-bold uppercase tracking-widest text-mono/50">Trainer</span>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-mono/50">@Localizer["Field.Trainer"]</span>
                         <strong id="sh-detail-coach" class="text-sm font-extrabold text-white"></strong>
                     </div>
                     <div class="flex flex-col gap-1">
-                        <span class="text-[10px] font-bold uppercase tracking-widest text-mono/50">Bookings</span>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-mono/50">@Localizer["Field.Bookings"]</span>
                         <strong id="sh-detail-capacity" class="text-sm font-extrabold text-white"></strong>
                     </div>
                     <div class="flex flex-col gap-1">
-                        <span class="text-[10px] font-bold uppercase tracking-widest text-mono/50">Status</span>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-mono/50">@Localizer["Field.Status"]</span>
                         <strong id="sh-detail-status" class="text-sm font-extrabold text-white"></strong>
                     </div>
                 </div>
@@ -159,7 +161,7 @@
                 @if (isTrainer)
                 {
                     <div class="mt-6 border-t border-white/5 pt-5">
-                        <span class="mb-2 block text-[10px] font-bold uppercase tracking-widest text-mono/50">Registered clients</span>
+                        <span class="mb-2 block text-[10px] font-bold uppercase tracking-widest text-mono/50">@Localizer["Field.RegisteredClients"]</span>
                         <div id="sh-detail-clients" class="text-sm text-mono"></div>
                     </div>
                 }
@@ -167,12 +169,12 @@
                 <div class="sh-form-actions sh-between">
                     @if (isTrainer)
                     {
-                        <button type="button" class="sh-btn sh-btn-outline-danger" id="sh-schedule-cancel-slot">Cancel workout</button>
-                        <button type="button" class="sh-btn sh-btn-primary" id="sh-schedule-edit">Edit</button>
+                        <button type="button" class="sh-btn sh-btn-outline-danger" id="sh-schedule-cancel-slot">@Localizer["Btn.CancelWorkout"]</button>
+                        <button type="button" class="sh-btn sh-btn-primary" id="sh-schedule-edit">@SharedLocalizer["Common.Edit"]</button>
                     }
                     else
                     {
-                        <button type="button" class="sh-btn sh-btn-outline-danger" id="sh-schedule-cancel-booking">Cancel booking</button>
+                        <button type="button" class="sh-btn sh-btn-outline-danger" id="sh-schedule-cancel-booking">@Localizer["Btn.CancelBooking"]</button>
                     }
                 </div>
             </div>
@@ -181,10 +183,46 @@
 </div>
 
 <script>
+    @{
+        var jsLoc = new {
+            Days = new[] {
+                Localizer["Day.Mon"].Value, Localizer["Day.Tue"].Value, Localizer["Day.Wed"].Value,
+                Localizer["Day.Thu"].Value, Localizer["Day.Fri"].Value, Localizer["Day.Sat"].Value,
+                Localizer["Day.Sun"].Value
+            },
+            Months = new[] {
+                Localizer["Month.January"].Value, Localizer["Month.February"].Value, Localizer["Month.March"].Value,
+                Localizer["Month.April"].Value, Localizer["Month.May"].Value, Localizer["Month.June"].Value,
+                Localizer["Month.July"].Value, Localizer["Month.August"].Value, Localizer["Month.September"].Value,
+                Localizer["Month.October"].Value, Localizer["Month.November"].Value, Localizer["Month.December"].Value
+            },
+            TBA = Localizer["Fallback.TBA"].Value,
+            Clients = Localizer["Text.ClientsCount"].Value,
+            StatusAvailable = Localizer["Status.Available"].Value,
+            StatusFullyBooked = Localizer["Status.FullyBooked"].Value,
+            StatusCancelled = Localizer["Status.Cancelled"].Value,
+            StatusCompleted = Localizer["Status.Completed"].Value,
+            NoClients = Localizer["Msg.NoClients"].Value,
+            ConfirmCancelWorkout = Localizer["Confirm.CancelWorkout"].Value,
+            ConfirmDeleteWorkout = Localizer["Confirm.DeleteWorkout"].Value,
+            ConfirmCancelBooking = Localizer["Confirm.CancelBooking"].Value,
+            AlertCannotEdit = Localizer["Alert.CannotEdit"].Value,
+            ErrorFailedLoad = Localizer["Error.FailedLoad"].Value,
+            ErrorRequestFailed = Localizer["Error.RequestFailed"].Value,
+            ErrorFillAllFields = Localizer["Error.FillAllFields"].Value,
+            ErrorTimeRange = Localizer["Error.TimeRange"].Value,
+            ErrorCapacityRange = Localizer["Error.CapacityRange"].Value,
+            ModalCreateTitle = Localizer["Modal.CreateTitle"].Value,
+            ModalEditTitle = Localizer["Modal.EditTitle"].Value,
+            ModalDetailsTitle = Localizer["Modal.DetailsTitle"].Value,
+            AriaDayAt = Localizer["Aria.DayAt"].Value
+        };
+    }
     window.PROFILE_SCHEDULE = {
         isTrainer: @JsonSerializer.Serialize(isTrainer),
         isClient: @JsonSerializer.Serialize(isClient),
-        initialSlots: @Html.Raw(JsonSerializer.Serialize(scheduleData))
+        initialSlots: @Html.Raw(JsonSerializer.Serialize(scheduleData)),
+        loc: @Html.Raw(JsonSerializer.Serialize(jsLoc))
     };
 </script>
 

@@ -98,4 +98,91 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="PageTitle" xml:space="preserve">
+	<value>Налаштування</value>
+</data>
+	<data name="Header.Subtitle" xml:space="preserve">
+	<value>Керуйте своїм акаунтом, безпекою та сповіщеннями.</value>
+</data>
+	<data name="Aria.SettingsSections" xml:space="preserve">
+	<value>Розділи налаштувань</value>
+</data>
+	<data name="Tab.Account" xml:space="preserve">
+	<value>Акаунт</value>
+</data>
+	<data name="Tab.Security" xml:space="preserve">
+	<value>Безпека</value>
+</data>
+	<data name="Tab.Notifications" xml:space="preserve">
+	<value>Сповіщення</value>
+</data>
+	<data name="Account.Desc" xml:space="preserve">
+	<value>Деталі вашого публічного профілю.</value>
+</data>
+	<data name="DangerZone.Title" xml:space="preserve">
+	<value>Небезпечна зона</value>
+</data>
+	<data name="DangerZone.Desc" xml:space="preserve">
+	<value>Після видалення акаунту шляху назад не буде. Всі ваші дані, бронювання та історія будуть назавжди видалені. Будь ласка, переконайтеся.</value>
+</data>
+	<data name="Btn.DeleteAccount" xml:space="preserve">
+	<value>Видалити акаунт</value>
+</data>
+	<data name="Security.Desc" xml:space="preserve">
+	<value>Регулярно змінюйте пароль, щоб забезпечити безпеку акаунту.</value>
+</data>
+	<data name="Field.CurrentPassword" xml:space="preserve">
+	<value>Поточний пароль</value>
+</data>
+	<data name="Field.NewPassword" xml:space="preserve">
+	<value>Новий пароль</value>
+</data>
+	<data name="Field.ConfirmPassword" xml:space="preserve">
+	<value>Підтвердіть пароль</value>
+</data>
+	<data name="Btn.UpdatePassword" xml:space="preserve">
+	<value>Оновити пароль</value>
+</data>
+	<data name="Notifications.Desc" xml:space="preserve">
+	<value>Оберіть, як ви хочете отримувати повідомлення від нас.</value>
+</data>
+	<data name="Notification.EmailAlerts" xml:space="preserve">
+	<value>Email-сповіщення про нові бронювання</value>
+</data>
+	<data name="Notification.EmailAlertsDesc" xml:space="preserve">
+	<value>Отримуйте email, коли клієнт бронює сесію.</value>
+</data>
+	<data name="Notification.ChatMessages" xml:space="preserve">
+	<value>Повідомлення в чаті</value>
+</data>
+	<data name="Notification.ChatMessagesDesc" xml:space="preserve">
+	<value>Показувати індикатор, коли клієнт надсилає вам повідомлення.</value>
+</data>
+	<data name="Msg.AccountUpdated" xml:space="preserve">
+	<value>Акаунт успішно оновлено.</value>
+</data>
+	<data name="Msg.AccountFailed" xml:space="preserve">
+	<value>Не вдалося оновити акаунт.</value>
+</data>
+	<data name="Msg.NetworkError" xml:space="preserve">
+	<value>Помилка мережі.</value>
+</data>
+	<data name="Msg.PasswordsMismatch" xml:space="preserve">
+	<value>Паролі не збігаються.</value>
+</data>
+	<data name="Msg.PasswordUpdated" xml:space="preserve">
+	<value>Пароль успішно оновлено.</value>
+</data>
+	<data name="Msg.PasswordFailed" xml:space="preserve">
+	<value>Не вдалося оновити пароль.</value>
+</data>
+	<data name="Msg.ConfirmDelete" xml:space="preserve">
+	<value>Ви абсолютно впевнені, що хочете видалити акаунт? Цю дію неможливо скасувати.</value>
+</data>
+	<data name="Btn.Deleting" xml:space="preserve">
+	<value>Видалення...</value>
+</data>
+	<data name="Msg.DeleteFailed" xml:space="preserve">
+	<value>Не вдалося видалити акаунт.</value>
+</data>
 </root>

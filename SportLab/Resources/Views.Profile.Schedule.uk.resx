@@ -98,4 +98,202 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="PageTitle" xml:space="preserve">
+	<value>Розклад</value>
+</data>
+	<data name="Desc.Trainer" xml:space="preserve">
+	<value>Керуйте своїми тренуваннями та переглядайте записаних клієнтів.</value>
+</data>
+	<data name="Desc.Client" xml:space="preserve">
+	<value>Перегляньте тренування, на які ви записалися.</value>
+</data>
+	<data name="Btn.CreateWorkout" xml:space="preserve">
+	<value>Створити тренування</value>
+</data>
+	<data name="Aria.FilterWorkouts" xml:space="preserve">
+	<value>Фільтрувати тренування за типом</value>
+</data>
+	<data name="Modal.DetailsTitle" xml:space="preserve">
+	<value>Деталі тренування</value>
+</data>
+	<data name="Field.ActivityType" xml:space="preserve">
+	<value>Тип активності</value>
+</data>
+	<data name="Workout.HIIT" xml:space="preserve">
+	<value>ВІТ</value>
+</data>
+	<data name="Workout.Pilates" xml:space="preserve">
+	<value>Пілатес</value>
+</data>
+	<data name="Workout.Yoga" xml:space="preserve">
+	<value>Йога</value>
+</data>
+	<data name="Workout.Strength" xml:space="preserve">
+	<value>Силові</value>
+</data>
+	<data name="Workout.Cycling" xml:space="preserve">
+	<value>Велотренажер</value>
+</data>
+	<data name="Workout.Boxing" xml:space="preserve">
+	<value>Бокс</value>
+</data>
+	<data name="Field.Date" xml:space="preserve">
+	<value>Дата</value>
+</data>
+	<data name="Field.StartTime" xml:space="preserve">
+	<value>Час початку</value>
+</data>
+	<data name="Field.EndTime" xml:space="preserve">
+	<value>Час завершення</value>
+</data>
+	<data name="Field.Capacity" xml:space="preserve">
+	<value>Місткість</value>
+</data>
+	<data name="Field.Activity" xml:space="preserve">
+	<value>Активність</value>
+</data>
+	<data name="Field.Time" xml:space="preserve">
+	<value>Час</value>
+</data>
+	<data name="Field.Trainer" xml:space="preserve">
+	<value>Тренер</value>
+</data>
+	<data name="Field.Bookings" xml:space="preserve">
+	<value>Бронювання</value>
+</data>
+	<data name="Field.Status" xml:space="preserve">
+	<value>Статус</value>
+</data>
+	<data name="Field.RegisteredClients" xml:space="preserve">
+	<value>Записані клієнти</value>
+</data>
+	<data name="Btn.CancelWorkout" xml:space="preserve">
+	<value>Скасувати тренування</value>
+</data>
+	<data name="Btn.CancelBooking" xml:space="preserve">
+	<value>Скасувати бронювання</value>
+</data>
+	<data name="Fallback.Workout" xml:space="preserve">
+	<value>Тренування</value>
+</data>
+	<data name="Fallback.TBA" xml:space="preserve">
+	<value>Буде визначено</value>
+</data>
+	<data name="Fallback.UnknownClient" xml:space="preserve">
+	<value>Невідомий клієнт</value>
+</data>
+	<data name="Day.Mon" xml:space="preserve">
+	<value>Пн</value>
+</data>
+	<data name="Day.Tue" xml:space="preserve">
+	<value>Вт</value>
+</data>
+	<data name="Day.Wed" xml:space="preserve">
+	<value>Ср</value>
+</data>
+	<data name="Day.Thu" xml:space="preserve">
+	<value>Чт</value>
+</data>
+	<data name="Day.Fri" xml:space="preserve">
+	<value>Пт</value>
+</data>
+	<data name="Day.Sat" xml:space="preserve">
+	<value>Сб</value>
+</data>
+	<data name="Day.Sun" xml:space="preserve">
+	<value>Нд</value>
+</data>
+	<data name="Month.January" xml:space="preserve">
+	<value>Січня</value>
+</data>
+	<data name="Month.February" xml:space="preserve">
+	<value>Лютого</value>
+</data>
+	<data name="Month.March" xml:space="preserve">
+	<value>Березня</value>
+</data>
+	<data name="Month.April" xml:space="preserve">
+	<value>Квітня</value>
+</data>
+	<data name="Month.May" xml:space="preserve">
+	<value>Травня</value>
+</data>
+	<data name="Month.June" xml:space="preserve">
+	<value>Червня</value>
+</data>
+	<data name="Month.July" xml:space="preserve">
+	<value>Липня</value>
+</data>
+	<data name="Month.August" xml:space="preserve">
+	<value>Серпня</value>
+</data>
+	<data name="Month.September" xml:space="preserve">
+	<value>Вересня</value>
+</data>
+	<data name="Month.October" xml:space="preserve">
+	<value>Жовтня</value>
+</data>
+	<data name="Month.November" xml:space="preserve">
+	<value>Листопада</value>
+</data>
+	<data name="Month.December" xml:space="preserve">
+	<value>Грудня</value>
+</data>
+	<data name="Text.ClientsCount" xml:space="preserve">
+	<value>{0} клієнтів</value>
+</data>
+	<data name="Status.Available" xml:space="preserve">
+	<value>Доступно</value>
+</data>
+	<data name="Status.FullyBooked" xml:space="preserve">
+	<value>Немає місць</value>
+</data>
+	<data name="Status.Cancelled" xml:space="preserve">
+	<value>Скасовано</value>
+</data>
+	<data name="Status.Completed" xml:space="preserve">
+	<value>Завершено</value>
+</data>
+	<data name="Msg.NoClients" xml:space="preserve">
+	<value>На це тренування ще ніхто не записався.</value>
+</data>
+	<data name="Confirm.CancelWorkout" xml:space="preserve">
+	<value>Скасувати це тренування? Усіх записаних клієнтів буде повідомлено.</value>
+</data>
+	<data name="Confirm.DeleteWorkout" xml:space="preserve">
+	<value>Видалити це тренування?</value>
+</data>
+	<data name="Confirm.CancelBooking" xml:space="preserve">
+	<value>Скасувати ваше бронювання цього тренування?</value>
+</data>
+	<data name="Alert.CannotEdit" xml:space="preserve">
+	<value>Тренування з наявними бронюваннями не можна редагувати.</value>
+</data>
+	<data name="Error.FailedLoad" xml:space="preserve">
+	<value>Не вдалося завантажити розклад.</value>
+</data>
+	<data name="Error.RequestFailed" xml:space="preserve">
+	<value>Не вдалося виконати запит.</value>
+</data>
+	<data name="Error.FillAllFields" xml:space="preserve">
+	<value>Будь ласка, заповніть усі поля дати та часу.</value>
+</data>
+	<data name="Error.TimeRange" xml:space="preserve">
+	<value>Тренування має бути між 08:00 та 20:00, а час завершення має бути пізніше часу початку.</value>
+</data>
+	<data name="Error.CapacityRange" xml:space="preserve">
+	<value>Місткість має бути від 1 до 1000.</value>
+</data>
+	<data name="Modal.CreateTitle" xml:space="preserve">
+	<value>Створити тренування</value>
+</data>
+	<data name="Modal.EditTitle" xml:space="preserve">
+	<value>Редагувати тренування</value>
+</data>
+	<data name="Modal.DetailsTitle" xml:space="preserve">
+	<value>Деталі тренування</value>
+</data>
+	<data name="Aria.DayAt" xml:space="preserve">
+	<value>о</value>
+</data>
 </root>

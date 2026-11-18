@@ -1,18 +1,21 @@
-﻿@{
+﻿@inject IViewLocalizer Localizer
+@inject IStringLocalizer<SportLab.SharedResource> SharedLocalizer
+
+@{
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
-    ViewData["Title"] = "Settings";
+    ViewData["Title"] = Localizer["PageTitle"];
 }
 
 <div class="mb-6">
-    <h2 class="text-3xl font-black uppercase tracking-tighter sm:text-4xl">Settings</h2>
-    <p class="mt-1 text-sm text-mono/60">Manage your account, security and alerts.</p>
+    <h2 class="text-3xl font-black uppercase tracking-tighter sm:text-4xl">@Localizer["PageTitle"]</h2>
+    <p class="mt-1 text-sm text-mono/60">@Localizer["Header.Subtitle"]</p>
 </div>
 
 <div class="flex flex-col gap-5 lg:flex-row">
-    <nav class="flex shrink-0 gap-1 overflow-x-auto rounded-lg bg-card p-2 lg:w-60 lg:flex-col" aria-label="Settings sections" role="tablist" aria-orientation="vertical">
-        <button type="button" role="tab" data-tab="account" class="settings-tab whitespace-nowrap rounded-md px-4 py-3 text-left text-xs font-bold uppercase tracking-widest">Account</button>
-        <button type="button" role="tab" data-tab="security" class="settings-tab whitespace-nowrap rounded-md px-4 py-3 text-left text-xs font-bold uppercase tracking-widest">Security</button>
-        <button type="button" role="tab" data-tab="notifications" class="settings-tab whitespace-nowrap rounded-md px-4 py-3 text-left text-xs font-bold uppercase tracking-widest">Notifications</button>
+    <nav class="flex shrink-0 gap-1 overflow-x-auto rounded-lg bg-card p-2 lg:w-60 lg:flex-col" aria-label="@Localizer["Aria.SettingsSections"]" role="tablist" aria-orientation="vertical">
+        <button type="button" role="tab" data-tab="account" class="settings-tab whitespace-nowrap rounded-md px-4 py-3 text-left text-xs font-bold uppercase tracking-widest">@Localizer["Tab.Account"]</button>
+        <button type="button" role="tab" data-tab="security" class="settings-tab whitespace-nowrap rounded-md px-4 py-3 text-left text-xs font-bold uppercase tracking-widest">@Localizer["Tab.Security"]</button>
+        <button type="button" role="tab" data-tab="notifications" class="settings-tab whitespace-nowrap rounded-md px-4 py-3 text-left text-xs font-bold uppercase tracking-widest">@Localizer["Tab.Notifications"]</button>
     </nav>
 
     <div class="min-w-0 flex-1 rounded-lg bg-card p-5 sm:p-7">
@@ -20,20 +23,20 @@
 
         <!-- Account Tab -->
         <section id="tab-account" data-tab-panel role="tabpanel">
-            <h3 class="text-lg font-extrabold uppercase tracking-tight">Account</h3>
-            <p class="mt-1 text-sm text-mono/60">Your public profile details.</p>
+            <h3 class="text-lg font-extrabold uppercase tracking-tight">@Localizer["Tab.Account"]</h3>
+            <p class="mt-1 text-sm text-mono/60">@Localizer["Account.Desc"]</p>
             
             <form id="account-form" class="mt-6 grid max-w-xl gap-4 sm:grid-cols-2">
                 <div>
-                    <label for="acc-name" class="mb-1.5 block text-[11px] font-semibold uppercase tracking-widest text-mono/50">Full name</label>
+                    <label for="acc-name" class="mb-1.5 block text-[11px] font-semibold uppercase tracking-widest text-mono/50">@SharedLocalizer["Common.FullName"]</label>
                     <input id="acc-name" type="text" required class="w-full rounded-md bg-shell px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-neon" />
                 </div>
                 <div>
-                    <label for="acc-email" class="mb-1.5 block text-[11px] font-semibold uppercase tracking-widest text-mono/50">Email</label>
+                    <label for="acc-email" class="mb-1.5 block text-[11px] font-semibold uppercase tracking-widest text-mono/50">@SharedLocalizer["Common.Email"]</label>
                     <input id="acc-email" type="email" required class="w-full rounded-md bg-shell px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-neon" />
                 </div>
                 <div class="sm:col-span-2">
-                    <button type="submit" id="btn-save-account" class="rounded-md bg-neon px-6 py-3 text-xs font-extrabold uppercase tracking-widest text-shell transition-transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed">Save changes</button>
+                    <button type="submit" id="btn-save-account" class="rounded-md bg-neon px-6 py-3 text-xs font-extrabold uppercase tracking-widest text-shell transition-transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed">@SharedLocalizer["Common.SaveChanges"]</button>
                     <p id="account-msg" class="mt-3 text-sm font-bold hidden"></p>
                 </div>
             </form>
@@ -42,11 +45,11 @@
             <div class="mt-10 border-t border-white/10 pt-6">
                 <h4 class="text-sm font-black text-red-500 uppercase tracking-widest mb-2 flex items-center gap-2">
                     <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                    Danger Zone
+                    @Localizer["DangerZone.Title"]
                 </h4>
-                <p class="text-xs text-mono/50 mb-4 max-w-md">Once you delete your account, there is no going back. All your data, bookings, and history will be permanently removed. Please be certain.</p>
+                <p class="text-xs text-mono/50 mb-4 max-w-md">@Localizer["DangerZone.Desc"]</p>
                 <button type="button" id="btn-delete-account" class="rounded-md border border-red-500/50 bg-red-500/10 px-6 py-3 text-xs font-extrabold uppercase tracking-widest text-red-500 transition-colors hover:bg-red-500 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed">
-                    Delete Account
+                    @Localizer["Btn.DeleteAccount"]
                 </button>
                 <p id="delete-msg" class="mt-3 text-sm font-bold hidden"></p>
             </div>
@@ -54,24 +57,24 @@
 
         <!-- Security Tab -->
         <section id="tab-security" data-tab-panel role="tabpanel" class="hidden">
-            <h3 class="text-lg font-extrabold uppercase tracking-tight">Security</h3>
-            <p class="mt-1 text-sm text-mono/60">Change your password regularly to keep your account safe.</p>
+            <h3 class="text-lg font-extrabold uppercase tracking-tight">@Localizer["Tab.Security"]</h3>
+            <p class="mt-1 text-sm text-mono/60">@Localizer["Security.Desc"]</p>
             
             <form id="password-form" class="mt-6 max-w-md space-y-4">
                 <div>
-                    <label for="pw-current" class="mb-1.5 block text-[11px] font-semibold uppercase tracking-widest text-mono/50">Current password</label>
+                    <label for="pw-current" class="mb-1.5 block text-[11px] font-semibold uppercase tracking-widest text-mono/50">@Localizer["Field.CurrentPassword"]</label>
                     <input id="pw-current" type="password" required autocomplete="current-password" class="w-full rounded-md bg-shell px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-neon" />
                 </div>
                 <div>
-                    <label for="pw-new" class="mb-1.5 block text-[11px] font-semibold uppercase tracking-widest text-mono/50">New password</label>
+                    <label for="pw-new" class="mb-1.5 block text-[11px] font-semibold uppercase tracking-widest text-mono/50">@Localizer["Field.NewPassword"]</label>
                     <input id="pw-new" type="password" required autocomplete="new-password" class="w-full rounded-md bg-shell px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-neon" />
                 </div>
                 <div>
-                    <label for="pw-confirm" class="mb-1.5 block text-[11px] font-semibold uppercase tracking-widest text-mono/50">Confirm password</label>
+                    <label for="pw-confirm" class="mb-1.5 block text-[11px] font-semibold uppercase tracking-widest text-mono/50">@Localizer["Field.ConfirmPassword"]</label>
                     <input id="pw-confirm" type="password" required autocomplete="new-password" class="w-full rounded-md bg-shell px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-neon" />
                 </div>
                 <div>
-                    <button type="submit" id="btn-save-password" class="rounded-md bg-neon px-6 py-3 text-xs font-extrabold uppercase tracking-widest text-shell transition-transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed">Update password</button>
+                    <button type="submit" id="btn-save-password" class="rounded-md bg-neon px-6 py-3 text-xs font-extrabold uppercase tracking-widest text-shell transition-transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed">@Localizer["Btn.UpdatePassword"]</button>
                     <p id="password-msg" class="mt-3 text-sm font-bold hidden"></p>
                 </div>
             </form>
@@ -79,13 +82,13 @@
 
         <!-- Notifications Tab -->
         <section id="tab-notifications" data-tab-panel role="tabpanel" class="hidden">
-            <h3 class="text-lg font-extrabold uppercase tracking-tight">Notifications</h3>
-            <p class="mt-1 text-sm text-mono/60">Choose how you want to hear from us.</p>
+            <h3 class="text-lg font-extrabold uppercase tracking-tight">@Localizer["Tab.Notifications"]</h3>
+            <p class="mt-1 text-sm text-mono/60">@Localizer["Notifications.Desc"]</p>
             <ul class="mt-6 max-w-xl divide-y divide-white/10">
                 <li class="flex items-center justify-between gap-4 py-4">
                     <div>
-                        <p id="sw-email-label" class="text-sm font-bold">Email alerts for new bookings</p>
-                        <p class="text-xs text-mono/50">Get an email whenever a client books a session.</p>
+                        <p id="sw-email-label" class="text-sm font-bold">@Localizer["Notification.EmailAlerts"]</p>
+                        <p class="text-xs text-mono/50">@Localizer["Notification.EmailAlertsDesc"]</p>
                     </div>
                     <button type="button" role="switch" aria-checked="true" aria-labelledby="sw-email-label" class="switch relative h-6 w-11 shrink-0 rounded-full bg-neon transition-colors focus:outline-none">
                         <span class="knob absolute left-0.5 top-0.5 h-5 w-5 translate-x-5 transform-gpu rounded-full bg-shell transition-transform"></span>
@@ -93,8 +96,8 @@
                 </li>
                 <li class="flex items-center justify-between gap-4 py-4">
                     <div>
-                        <p id="sw-chat-label" class="text-sm font-bold">In-app chat messages</p>
-                        <p class="text-xs text-mono/50">Show a badge when a client sends you a message.</p>
+                        <p id="sw-chat-label" class="text-sm font-bold">@Localizer["Notification.ChatMessages"]</p>
+                        <p class="text-xs text-mono/50">@Localizer["Notification.ChatMessagesDesc"]</p>
                     </div>
                     <button type="button" role="switch" aria-checked="false" aria-labelledby="sw-chat-label" class="switch relative h-6 w-11 shrink-0 rounded-full bg-shell transition-colors focus:outline-none">
                         <span class="knob absolute left-0.5 top-0.5 h-5 w-5 transform-gpu rounded-full bg-mono/60 transition-transform"></span>
@@ -110,6 +113,19 @@
         (function () {
             'use strict';
             var token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+            var locStrings = {
+                msgAccountUpdated: @Html.Raw(Json.Serialize(Localizer["Msg.AccountUpdated"].Value)),
+                msgAccountFailed: @Html.Raw(Json.Serialize(Localizer["Msg.AccountFailed"].Value)),
+                msgNetworkError: @Html.Raw(Json.Serialize(Localizer["Msg.NetworkError"].Value)),
+                msgPasswordsMismatch: @Html.Raw(Json.Serialize(Localizer["Msg.PasswordsMismatch"].Value)),
+                msgPasswordUpdated: @Html.Raw(Json.Serialize(Localizer["Msg.PasswordUpdated"].Value)),
+                msgPasswordFailed: @Html.Raw(Json.Serialize(Localizer["Msg.PasswordFailed"].Value)),
+                confirmDelete: @Html.Raw(Json.Serialize(Localizer["Msg.ConfirmDelete"].Value)),
+                btnDeleting: @Html.Raw(Json.Serialize(Localizer["Btn.Deleting"].Value)),
+                msgDeleteFailed: @Html.Raw(Json.Serialize(Localizer["Msg.DeleteFailed"].Value)),
+                btnDeleteAccount: @Html.Raw(Json.Serialize(Localizer["Btn.DeleteAccount"].Value))
+            };
 
             function setTab(name) {
                 document.querySelectorAll('[data-tab-panel]').forEach(function (p) { p.classList.toggle('hidden', p.id !== 'tab-' + name); });
@@ -173,7 +189,7 @@
                     });
                     const data = await res.json();
                     if (res.ok && data.success) {
-                        showMsg('account-msg', 'Account updated successfully.', true);
+                        showMsg('account-msg', locStrings.msgAccountUpdated, true);
 
                         const newName = data.name;
                         const firstName = newName.split(' ')[0];
@@ -190,10 +206,10 @@
                         const mobileNameEl = document.getElementById('mobile-user-name');
                         if (mobileNameEl) mobileNameEl.textContent = firstName;
                     } else {
-                        showMsg('account-msg', data.message || 'Failed to update account.', false);
+                        showMsg('account-msg', data.message || locStrings.msgAccountFailed, false);
                     }
                 } catch(err) {
-                    showMsg('account-msg', 'Network error.', false);
+                    showMsg('account-msg', locStrings.msgNetworkError, false);
                 } finally {
                     btn.disabled = false;
                 }
@@ -206,7 +222,7 @@
                 const confirmPw = document.getElementById('pw-confirm').value;
 
                 if (newPw !== confirmPw) {
-                    showMsg('password-msg', 'Passwords do not match.', false);
+                    showMsg('password-msg', locStrings.msgPasswordsMismatch, false);
                     return;
                 }
 
@@ -225,25 +241,25 @@
                     });
                     const data = await res.json();
                     if (res.ok && data.success) {
-                        showMsg('password-msg', 'Password updated successfully.', true);
+                        showMsg('password-msg', locStrings.msgPasswordUpdated, true);
                         document.getElementById('password-form').reset();
                     } else {
-                        showMsg('password-msg', data.message || 'Failed to update password.', false);
+                        showMsg('password-msg', data.message || locStrings.msgPasswordFailed, false);
                     }
                 } catch(err) {
-                    showMsg('password-msg', 'Network error.', false);
+                    showMsg('password-msg', locStrings.msgNetworkError, false);
                 } finally {
                     btn.disabled = false;
                 }
             });
 
             // --- DELETE ACCOUNT LOGIC 
-               document.getElementById('btn-delete-account').addEventListener('click', async function() {
-                if (!confirm('Are you absolutely sure you want to delete your account? This action cannot be undone.')) return;
+            document.getElementById('btn-delete-account').addEventListener('click', async function() {
+                if (!confirm(locStrings.confirmDelete)) return;
 
                 const btn = this;
                 btn.disabled = true;
-                btn.innerHTML = 'Deleting...';
+                btn.innerHTML = locStrings.btnDeleting;
 
                 try {
                     const res = await fetch('/Profile/DeleteAccount', {
@@ -255,14 +271,14 @@
                     if (res.ok && data.success) {
                         window.location.href = '/';
                     } else {
-                        showMsg('delete-msg', data.message || 'Failed to delete account.', false);
+                        showMsg('delete-msg', data.message || locStrings.msgDeleteFailed, false);
                         btn.disabled = false;
-                        btn.innerHTML = 'Delete Account';
+                        btn.innerHTML = locStrings.btnDeleteAccount;
                     }
                 } catch(err) {
-                    showMsg('delete-msg', 'Network error.', false);
+                    showMsg('delete-msg', locStrings.msgNetworkError, false);
                     btn.disabled = false;
-                    btn.innerHTML = 'Delete Account';
+                    btn.innerHTML = locStrings.btnDeleteAccount;
                 }
             });
 

@@ -98,4 +98,247 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="PageTitle" xml:space="preserve">
+    <value>Trainer Profile</value>
+  </data>
+	<data name="Greeting.WelcomeBack" xml:space="preserve">
+    <value>Welcome back,</value>
+  </data>
+	<data name="Greeting.Subtitle" xml:space="preserve">
+    <value>Manage your profile, clients and sessions.</value>
+  </data>
+	<data name="Section.ProInfo" xml:space="preserve">
+    <value>Professional Information</value>
+  </data>
+	<data name="Image.AltPortrait" xml:space="preserve">
+    <value>Portrait of trainer</value>
+  </data>
+	<data name="Btn.ChangePhoto" xml:space="preserve">
+    <value>Change Photo</value>
+  </data>
+	<data name="Text.PhotoFormat" xml:space="preserve">
+    <value>JPG, PNG or WEBP</value>
+  </data>
+	<data name="Field.FullName" xml:space="preserve">
+    <value>Full name</value>
+  </data>
+	<data name="Field.Dob" xml:space="preserve">
+    <value>Date of birth</value>
+  </data>
+	<data name="Field.Experience" xml:space="preserve">
+    <value>Experience</value>
+  </data>
+	<data name="Field.About" xml:space="preserve">
+    <value>About me</value>
+  </data>
+	<data name="Field.Specializations" xml:space="preserve">
+    <value>Specializations</value>
+  </data>
+	<data name="Aria.EditName" xml:space="preserve">
+    <value>Edit full name</value>
+  </data>
+	<data name="Aria.EditDob" xml:space="preserve">
+    <value>Edit date of birth</value>
+  </data>
+	<data name="Aria.EditExperience" xml:space="preserve">
+    <value>Edit experience</value>
+  </data>
+	<data name="Aria.EditAbout" xml:space="preserve">
+    <value>Edit about me</value>
+  </data>
+	<data name="Text.SelectSpecs" xml:space="preserve">
+    <value>Select specializations</value>
+  </data>
+	<data name="Text.Selected" xml:space="preserve">
+    <value>selected</value>
+  </data>
+	<data name="Text.NoneSelected" xml:space="preserve">
+    <value>None selected</value>
+  </data>
+	<data name="Text.NotSet" xml:space="preserve">
+    <value>Not set</value>
+  </data>
+	<data name="Section.Schedule" xml:space="preserve">
+    <value>Work Schedule</value>
+  </data>
+	<data name="Aria.ScheduleDay" xml:space="preserve">
+    <value>Schedule day</value>
+  </data>
+	<data name="Tab.Today" xml:space="preserve">
+    <value>Today</value>
+  </data>
+	<data name="Tab.Tomorrow" xml:space="preserve">
+    <value>Tomorrow</value>
+  </data>
+	<data name="Btn.CreateWorkout" xml:space="preserve">
+    <value>Create Workout</value>
+  </data>
+	<data name="Empty.NoWorkouts" xml:space="preserve">
+    <value>No workouts</value>
+  </data>
+	<data name="Empty.ScheduleDesc" xml:space="preserve">
+    <value>Your calendar is open. Add availability so clients can book you.</value>
+  </data>
+	<data name="Empty.UsePlus" xml:space="preserve">
+    <value>Use the + button above</value>
+  </data>
+	<data name="Text.To" xml:space="preserve">
+    <value>to</value>
+  </data>
+	<data name="Text.Booked" xml:space="preserve">
+    <value>booked</value>
+  </data>
+	<data name="Section.Clients" xml:space="preserve">
+    <value>My Clients</value>
+  </data>
+	<data name="Text.SearchClients" xml:space="preserve">
+    <value>Search clients</value>
+  </data>
+	<data name="Text.SortClients" xml:space="preserve">
+    <value>Sort clients</value>
+  </data>
+	<data name="Sort.Recent" xml:space="preserve">
+    <value>Recent</value>
+  </data>
+	<data name="Sort.AZ" xml:space="preserve">
+    <value>A-Z</value>
+  </data>
+	<data name="Sort.Workouts" xml:space="preserve">
+    <value>Most workouts</value>
+  </data>
+	<data name="Text.LoadingClients" xml:space="preserve">
+    <value>Loading clients...</value>
+  </data>
+	<data name="Empty.NoClients" xml:space="preserve">
+    <value>No clients match your search.</value>
+  </data>
+	<data name="Text.Weight" xml:space="preserve">
+    <value>Weight</value>
+  </data>
+	<data name="Text.Kg" xml:space="preserve">
+    <value>kg</value>
+  </data>
+	<data name="Text.Sessions" xml:space="preserve">
+    <value>Sessions:</value>
+  </data>
+	<data name="Btn.History" xml:space="preserve">
+    <value>History</value>
+  </data>
+	<data name="Modal.Create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+	<data name="Modal.Slot" xml:space="preserve">
+    <value>slot</value>
+  </data>
+	<data name="Modal.Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+	<data name="Modal.StartTime" xml:space="preserve">
+    <value>Start time</value>
+  </data>
+	<data name="Modal.EndTime" xml:space="preserve">
+    <value>End time</value>
+  </data>
+	<data name="Modal.WorkoutType" xml:space="preserve">
+    <value>Workout type</value>
+  </data>
+	<data name="Workout.Strength" xml:space="preserve">
+    <value>Strength</value>
+  </data>
+	<data name="Workout.Boxing" xml:space="preserve">
+    <value>Boxing</value>
+  </data>
+	<data name="Workout.Yoga" xml:space="preserve">
+    <value>Yoga</value>
+  </data>
+	<data name="Workout.Cardio" xml:space="preserve">
+    <value>Cardio</value>
+  </data>
+	<data name="Workout.HIIT" xml:space="preserve">
+    <value>HIIT</value>
+  </data>
+	<data name="Workout.Pilates" xml:space="preserve">
+    <value>Pilates</value>
+  </data>
+	<data name="Modal.MaxClients" xml:space="preserve">
+    <value>Maximum clients</value>
+  </data>
+	<data name="Btn.SaveSlot" xml:space="preserve">
+    <value>Save Slot</value>
+  </data>
+	<data name="Modal.CancelWorkout" xml:space="preserve">
+    <value>Cancel workout</value>
+  </data>
+	<data name="Modal.CancelConfirmText" xml:space="preserve">
+    <value>Are you sure you want to cancel this session? The client will be notified.</value>
+  </data>
+	<data name="Btn.Keep" xml:space="preserve">
+    <value>Keep</value>
+  </data>
+	<data name="Btn.ConfirmCancel" xml:space="preserve">
+    <value>Confirm Cancel</value>
+  </data>
+	<data name="Alert.FailedSave" xml:space="preserve">
+    <value>Failed to save changes.</value>
+  </data>
+	<data name="Alert.NetworkError" xml:space="preserve">
+    <value>Network error.</value>
+  </data>
+	<data name="Alert.UploadFailed" xml:space="preserve">
+    <value>Upload failed.</value>
+  </data>
+	<data name="Alert.EndTimeError" xml:space="preserve">
+    <value>End time must be later than start time.</value>
+  </data>
+	<data name="Alert.InvalidResponse" xml:space="preserve">
+    <value>Server returned an invalid response. Check if times are correct.</value>
+  </data>
+	<data name="Alert.ErrorSavingSlot" xml:space="preserve">
+    <value>Error saving slot</value>
+  </data>
+	<data name="Alert.Cancelling" xml:space="preserve">
+    <value>Cancelling...</value>
+  </data>
+	<data name="Alert.FailedCancel" xml:space="preserve">
+    <value>Failed to cancel workout.</value>
+  </data>
+	<data name="Alert.NetworkErrorRetry" xml:space="preserve">
+    <value>Network error. Please try again.</value>
+  </data>
+	<data name="Text.NoWeightData" xml:space="preserve">
+    <value>No weight data</value>
+  </data>
+	<data name="Text.NotEnoughData" xml:space="preserve">
+    <value>Not enough data for a chart</value>
+  </data>
+	<data name="Text.TrainerFallback" xml:space="preserve">
+    <value>Trainer</value>
+  </data>
+	<data name="Aria.RemoveSpec" xml:space="preserve">
+		<value>Remove</value>
+	</data>
+	<data name="Spec.CrossFit" xml:space="preserve">
+		<value>CrossFit</value>
+	</data>
+	<data name="Spec.Pilates" xml:space="preserve">
+		<value>Pilates</value>
+	</data>
+	<data name="Spec.Yoga" xml:space="preserve">
+		<value>Yoga</value>
+	</data>
+	<data name="Spec.Strength" xml:space="preserve">
+		<value>Strength</value>
+	</data>
+	<data name="Spec.HIIT" xml:space="preserve">
+		<value>HIIT</value>
+	</data>
+	<data name="Spec.Boxing" xml:space="preserve">
+		<value>Boxing</value>
+	</data>
+	<data name="Spec.Mobility" xml:space="preserve">
+		<value>Mobility</value>
+	</data>
+	<data name="Spec.Nutrition" xml:space="preserve">
+		<value>Nutrition</value>
+	</data>
 </root>

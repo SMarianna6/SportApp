@@ -1,101 +1,363 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-	<!-- 
-		Microsoft ResX Schema
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
 
-		Version 1.3
-
-		The primary goals of this format is to allow a simple XML format 
-		that is mostly human readable. The generation and parsing of the 
-		various data types are done through the TypeConverter classes 
-		associated with the data types.
-
-		Example:
-
-		... ado.net/XML headers & schema ...
-		<resheader name="resmimetype">text/microsoft-resx</resheader>
-		<resheader name="version">1.3</resheader>
-		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-		<data name="Name1">this is my long string</data>
-		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-			[base64 mime encoded serialized .NET Framework object]
-		</data>
-		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-			[base64 mime encoded string representing a byte array form of the .NET Framework object]
-		</data>
-
-		There are any number of "resheader" rows that contain simple 
-		name/value pairs.
-
-		Each data row contains a name, and value. The row also contains a 
-		type or mimetype. Type corresponds to a .NET class that support 
-		text/value conversion through the TypeConverter architecture. 
-		Classes that don't support this are serialized and stored with the 
-		mimetype set.
-
-		The mimetype is used for serialized objects, and tells the 
-		ResXResourceReader how to depersist the object. This is currently not 
-		extensible. For a given mimetype the value must be set accordingly:
-
-		Note - application/x-microsoft.net.object.binary.base64 is the format 
-		that the ResXResourceWriter will generate, however the reader can 
-		read any of the formats listed below.
-
-		mimetype: application/x-microsoft.net.object.binary.base64
-		value   : The object must be serialized with 
-			: System.Serialization.Formatters.Binary.BinaryFormatter
-			: and then encoded with base64 encoding.
-
-		mimetype: application/x-microsoft.net.object.soap.base64
-		value   : The object must be serialized with 
-			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-			: and then encoded with base64 encoding.
-
-		mimetype: application/x-microsoft.net.object.bytearray.base64
-		value   : The object must be serialized into a byte array 
-			: using a System.ComponentModel.TypeConverter
-			: and then encoded with base64 encoding.
-	-->
-	
-	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-		<xsd:element name="root" msdata:IsDataSet="true">
-			<xsd:complexType>
-				<xsd:choice maxOccurs="unbounded">
-					<xsd:element name="data">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
-							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-						</xsd:complexType>
-					</xsd:element>
-					<xsd:element name="resheader">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" use="required" />
-						</xsd:complexType>
-					</xsd:element>
-				</xsd:choice>
-			</xsd:complexType>
-		</xsd:element>
-	</xsd:schema>
-	<resheader name="resmimetype">
-		<value>text/microsoft-resx</value>
-	</resheader>
-	<resheader name="version">
-		<value>1.3</value>
-	</resheader>
-	<resheader name="reader">
-		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
-	<resheader name="writer">
-		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PageTitle" xml:space="preserve">
+    <value>Профіль тренера</value>
+  </data>
+  <data name="Greeting.WelcomeBack" xml:space="preserve">
+    <value>З поверненням,</value>
+  </data>
+  <data name="Greeting.Subtitle" xml:space="preserve">
+    <value>Керуйте своїм профілем, клієнтами та сесіями.</value>
+  </data>
+  <data name="Section.ProInfo" xml:space="preserve">
+    <value>Професійна інформація</value>
+  </data>
+  <data name="Image.AltPortrait" xml:space="preserve">
+    <value>Портрет тренера</value>
+  </data>
+  <data name="Btn.ChangePhoto" xml:space="preserve">
+    <value>Змінити фото</value>
+  </data>
+  <data name="Text.PhotoFormat" xml:space="preserve">
+    <value>JPG, PNG або WEBP</value>
+  </data>
+  <data name="Field.FullName" xml:space="preserve">
+    <value>Повне ім'я</value>
+  </data>
+  <data name="Field.Dob" xml:space="preserve">
+    <value>Дата народження</value>
+  </data>
+  <data name="Field.Experience" xml:space="preserve">
+    <value>Досвід</value>
+  </data>
+  <data name="Field.About" xml:space="preserve">
+    <value>Про мене</value>
+  </data>
+  <data name="Field.Specializations" xml:space="preserve">
+    <value>Спеціалізації</value>
+  </data>
+  <data name="Aria.EditName" xml:space="preserve">
+    <value>Редагувати повне ім'я</value>
+  </data>
+  <data name="Aria.EditDob" xml:space="preserve">
+    <value>Редагувати дату народження</value>
+  </data>
+  <data name="Aria.EditExperience" xml:space="preserve">
+    <value>Редагувати досвід</value>
+  </data>
+  <data name="Aria.EditAbout" xml:space="preserve">
+    <value>Редагувати розділ про мене</value>
+  </data>
+  <data name="Text.SelectSpecs" xml:space="preserve">
+    <value>Оберіть спеціалізації</value>
+  </data>
+  <data name="Text.Selected" xml:space="preserve">
+    <value>обрано</value>
+  </data>
+  <data name="Text.NoneSelected" xml:space="preserve">
+    <value>Нічого не обрано</value>
+  </data>
+  <data name="Text.NotSet" xml:space="preserve">
+    <value>Не вказано</value>
+  </data>
+  <data name="Section.Schedule" xml:space="preserve">
+    <value>Робочий графік</value>
+  </data>
+  <data name="Aria.ScheduleDay" xml:space="preserve">
+    <value>День графіку</value>
+  </data>
+  <data name="Tab.Today" xml:space="preserve">
+    <value>Сьогодні</value>
+  </data>
+  <data name="Tab.Tomorrow" xml:space="preserve">
+    <value>Завтра</value>
+  </data>
+  <data name="Btn.CreateWorkout" xml:space="preserve">
+    <value>Створити тренування</value>
+  </data>
+  <data name="Empty.NoWorkouts" xml:space="preserve">
+    <value>Немає тренувань</value>
+  </data>
+  <data name="Empty.ScheduleDesc" xml:space="preserve">
+    <value>Ваш календар відкритий. Додайте доступність, щоб клієнти могли записатися до вас.</value>
+  </data>
+  <data name="Empty.UsePlus" xml:space="preserve">
+    <value>Використовуйте кнопку + вище</value>
+  </data>
+  <data name="Text.To" xml:space="preserve">
+    <value>до</value>
+  </data>
+  <data name="Text.Booked" xml:space="preserve">
+    <value>заброньовано</value>
+  </data>
+  <data name="Section.Clients" xml:space="preserve">
+    <value>Мої клієнти</value>
+  </data>
+  <data name="Text.SearchClients" xml:space="preserve">
+    <value>Пошук клієнтів</value>
+  </data>
+  <data name="Text.SortClients" xml:space="preserve">
+    <value>Сортувати клієнтів</value>
+  </data>
+  <data name="Sort.Recent" xml:space="preserve">
+    <value>Нещодавні</value>
+  </data>
+  <data name="Sort.AZ" xml:space="preserve">
+    <value>А-Я</value>
+  </data>
+  <data name="Sort.Workouts" xml:space="preserve">
+    <value>Найбільше тренувань</value>
+  </data>
+  <data name="Text.LoadingClients" xml:space="preserve">
+    <value>Завантаження клієнтів...</value>
+  </data>
+  <data name="Empty.NoClients" xml:space="preserve">
+    <value>Жоден клієнт не відповідає вашому запиту.</value>
+  </data>
+  <data name="Text.Weight" xml:space="preserve">
+    <value>Вага</value>
+  </data>
+  <data name="Text.Kg" xml:space="preserve">
+    <value>кг</value>
+  </data>
+  <data name="Text.Sessions" xml:space="preserve">
+    <value>Сесії:</value>
+  </data>
+  <data name="Btn.History" xml:space="preserve">
+    <value>Історія</value>
+  </data>
+  <data name="Modal.Create" xml:space="preserve">
+    <value>Створити</value>
+  </data>
+  <data name="Modal.Slot" xml:space="preserve">
+    <value>слот</value>
+  </data>
+  <data name="Modal.Date" xml:space="preserve">
+    <value>Дата</value>
+  </data>
+  <data name="Modal.StartTime" xml:space="preserve">
+    <value>Час початку</value>
+  </data>
+  <data name="Modal.EndTime" xml:space="preserve">
+    <value>Час закінчення</value>
+  </data>
+  <data name="Modal.WorkoutType" xml:space="preserve">
+    <value>Тип тренування</value>
+  </data>
+  <data name="Workout.Strength" xml:space="preserve">
+    <value>Силове</value>
+  </data>
+  <data name="Workout.Boxing" xml:space="preserve">
+    <value>Бокс</value>
+  </data>
+  <data name="Workout.Yoga" xml:space="preserve">
+    <value>Йога</value>
+  </data>
+  <data name="Workout.Cardio" xml:space="preserve">
+    <value>Кардіо</value>
+  </data>
+  <data name="Workout.HIIT" xml:space="preserve">
+    <value>ВІТ (HIIT)</value>
+  </data>
+  <data name="Workout.Pilates" xml:space="preserve">
+    <value>Пілатес</value>
+  </data>
+  <data name="Modal.MaxClients" xml:space="preserve">
+    <value>Максимум клієнтів</value>
+  </data>
+  <data name="Btn.SaveSlot" xml:space="preserve">
+    <value>Зберегти слот</value>
+  </data>
+  <data name="Modal.CancelWorkout" xml:space="preserve">
+    <value>Скасувати тренування</value>
+  </data>
+  <data name="Modal.CancelConfirmText" xml:space="preserve">
+    <value>Ви впевнені, що хочете скасувати цю сесію? Клієнта буде повідомлено.</value>
+  </data>
+  <data name="Btn.Keep" xml:space="preserve">
+    <value>Залишити</value>
+  </data>
+  <data name="Btn.ConfirmCancel" xml:space="preserve">
+    <value>Підтвердити скасування</value>
+  </data>
+  <data name="Alert.FailedSave" xml:space="preserve">
+    <value>Не вдалося зберегти зміни.</value>
+  </data>
+  <data name="Alert.NetworkError" xml:space="preserve">
+    <value>Помилка мережі.</value>
+  </data>
+  <data name="Alert.UploadFailed" xml:space="preserve">
+    <value>Помилка завантаження.</value>
+  </data>
+  <data name="Alert.EndTimeError" xml:space="preserve">
+    <value>Час закінчення має бути пізніше часу початку.</value>
+  </data>
+  <data name="Alert.InvalidResponse" xml:space="preserve">
+    <value>Сервер повернув недійсну відповідь. Перевірте правильність часу.</value>
+  </data>
+  <data name="Alert.ErrorSavingSlot" xml:space="preserve">
+    <value>Помилка збереження слоту</value>
+  </data>
+  <data name="Alert.Cancelling" xml:space="preserve">
+    <value>Скасування...</value>
+  </data>
+  <data name="Alert.FailedCancel" xml:space="preserve">
+    <value>Не вдалося скасувати тренування.</value>
+  </data>
+  <data name="Alert.NetworkErrorRetry" xml:space="preserve">
+    <value>Помилка мережі. Будь ласка, спробуйте ще раз.</value>
+  </data>
+  <data name="Text.NoWeightData" xml:space="preserve">
+    <value>Немає даних про вагу</value>
+  </data>
+	<data name="Text.NotEnoughData" xml:space="preserve">
+    <value>Недостатньо даних для графіка</value>
+  </data>
+	<data name="Text.TrainerFallback" xml:space="preserve">
+    <value>Тренер</value>
+  </data>
+	<data name="Aria.RemoveSpec" xml:space="preserve">
+		<value>Видалити</value>
+	</data>
+	<data name="Spec.CrossFit" xml:space="preserve">
+		<value>Кросфіт</value>
+	</data>
+	<data name="Spec.Pilates" xml:space="preserve">
+		<value>Пілатес</value>
+	</data>
+	<data name="Spec.Yoga" xml:space="preserve">
+		<value>Йога</value>
+	</data>
+	<data name="Spec.Strength" xml:space="preserve">
+		<value>Силові</value>
+	</data>
+	<data name="Spec.HIIT" xml:space="preserve">
+		<value>ВІТ</value>
+	</data>
+	<data name="Spec.Boxing" xml:space="preserve">
+		<value>Бокс</value>
+	</data>
+	<data name="Spec.Mobility" xml:space="preserve">
+		<value>Мобільність</value>
+	</data>
+	<data name="Spec.Nutrition" xml:space="preserve">
+		<value>Харчування</value>
+	</data>
 </root>

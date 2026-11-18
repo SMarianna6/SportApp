@@ -98,4 +98,202 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="PageTitle" xml:space="preserve">
+	<value>Schedule</value>
+</data>
+	<data name="Desc.Trainer" xml:space="preserve">
+	<value>Manage your workouts and view registered clients.</value>
+</data>
+	<data name="Desc.Client" xml:space="preserve">
+	<value>View the workouts you have booked.</value>
+</data>
+	<data name="Btn.CreateWorkout" xml:space="preserve">
+	<value>Create workout</value>
+</data>
+	<data name="Aria.FilterWorkouts" xml:space="preserve">
+	<value>Filter workouts by type</value>
+</data>
+	<data name="Modal.DetailsTitle" xml:space="preserve">
+	<value>Workout details</value>
+</data>
+	<data name="Field.ActivityType" xml:space="preserve">
+	<value>Activity Type</value>
+</data>
+	<data name="Workout.HIIT" xml:space="preserve">
+	<value>HIIT</value>
+</data>
+	<data name="Workout.Pilates" xml:space="preserve">
+	<value>Pilates</value>
+</data>
+	<data name="Workout.Yoga" xml:space="preserve">
+	<value>Yoga</value>
+</data>
+	<data name="Workout.Strength" xml:space="preserve">
+	<value>Strength</value>
+</data>
+	<data name="Workout.Cycling" xml:space="preserve">
+	<value>Cycling</value>
+</data>
+	<data name="Workout.Boxing" xml:space="preserve">
+	<value>Boxing</value>
+</data>
+	<data name="Field.Date" xml:space="preserve">
+	<value>Date</value>
+</data>
+	<data name="Field.StartTime" xml:space="preserve">
+	<value>Start Time</value>
+</data>
+	<data name="Field.EndTime" xml:space="preserve">
+	<value>End Time</value>
+</data>
+	<data name="Field.Capacity" xml:space="preserve">
+	<value>Capacity</value>
+</data>
+	<data name="Field.Activity" xml:space="preserve">
+	<value>Activity</value>
+</data>
+	<data name="Field.Time" xml:space="preserve">
+	<value>Time</value>
+</data>
+	<data name="Field.Trainer" xml:space="preserve">
+	<value>Trainer</value>
+</data>
+	<data name="Field.Bookings" xml:space="preserve">
+	<value>Bookings</value>
+</data>
+	<data name="Field.Status" xml:space="preserve">
+	<value>Status</value>
+</data>
+	<data name="Field.RegisteredClients" xml:space="preserve">
+	<value>Registered clients</value>
+</data>
+	<data name="Btn.CancelWorkout" xml:space="preserve">
+	<value>Cancel workout</value>
+</data>
+	<data name="Btn.CancelBooking" xml:space="preserve">
+	<value>Cancel booking</value>
+</data>
+	<data name="Fallback.Workout" xml:space="preserve">
+	<value>Workout</value>
+</data>
+	<data name="Fallback.TBA" xml:space="preserve">
+	<value>TBA</value>
+</data>
+	<data name="Fallback.UnknownClient" xml:space="preserve">
+	<value>Unknown client</value>
+</data>
+	<data name="Day.Mon" xml:space="preserve">
+	<value>Mon</value>
+</data>
+	<data name="Day.Tue" xml:space="preserve">
+	<value>Tue</value>
+</data>
+	<data name="Day.Wed" xml:space="preserve">
+	<value>Wed</value>
+</data>
+	<data name="Day.Thu" xml:space="preserve">
+	<value>Thu</value>
+</data>
+	<data name="Day.Fri" xml:space="preserve">
+	<value>Fri</value>
+</data>
+	<data name="Day.Sat" xml:space="preserve">
+	<value>Sat</value>
+</data>
+	<data name="Day.Sun" xml:space="preserve">
+	<value>Sun</value>
+</data>
+	<data name="Month.January" xml:space="preserve">
+	<value>January</value>
+</data>
+	<data name="Month.February" xml:space="preserve">
+	<value>February</value>
+</data>
+	<data name="Month.March" xml:space="preserve">
+	<value>March</value>
+</data>
+	<data name="Month.April" xml:space="preserve">
+	<value>April</value>
+</data>
+	<data name="Month.May" xml:space="preserve">
+	<value>May</value>
+</data>
+	<data name="Month.June" xml:space="preserve">
+	<value>June</value>
+</data>
+	<data name="Month.July" xml:space="preserve">
+	<value>July</value>
+</data>
+	<data name="Month.August" xml:space="preserve">
+	<value>August</value>
+</data>
+	<data name="Month.September" xml:space="preserve">
+	<value>September</value>
+</data>
+	<data name="Month.October" xml:space="preserve">
+	<value>October</value>
+</data>
+	<data name="Month.November" xml:space="preserve">
+	<value>November</value>
+</data>
+	<data name="Month.December" xml:space="preserve">
+	<value>December</value>
+</data>
+	<data name="Text.ClientsCount" xml:space="preserve">
+	<value>{0} clients</value>
+</data>
+	<data name="Status.Available" xml:space="preserve">
+	<value>Available</value>
+</data>
+	<data name="Status.FullyBooked" xml:space="preserve">
+	<value>Fully booked</value>
+</data>
+	<data name="Status.Cancelled" xml:space="preserve">
+	<value>Cancelled</value>
+</data>
+	<data name="Status.Completed" xml:space="preserve">
+	<value>Completed</value>
+</data>
+	<data name="Msg.NoClients" xml:space="preserve">
+	<value>No clients have booked this workout yet.</value>
+</data>
+	<data name="Confirm.CancelWorkout" xml:space="preserve">
+	<value>Cancel this workout? All registered clients will be notified.</value>
+</data>
+	<data name="Confirm.DeleteWorkout" xml:space="preserve">
+	<value>Delete this workout?</value>
+</data>
+	<data name="Confirm.CancelBooking" xml:space="preserve">
+	<value>Cancel your booking for this workout?</value>
+</data>
+	<data name="Alert.CannotEdit" xml:space="preserve">
+	<value>A workout with existing bookings cannot be edited.</value>
+</data>
+	<data name="Error.FailedLoad" xml:space="preserve">
+	<value>Failed to load schedule.</value>
+</data>
+	<data name="Error.RequestFailed" xml:space="preserve">
+	<value>The request could not be completed.</value>
+</data>
+	<data name="Error.FillAllFields" xml:space="preserve">
+	<value>Please complete all date and time fields.</value>
+</data>
+	<data name="Error.TimeRange" xml:space="preserve">
+	<value>The workout must be between 08:00 and 20:00, and the end time must be later than the start time.</value>
+</data>
+	<data name="Error.CapacityRange" xml:space="preserve">
+	<value>Capacity must be between 1 and 1000.</value>
+</data>
+	<data name="Modal.CreateTitle" xml:space="preserve">
+	<value>Create workout</value>
+</data>
+	<data name="Modal.EditTitle" xml:space="preserve">
+	<value>Edit workout</value>
+</data>
+	<data name="Modal.DetailsTitle" xml:space="preserve">
+	<value>Workout details</value>
+</data>
+	<data name="Aria.DayAt" xml:space="preserve">
+	<value>at</value>
+</data>
 </root>
