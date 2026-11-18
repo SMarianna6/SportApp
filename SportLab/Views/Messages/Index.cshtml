@@ -1,8 +1,10 @@
 ﻿@model IEnumerable<SportLab.Models.ContactViewModel>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 @{
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
-    ViewData["Title"] = "Messages";
+    ViewData["Title"] = Localizer["MessagesTitle"];
     
     bool isTrainer = User.IsInRole(Roles.Trainer);
 }
@@ -16,30 +18,30 @@
 
 <div class="h-[calc(100vh-200px)] min-h-[500px] overflow-hidden rounded-xl border border-white/10 shadow-2xl lg:grid lg:grid-cols-[minmax(260px,27%)_minmax(0,1fr)] xl:grid-cols-[minmax(280px,26%)_minmax(0,1fr)_minmax(260px,25%)]">
    
-    <aside id="chat-list-col" class="flex h-full min-h-0 flex-col border-r border-white/10 bg-shell" aria-label="Conversations">
+    <aside id="chat-list-col" class="flex h-full min-h-0 flex-col border-r border-white/10 bg-shell" aria-label="@Localizer["ConversationsAria"]">
         <div class="sticky top-0 z-10 border-b border-white/10 bg-shell p-4">
-            <h2 class="mb-3 text-2xl font-black uppercase tracking-tighter">Messages</h2>
+            <h2 class="mb-3 text-2xl font-black uppercase tracking-tighter">@Localizer["MessagesHeader"]</h2>
             <label class="relative block">
-                <span class="sr-only">Search messages</span>
+                <span class="sr-only">@Localizer["SearchMessagesSr"]</span>
                 <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-mono/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-                <input id="chat-search" type="search" placeholder="Search messages" class="w-full rounded-md border border-white/10 bg-shell py-2.5 pl-9 pr-3 text-sm text-white placeholder:text-mono/40 transition-colors hover:border-white/25 focus:border-neon focus:outline-none focus:ring-1 focus:ring-neon" />
+                <input id="chat-search" type="search" placeholder="@Localizer["SearchMessagesPlaceholder"]" class="w-full rounded-md border border-white/10 bg-shell py-2.5 pl-9 pr-3 text-sm text-white placeholder:text-mono/40 transition-colors hover:border-white/25 focus:border-neon focus:outline-none focus:ring-1 focus:ring-neon" />
             </label>
         </div>
         <ul id="chat-list" class="min-h-0 flex-1 overflow-y-auto">
             
         </ul>
-        <p id="chat-empty" class="hidden p-6 text-center text-sm text-mono/60">No conversations found.</p>
+        <p id="chat-empty" class="hidden p-6 text-center text-sm text-mono/60">@Localizer["NoConversationsFound"]</p>
     </aside>
 
     <!-- Active chat -->
-    <section id="chat-col" class="hidden h-full min-h-0 flex-col bg-shell lg:flex" aria-label="Active conversation">
+    <section id="chat-col" class="hidden h-full min-h-0 flex-col bg-shell lg:flex" aria-label="@Localizer["ActiveConversationAria"]">
         <header class="flex items-center gap-3 border-b border-white/10 bg-shell px-4 py-3">
             <button id="chat-back" type="button" class="flex h-10 w-10 items-center justify-center rounded-md text-white transition-colors hover:bg-white/5 hover:text-neon lg:hidden">
                 <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
             </button>
             <span id="head-avatar" class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-violet text-sm font-extrabold"></span>
             <div class="min-w-0 flex-1">
-                <h3 id="head-name" class="truncate text-base font-extrabold">Select a chat</h3>
+                <h3 id="head-name" class="truncate text-base font-extrabold">@Localizer["SelectAChat"]</h3>
                 <p id="head-status" class="flex items-center gap-1.5 text-xs font-semibold" aria-live="polite"></p>
             </div>
             <button id="info-btn" type="button" class="flex h-10 w-10 items-center justify-center rounded-md text-mono/70 transition-colors hover:bg-white/5 hover:text-neon xl:hidden">
@@ -56,11 +58,11 @@
                 <div id="plus-menu" class="absolute bottom-full left-3 z-20 mb-2 hidden w-56 overflow-hidden rounded-lg bg-card py-1 shadow-xl ring-1 ring-white/10 sm:left-4" role="menu">
                     <button type="button" role="menuitem" data-action="workout" class="flex w-full items-center gap-3 px-4 py-3 text-left text-sm font-semibold transition-colors hover:bg-white/5 hover:text-neon">
                         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/></svg>
-                        Send Workout
+                        @Localizer["SendWorkoutAction"]
                     </button>
                     <button type="button" role="menuitem" data-action="booking" class="flex w-full items-center gap-3 px-4 py-3 text-left text-sm font-semibold transition-colors hover:bg-white/5 hover:text-neon">
                         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>
-                        Send Booking Link
+                        @Localizer["SendBookingLinkAction"]
                     </button>
                 </div>
             }
@@ -74,8 +76,8 @@
                     </button>
                 }
                 <div class="flex min-w-0 flex-1 items-center gap-1 rounded-full border border-white/10 bg-shell px-2 transition-colors focus-within:border-neon hover:border-white/25">
-                    <label for="msg-input" class="sr-only">Type a message</label>
-                    <input id="msg-input" type="text" autocomplete="off" placeholder="Type a message" class="min-w-0 flex-1 bg-transparent px-3 py-3 text-sm text-white placeholder:text-mono/40 focus:outline-none" />
+                    <label for="msg-input" class="sr-only">@Localizer["TypeMessageSr"]</label>
+                    <input id="msg-input" type="text" autocomplete="off" placeholder="@Localizer["TypeMessagePlaceholder"]" class="min-w-0 flex-1 bg-transparent px-3 py-3 text-sm text-white placeholder:text-mono/40 focus:outline-none" />
                 </div>
                 <button type="submit" class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-neon text-shell transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">
                     <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M21.7 2.3a1 1 0 0 0-1-.2L2.6 9.2a1 1 0 0 0 .1 1.9l7.1 2.4 2.4 7.1a1 1 0 0 0 1.9.1l7.2-18.1a1 1 0 0 0-.2-1.1ZM10.9 12.6l6.2-6.2-4.3 8.6-1.9-2.4Z"/></svg>
@@ -85,7 +87,7 @@
     </section>
 
     <!-- Context panel -->
-    <aside id="info-col" class="hidden h-full min-h-0 overflow-y-auto border-l border-white/10 bg-shell p-5 xl:block" aria-label="Context details">
+    <aside id="info-col" class="hidden h-full min-h-0 overflow-y-auto border-l border-white/10 bg-shell p-5 xl:block" aria-label="@Localizer["ContextDetailsAria"]">
         <div class="mb-3 flex justify-end xl:hidden">
             <button id="info-close" type="button" class="rounded-md p-2 text-mono/70 hover:text-neon">
                 <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
@@ -109,7 +111,7 @@
                 name = c.Name,
                 time = c.LastMessageDate == DateTime.MinValue ? "" : c.LastMessageDate.ToString("HH:mm"),
                 unread = c.UnreadCount,
-                lastText = string.IsNullOrEmpty(c.LastMessageText) ? "No messages yet" : c.LastMessageText,
+                lastText = string.IsNullOrEmpty(c.LastMessageText) ? Localizer["NoMessagesYetScript"].Value : c.LastMessageText,
                 msgs = new List<object>()
             })));
 
@@ -160,6 +162,8 @@
             }
 
             function renderChat() {
+                var todayText = '@Localizer["TodayScript"]';
+                var activeText = '@Localizer["ActiveStatusScript"]';
                 if (!activeId) return;
                 var c = byId(activeId);
                 if (!c) return;
@@ -168,16 +172,16 @@
                 if ($('head-name')) $('head-name').textContent = c.name;
                 if ($('head-status')) {
                     $('head-status').className = 'flex items-center gap-1.5 text-xs font-semibold text-neon';
-                    $('head-status').innerHTML = '<span class="h-1.5 w-1.5 rounded-full bg-neon"></span>Active';
+                    $('head-status').innerHTML = '<span class="h-1.5 w-1.5 rounded-full bg-neon"></span>' + activeText;
                 }
 
                 var box = $('messages');
                 if (box) {
                     var msgs = c.msgs || [];
                     if (msgs.length === 0) {
-                        box.innerHTML = '<p class="mx-auto w-fit rounded-full bg-card px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-mono/60">No messages yet</p>';
+                        box.innerHTML = '<p class="mx-auto w-fit rounded-full bg-card px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-mono/60">' + '@Localizer["NoMessagesYetScript"]' + '</p>';
                     } else {
-                        box.innerHTML = '<p class="mx-auto w-fit rounded-full bg-card px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-mono/60">Today</p>' + msgs.map(bubble).join('');
+                        box.innerHTML = '<p class="mx-auto w-fit rounded-full bg-card px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-mono/60">' + todayText + '</p>' + msgs.map(bubble).join('');
                     }
                     box.scrollTop = box.scrollHeight;
                 }
@@ -201,8 +205,8 @@
                 if (String(id) === 'BROADCAST_TRAINERS') {
                     if (c) c.msgs = [];
                     if ($('head-avatar')) $('head-avatar').textContent = '📢';
-                    if ($('head-name')) $('head-name').textContent = 'All Trainers';
-                    if ($('head-status')) $('head-status').textContent = 'Mass mailing';
+                    if ($('head-name')) $('head-name').textContent = '@Localizer["AllTrainersScript"]';
+                    if ($('head-status')) $('head-status').textContent = '@Localizer["MassMailingScript"]';
                     renderChat();
                     return;
                 }
@@ -248,8 +252,10 @@
             }
 
             function sendMessage(text) {
+                var selectContactAlert = '@Localizer["SelectContactAlertScript"]';
+                var failedSendAlert = '@Localizer["FailedSendAlertScript"]';
                 if (!activeId) {
-                    alert("Please select a contact first.");
+                    alert(selectContactAlert);
                     return;
                 }
 
@@ -270,7 +276,7 @@
                             renderChat();
                         }
                     } else {
-                        alert("Failed to send message.");
+                        alert(failedSendAlert);
                     }
                 })
                 .catch(function (err) { console.error("Send error:", err); });

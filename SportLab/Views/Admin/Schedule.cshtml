@@ -1,8 +1,11 @@
 ﻿@model SportLab.Models.WorkoutSlot
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@inject IStringLocalizer<SportLab.SharedResource> SharedLocalizer
 
 @{
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
-    ViewData["Title"] = "Schedule";
+    ViewData["Title"] = Localizer["ScheduleTitle"];
 }
 
 <link rel="stylesheet" href="~/css/admin/sporthub.css" asp-append-version="true" />
@@ -10,12 +13,12 @@
 <div class="sh-page" data-sh-page="schedule">
     <div class="sh-head">
         <div>
-            <h1 class="sh-title">Schedule</h1>
-            <p class="sh-sub">Weekly class grid. Click an empty cell to add a class, or a class to edit it.</p>
+            <h1 class="sh-title">@Localizer["ScheduleHeader"]</h1>
+            <p class="sh-sub">@Localizer["ScheduleSubHeader"]</p>
         </div>
     </div>
 
-    <div class="sh-legend" id="sh-schedule-legend" role="group" aria-label="Filter classes by type"></div>
+    <div class="sh-legend" id="sh-schedule-legend" role="group" aria-label="@Localizer["FilterClassesAria"]"></div>
 
     <div class="sh-card sh-scroll-x">
         <div class="sh-cal" id="sh-cal"></div>
@@ -26,47 +29,57 @@
     <div class="sh-modal" role="dialog" aria-modal="true" aria-labelledby="sh-schedule-modal-title">
         <div class="sh-modal-bar"></div>
         <div class="sh-modal-head">
-            <h2 class="sh-modal-title" id="sh-schedule-modal-title">Add Class</h2>
-            <button type="button" class="sh-modal-close" data-sh-close aria-label="Close"><svg class="sh-ico sh-ico-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg></button>
+            <h2 class="sh-modal-title" id="sh-schedule-modal-title">@Localizer["ModalAddClassTitle"]</h2>
+            <button type="button" class="sh-modal-close" data-sh-close aria-label="@SharedLocalizer["Close"]"><svg class="sh-ico sh-ico-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg></button>
         </div>
         <div class="sh-modal-body">
             <form class="sh-form" id="sh-schedule-form">
                 @Html.AntiForgeryToken()
-                
+
                 <div asp-validation-summary="ModelOnly" style="color: #ff4d4d; font-size: 14px; margin-bottom: 10px;"></div>
-                
+
                 <div class="sh-form-grid">
-                    <label class="sh-field">Activity Type
+                    <label class="sh-field">
+                        @Localizer["ActivityTypeLabel"]
                         <div class="sh-field-body">
                             <select class="sh-input" name="ActivityName" id="sh-schedule-type"></select>
                         </div>
                     </label>
-                    <label class="sh-field">Day
+                    <label class="sh-field">
+                        @Localizer["DayLabel"]
                         <div class="sh-field-body">
                             <select class="sh-input" name="day">
-                                <option value="1">Mon</option><option value="2">Tue</option><option value="3">Wed</option>
-                                <option value="4">Thu</option><option value="5">Fri</option><option value="6">Sat</option><option value="7">Sun</option>
+                                <option value="1">@Localizer["DayMon"]</option>
+                                <option value="2">@Localizer["DayTue"]</option>
+                                <option value="3">@Localizer["DayWed"]</option>
+                                <option value="4">@Localizer["DayThu"]</option>
+                                <option value="5">@Localizer["DayFri"]</option>
+                                <option value="6">@Localizer["DaySat"]</option>
+                                <option value="7">@Localizer["DaySun"]</option>
                             </select>
                         </div>
                     </label>
-                    <label class="sh-field">Start Time
+                    <label class="sh-field">
+                        @Localizer["StartTimeLabel"]
                         <div class="sh-field-body">
                             <input class="sh-input" asp-for="StartTime" type="time" min="08:00" max="20:00" step="900" />
                             <span asp-validation-for="StartTime" style="color: #ff4d4d; font-size: 12px; margin-top: 4px; display: block;"></span>
                         </div>
                     </label>
-                    <label class="sh-field">End Time
+                    <label class="sh-field">
+                        @Localizer["EndTimeLabel"]
                         <div class="sh-field-body">
                             <input class="sh-input" asp-for="EndTime" type="time" min="08:00" max="20:00" step="900" />
                             <span asp-validation-for="EndTime" style="color: #ff4d4d; font-size: 12px; margin-top: 4px; display: block;"></span>
                         </div>
                     </label>
                 </div>
-                
-                <label class="sh-field">Coach
+
+                <label class="sh-field">
+                    @Localizer["CoachLabel"]
                     <div class="sh-field-body">
                         <select class="sh-input" name="coach" required>
-                            <option value="" disabled selected>Select a trainer</option>
+                            <option value="" disabled selected>@Localizer["SelectTrainerPrompt"]</option>
                             @foreach (var trainer in ViewBag.Trainers)
                             {
                                 <option value="@trainer.Name">@trainer.Name</option>
@@ -74,9 +87,10 @@
                         </select>
                     </div>
                 </label>
-                
+
                 <div class="sh-form-grid">
-                    <label class="sh-field">Capacity
+                    <label class="sh-field">
+                        @Localizer["CapacityLabel"]
                         <div class="sh-field-body">
                             <input class="sh-input" asp-for="Capacity" type="number" min="1" step="1" />
                             <span asp-validation-for="Capacity" style="color: #ff4d4d; font-size: 12px; margin-top: 4px; display: block;"></span>
@@ -87,10 +101,10 @@
                 <p class="sh-form-error" id="sh-schedule-error" role="alert" hidden></p>
 
                 <div class="sh-form-actions sh-between">
-                    <button type="button" class="sh-btn sh-btn-outline-danger" id="sh-schedule-delete" hidden>Delete</button>
+                    <button type="button" class="sh-btn sh-btn-outline-danger" id="sh-schedule-delete" hidden>@SharedLocalizer["Delete"]</button>
                     <div class="sh-form-actions-right">
-                        <button type="button" class="sh-btn sh-btn-ghost" data-sh-close>Close</button>
-                        <button type="submit" class="sh-btn sh-btn-primary">Save</button>
+                        <button type="button" class="sh-btn sh-btn-ghost" data-sh-close>@SharedLocalizer["Close"]</button>
+                        <button type="submit" class="sh-btn sh-btn-primary">@SharedLocalizer["Save"]</button>
                     </div>
                 </div>
             </form>

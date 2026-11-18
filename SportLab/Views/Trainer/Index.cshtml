@@ -1,6 +1,9 @@
 @model IEnumerable<SportLab.Models.User>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
 @{
-    ViewData["Title"] = "Our Trainers";
+    ViewData["Title"] = Localizer["TrainersTitle"];
 }
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,209 +29,207 @@
         color: var(--tp-text);
     }
 
-    .trainers-page .tp-title {
-        font-size: clamp(1.75rem, 1.2rem + 2vw, 2.5rem);
-        font-weight: 800;
-        letter-spacing: -0.02em;
-        color: var(--tp-text);
-    }
+        .trainers-page .tp-title {
+            font-size: clamp(1.75rem, 1.2rem + 2vw, 2.5rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--tp-text);
+        }
 
-    .trainers-page .tp-accent {
-        color: var(--tp-accent);
-    }
+        .trainers-page .tp-accent {
+            color: var(--tp-accent);
+        }
 
-    .trainers-page .tp-muted {
-        color: var(--tp-muted);
-    }
+        .trainers-page .tp-muted {
+            color: var(--tp-muted);
+        }
 
-    /* Buttons */
-    .trainers-page .tp-btn {
-        border: 1px solid transparent;
-        border-radius: 10px;
-        font-weight: 600;
-        box-shadow: none;
-        transition: background-color .2s ease, border-color .2s ease, color .2s ease;
-    }
+        /* Buttons */
+        .trainers-page .tp-btn {
+            border: 1px solid transparent;
+            border-radius: 10px;
+            font-weight: 600;
+            box-shadow: none;
+            transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+        }
 
-    .trainers-page .tp-btn-primary,
-    .trainers-page .tp-btn-primary:focus {
-        background-color: var(--tp-accent);
-        border-color: var(--tp-accent);
-        color: var(--tp-accent-ink);
-    }
+        .trainers-page .tp-btn-primary,
+        .trainers-page .tp-btn-primary:focus {
+            background-color: var(--tp-accent);
+            border-color: var(--tp-accent);
+            color: var(--tp-accent-ink);
+        }
 
-    .trainers-page .tp-btn-primary:hover,
-    .trainers-page .tp-btn-primary:active {
-        background-color: var(--tp-accent-hover);
-        border-color: var(--tp-accent-hover);
-        color: var(--tp-accent-ink);
-    }
+            .trainers-page .tp-btn-primary:hover,
+            .trainers-page .tp-btn-primary:active {
+                background-color: var(--tp-accent-hover);
+                border-color: var(--tp-accent-hover);
+                color: var(--tp-accent-ink);
+            }
 
-    .trainers-page .tp-btn-outline,
-    .trainers-page .tp-btn-outline:focus {
-        background-color: transparent;
-        border-color: var(--tp-border-strong);
-        color: var(--tp-text);
-    }
+        .trainers-page .tp-btn-outline,
+        .trainers-page .tp-btn-outline:focus {
+            background-color: transparent;
+            border-color: var(--tp-border-strong);
+            color: var(--tp-text);
+        }
 
-    .trainers-page .tp-btn-outline:hover,
-    .trainers-page .tp-btn-outline:active {
-        background-color: rgba(204, 255, 0, 0.08);
-        border-color: var(--tp-accent);
-        color: var(--tp-accent);
-    }
+            .trainers-page .tp-btn-outline:hover,
+            .trainers-page .tp-btn-outline:active {
+                background-color: rgba(204, 255, 0, 0.08);
+                border-color: var(--tp-accent);
+                color: var(--tp-accent);
+            }
 
-    .trainers-page .tp-btn:focus-visible,
-    .trainers-page .btn.filter-btn:focus-visible {
-        outline: 2px solid var(--tp-accent);
-        outline-offset: 2px;
-        box-shadow: none;
-    }
+        .trainers-page .tp-btn:focus-visible,
+        .trainers-page .btn.filter-btn:focus-visible {
+            outline: 2px solid var(--tp-accent);
+            outline-offset: 2px;
+            box-shadow: none;
+        }
 
-    /* Filter pills (the script toggles .active / .btn-dark / .btn-outline-dark) */
-    .trainers-page .btn.filter-btn {
-        padding: .5rem 1.1rem;
-        border: 1px solid var(--tp-border);
-        border-radius: 999px;
-        background-color: var(--tp-surface);
-        color: #D4D4D4;
-        font-size: .875rem;
-        font-weight: 600;
-        box-shadow: none;
-        transition: background-color .2s ease, border-color .2s ease, color .2s ease;
-    }
+        /* Filter pills */
+        .trainers-page .btn.filter-btn {
+            padding: .5rem 1.1rem;
+            border: 1px solid var(--tp-border);
+            border-radius: 999px;
+            background-color: var(--tp-surface);
+            color: #D4D4D4;
+            font-size: .875rem;
+            font-weight: 600;
+            box-shadow: none;
+            transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+        }
 
-    .trainers-page .btn.filter-btn:hover {
-        background-color: var(--tp-surface);
-        border-color: var(--tp-accent);
-        color: var(--tp-accent);
-    }
+            .trainers-page .btn.filter-btn:hover {
+                background-color: var(--tp-surface);
+                border-color: var(--tp-accent);
+                color: var(--tp-accent);
+            }
 
-    .trainers-page .btn.filter-btn.active,
-    .trainers-page .btn.filter-btn.active:hover,
-    .trainers-page .btn.filter-btn:active {
-        background-color: var(--tp-accent);
-        border-color: var(--tp-accent);
-        color: var(--tp-accent-ink);
-    }
+            .trainers-page .btn.filter-btn.active,
+            .trainers-page .btn.filter-btn.active:hover,
+            .trainers-page .btn.filter-btn:active {
+                background-color: var(--tp-accent);
+                border-color: var(--tp-accent);
+                color: var(--tp-accent-ink);
+            }
 
-    /* Trainer cards */
-    .trainers-page .trainer-card {
-        background-color: var(--tp-surface);
-        border: 1px solid var(--tp-border);
-        border-radius: 20px;
-        color: var(--tp-text);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-        overflow: hidden;
-        transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
-    }
+        /* Trainer cards */
+        .trainers-page .trainer-card {
+            background-color: var(--tp-surface);
+            border: 1px solid var(--tp-border);
+            border-radius: 20px;
+            color: var(--tp-text);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+            overflow: hidden;
+            transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+        }
 
-    .trainers-page .trainer-card:hover {
-        transform: translateY(-4px);
-        border-color: rgba(204, 255, 0, 0.45);
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
-    }
+            .trainers-page .trainer-card:hover {
+                transform: translateY(-4px);
+                border-color: rgba(204, 255, 0, 0.45);
+                box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+            }
 
-    .trainers-page .trainer-photo {
-        margin: .75rem .75rem 0;
-        border-radius: 14px;
-        background-color: var(--tp-surface-2);
-        overflow: hidden;
-    }
+        .trainers-page .trainer-photo {
+            margin: .75rem .75rem 0;
+            border-radius: 14px;
+            background-color: var(--tp-surface-2);
+            overflow: hidden;
+        }
 
-    .trainers-page .trainer-photo img {
-        display: block;
-        width: 100%;
-        height: 280px;
-        border-radius: 0;
-        object-fit: cover;
-        transition: transform .4s ease;
-    }
+            .trainers-page .trainer-photo img {
+                display: block;
+                width: 100%;
+                height: 280px;
+                border-radius: 0;
+                object-fit: cover;
+                transition: transform .4s ease;
+            }
 
-    .trainers-page .trainer-card:hover .trainer-photo img {
-        transform: scale(1.04);
-    }
+        .trainers-page .trainer-card:hover .trainer-photo img {
+            transform: scale(1.04);
+        }
 
-    .trainers-page .trainer-name {
-        font-size: 1.2rem;
-        font-weight: 800;
-        letter-spacing: -0.01em;
-        color: var(--tp-text);
-    }
+        .trainers-page .trainer-name {
+            font-size: 1.2rem;
+            font-weight: 800;
+            letter-spacing: -0.01em;
+            color: var(--tp-text);
+        }
 
-    .trainers-page .trainer-specs {
-        color: var(--tp-muted);
-        font-weight: 500;
-    }
+        .trainers-page .trainer-specs {
+            color: var(--tp-muted);
+            font-weight: 500;
+        }
 
-    .trainers-page .trainer-about {
-        color: var(--tp-muted);
-        line-height: 1.6;
-    }
+        .trainers-page .trainer-about {
+            color: var(--tp-muted);
+            line-height: 1.6;
+        }
 
-    .trainers-page .line-clamp-3 {
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 3;
-        line-clamp: 3;
-        overflow: hidden;
-    }
+        .trainers-page .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            overflow: hidden;
+        }
 
-    .trainers-page .trainer-actions {
-        border-top: 1px solid var(--tp-border);
-    }
+        .trainers-page .trainer-actions {
+            border-top: 1px solid var(--tp-border);
+        }
 
-    /* Specialty badges: restyles the Bootstrap bg-* classes set by badgeColor */
-    .trainers-page .spec-badge {
-        flex-shrink: 0;
-        max-width: 55%;
-        padding: .45em .8em;
-        border: 1px solid transparent;
-        border-radius: 999px;
-        font-size: .72rem;
-        font-weight: 600;
-        letter-spacing: .02em;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
+        .trainers-page .spec-badge {
+            flex-shrink: 0;
+            max-width: 55%;
+            padding: .45em .8em;
+            border: 1px solid transparent;
+            border-radius: 999px;
+            font-size: .72rem;
+            font-weight: 600;
+            letter-spacing: .02em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
-    .trainers-page .spec-badge.bg-dark {
-        background-color: rgba(255, 255, 255, 0.08) !important;
-        border-color: rgba(255, 255, 255, 0.2);
-        color: #FFFFFF;
-    }
+            .trainers-page .spec-badge.bg-dark {
+                background-color: rgba(255, 255, 255, 0.08) !important;
+                border-color: rgba(255, 255, 255, 0.2);
+                color: #FFFFFF;
+            }
 
-    .trainers-page .spec-badge.bg-success {
-        background-color: rgba(204, 255, 0, 0.12) !important;
-        border-color: rgba(204, 255, 0, 0.35);
-        color: #CCFF00;
-    }
+            .trainers-page .spec-badge.bg-success {
+                background-color: rgba(204, 255, 0, 0.12) !important;
+                border-color: rgba(204, 255, 0, 0.35);
+                color: #CCFF00;
+            }
 
-    .trainers-page .spec-badge.bg-danger {
-        background-color: rgba(255, 92, 92, 0.12) !important;
-        border-color: rgba(255, 92, 92, 0.35);
-        color: #FF8080;
-    }
+            .trainers-page .spec-badge.bg-danger {
+                background-color: rgba(255, 92, 92, 0.12) !important;
+                border-color: rgba(255, 92, 92, 0.35);
+                color: #FF8080;
+            }
 
-    .trainers-page .spec-badge.bg-primary {
-        background-color: rgba(77, 163, 255, 0.12) !important;
-        border-color: rgba(77, 163, 255, 0.35);
-        color: #7ABDFF;
-    }
+            .trainers-page .spec-badge.bg-primary {
+                background-color: rgba(77, 163, 255, 0.12) !important;
+                border-color: rgba(77, 163, 255, 0.35);
+                color: #7ABDFF;
+            }
 
-    /* Alert + empty state */
-    .trainers-page .alert-danger {
-        background-color: rgba(255, 92, 92, 0.1);
-        border: 1px solid rgba(255, 92, 92, 0.35);
-        border-radius: 12px;
-        color: #FFB3B3;
-    }
+        .trainers-page .alert-danger {
+            background-color: rgba(255, 92, 92, 0.1);
+            border: 1px solid rgba(255, 92, 92, 0.35);
+            border-radius: 12px;
+            color: #FFB3B3;
+        }
 
-    .trainers-page .tp-empty {
-        border: 1px dashed var(--tp-border-strong);
-        border-radius: 20px;
-        color: var(--tp-muted);
-    }
+        .trainers-page .tp-empty {
+            border: 1px dashed var(--tp-border-strong);
+            border-radius: 20px;
+            color: var(--tp-muted);
+        }
 
     @@media (prefers-reduced-motion: reduce) {
         .trainers-page .trainer-card,
@@ -238,22 +239,22 @@
             transition: none;
         }
 
-        .trainers-page .trainer-card:hover,
-        .trainers-page .trainer-card:hover .trainer-photo img {
-            transform: none;
-        }
+            .trainers-page .trainer-card:hover,
+            .trainers-page .trainer-card:hover .trainer-photo img {
+                transform: none;
+            }
     }
 </style>
 
 <div class="container mt-4 pb-5 trainers-page">
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div>
-            <h2 class="tp-title mb-1">Meet Our <span class="tp-accent">Trainers</span></h2>
-            <p class="tp-muted mb-0">Certified fitness coaches ready to guide you toward your personal goals.</p>
+            <h2 class="tp-title mb-1">@Localizer["MeetOurText"] <span class="tp-accent">@Localizer["TrainersHighlight"]</span></h2>
+            <p class="tp-muted mb-0">@Localizer["TrainersSubtitle"]</p>
         </div>
         <div>
             <a asp-controller="Schedule" asp-action="Index" class="btn tp-btn tp-btn-outline">
-                View Schedule
+                @Localizer["ViewScheduleBtn"]
             </a>
         </div>
     </div>
@@ -268,11 +269,11 @@
 
     <!-- Filter Buttons -->
     <div class="mb-4 d-flex gap-2 flex-wrap" role="group" aria-label="Filter trainers by specialty">
-        <button type="button" class="btn btn-sm btn-dark filter-btn active" onclick="filterTrainers('all', this)">All Specialties</button>
-        <button type="button" class="btn btn-sm btn-outline-dark filter-btn" onclick="filterTrainers('strength', this)">Strength & Bodybuilding</button>
-        <button type="button" class="btn btn-sm btn-outline-dark filter-btn" onclick="filterTrainers('functional', this)">CrossFit & Functional</button>
-        <button type="button" class="btn btn-sm btn-outline-dark filter-btn" onclick="filterTrainers('yoga', this)">Yoga & Mobility</button>
-        <button type="button" class="btn btn-sm btn-outline-dark filter-btn" onclick="filterTrainers('combat', this)">Combat & Boxing</button>
+        <button type="button" class="btn btn-sm btn-dark filter-btn active" onclick="filterTrainers('all', this)">@Localizer["FilterAllSpecs"]</button>
+        <button type="button" class="btn btn-sm btn-outline-dark filter-btn" onclick="filterTrainers('strength', this)">@Localizer["FilterStrength"]</button>
+        <button type="button" class="btn btn-sm btn-outline-dark filter-btn" onclick="filterTrainers('functional', this)">@Localizer["FilterFunctional"]</button>
+        <button type="button" class="btn btn-sm btn-outline-dark filter-btn" onclick="filterTrainers('yoga', this)">@Localizer["FilterYoga"]</button>
+        <button type="button" class="btn btn-sm btn-outline-dark filter-btn" onclick="filterTrainers('combat', this)">@Localizer["FilterCombat"]</button>
     </div>
 
     <div class="row g-4" id="trainersList">
@@ -280,50 +281,49 @@
         {
             <div class="col-12">
                 <div class="tp-empty text-center py-5">
-                    <h5 class="mb-0">No trainers available at the moment.</h5>
+                    <h5 class="mb-0">@Localizer["NoTrainersAvailable"]</h5>
                 </div>
             </div>
         }
         else
         {
-            <!-- Client-side empty state (hidden by default) -->
             <div id="noResultsMessage" class="col-12" style="display: none;">
                 <div class="tp-empty text-center py-5">
-                    <h5 class="mb-0">No trainers found in this category.</h5>
+                    <h5 class="mb-0">@Localizer["NoTrainersFoundCategory"]</h5>
                 </div>
             </div>
 
             @foreach (var trainer in Model)
             {
                 var profile = trainer.TrainerProfile;
-                
-                var specs = !string.IsNullOrWhiteSpace(profile?.Specializations) 
-                    ? profile.Specializations.Split(',').Select(s => s.Trim()).ToList() 
-                    : new List<string> { "Coach" };
-                    
+
+                var specs = !string.IsNullOrWhiteSpace(profile?.Specializations)
+                ? profile.Specializations.Split(',').Select(s => s.Trim()).ToList()
+                : new List<string> { "Coach" };
+
                 var firstSpec = specs.First();
                 var allSpecs = string.Join(", ", specs);
 
-                var dataSpecialty = "functional"; // Default
+                var dataSpecialty = "functional";
                 if (specs.Any(s => s.Contains("Strength", StringComparison.OrdinalIgnoreCase))) dataSpecialty = "strength";
                 if (specs.Any(s => s.Contains("Yoga", StringComparison.OrdinalIgnoreCase) || s.Contains("Mobility", StringComparison.OrdinalIgnoreCase))) dataSpecialty = "yoga";
                 if (specs.Any(s => s.Contains("Boxing", StringComparison.OrdinalIgnoreCase) || s.Contains("Combat", StringComparison.OrdinalIgnoreCase))) dataSpecialty = "combat";
 
                 var badgeColor = dataSpecialty == "strength" ? "bg-dark" :
-                                 dataSpecialty == "yoga" ? "bg-success" :
-                                 dataSpecialty == "combat" ? "bg-danger" :
-                                 "bg-primary";
+                dataSpecialty == "yoga" ? "bg-success" :
+                dataSpecialty == "combat" ? "bg-danger" :
+                "bg-primary";
 
-                var photoUrl = !string.IsNullOrWhiteSpace(profile?.PhotoUrl) 
-                    ? profile.PhotoUrl 
-                    : (trainer.AvatarUrl ?? "https://images.unsplash.com/photo-1769134277133-4d26989a7783?w=600&auto=format&fit=crop&q=80");
+                var photoUrl = !string.IsNullOrWhiteSpace(profile?.PhotoUrl)
+                ? profile.PhotoUrl
+                : (trainer.AvatarUrl ?? "https://images.unsplash.com/photo-1769134277133-4d26989a7783?w=600&auto=format&fit=crop&q=80");
 
                 <div class="col-sm-6 col-lg-4 trainer-item" data-specialty="@dataSpecialty">
                     <div class="card h-100 trainer-card">
                         <div class="trainer-photo">
-                            <img src="@photoUrl" 
-                                 class="card-img-top" 
-                                 alt="@trainer.Name" 
+                            <img src="@photoUrl"
+                                 class="card-img-top"
+                                 alt="@trainer.Name"
                                  loading="lazy">
                         </div>
                         <div class="card-body d-flex flex-column">
@@ -336,12 +336,12 @@
                                 @(profile?.About ?? "Dedicated fitness professional ready to help you achieve your goals.")
                             </p>
                             <div class="mt-auto pt-3 trainer-actions d-flex gap-2">
-                                <a asp-controller="Schedule" asp-action="Index" class="btn btn-sm tp-btn tp-btn-outline flex-fill">Schedule</a>
-                                
+                                <a asp-controller="Schedule" asp-action="Index" class="btn btn-sm tp-btn tp-btn-outline flex-fill">@Localizer["ScheduleBtn"]</a>
+
                                 <form asp-controller="Trainer" asp-action="BookTrainer" method="post" class="flex-fill m-0">
                                     @Html.AntiForgeryToken()
                                     <input type="hidden" name="trainerId" value="@trainer.Id" />
-                                    <button type="submit" class="btn btn-sm tp-btn tp-btn-primary w-100">Book Session</button>
+                                    <button type="submit" class="btn btn-sm tp-btn tp-btn-primary w-100">@Localizer["BookSessionBtn"]</button>
                                 </form>
                             </div>
                         </div>

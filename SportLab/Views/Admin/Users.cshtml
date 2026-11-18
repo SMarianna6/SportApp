@@ -1,8 +1,11 @@
 ﻿@model SportLab.Models.User
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@inject IStringLocalizer<SportLab.SharedResource> SharedLocalizer
 
 @{
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
-    ViewData["Title"] = "Users";
+    ViewData["Title"] = Localizer["UsersTitle"];
 }
 
 <link rel="stylesheet" href="~/css/admin/sporthub.css" asp-append-version="true" />
@@ -10,11 +13,11 @@
 <div class="sh-page" data-sh-page="users">
     <div class="sh-head">
         <div>
-            <h1 class="sh-title">Users</h1>
+            <h1 class="sh-title">@Localizer["UsersHeader"]</h1>
             <p class="sh-sub" id="sh-users-count"></p>
         </div>
         <button type="button" class="sh-btn sh-btn-primary" id="sh-user-add">
-            <svg class="sh-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14" /><path d="M12 5v14" /></svg>Add User
+            <svg class="sh-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14" /><path d="M12 5v14" /></svg>@Localizer["AddUserButton"]
         </button>
     </div>
 
@@ -22,7 +25,12 @@
         <table class="sh-table" style="min-width:760px">
             <thead>
                 <tr>
-                    <th>Name</th><th>Email</th><th>Role</th><th>Current Tariff</th><th>Status</th><th class="sh-right">Actions</th>
+                    <th>@Localizer["ThName"]</th>
+                    <th>@Localizer["ThEmail"]</th>
+                    <th>@Localizer["ThRole"]</th>
+                    <th>@Localizer["ThTariff"]</th>
+                    <th>@Localizer["ThStatus"]</th>
+                    <th class="sh-right">@Localizer["ThActions"]</th>
                 </tr>
             </thead>
             <tbody id="sh-users-body"></tbody>
@@ -34,8 +42,8 @@
     <div class="sh-modal" role="dialog" aria-modal="true" aria-labelledby="sh-user-modal-title">
         <div class="sh-modal-bar"></div>
         <div class="sh-modal-head">
-            <h2 class="sh-modal-title" id="sh-user-modal-title">Add User</h2>
-            <button type="button" class="sh-modal-close" data-sh-close aria-label="Close"><svg class="sh-ico sh-ico-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg></button>
+            <h2 class="sh-modal-title" id="sh-user-modal-title">@Localizer["ModalAddUserTitle"]</h2>
+            <button type="button" class="sh-modal-close" data-sh-close aria-label="@SharedLocalizer["Close"]"><svg class="sh-ico sh-ico-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg></button>
         </div>
         <div class="sh-modal-body">
             @* MVC integration point: point action/method at your own controller action and add @Html.AntiForgeryToken() if you post it. *@
@@ -45,7 +53,7 @@
                 </div>
 
                 <label class="sh-field">
-                    Full Name
+                    @Localizer["FullNameLabel"]
                     <div class="sh-field-body">
                         <input class="sh-input" asp-for="Name" />
                         <span asp-validation-for="Name"
@@ -54,7 +62,7 @@
                 </label>
 
                 <label class="sh-field">
-                    Email
+                    @Localizer["EmailLabel"]
                     <div class="sh-field-body">
                         <input class="sh-input" asp-for="Email" type="email" />
                         <span asp-validation-for="Email"
@@ -63,7 +71,7 @@
                 </label>
 
                 <label class="sh-field">
-                    Password
+                    @Localizer["PasswordLabel"]
                     <div class="sh-field-body">
                         <input class="sh-input" asp-for="Password" type="password" />
                         <span asp-validation-for="Password"
@@ -73,12 +81,12 @@
 
                 <div class="sh-form-grid">
                     <label class="sh-field">
-                        Role
+                        @Localizer["RoleLabel"]
                         <div class="sh-field-body">
                             <select class="sh-input" asp-for="Role">
-                                <option value="Client">Client</option>
-                                <option value="Trainer">Trainer</option>
-                                <option value="Admin">Admin</option>
+                                <option value="Client">@Localizer["RoleClient"]</option>
+                                <option value="Trainer">@Localizer["RoleTrainer"]</option>
+                                <option value="Admin">@Localizer["RoleAdmin"]</option>
                             </select>
                             <span asp-validation-for="Role"
                                   style="color: #ff4d4d; font-size: 12px; margin-top: 4px; display: block;"></span>
@@ -86,7 +94,7 @@
                     </label>
 
                     <label class="sh-field">
-                        Select Tariff
+                        @Localizer["SelectTariffLabel"]
                         <div class="sh-field-body">
                             <select class="sh-input" name="tariff" id="sh-user-tariff"></select>
                         </div>
@@ -94,8 +102,8 @@
                 </div>
 
                 <div class="sh-form-actions">
-                    <button type="button" class="sh-btn sh-btn-ghost" data-sh-close>Cancel</button>
-                    <button type="submit" class="sh-btn sh-btn-primary">Save</button>
+                    <button type="button" class="sh-btn sh-btn-ghost" data-sh-close>@SharedLocalizer["Cancel"]</button>
+                    <button type="submit" class="sh-btn sh-btn-primary">@SharedLocalizer["Save"]</button>
                 </div>
             </form>
         </div>

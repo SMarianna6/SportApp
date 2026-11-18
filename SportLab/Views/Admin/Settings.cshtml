@@ -1,6 +1,10 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@inject IStringLocalizer<SportLab.SharedResource> SharedLocalizer
+
+@{
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
-    ViewData["Title"] = "Settings";
+    ViewData["Title"] = Localizer["SettingsTitle"];
 }
 
 <link rel="stylesheet" href="~/css/admin/sporthub.css" asp-append-version="true" />
@@ -8,54 +12,59 @@
 <div class="sh-page" data-sh-page="settings">
     <div class="sh-head">
         <div>
-            <h1 class="sh-title">Settings</h1>
-            <p class="sh-sub">Manage your admin profile</p>
+            <h1 class="sh-title">@Localizer["SettingsHeader"]</h1>
+            <p class="sh-sub">@Localizer["SettingsSubHeader"]</p>
         </div>
     </div>
 
     <div class="sh-tabs" role="tablist">
-        <button type="button" class="sh-tab is-active" role="tab" data-tab="Account">Account</button>
-        <button type="button" class="sh-tab" role="tab" data-tab="Security">Security</button>
-        <button type="button" class="sh-tab" role="tab" data-tab="Notifications">Notifications</button>
+        <button type="button" class="sh-tab is-active" role="tab" data-tab="Account">@Localizer["TabAccount"]</button>
+        <button type="button" class="sh-tab" role="tab" data-tab="Security">@Localizer["TabSecurity"]</button>
+        <button type="button" class="sh-tab" role="tab" data-tab="Notifications">@Localizer["TabNotifications"]</button>
     </div>
 
     @Html.AntiForgeryToken()
 
     <div class="sh-card sh-settings-card sh-form">
         <form id="admin-account-form" class="sh-form" data-panel="Account">
-            <label class="sh-field">Display Name
+            <label class="sh-field">
+                @Localizer["DisplayNameLabel"]
                 <div class="sh-field-body"><input id="admin-acc-name" class="sh-input" required /></div>
             </label>
-            <label class="sh-field">Update Email
+            <label class="sh-field">
+                @Localizer["UpdateEmailLabel"]
                 <div class="sh-field-body"><input id="admin-acc-email" class="sh-input" type="email" required /></div>
             </label>
             <div>
-                <button type="submit" id="admin-btn-save-acc" class="sh-btn sh-btn-primary">Save Changes</button>
+                <button type="submit" id="admin-btn-save-acc" class="sh-btn sh-btn-primary">@Localizer["SaveChangesButton"]</button>
                 <p id="admin-acc-msg" class="mt-3 text-sm font-bold hidden" style="color: #AAFF00;"></p>
             </div>
         </form>
 
         <form id="admin-security-form" class="sh-form" data-panel="Security" hidden>
-            <label class="sh-field">Current Password
+            <label class="sh-field">
+                @Localizer["CurrentPasswordLabel"]
                 <div class="sh-field-body"><input id="admin-pw-current" class="sh-input" type="password" required /></div>
             </label>
-            <label class="sh-field">New Password
+            <label class="sh-field">
+                @Localizer["NewPasswordLabel"]
                 <div class="sh-field-body"><input id="admin-pw-new" class="sh-input" type="password" required /></div>
             </label>
-            <label class="sh-field">Confirm New Password
+            <label class="sh-field">
+                @Localizer["ConfirmNewPasswordLabel"]
                 <div class="sh-field-body"><input id="admin-pw-confirm" class="sh-input" type="password" required /></div>
             </label>
             <div>
-                <button type="submit" id="admin-btn-save-pw" class="sh-btn sh-btn-primary">Change Password</button>
+                <button type="submit" id="admin-btn-save-pw" class="sh-btn sh-btn-primary">@Localizer["ChangePasswordButton"]</button>
                 <p id="admin-pw-msg" class="mt-3 text-sm font-bold hidden" style="color: #AAFF00;"></p>
             </div>
         </form>
 
         <div data-panel="Notifications" hidden>
-            <div class="sh-pref"><span>New member registrations</span><button type="button" class="sh-switch" role="switch" aria-checked="true" aria-label="New member registrations"></button></div>
-            <div class="sh-pref"><span>Low stock alerts</span><button type="button" class="sh-switch" role="switch" aria-checked="true" aria-label="Low stock alerts"></button></div>
-            <div class="sh-pref"><span>Class cancellations</span><button type="button" class="sh-switch" role="switch" aria-checked="false" aria-label="Class cancellations"></button></div>
-            <div class="sh-pref"><span>Weekly revenue report</span><button type="button" class="sh-switch" role="switch" aria-checked="true" aria-label="Weekly revenue report"></button></div>
+            <div class="sh-pref"><span>@Localizer["PrefNewMembers"]</span><button type="button" class="sh-switch" role="switch" aria-checked="true" aria-label="@Localizer["PrefNewMembers"]"></button></div>
+            <div class="sh-pref"><span>@Localizer["PrefLowStock"]</span><button type="button" class="sh-switch" role="switch" aria-checked="true" aria-label="@Localizer["PrefLowStock"]"></button></div>
+            <div class="sh-pref"><span>@Localizer["PrefClassCancellations"]</span><button type="button" class="sh-switch" role="switch" aria-checked="false" aria-label="@Localizer["PrefClassCancellations"]"></button></div>
+            <div class="sh-pref"><span>@Localizer["PrefWeeklyRevenue"]</span><button type="button" class="sh-switch" role="switch" aria-checked="true" aria-label="@Localizer["PrefWeeklyRevenue"]"></button></div>
         </div>
     </div>
 </div>

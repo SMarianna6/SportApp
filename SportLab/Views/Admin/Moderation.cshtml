@@ -1,6 +1,10 @@
 ﻿@model List<SportLab.Models.Review>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@inject IStringLocalizer<SportLab.SharedResource> SharedLocalizer
+
 @{
-    ViewData["Title"] = "Review Moderation";
+    ViewData["Title"] = Localizer["ReviewModerationTitle"];
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
     var pending = Model.Count(r => r.ModerationStatus == "Pending");
     var published = Model.Count(r => r.ModerationStatus == "Approved" || r.ModerationStatus == "Published");
@@ -13,23 +17,23 @@
     <div class="mx-auto max-w-5xl">
 
         <div class="mb-8">
-            <p class="text-xs font-extrabold uppercase tracking-widest text-neon">Moderator Panel</p>
-            <h1 class="mt-1 text-4xl font-black uppercase tracking-tighter">Review Moderation</h1>
-            <p class="mt-1 text-sm text-white/50">Approve, hide or delete reviews submitted by clients.</p>
+            <p class="text-xs font-extrabold uppercase tracking-widest text-neon">@Localizer["ModeratorPanelSub"]</p>
+            <h1 class="mt-1 text-4xl font-black uppercase tracking-tighter">@Localizer["ReviewModerationHeader"]</h1>
+            <p class="mt-1 text-sm text-white/50">@Localizer["ReviewModerationDesc"]</p>
         </div>
 
-        <!-- Counters (Added IDs for JS updates) -->
+        <!-- Counters -->
         <div class="mb-8 grid gap-4 sm:grid-cols-3">
             <div class="rounded-lg border border-white/10 bg-[#1a1a1a] p-5">
-                <p class="text-xs font-bold uppercase tracking-widest text-white/40">Pending</p>
+                <p class="text-xs font-bold uppercase tracking-widest text-white/40">@Localizer["PendingStatusLabel"]</p>
                 <p id="count-pending" class="mt-1 text-3xl font-black text-neon">@pending</p>
             </div>
             <div class="rounded-lg border border-white/10 bg-[#1a1a1a] p-5">
-                <p class="text-xs font-bold uppercase tracking-widest text-white/40">Published</p>
+                <p class="text-xs font-bold uppercase tracking-widest text-white/40">@Localizer["PublishedStatusLabel"]</p>
                 <p id="count-published" class="mt-1 text-3xl font-black text-green-400">@published</p>
             </div>
             <div class="rounded-lg border border-white/10 bg-[#1a1a1a] p-5">
-                <p class="text-xs font-bold uppercase tracking-widest text-white/40">Hidden</p>
+                <p class="text-xs font-bold uppercase tracking-widest text-white/40">@Localizer["HiddenStatusLabel"]</p>
                 <p id="count-hidden" class="mt-1 text-3xl font-black text-red-400">@hidden</p>
             </div>
         </div>
@@ -37,8 +41,8 @@
         @if (!Model.Any())
         {
             <div id="empty-state" class="rounded-lg border border-dashed border-white/10 p-12 text-center">
-                <svg class="mx-auto mb-4 h-12 w-12 text-white/20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg>
-                <p class="text-sm font-semibold text-white/40">No reviews to moderate yet.</p>
+                <svg class="mx-auto mb-4 h-12 w-12 text-white/20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z" /></svg>
+                <p class="text-sm font-semibold text-white/40">@Localizer["NoReviewsYet"]</p>
             </div>
         }
         else
@@ -47,13 +51,13 @@
                 @foreach (var review in Model)
                 {
                     var statusClass = review.ModerationStatus == "Pending" ? "bg-yellow-500/20 text-yellow-300" :
-                                      review.ModerationStatus == "Hidden" ? "bg-red-500/20 text-red-400" :
-                                      "bg-green-500/20 text-green-400";
+                    review.ModerationStatus == "Hidden" ? "bg-red-500/20 text-red-400" :
+                    "bg-green-500/20 text-green-400";
 
                     <div id="review-@review.Id" data-id="@review.Id" class="review-card rounded-lg border border-white/10 bg-[#1a1a1a] p-5">
                         <div class="flex flex-wrap items-start justify-between gap-3">
                             <div>
-                                <p class="font-black uppercase tracking-tight">@(review.User?.Name ?? "Unknown client")</p>
+                                <p class="font-black uppercase tracking-tight">@(review.User?.Name ?? Localizer["UnknownClientText"].Value)</p>
                                 <p class="text-xs text-white/40">@review.User?.Email</p>
                                 <p class="mt-2 text-xs text-white/40">@review.CreatedDate.ToString("dd.MM.yyyy HH:mm")</p>
                             </div>
@@ -75,22 +79,22 @@
 
                         <!-- Async Buttons -->
                         <div class="mt-5 flex flex-wrap gap-2">
-                            <button type="button" 
+                            <button type="button"
                                     class="btn-approve @(review.ModerationStatus == "Approved" || review.ModerationStatus == "Published" ? "hidden" : "") rounded-md bg-green-500/20 px-4 py-2 text-xs font-bold uppercase tracking-widest text-green-400 transition-colors hover:bg-green-500/30"
                                     data-id="@review.Id">
-                                Approve
+                                @Localizer["ApproveButton"]
                             </button>
-                            
-                            <button type="button" 
+
+                            <button type="button"
                                     class="btn-hide @(review.ModerationStatus == "Hidden" ? "hidden" : "") rounded-md bg-yellow-500/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-yellow-300 transition-colors hover:bg-yellow-500/20"
                                     data-id="@review.Id">
-                                Hide
+                                @Localizer["HideButton"]
                             </button>
-                            
-                            <button type="button" 
+
+                            <button type="button"
                                     class="btn-delete rounded-md bg-red-500/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-red-400 transition-colors hover:bg-red-500/20"
                                     data-id="@review.Id">
-                                Delete
+                                @SharedLocalizer["Delete"]
                             </button>
                         </div>
                     </div>
@@ -112,6 +116,10 @@
         const toast = document.getElementById('toast');
         const toastText = document.getElementById('toast-text');
 
+        const confirmDeleteText = '@Localizer["ConfirmDeleteScript"]';
+        const deletedToastText = '@Localizer["ReviewDeletedScript"]';
+        const netErrorText = '@Localizer["NetworkErrorScript"]';
+
         function showToast(msg, isError = false) {
             toastText.textContent = msg;
             toastText.className = isError ? 'text-[#FF5252]' : 'text-neon';
@@ -128,7 +136,7 @@
             const id = btn.dataset.id;
             const card = document.getElementById('review-' + id);
             const badge = card.querySelector('.status-badge');
-            
+
             let action = '';
             if (btn.classList.contains('btn-approve')) action = 'ApproveReview';
             if (btn.classList.contains('btn-hide')) action = 'HideReview';
@@ -136,7 +144,7 @@
 
             if (!action) return;
 
-            if (action === 'DeleteReview' && !confirm('Delete this review permanently?')) return;
+            if (action === 'DeleteReview' && !confirm(confirmDeleteText)) return;
 
             // Visual loading state
             const originalText = btn.textContent;
@@ -170,9 +178,9 @@
 
                     if (action === 'DeleteReview') {
                         card.remove();
-                        showToast('Review deleted.');
-                        if(container.children.length === 0) window.location.reload(); // reload to show empty state
-                    } 
+                        showToast(deletedToastText);
+                        if(container.children.length === 0) window.location.reload();
+                    }
                     else {
                         const newStatus = data.status;
                         // Increment new status count
@@ -182,15 +190,15 @@
                         // Update DOM
                         badge.textContent = newStatus;
                         badge.dataset.status = newStatus;
-                        
+
                         // Reset badge colors
-                        badge.className = 'status-badge rounded-md px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-widest ' + 
+                        badge.className = 'status-badge rounded-md px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-widest ' +
                             (newStatus === 'Hidden' ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400');
 
                         // Toggle buttons
                         const btnApprove = card.querySelector('.btn-approve');
                         const btnHide = card.querySelector('.btn-hide');
-                        
+
                         if (newStatus === 'Approved') btnApprove.classList.add('hidden');
                         else btnApprove.classList.remove('hidden');
 
@@ -203,7 +211,7 @@
                     showToast(data.message || 'Action failed.', true);
                 }
             } catch (err) {
-                showToast('Network error.', true);
+                showToast(netErrorText, true);
             } finally {
                 btn.textContent = originalText;
                 btn.disabled = false;

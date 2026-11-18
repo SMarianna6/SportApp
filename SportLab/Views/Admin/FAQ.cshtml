@@ -1,8 +1,11 @@
 ﻿@model SportLab.Models.FAQ
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@inject IStringLocalizer<SportLab.SharedResource> SharedLocalizer
 
 @{
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
-    ViewData["Title"] = "FAQ";
+    ViewData["Title"] = Localizer["AdminFaqTitle"];
 }
 
 <link rel="stylesheet" href="~/css/admin/sporthub.css" asp-append-version="true" />
@@ -10,11 +13,11 @@
 <div class="sh-page" data-sh-page="faq">
     <div class="sh-head">
         <div>
-            <h1 class="sh-title">FAQ</h1>
+            <h1 class="sh-title">@Localizer["AdminFaqHeader"]</h1>
             <p class="sh-sub" id="sh-faq-count"></p>
         </div>
         <button type="button" class="sh-btn sh-btn-primary" id="sh-faq-add">
-            <svg class="sh-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14" /><path d="M12 5v14" /></svg>Add FAQ
+            <svg class="sh-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14" /><path d="M12 5v14" /></svg>@Localizer["AddFaqButton"]
         </button>
     </div>
 
@@ -25,36 +28,38 @@
     <div class="sh-modal" role="dialog" aria-modal="true" aria-labelledby="sh-faq-modal-title">
         <div class="sh-modal-bar"></div>
         <div class="sh-modal-head">
-            <h2 class="sh-modal-title" id="sh-faq-modal-title">Add FAQ</h2>
-            <button type="button" class="sh-modal-close" data-sh-close aria-label="Close"><svg class="sh-ico sh-ico-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg></button>
+            <h2 class="sh-modal-title" id="sh-faq-modal-title">@Localizer["ModalAddFaqTitle"]</h2>
+            <button type="button" class="sh-modal-close" data-sh-close aria-label="@SharedLocalizer["Close"]"><svg class="sh-ico sh-ico-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg></button>
         </div>
         <div class="sh-modal-body">
             <form class="sh-form" id="sh-faq-form">
                 @Html.AntiForgeryToken()
                 <div asp-validation-summary="ModelOnly" style="color: #ff4d4d; font-size: 14px; margin-bottom: 10px;"></div>
-                
-                <label class="sh-field">Question
+
+                <label class="sh-field">
+                    @Localizer["QuestionLabel"]
                     <div class="sh-field-body">
                         <input class="sh-input" asp-for="Question" />
                         <span asp-validation-for="Question" style="color: #ff4d4d; font-size: 12px; margin-top: 4px; display: block;"></span>
                     </div>
                 </label>
-                
-                <label class="sh-field">Answer
+
+                <label class="sh-field">
+                    @Localizer["AnswerLabel"]
                     <div class="sh-field-body">
                         <textarea class="sh-input" asp-for="Answer" rows="4"></textarea>
                         <span asp-validation-for="Answer" style="color: #ff4d4d; font-size: 12px; margin-top: 4px; display: block;"></span>
                     </div>
                 </label>
-                
+
                 <label class="sh-check">
                     <input type="checkbox" asp-for="IsActive" checked />
-                    <span>Is Active</span>
+                    <span>@Localizer["IsActiveLabel"]</span>
                 </label>
-                
+
                 <div class="sh-form-actions">
-                    <button type="button" class="sh-btn sh-btn-ghost" data-sh-close>Cancel</button>
-                    <button type="submit" class="sh-btn sh-btn-primary">Save</button>
+                    <button type="button" class="sh-btn sh-btn-ghost" data-sh-close>@SharedLocalizer["Cancel"]</button>
+                    <button type="submit" class="sh-btn sh-btn-primary">@SharedLocalizer["Save"]</button>
                 </div>
             </form>
         </div>

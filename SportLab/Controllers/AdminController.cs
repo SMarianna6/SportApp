@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Microsoft.EntityFrameworkCore;
 using SportLab.Data;
 using SportLab.Filters;
@@ -13,10 +14,12 @@ namespace SportLab.Controllers
     public class AdminController : Controller
     {
         private readonly SportLabContext _context;
+        private readonly IStringLocalizer<AdminController> _localizer;
 
-        public AdminController(SportLabContext context)
+        public AdminController(SportLabContext context, IStringLocalizer<AdminController> localizer)
         {
             _context = context;
+            _localizer = localizer;
         }
 
         public IActionResult Index()
@@ -26,7 +29,6 @@ namespace SportLab.Controllers
                 Tariffs = _context.Plans.ToList(),
                 Products = _context.Products.ToList(),
                 Users = _context.Users.ToList(),
-
             };
 
             return View(model);
@@ -35,7 +37,7 @@ namespace SportLab.Controllers
         public IActionResult Users()
         {
             var tariffNames = _context.Plans.Select(p => p.Name).ToList();
-            tariffNames.Insert(0, "No plan selected");
+            tariffNames.Insert(0, _localizer["NoPlanSelected"]);
 
             ViewBag.TariffNames = tariffNames;
             return View();
@@ -183,7 +185,7 @@ namespace SportLab.Controllers
             {
                 if (string.IsNullOrWhiteSpace(userDto.Password))
                 {
-                    return BadRequest("A password is required for new users.");
+                    return BadRequest(_localizer["PasswordRequiredNewUser"].Value);
                 }
 
                 user = new User
@@ -235,9 +237,8 @@ namespace SportLab.Controllers
                     _context.Set<Subscription>().Add(newSubscription);
                 }
             }
-            else if (string.IsNullOrWhiteSpace(userDto.Tariff) || userDto.Tariff == "No plan selected")
+            else if (string.IsNullOrWhiteSpace(userDto.Tariff) || userDto.Tariff == "No plan selected" || userDto.Tariff == _localizer["NoPlanSelected"])
             {
-                // If Admin selected "No plan", deactivate all active subscriptions
                 foreach (var sub in user.Subscriptions.Where(s => s.IsActive))
                 {
                     sub.IsActive = false;
@@ -528,25 +529,25 @@ namespace SportLab.Controllers
                 return BadRequest(ModelState);
 
             if (dto.Day < 1 || dto.Day > 7)
-                return BadRequest("Invalid day.");
+                return BadRequest(_localizer["InvalidDayError"].Value);
 
             if (dto.Capacity < 1)
-                return BadRequest("Capacity must be greater than zero.");
+                return BadRequest(_localizer["CapacityZeroError"].Value);
 
             if (!TimeSpan.TryParse(dto.TimeStart, out var startTime) ||
                 !TimeSpan.TryParse(dto.TimeEnd, out var endTime))
-                return BadRequest("Invalid time format.");
+                return BadRequest(_localizer["InvalidTimeFormatError"].Value);
 
             if (startTime < TimeSpan.FromHours(8) ||
                 endTime > TimeSpan.FromHours(20) ||
                 endTime <= startTime)
-                return BadRequest("Invalid class time.");
+                return BadRequest(_localizer["InvalidClassTimeError"].Value);
 
             var trainer = await _context.Users
                 .FirstOrDefaultAsync(u => u.Name == dto.Coach);
 
             if (trainer == null)
-                return BadRequest("Selected trainer was not found.");
+                return BadRequest(_localizer["TrainerNotFoundError"].Value);
 
             var today = DateTime.Today;
             var diff = (7 + (today.DayOfWeek - DayOfWeek.Monday)) % 7;
@@ -582,7 +583,7 @@ namespace SportLab.Controllers
                 return NotFound();
 
             if (dto.Capacity < existingSlot.Bookings.Count)
-                return BadRequest("Capacity cannot be lower than the current number of bookings.");
+                return BadRequest(_localizer["CapacityLowerThanBookingsError"].Value);
 
             existingSlot.ActivityName = dto.Type;
             existingSlot.TrainerId = trainer.Id;
@@ -613,15 +614,13 @@ namespace SportLab.Controllers
                 return NotFound();
 
             if (slot.Bookings.Any())
-                return BadRequest("This class has active bookings and cannot be deleted.");
+                return BadRequest(_localizer["ClassHasBookingsError"].Value);
 
             _context.WorkoutSlots.Remove(slot);
             await _context.SaveChangesAsync();
 
             return Ok();
         }
-
-        // Add this inside AdminController
 
         [HttpGet]
         public async Task<IActionResult> Moderation()
@@ -640,12 +639,12 @@ namespace SportLab.Controllers
         public async Task<IActionResult> ApproveReview(int id)
         {
             var review = await _context.Reviews.FindAsync(id);
-            if (review == null) return NotFound(new { success = false, message = "Review not found." });
+            if (review == null) return NotFound(new { success = false, message = _localizer["ReviewNotFoundError"].Value });
 
             review.ModerationStatus = "Approved";
             await _context.SaveChangesAsync();
 
-            return Json(new { success = true, status = "Approved", message = "Review approved." });
+            return Json(new { success = true, status = "Approved", message = _localizer["ReviewApprovedMsg"].Value });
         }
 
         [HttpPost]
@@ -653,12 +652,12 @@ namespace SportLab.Controllers
         public async Task<IActionResult> HideReview(int id)
         {
             var review = await _context.Reviews.FindAsync(id);
-            if (review == null) return NotFound(new { success = false, message = "Review not found." });
+            if (review == null) return NotFound(new { success = false, message = _localizer["ReviewNotFoundError"].Value });
 
             review.ModerationStatus = "Hidden";
             await _context.SaveChangesAsync();
 
-            return Json(new { success = true, status = "Hidden", message = "Review hidden." });
+            return Json(new { success = true, status = "Hidden", message = _localizer["ReviewHiddenMsg"].Value });
         }
 
         [HttpPost]
@@ -666,12 +665,12 @@ namespace SportLab.Controllers
         public async Task<IActionResult> DeleteReview(int id)
         {
             var review = await _context.Reviews.FindAsync(id);
-            if (review == null) return NotFound(new { success = false, message = "Review not found." });
+            if (review == null) return NotFound(new { success = false, message = _localizer["ReviewNotFoundError"].Value });
 
             _context.Reviews.Remove(review);
             await _context.SaveChangesAsync();
 
-            return Json(new { success = true, message = "Review deleted." });
+            return Json(new { success = true, message = _localizer["ReviewDeletedMsg"].Value });
         }
 
         [HttpGet]
@@ -703,7 +702,6 @@ namespace SportLab.Controllers
                 classBookings = classBookings,
                 shopSales = shopSales
             };
-
 
             var revenueData = new int[12];
             var newUsersData = new int[12];
@@ -834,7 +832,7 @@ namespace SportLab.Controllers
         public async Task<IActionResult> UpdateOrderStatusApi(int id, string status)
         {
             var order = await _context.Orders.FindAsync(id);
-            if (order == null) return NotFound(new { success = false, message = "Order not found" });
+            if (order == null) return NotFound(new { success = false, message = _localizer["OrderNotFoundError"].Value });
 
             order.Status = status;
             await _context.SaveChangesAsync();

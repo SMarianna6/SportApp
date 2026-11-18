@@ -1,6 +1,10 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@inject IStringLocalizer<SportLab.SharedResource> SharedLocalizer
+
+@{
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
-    ViewData["Title"] = "Dashboard";
+    ViewData["Title"] = Localizer["DashboardTitle"];
 }
 
 <link rel="stylesheet" href="~/css/admin/sporthub.css" asp-append-version="true" />
@@ -8,8 +12,8 @@
 <div class="sh-page" data-sh-page="dashboard">
     <div class="sh-head">
         <div>
-            <h1 class="sh-title">Dashboard</h1>
-            <p class="sh-sub">Club performance at a glance</p>
+            <h1 class="sh-title">@Localizer["DashboardHeader"]</h1>
+            <p class="sh-sub">@Localizer["DashboardSubHeader"]</p>
         </div>
     </div>
 
@@ -18,21 +22,21 @@
     <div class="sh-dash-grid">
         <div class="sh-card sh-chart-card">
             <div class="sh-chart-head">
-                <h2 class="sh-h2">Platform Growth</h2>
+                <h2 class="sh-h2">@Localizer["PlatformGrowthHeader"]</h2>
                 <div class="sh-chart-controls">
-                    <button type="button" class="sh-select-btn sh-n"><span class="sh-dot sh-dot-n"></span>Revenue <svg class="sh-ico sh-ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></button>
-                    <button type="button" class="sh-select-btn sh-v"><span class="sh-dot sh-dot-v"></span>New Users <svg class="sh-ico sh-ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></button>
+                    <button type="button" class="sh-select-btn sh-n"><span class="sh-dot sh-dot-n"></span>@Localizer["RevenueBtn"] <svg class="sh-ico sh-ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></button>
+                    <button type="button" class="sh-select-btn sh-v"><span class="sh-dot sh-dot-v"></span>@Localizer["NewUsersBtn"] <svg class="sh-ico sh-ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></button>
                     <button type="button" class="sh-select-btn sh-dim">2026 <svg class="sh-ico sh-ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></button>
                 </div>
             </div>
             <div class="sh-chart-wrap">
-                <svg id="sh-chart" class="sh-chart-svg" role="img" aria-label="Revenue and new users by month"></svg>
+                <svg id="sh-chart" class="sh-chart-svg" role="img" aria-label="@Localizer["ChartAriaLabel"]"></svg>
                 <div id="sh-tooltip" class="sh-tooltip" hidden></div>
             </div>
         </div>
 
         <div class="sh-card sh-events-card">
-            <h2 class="sh-h2">Recent Events</h2>
+            <h2 class="sh-h2">@Localizer["RecentEventsHeader"]</h2>
             <ul class="sh-events" id="sh-events"></ul>
         </div>
     </div>

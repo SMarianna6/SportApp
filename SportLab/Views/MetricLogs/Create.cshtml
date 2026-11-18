@@ -1,38 +1,40 @@
 ﻿@model SportLab.Models.MetricLog
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 @{
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
-    ViewData["Title"] = "Log Weight";
+    ViewData["Title"] = Localizer["MetricLogCreateTitle"];
 }
 
 <div class="container p-4 text-white">
-    <h2>Log New Weight</h2>
+    <h2>@Localizer["MetricLogCreateHeader"]</h2>
     <hr class="border-secondary" />
     <div class="row">
         <div class="col-md-5">
             <div class="card bg-dark p-4 shadow-sm border-secondary">
                 <form asp-action="Create">
                     <div class="mb-4">
-                        <label asp-for="UserId" class="form-label text-white fw-bold">Client</label>
+                        <label asp-for="UserId" class="form-label text-white fw-bold">@Localizer["ClientLabel"]</label>
                         <select asp-for="UserId" class="form-select bg-dark text-white border-secondary" asp-items="ViewBag.UserId"></select>
                     </div>
                     <div class="mb-4">
-                        <label asp-for="Weight" class="form-label text-white fw-bold">Weight (kg)</label>
-                        <input asp-for="Weight" class="form-control bg-dark text-white border-secondary" placeholder="e.g., 75.5" />
+                        <label asp-for="Weight" class="form-label text-white fw-bold">@Localizer["WeightLabel"]</label>
+                        <input asp-for="Weight" class="form-control bg-dark text-white border-secondary" placeholder="@Localizer["WeightPlaceholder"]" />
                         <span asp-validation-for="Weight" class="text-danger small"></span>
                     </div>
                     <div class="mb-4">
-                        <label asp-for="RecordDate" class="form-label text-white fw-bold">Date</label>
+                        <label asp-for="RecordDate" class="form-label text-white fw-bold">@Localizer["DateLabel"]</label>
                         <input asp-for="RecordDate" type="date" class="form-control bg-dark text-white border-secondary" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
                         <span asp-validation-for="RecordDate" class="text-danger small"></span>
                     </div>
                     <div class="mb-4">
-                        <label asp-for="Notes" class="form-label text-white fw-bold">Notes (Optional)</label>
-                        <input asp-for="Notes" class="form-control bg-dark text-white border-secondary" placeholder="How was your workout?" />
+                        <label asp-for="Notes" class="form-label text-white fw-bold">@Localizer["NotesLabel"]</label>
+                        <input asp-for="Notes" class="form-control bg-dark text-white border-secondary" placeholder="@Localizer["NotesPlaceholder"]" />
                     </div>
                     <div class="d-flex gap-3 mt-2">
-                        <button type="submit" class="btn btn-primary px-4 fw-bold">Save</button>
-                        <a asp-action="Index" class="btn btn-outline-light px-4">Cancel</a>
+                        <button type="submit" class="btn btn-primary px-4 fw-bold">@Localizer["SaveButton"]</button>
+                        <a asp-action="Index" class="btn btn-outline-light px-4">@Localizer["CancelButton"]</a>
                     </div>
                 </form>
             </div>
@@ -41,5 +43,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

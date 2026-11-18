@@ -1,19 +1,21 @@
 ﻿@model IEnumerable<SportLab.Models.MetricLog>
 @using System.Globalization
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 @{
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
-    ViewData["Title"] = "My Progress";
+    ViewData["Title"] = Localizer["MetricLogsIndexTitle"];
 }
 
 <div class="container p-4 text-white">
-    <h2>My Progress</h2>
+    <h2>@Localizer["MyProgressHeader"]</h2>
     <hr class="border-secondary" />
 
     <div class="row mt-4">
         <div class="col-lg-7 mb-4">
             <div class="card bg-dark p-4 shadow-sm border-secondary h-100">
-                <h4 class="mb-4">Weight Chart</h4>
+                <h4 class="mb-4">@Localizer["WeightChartHeader"]</h4>
                 <div style="height: 250px; border-left: 2px solid #6c757d; border-bottom: 2px solid #6c757d; padding: 10px;">
                     @{
                         var pointsList = new List<string>();
@@ -23,10 +25,10 @@
                             float maxW = logsList.Max(m => m.Weight);
                             float minW = logsList.Min(m => m.Weight);
                             float diff = (maxW - minW) == 0 ? 1 : (maxW - minW);
-            
+
                             int width = 300;
                             int height = 230;
-            
+
                             for (int i = 0; i < logsList.Count; i++)
                             {
                                 int x = logsList.Count == 1 ? width / 2 : (i * width) / (logsList.Count - 1);
@@ -51,25 +53,25 @@
         <div class="col-lg-5 mb-4">
             <div class="card bg-dark p-4 shadow-sm border-secondary h-100">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h4 class="mb-0">History</h4>
-                    <a asp-controller="MetricLogs" asp-action="Create" class="btn btn-primary btn-sm fw-bold px-3">+ Log Weight</a>
+                    <h4 class="mb-0">@Localizer["HistoryHeader"]</h4>
+                    <a asp-controller="MetricLogs" asp-action="Create" class="btn btn-primary btn-sm fw-bold px-3">@Localizer["LogWeightBtn"]</a>
                 </div>
-                
+
                 <div class="table-responsive">
                     <table class="table table-dark table-hover align-middle mt-2">
                         <thead>
                             <tr class="text-secondary">
-                                <th>Date</th>
-                                <th>Weight</th>
-                                <th>Notes</th>
-                                <th class="text-end">Actions</th>
+                                <th>@Localizer["ThDate"]</th>
+                                <th>@Localizer["ThWeight"]</th>
+                                <th>@Localizer["ThNotes"]</th>
+                                <th class="text-end">@Localizer["ThActions"]</th>
                             </tr>
                         </thead>
                         <tbody>
                             @if (Model == null || !Model.Any())
                             {
                                 <tr>
-                                    <td colspan="4" class="text-center text-muted py-4">No progress logged yet.</td>
+                                    <td colspan="4" class="text-center text-muted py-4">@Localizer["NoProgressLogged"]</td>
                                 </tr>
                             }
                             else
@@ -78,13 +80,13 @@
                                 {
                                     <tr>
                                         <td class="text-nowrap">@log.RecordDate.ToString("MMM d", new CultureInfo("en-US"))</td>
-                                        <td class="fw-bold text-nowrap">@log.Weight kg</td>
+                                        <td class="fw-bold text-nowrap">@log.Weight @Localizer["KgUnit"]</td>
                                         <td class="text-white small">@(string.IsNullOrEmpty(log.Notes) ? "-" : log.Notes)</td>
                                         <td>
                                             <div class="d-flex justify-content-end gap-2">
-                                                <a asp-controller="MetricLogs" asp-action="Edit" asp-route-id="@log.Id" class="btn btn-sm btn-outline-light">Edit</a>
-                                                <form asp-controller="MetricLogs" asp-action="Delete" asp-route-id="@log.Id" method="post" onsubmit="return confirm('Delete this record?');">
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                                <a asp-controller="MetricLogs" asp-action="Edit" asp-route-id="@log.Id" class="btn btn-sm btn-outline-light">@Localizer["EditBtn"]</a>
+                                                <form asp-controller="MetricLogs" asp-action="Delete" asp-route-id="@log.Id" method="post" onsubmit="return confirm('@Localizer["DeleteConfirm"]');">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">@Localizer["DeleteBtn"]</button>
                                                 </form>
                                             </div>
                                         </td>
