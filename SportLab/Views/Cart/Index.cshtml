@@ -1,7 +1,9 @@
 @model List<SportLab.Controllers.CartItem>
 
+@inject IViewLocalizer Localizer
+
 @{
-    ViewData["Title"] = "Shopping Cart - SportLab";
+    ViewData["Title"] = Localizer["PageTitle"];
     var subtotal = Model.Sum(i => i.Subtotal);
 }
 
@@ -12,15 +14,15 @@
     <!-- Breadcrumb -->
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-decoration-none">Home</a></li>
-            <li class="breadcrumb-item"><a asp-controller="Shop" asp-action="Index" class="text-decoration-none">Shop</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Shopping Cart</li>
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-decoration-none">@Localizer["Home"]</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Shop" asp-action="Index" class="text-decoration-none">@Localizer["Shop"]</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Localizer["ShoppingCart"]</li>
         </ol>
     </nav>
 
     <div class="d-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 fw-bold mb-0">Your Shopping Cart</h1>
-        <span class="text-muted"><span id="cartItemsCount">@Model.Sum(i => i.Quantity)</span> items</span>
+        <h1 class="h3 fw-bold mb-0">@Localizer["YourCart"]</h1>
+        <span class="text-muted"><span id="cartItemsCount">@Model.Sum(i => i.Quantity)</span> @Localizer["ItemsLabel"]</span>
     </div>
 
     @if (!Model.Any())
@@ -30,10 +32,10 @@
             <div class="display-3 text-muted mb-3">
                 <i class="bi bi-cart-x"></i>
             </div>
-            <h3 class="fw-bold mb-2">Your cart is currently empty</h3>
-            <p class="text-muted mb-4">Looks like you haven't added any fitness gear or nutrition yet.</p>
+            <h3 class="fw-bold mb-2">@Localizer["EmptyCartTitle"]</h3>
+            <p class="text-muted mb-4">@Localizer["EmptyCartText"]</p>
             <a asp-controller="Shop" asp-action="Index" class="btn btn-primary rounded-pill px-5 py-2 fw-semibold">
-                <i class="bi bi-bag-plus me-1"></i> Start Shopping
+                <i class="bi bi-bag-plus me-1"></i> @Localizer["StartShopping"]
             </a>
         </div>
     }
@@ -47,10 +49,10 @@
                         <table class="table cart-table align-middle mb-0">
                             <thead>
                                 <tr>
-                                    <th style="width: 45%;">Product</th>
-                                    <th>Price</th>
-                                    <th>Quantity</th>
-                                    <th>Subtotal</th>
+                                    <th style="width: 45%;">@Localizer["Product"]</th>
+                                    <th>@Localizer["Price"]</th>
+                                    <th>@Localizer["Quantity"]</th>
+                                    <th>@Localizer["Subtotal"]</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -93,7 +95,7 @@
                                             <span class="fw-bold text-primary" id="subtotal-@item.ProductId">@item.Subtotal.ToString("N0") ₴</span>
                                         </td>
                                         <td class="text-end">
-                                            <button type="button" class="btn btn-outline-danger btn-sm border-0 btn-remove-item" data-product-id="@item.ProductId" title="Remove">
+                                            <button type="button" class="btn btn-outline-danger btn-sm border-0 btn-remove-item" data-product-id="@item.ProductId" title="@Localizer["Remove"]">
                                                 <i class="bi bi-trash3"></i>
                                             </button>
                                         </td>
@@ -105,11 +107,11 @@
 
                     <div class="p-3 bg-light border-top d-flex justify-content-between align-items-center">
                         <a asp-controller="Shop" asp-action="Index" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
-                            <i class="bi bi-arrow-left me-1"></i> Continue Shopping
+                            <i class="bi bi-arrow-left me-1"></i> @Localizer["ContinueShopping"]
                         </a>
                         <form asp-action="ClearCart" method="post" class="d-inline">
-                            <button type="submit" class="btn btn-link text-danger btn-sm text-decoration-none" onclick="return confirm('Clear all items from your cart?')">
-                                Clear Cart
+                            <button type="submit" class="btn btn-link text-danger btn-sm text-decoration-none" onclick="return confirm('@Localizer["ClearCartConfirm"]')">
+                                @Localizer["ClearCart"]
                             </button>
                         </form>
                     </div>
@@ -119,40 +121,40 @@
             <!-- Right: Order Summary Card -->
             <div class="col-lg-4">
                 <div class="cart-summary-card">
-                    <h5 class="fw-bold mb-3">Order Summary</h5>
+                    <h5 class="fw-bold mb-3">@Localizer["OrderSummary"]</h5>
 
                     <div class="d-flex justify-content-between mb-2">
-                        <span class="text-muted">Items Subtotal:</span>
+                        <span class="text-muted">@Localizer["ItemsSubtotal"]</span>
                         <span class="fw-bold" id="summarySubtotal">@subtotal.ToString("N0") ₴</span>
                     </div>
 
                     <div class="d-flex justify-content-between mb-2">
-                        <span class="text-muted">Shipping:</span>
-                        <span class="text-success fw-semibold">Free (Pickup)</span>
+                        <span class="text-muted">@Localizer["Shipping"]</span>
+                        <span class="text-success fw-semibold">@Localizer["FreePickup"]</span>
                     </div>
 
                     <!-- Promo Code Box -->
                     <div class="my-3 pt-2">
                         <div class="input-group input-group-sm">
-                            <input type="text" class="form-control" id="promoCodeInput" placeholder="Promo code (e.g. SPORT10)" />
-                            <button class="btn btn-outline-dark" type="button" id="btnApplyPromo">Apply</button>
+                            <input type="text" class="form-control" id="promoCodeInput" placeholder="@Localizer["PromoPlaceholder"]" />
+                            <button class="btn btn-outline-dark" type="button" id="btnApplyPromo">@Localizer["Apply"]</button>
                         </div>
-                        <span class="form-text text-success small d-none" id="promoSuccessText">10% discount applied!</span>
+                        <span class="form-text text-success small d-none" id="promoSuccessText">@Localizer["PromoApplied"]</span>
                     </div>
 
                     <hr class="my-3">
 
                     <div class="d-flex justify-content-between align-items-baseline mb-4">
-                        <span class="fs-5 fw-bold">Total:</span>
+                        <span class="fs-5 fw-bold">@Localizer["Total"]</span>
                         <span class="fs-3 fw-extrabold text-primary" id="summaryTotal">@subtotal.ToString("N0") ₴</span>
                     </div>
 
                     <a asp-action="Checkout" class="btn btn-primary w-100 py-3 rounded-pill fw-bold shadow-sm mb-3">
-                        Proceed to Checkout <i class="bi bi-arrow-right ms-1"></i>
+                        @Localizer["ProceedToCheckout"] <i class="bi bi-arrow-right ms-1"></i>
                     </a>
 
                     <div class="text-center text-muted small">
-                        <i class="bi bi-shield-check text-success me-1"></i> 100% Encrypted & Safe Payments
+                        <i class="bi bi-shield-check text-success me-1"></i> @Localizer["SecurePayments"]
                     </div>
                 </div>
             </div>
@@ -178,7 +180,7 @@
                     promoSuccess.classList.remove("d-none");
                     updateTotalDisplay();
                 } else {
-                    alert("Invalid promo code. Try SPORT10 for 10% off.");
+                    alert('@Localizer["InvalidPromo"]');
                 }
             });
         }
@@ -243,7 +245,7 @@
                         }
                     }
                 } catch (e) {
-                    alert("Network error.");
+                    alert('@Localizer["NetworkError"]');
                 }
             });
         });
@@ -283,7 +285,7 @@
                         }
                     }
                 } catch (e) {
-                    alert("Network error.");
+                    alert('@Localizer["NetworkError"]');
                 }
             });
         });

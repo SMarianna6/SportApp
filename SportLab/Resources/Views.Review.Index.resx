@@ -1,0 +1,191 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<!-- 
+		Microsoft ResX Schema
+
+		Version 1.3
+
+		The primary goals of this format is to allow a simple XML format 
+		that is mostly human readable. The generation and parsing of the 
+		various data types are done through the TypeConverter classes 
+		associated with the data types.
+
+		Example:
+
+		... ado.net/XML headers & schema ...
+		<resheader name="resmimetype">text/microsoft-resx</resheader>
+		<resheader name="version">1.3</resheader>
+		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+		<data name="Name1">this is my long string</data>
+		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+			[base64 mime encoded serialized .NET Framework object]
+		</data>
+		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+			[base64 mime encoded string representing a byte array form of the .NET Framework object]
+		</data>
+
+		There are any number of "resheader" rows that contain simple 
+		name/value pairs.
+
+		Each data row contains a name, and value. The row also contains a 
+		type or mimetype. Type corresponds to a .NET class that support 
+		text/value conversion through the TypeConverter architecture. 
+		Classes that don't support this are serialized and stored with the 
+		mimetype set.
+
+		The mimetype is used for serialized objects, and tells the 
+		ResXResourceReader how to depersist the object. This is currently not 
+		extensible. For a given mimetype the value must be set accordingly:
+
+		Note - application/x-microsoft.net.object.binary.base64 is the format 
+		that the ResXResourceWriter will generate, however the reader can 
+		read any of the formats listed below.
+
+		mimetype: application/x-microsoft.net.object.binary.base64
+		value   : The object must be serialized with 
+			: System.Serialization.Formatters.Binary.BinaryFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.soap.base64
+		value   : The object must be serialized with 
+			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.bytearray.base64
+		value   : The object must be serialized into a byte array 
+			: using a System.ComponentModel.TypeConverter
+			: and then encoded with base64 encoding.
+	-->
+	
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>1.3</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="PageTitle" xml:space="preserve">
+    <value>Member Reviews - SportLab</value>
+  </data>
+	<data name="CommunityBadge" xml:space="preserve">
+    <value>Community Trust &amp; Feedback</value>
+  </data>
+	<data name="Title" xml:space="preserve">
+    <value>Member Reviews &amp; Experiences</value>
+  </data>
+	<data name="Subtitle" xml:space="preserve">
+    <value>Real testimonials from our athletes, powerlifters, and fitness enthusiasts at SportLab.</value>
+  </data>
+	<data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+	<data name="BasedOn" xml:space="preserve">
+    <value>Based on {0} verified reviews</value>
+  </data>
+	<data name="FilterByRating" xml:space="preserve">
+    <value>Filter by Star Rating:</value>
+  </data>
+	<data name="AllReviews" xml:space="preserve">
+    <value>All Reviews ({0})</value>
+  </data>
+	<data name="Stars5" xml:space="preserve">
+    <value>5 Stars</value>
+  </data>
+	<data name="Stars4" xml:space="preserve">
+    <value>4 Stars</value>
+  </data>
+	<data name="Stars3" xml:space="preserve">
+    <value>3 Stars</value>
+  </data>
+	<data name="ShareExperience" xml:space="preserve">
+    <value>Share Your Experience</value>
+  </data>
+	<data name="ShareHint" xml:space="preserve">
+    <value>Your feedback helps us continuously improve our facilities and training programs.</value>
+  </data>
+	<data name="OverallRating" xml:space="preserve">
+    <value>Overall Rating</value>
+  </data>
+	<data name="Rating5" xml:space="preserve">
+    <value>5/5 - Outstanding!</value>
+  </data>
+	<data name="Rating4" xml:space="preserve">
+    <value>4/5 - Very Good</value>
+  </data>
+	<data name="Rating3" xml:space="preserve">
+    <value>3/5 - Good</value>
+  </data>
+	<data name="Rating2" xml:space="preserve">
+    <value>2/5 - Fair</value>
+  </data>
+	<data name="Rating1" xml:space="preserve">
+    <value>1/5 - Poor</value>
+  </data>
+	<data name="YourReview" xml:space="preserve">
+    <value>Your Review</value>
+  </data>
+	<data name="ReviewPlaceholder" xml:space="preserve">
+    <value>Tell us about the trainers, equipment, classes, or atmosphere...</value>
+  </data>
+	<data name="SubmitReview" xml:space="preserve">
+    <value>Submit Review</value>
+  </data>
+	<data name="OnlyClients" xml:space="preserve">
+    <value>Only clients can leave reviews.</value>
+  </data>
+	<data name="MustLogin" xml:space="preserve">
+    <value>You must be logged in to leave a review.</value>
+  </data>
+	<data name="LoginToReview" xml:space="preserve">
+    <value>Log in to Review</value>
+  </data>
+	<data name="PublishedReviews" xml:space="preserve">
+    <value>Published Reviews ({0})</value>
+  </data>
+	<data name="NoReviews" xml:space="preserve">
+    <value>No reviews found</value>
+  </data>
+	<data name="NoReviewsHint" xml:space="preserve">
+    <value>Be the first to share your thoughts about SportLab!</value>
+  </data>
+	<data name="MemberFallback" xml:space="preserve">
+    <value>Member</value>
+  </data>
+	<data name="VerifiedAthlete" xml:space="preserve">
+    <value>Verified Athlete</value>
+  </data>
+</root>

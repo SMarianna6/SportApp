@@ -1,7 +1,9 @@
 ﻿@model IEnumerable<SportLab.Models.Plan>
 
+@inject IViewLocalizer Localizer
+
 @{
-    ViewData["Title"] = "Memberships & Plans";
+    ViewData["Title"] = Localizer["PageTitle"];
 }
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -13,11 +15,11 @@
         <div class="row align-items-center">
             <div class="col-lg-8">
                 <span class="badge-hero mb-3">
-                    <i class="bi bi-lightning-charge-fill text-warning"></i> Premium Fitness Experience
+                    <i class="bi bi-lightning-charge-fill text-warning"></i> @Localizer["HeroBadge"]
                 </span>
-                <h1 class="display-5 fw-bold mb-3 text-white">Memberships & Club Passes</h1>
+                <h1 class="display-5 fw-bold mb-3 text-white">@Localizer["HeroTitle"]</h1>
                 <p class="lead text-light mb-0" style="opacity: 0.9;">
-                    Choose the perfect workout plan tailored to your fitness goals. Top-tier equipment, certified trainers, and world-class service.
+                    @Localizer["HeroText"]
                 </p>
             </div>
         </div>
@@ -26,19 +28,19 @@
     <!-- Category Filter Tabs -->
     <div class="tariffs-filter-container">
         <button type="button" class="filter-pill active" data-filter="all">
-            <i class="bi bi-grid-fill me-1"></i> All Plans
+            <i class="bi bi-grid-fill me-1"></i> @Localizer["FilterAll"]
         </button>
         <button type="button" class="filter-pill" data-filter="popular">
-            <i class="bi bi-star-fill text-warning me-1"></i> Popular
+            <i class="bi bi-star-fill text-warning me-1"></i> @Localizer["FilterPopular"]
         </button>
         <button type="button" class="filter-pill" data-filter="basic">
-            <i class="bi bi-check2-circle me-1"></i> Basic
+            <i class="bi bi-check2-circle me-1"></i> @Localizer["FilterBasic"]
         </button>
         <button type="button" class="filter-pill" data-filter="premium">
-            <i class="bi bi-gem me-1"></i> Premium / Annual
+            <i class="bi bi-gem me-1"></i> @Localizer["FilterPremium"]
         </button>
         <button type="button" class="filter-pill" data-filter="student">
-            <i class="bi bi-mortarboard-fill me-1"></i> Student
+            <i class="bi bi-mortarboard-fill me-1"></i> @Localizer["FilterStudent"]
         </button>
     </div>
 
@@ -49,9 +51,9 @@
             <div class="col-12 text-center py-5">
                 <div class="p-5 bg-light rounded-4 border">
                     <i class="bi bi-inbox display-4 text-muted mb-3 d-block"></i>
-                    <h4 class="fw-bold">No Membership Plans Found</h4>
-                    <p class="text-muted">Create a new plan or reload the page to load default options.</p>
-                    <a asp-action="Create" class="btn btn-primary rounded-pill px-4">Create Plan</a>
+                    <h4 class="fw-bold">@Localizer["NoPlansTitle"]</h4>
+                    <p class="text-muted">@Localizer["NoPlansText"]</p>
+                    <a asp-action="Create" class="btn btn-primary rounded-pill px-4">@Localizer["CreatePlan"]</a>
                 </div>
             </div>
         }
@@ -99,13 +101,13 @@
                 string cardModifier = isFeatured ? "featured" : (isVip ? "vip" : (isStudent ? "student" : ""));
                 string categoriesAttr = string.Join(" ", cardCategories);
 
-                string badgeLabel = isStudent ? "Student" : (isVip ? "Premium" : (isFeatured ? "Best Seller" : (item.Type ?? "Plan")));
+                string badgeLabel = isStudent ? Localizer["BadgeStudent"].Value : (isVip ? Localizer["BadgePremium"].Value : (isFeatured ? Localizer["BadgeBestSeller"].Value : (item.Type ?? Localizer["BadgePlan"].Value)));
 
                 <div class="col-lg-4 col-md-6 tariff-card-col" data-categories="@categoriesAttr">
                     <div class="tariff-card @cardModifier">
                         @if (isFeatured)
                         {
-                            <div class="ribbon-featured">Best Seller</div>
+                            <div class="ribbon-featured">@Localizer["BadgeBestSeller"]</div>
                         }
 
                         <!-- Card Header -->
@@ -122,18 +124,18 @@
                             <div class="tariff-price-block">
                                 <span class="tariff-currency">₴</span>
                                 <span class="tariff-amount">@item.Price.ToString("N0")</span>
-                                <span class="tariff-period">/ @(item.Duration >= 365 ? "year" : $"{item.Duration} days")</span>
+                                <span class="tariff-period">@(item.Duration >= 365 ? Localizer["PerYear"].Value : Localizer["PerDays", item.Duration].Value)</span>
                             </div>
 
                             <div class="tariff-duration-chip">
                                 <i class="bi bi-calendar3 text-primary"></i>
-                                <span>Duration: <strong>@item.Duration days</strong></span>
+                                <span>@Localizer["DurationLabel"] <strong>@Localizer["DurationDays", item.Duration]</strong></span>
                             </div>
                         </div>
 
                         <!-- Card Body (Included Services) -->
                         <div class="tariff-card-body">
-                            <div class="tariff-features-title">Included in this plan:</div>
+                            <div class="tariff-features-title">@Localizer["IncludedTitle"]</div>
                             <ul class="tariff-features-list">
                                 @{
                                     var features = (item.Description ?? "")
@@ -145,11 +147,11 @@
                                     {
                                         <li class="tariff-feature-item">
                                             <i class="bi bi-check-circle-fill"></i>
-                                            <span>Full gym & cardio area access</span>
+                                            <span>@Localizer["FeatureFallback1"]</span>
                                         </li>
                                         <li class="tariff-feature-item">
                                             <i class="bi bi-check-circle-fill"></i>
-                                            <span>Locker rooms & shower facilities</span>
+                                            <span>@Localizer["FeatureFallback2"]</span>
                                         </li>
                                     }
                                     else
@@ -175,11 +177,11 @@
                                     data-tariff-price="@item.Price.ToString("N0")"
                                     data-tariff-duration="@item.Duration"
                                     data-tariff-type="@badgeLabel">
-                                <i class="bi bi-bag-check-fill"></i> Quick Purchase
+                                <i class="bi bi-bag-check-fill"></i> @Localizer["QuickPurchase"]
                             </button>
 
                             <a asp-action="ConfirmPurchase" asp-route-id="@item.Id" class="btn-detail-tariff">
-                                <i class="bi bi-shield-check me-1"></i> Order with Guarantee
+                                <i class="bi bi-shield-check me-1"></i> @Localizer["OrderWithGuarantee"]
                             </a>
                         </div>
                     </div>
@@ -190,10 +192,10 @@
             <div class="col-12 text-center py-4 d-none" id="filterEmptyState">
                 <div class="p-4 bg-white rounded-4 border shadow-sm">
                     <i class="bi bi-funnel text-primary fs-1 mb-2 d-block"></i>
-                    <h5 class="fw-bold text-dark">No plans found in this category</h5>
-                    <p class="text-muted small mb-3">Try choosing another category or view all available memberships.</p>
+                    <h5 class="fw-bold text-dark">@Localizer["EmptyFilterTitle"]</h5>
+                    <p class="text-muted small mb-3">@Localizer["EmptyFilterText"]</p>
                     <button type="button" class="btn btn-primary btn-sm rounded-pill px-4 py-2 fw-semibold" onclick="document.querySelector('[data-filter=all]').click();">
-                        <i class="bi bi-grid-fill me-1"></i> View All Plans
+                        <i class="bi bi-grid-fill me-1"></i> @Localizer["ViewAllPlans"]
                     </button>
                 </div>
             </div>
@@ -205,22 +207,22 @@
         <div class="col-md-4">
             <div class="p-4 bg-white rounded-4 border shadow-sm text-center h-100">
                 <div class="text-primary fs-1 mb-2"><i class="bi bi-shield-fill-check"></i></div>
-                <h5 class="fw-bold">100% Secure Checkout</h5>
-                <p class="text-muted small mb-0">Instant digital pass activation right after payment confirmation.</p>
+                <h5 class="fw-bold">@Localizer["TrustSecureTitle"]</h5>
+                <p class="text-muted small mb-0">@Localizer["TrustSecureText"]</p>
             </div>
         </div>
         <div class="col-md-4">
             <div class="p-4 bg-white rounded-4 border shadow-sm text-center h-100">
                 <div class="text-success fs-1 mb-2"><i class="bi bi-snow2"></i></div>
-                <h5 class="fw-bold">Complimentary Freeze</h5>
-                <p class="text-muted small mb-0">Pause your membership anytime during vacation or illness.</p>
+                <h5 class="fw-bold">@Localizer["TrustFreezeTitle"]</h5>
+                <p class="text-muted small mb-0">@Localizer["TrustFreezeText"]</p>
             </div>
         </div>
         <div class="col-md-4">
             <div class="p-4 bg-white rounded-4 border shadow-sm text-center h-100">
                 <div class="text-danger fs-1 mb-2"><i class="bi bi-person-check-fill"></i></div>
-                <h5 class="fw-bold">Introductory Session</h5>
-                <p class="text-muted small mb-0">Complimentary first training session and body composition analysis included.</p>
+                <h5 class="fw-bold">@Localizer["TrustIntroTitle"]</h5>
+                <p class="text-muted small mb-0">@Localizer["TrustIntroText"]</p>
             </div>
         </div>
     </div>
@@ -235,10 +237,10 @@
             <!-- Modal Header -->
             <div class="modal-header modal-tariff-header">
                 <div>
-                    <span class="badge bg-primary-subtle text-primary fw-bold text-uppercase mb-1" id="modalTariffBadge">Membership</span>
-                    <h4 class="modal-title fw-bold text-white mb-0" id="quickPurchaseModalLabel">Membership Checkout</h4>
+                    <span class="badge bg-primary-subtle text-primary fw-bold text-uppercase mb-1" id="modalTariffBadge">@Localizer["ModalMembership"]</span>
+                    <h4 class="modal-title fw-bold text-white mb-0" id="quickPurchaseModalLabel">@Localizer["ModalCheckout"]</h4>
                 </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@Localizer["Close"]"></button>
             </div>
 
             <!-- Modal Body: Form State -->
@@ -247,11 +249,11 @@
                 {
                     <div class="text-center py-4">
                         <i class="bi bi-lock-fill display-4 text-warning mb-3 d-block"></i>
-                        <h4 class="fw-bold text-dark mb-2">Authentication Required</h4>
+                        <h4 class="fw-bold text-dark mb-2">@Localizer["AuthRequired"]</h4>
                         <p class="text-muted mb-4">
-                            To purchase a membership plan, please <a asp-controller="Account" asp-action="Login" class="fw-bold text-primary text-decoration-underline">Sign In</a> to your account.
+                            @Localizer["AuthRequiredPrefix"] <a asp-controller="Account" asp-action="Login" class="fw-bold text-primary text-decoration-underline">@Localizer["SignInLink"]</a> @Localizer["AuthRequiredSuffix"]
                         </p>
-                        <button type="button" class="btn btn-outline-secondary px-4 rounded-pill" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-outline-secondary px-4 rounded-pill" data-bs-dismiss="modal">@Localizer["Close"]</button>
                     </div>
                 }
                 else
@@ -260,16 +262,16 @@
                     <div class="modal-tariff-summary mb-4">
                         <div class="row align-items-center">
                             <div class="col-md-7">
-                                <span class="text-muted small d-block">Selected Plan:</span>
+                                <span class="text-muted small d-block">@Localizer["SelectedPlan"]</span>
                                 <h4 class="fw-bold text-dark mb-1" id="modalTariffName">-</h4>
                                 <div class="text-muted small">
-                                    <i class="bi bi-clock-history text-primary me-1"></i> Duration: <strong id="modalTariffDuration">-</strong> days
+                                    <i class="bi bi-clock-history text-primary me-1"></i> @Localizer["DurationLabel"] <strong id="modalTariffDuration">-</strong> @Localizer["DaysSuffix"]
                                     <span class="mx-2">•</span>
-                                    <i class="bi bi-calendar-check text-success me-1"></i> Valid until: <strong id="modalCalculatedEndDate">-</strong>
+                                    <i class="bi bi-calendar-check text-success me-1"></i> @Localizer["ValidUntil"] <strong id="modalCalculatedEndDate">-</strong>
                                 </div>
                             </div>
                             <div class="col-md-5 text-md-end mt-3 mt-md-0">
-                                <span class="text-muted small d-block">Total to Pay:</span>
+                                <span class="text-muted small d-block">@Localizer["TotalToPay"]</span>
                                 <div class="fs-2 fw-bold text-primary">
                                     <span id="modalTariffPrice">-</span> <span class="fs-4">₴</span>
                                 </div>
@@ -284,15 +286,15 @@
 
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label for="customerFullName" class="form-label fw-semibold small">Full Name <span class="text-danger">*</span></label>
+                                <label for="customerFullName" class="form-label fw-semibold small">@Localizer["FullName"] <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-white"><i class="bi bi-person text-muted"></i></span>
-                                    <input type="text" class="form-control" id="customerFullName" value="@ViewBag.CurrentUserName" placeholder="Alexander Smith" required />
+                                    <input type="text" class="form-control" id="customerFullName" value="@ViewBag.CurrentUserName" placeholder="@Localizer["FullNamePlaceholder"]" required />
                                 </div>
                             </div>
 
                             <div class="col-md-6">
-                                <label for="customerPhone" class="form-label fw-semibold small">Phone Number <span class="text-danger">*</span></label>
+                                <label for="customerPhone" class="form-label fw-semibold small">@Localizer["PhoneNumber"] <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-white"><i class="bi bi-telephone text-muted"></i></span>
                                     <input type="tel" class="form-control" id="customerPhone" placeholder="+380 (97) 123-45-67" required />
@@ -300,15 +302,15 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label for="customerEmail" class="form-label fw-semibold small">Email Address <span class="text-danger">*</span></label>
+                                <label for="customerEmail" class="form-label fw-semibold small">@Localizer["EmailAddress"] <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-white"><i class="bi bi-envelope text-muted"></i></span>
-                                    <input type="email" class="form-control" id="customerEmail" value="@ViewBag.CurrentUserEmail" placeholder="client@example.com" required />
+                                    <input type="email" class="form-control" id="customerEmail" value="@ViewBag.CurrentUserEmail" placeholder="@Localizer["EmailPlaceholder"]" required />
                                 </div>
                             </div>
 
                             <div class="col-md-6">
-                                <label for="subscriptionStartDate" class="form-label fw-semibold small">Activation Date <span class="text-danger">*</span></label>
+                                <label for="subscriptionStartDate" class="form-label fw-semibold small">@Localizer["ActivationDate"] <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-white"><i class="bi bi-calendar-event text-muted"></i></span>
                                     <input type="date" class="form-control" id="subscriptionStartDate" required />
@@ -317,30 +319,30 @@
 
                             <!-- Payment Details Section (Card Only) -->
                             <div class="col-12 mt-3">
-                                <h6 class="fw-bold small text-uppercase text-muted mb-2"><i class="bi bi-credit-card-2-front me-1"></i> Payment Details (Credit/Debit Card)</h6>
+                                <h6 class="fw-bold small text-uppercase text-muted mb-2"><i class="bi bi-credit-card-2-front me-1"></i> @Localizer["PaymentDetails"]</h6>
                             </div>
 
                             <div class="col-12">
-                                <label for="cardNumber" class="form-label fw-semibold small">Card Number <span class="text-danger">*</span></label>
+                                <label for="cardNumber" class="form-label fw-semibold small">@Localizer["CardNumber"] <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-white"><i class="bi bi-credit-card text-muted"></i></span>
-                                    <input type="text" class="form-control" id="cardNumber" maxlength="19" placeholder="0000 0000 0000 0000" pattern="\d{16,19}" title="Enter valid 16-digit card number" required />
+                                    <input type="text" class="form-control" id="cardNumber" maxlength="19" placeholder="0000 0000 0000 0000" pattern="\d{16,19}" title="@Localizer["CardNumberTitle"]" required />
                                 </div>
                             </div>
 
                             <div class="col-md-6">
-                                <label for="cardExpiry" class="form-label fw-semibold small">Expiry Date (MM/YY) <span class="text-danger">*</span></label>
+                                <label for="cardExpiry" class="form-label fw-semibold small">@Localizer["ExpiryDate"] <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-white"><i class="bi bi-calendar3 text-muted"></i></span>
-                                    <input type="text" class="form-control" id="cardExpiry" maxlength="5" placeholder="MM/YY" pattern="(0[1-9]|1[0-2])\/[0-9]{2}" title="Format: MM/YY" required />
+                                    <input type="text" class="form-control" id="cardExpiry" maxlength="5" placeholder="MM/YY" pattern="(0[1-9]|1[0-2])\/[0-9]{2}" title="@Localizer["ExpiryTitle"]" required />
                                 </div>
                             </div>
 
                             <div class="col-md-6">
-                                <label for="cardCvc" class="form-label fw-semibold small">CVC / CVV <span class="text-danger">*</span></label>
+                                <label for="cardCvc" class="form-label fw-semibold small">@Localizer["Cvc"] <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-white"><i class="bi bi-lock text-muted"></i></span>
-                                    <input type="password" class="form-control" id="cardCvc" maxlength="3" placeholder="123" pattern="\d{3}" title="3-digit security code" required />
+                                    <input type="password" class="form-control" id="cardCvc" maxlength="3" placeholder="123" pattern="\d{3}" title="@Localizer["CvcTitle"]" required />
                                 </div>
                             </div>
 
@@ -349,7 +351,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" id="agreeTerms" checked required />
                                     <label class="form-check-label small text-muted" for="agreeTerms">
-                                        I agree to the SportLab club visit rules and terms of service.
+                                        @Localizer["TermsAgree"]
                                     </label>
                                 </div>
                             </div>
@@ -358,10 +360,10 @@
                         <div id="modalAlert" class="alert alert-danger d-none mt-3" role="alert"></div>
 
                         <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
-                            <button type="button" class="btn btn-outline-secondary px-4 rounded-pill" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-outline-secondary px-4 rounded-pill" data-bs-dismiss="modal">@Localizer["Cancel"]</button>
                             <button type="submit" class="btn btn-primary px-5 py-2 rounded-pill fw-bold shadow-sm" id="btnSubmitPurchase">
                                 <span class="spinner-border spinner-border-sm d-none me-2" id="submitSpinner" role="status" aria-hidden="true"></span>
-                                <span id="submitBtnText"><i class="bi bi-check2-circle me-1"></i> Confirm & Activate</span>
+                                <span id="submitBtnText"><i class="bi bi-check2-circle me-1"></i> @Localizer["ConfirmActivate"]</span>
                             </button>
                         </div>
                     </form>
@@ -374,23 +376,23 @@
                     <div class="display-3 text-success mb-3">
                         <i class="bi bi-patch-check-fill"></i>
                     </div>
-                    <h3 class="fw-bold text-dark mb-2">Welcome to the SportLab Community!</h3>
-                    <p class="text-muted mb-4" id="successMessageText">Your membership pass has been successfully activated.</p>
+                    <h3 class="fw-bold text-dark mb-2">@Localizer["WelcomeTitle"]</h3>
+                    <p class="text-muted mb-4" id="successMessageText">@Localizer["SuccessActivated"]</p>
 
                     <!-- Digital Pass Card Preview -->
                     <div class="digital-membership-pass text-start mx-auto mb-4" style="max-width: 460px;">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <div>
-                                <span class="badge bg-warning text-dark fw-bold text-uppercase px-2 py-1">Member Pass</span>
+                                <span class="badge bg-warning text-dark fw-bold text-uppercase px-2 py-1">@Localizer["MemberPass"]</span>
                                 <h4 class="fw-bold mb-0 mt-1" id="passTariffName">Unlimited Pro</h4>
                             </div>
                             <div class="pass-chip"></div>
                         </div>
                         <div class="row align-items-end mt-4">
                             <div class="col-8">
-                                <span class="text-white-50 small d-block">Pass Holder:</span>
+                                <span class="text-white-50 small d-block">@Localizer["PassHolder"]</span>
                                 <h5 class="fw-bold mb-2 text-white" id="passUserName">Alexander Smith</h5>
-                                <span class="text-white-50 small d-block">Validity Period:</span>
+                                <span class="text-white-50 small d-block">@Localizer["ValidityPeriod"]</span>
                                 <span class="small fw-semibold text-white" id="passDates">21.10.2026 — 20.11.2026</span>
                             </div>
                             <div class="col-4 text-end">
@@ -403,10 +405,10 @@
 
                     <div class="d-flex justify-content-center gap-3">
                         <a asp-controller="Profile" asp-action="Client" class="btn btn-primary rounded-pill px-4">
-                            <i class="bi bi-person-circle me-1"></i> Go to Profile
+                            <i class="bi bi-person-circle me-1"></i> @Localizer["GoToProfile"]
                         </a>
                         <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
-                            Close
+                            @Localizer["Close"]
                         </button>
                     </div>
                 </div>
@@ -556,11 +558,11 @@
                             modalFormContainer.classList.add("d-none");
                             modalSuccessContainer.classList.remove("d-none");
                         } else {
-                            modalAlert.textContent = data.message || "Failed to complete purchase.";
+                            modalAlert.textContent = data.message || '@Localizer["PurchaseFailed"]';
                             modalAlert.classList.remove("d-none");
                         }
                     } catch (err) {
-                        modalAlert.textContent = "Unable to connect to the server. Please try again.";
+                        modalAlert.textContent = '@Localizer["ServerError"]';
                         modalAlert.classList.remove("d-none");
                     } finally {
                         submitBtn.disabled = false;

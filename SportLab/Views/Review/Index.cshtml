@@ -1,7 +1,9 @@
 @model IEnumerable<SportLab.Models.Review>
 
+@inject IViewLocalizer Localizer
+
 @{
-    ViewData["Title"] = "Member Reviews - SportLab";
+    ViewData["Title"] = Localizer["PageTitle"];
     var avgRating = ViewBag.AverageRating ?? 4.9;
     var totalReviews = ViewBag.TotalReviews ?? Model.Count();
     var filterRating = ViewBag.FilterRating as int?;
@@ -49,11 +51,11 @@
     <!-- Header Hero -->
     <div class="text-center mb-5">
         <span class="badge bg-primary-subtle text-primary fw-bold text-uppercase px-3 py-2 rounded-pill mb-2">
-            <i class="bi bi-chat-heart-fill text-danger me-1"></i> Community Trust & Feedback
+            <i class="bi bi-chat-heart-fill text-danger me-1"></i> @Localizer["CommunityBadge"]
         </span>
-        <h1 class="display-5 fw-bold text-dark mb-2">Member Reviews & Experiences</h1>
+        <h1 class="display-5 fw-bold text-dark mb-2">@Localizer["Title"]</h1>
         <p class="lead text-muted mx-auto" style="max-width: 650px;">
-            Real testimonials from our athletes, powerlifters, and fitness enthusiasts at SportLab.
+            @Localizer["Subtitle"]
         </p>
     </div>
 
@@ -63,7 +65,7 @@
         <div class="alert alert-success alert-dismissible fade show rounded-4 shadow-sm mb-4" role="alert">
             <i class="bi bi-check-circle-fill me-2 fs-5 align-middle"></i>
             <strong>@TempData["SuccessMessage"]</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="@Localizer["Close"]"></button>
         </div>
     }
     @if (TempData["ErrorMessage"] != null)
@@ -71,7 +73,7 @@
         <div class="alert alert-danger alert-dismissible fade show rounded-4 shadow-sm mb-4" role="alert">
             <i class="bi bi-exclamation-triangle-fill me-2 fs-5 align-middle"></i>
             <strong>@TempData["ErrorMessage"]</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="@Localizer["Close"]"></button>
         </div>
     }
 
@@ -87,23 +89,23 @@
                     <i class="bi bi-star-fill"></i>
                     <i class="bi bi-star-fill"></i>
                 </div>
-                <span class="text-muted small">Based on @totalReviews verified reviews</span>
+                <span class="text-muted small">@Localizer["BasedOn", totalReviews]</span>
             </div>
 
             <div class="col-md-8">
-                <span class="text-muted small fw-bold text-uppercase d-block mb-2">Filter by Star Rating:</span>
+                <span class="text-muted small fw-bold text-uppercase d-block mb-2">@Localizer["FilterByRating"]</span>
                 <div class="d-flex flex-wrap gap-2">
                     <a asp-action="Index" class="btn btn-sm rounded-pill px-3 @(!filterRating.HasValue ? "btn-dark fw-bold" : "btn-outline-secondary")">
-                        All Reviews (@totalReviews)
+                        @Localizer["AllReviews", totalReviews]
                     </a>
                     <a asp-action="Index" asp-route-filterRating="5" class="btn btn-sm rounded-pill px-3 @(filterRating == 5 ? "btn-dark fw-bold" : "btn-outline-secondary")">
-                        <i class="bi bi-star-fill text-warning me-1"></i> 5 Stars
+                        <i class="bi bi-star-fill text-warning me-1"></i> @Localizer["Stars5"]
                     </a>
                     <a asp-action="Index" asp-route-filterRating="4" class="btn btn-sm rounded-pill px-3 @(filterRating == 4 ? "btn-dark fw-bold" : "btn-outline-secondary")">
-                        <i class="bi bi-star-fill text-warning me-1"></i> 4 Stars
+                        <i class="bi bi-star-fill text-warning me-1"></i> @Localizer["Stars4"]
                     </a>
                     <a asp-action="Index" asp-route-filterRating="3" class="btn btn-sm rounded-pill px-3 @(filterRating == 3 ? "btn-dark fw-bold" : "btn-outline-secondary")">
-                        <i class="bi bi-star-fill text-warning me-1"></i> 3 Stars
+                        <i class="bi bi-star-fill text-warning me-1"></i> @Localizer["Stars3"]
                     </a>
                 </div>
             </div>
@@ -114,8 +116,8 @@
         <!-- Left: Write a Review Form -->
         <div class="col-lg-5">
             <div class="card bg-white border rounded-4 shadow-sm p-4 p-md-4 sticky-top" style="top: 2rem;">
-                <h4 class="fw-bold mb-1">Share Your Experience</h4>
-                <p class="text-muted small mb-4">Your feedback helps us continuously improve our facilities and training programs.</p>
+                <h4 class="fw-bold mb-1">@Localizer["ShareExperience"]</h4>
+                <p class="text-muted small mb-4">@Localizer["ShareHint"]</p>
 
                 @if (User.Identity?.IsAuthenticated == true && User.IsInRole(SportLab.Models.Roles.Client))
                 {
@@ -123,7 +125,7 @@
                         @Html.AntiForgeryToken()
 
                         <div class="mb-4">
-                            <label class="form-label fw-semibold small d-block">Overall Rating <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold small d-block">@Localizer["OverallRating"] <span class="text-danger">*</span></label>
                             <div class="star-rating-selector d-flex align-items-center gap-2 mb-1" id="starContainer">
                                 <i class="bi bi-star-fill" data-score="1"></i>
                                 <i class="bi bi-star-fill" data-score="2"></i>
@@ -132,30 +134,30 @@
                                 <i class="bi bi-star-fill active" data-score="5"></i>
                             </div>
                             <input type="hidden" name="rating" id="ratingInput" value="5" />
-                            <span class="small fw-semibold text-primary" id="ratingScoreText">5/5 - Outstanding!</span>
+                            <span class="small fw-semibold text-primary" id="ratingScoreText">@Localizer["Rating5"]</span>
                         </div>
 
                         <div class="mb-4">
-                            <label for="comment" class="form-label fw-semibold small">Your Review <span class="text-danger">*</span></label>
-                            <textarea name="comment" id="comment" rows="4" class="form-control" placeholder="Tell us about the trainers, equipment, classes, or atmosphere..." required></textarea>
+                            <label for="comment" class="form-label fw-semibold small">@Localizer["YourReview"] <span class="text-danger">*</span></label>
+                            <textarea name="comment" id="comment" rows="4" class="form-control" placeholder="@Localizer["ReviewPlaceholder"]" required></textarea>
                         </div>
 
                         <button type="submit" class="btn btn-primary rounded-pill w-100 py-2 fw-bold shadow-sm">
-                            <i class="bi bi-send me-1"></i> Submit Review
+                            <i class="bi bi-send me-1"></i> @Localizer["SubmitReview"]
                         </button>
                     </form>
                 }
                 else if (User.Identity?.IsAuthenticated == true)
                 {
                     <div class="alert alert-info rounded-4">
-                        Only clients can leave reviews.
+                        @Localizer["OnlyClients"]
                     </div>
                 }
                 else
                 {
                     <div class="text-center py-4">
-                        <p class="text-muted mb-3">You must be logged in to leave a review.</p>
-                        <a asp-controller="Account" asp-action="Login" class="btn btn-dark rounded-pill px-4">Log in to Review</a>
+                        <p class="text-muted mb-3">@Localizer["MustLogin"]</p>
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-dark rounded-pill px-4">@Localizer["LoginToReview"]</a>
                     </div>
                 }
             </div>
@@ -163,14 +165,14 @@
 
         <!-- Right: Published Reviews List -->
         <div class="col-lg-7">
-            <h4 class="fw-bold mb-4">Published Reviews (@Model.Count())</h4>
+            <h4 class="fw-bold mb-4">@Localizer["PublishedReviews", Model.Count()]</h4>
 
             @if (!Model.Any())
             {
                 <div class="text-center py-5 bg-white rounded-4 border p-4">
                     <i class="bi bi-chat-square-text display-4 text-muted mb-3 d-block"></i>
-                    <h5 class="fw-bold">No reviews found</h5>
-                    <p class="text-muted small">Be the first to share your thoughts about SportLab!</p>
+                    <h5 class="fw-bold">@Localizer["NoReviews"]</h5>
+                    <p class="text-muted small">@Localizer["NoReviewsHint"]</p>
                 </div>
             }
             else
@@ -178,7 +180,7 @@
                 <div class="d-flex flex-column gap-3">
                     @foreach (var review in Model)
                     {
-                        var userName = review.User?.Name ?? "Member";
+                        var userName = review.User?.Name ?? Localizer["MemberFallback"].Value;
                         var initial = !string.IsNullOrWhiteSpace(userName) ? userName.Substring(0, 1).ToUpper() : "M";
 
                         <div class="card review-card bg-white rounded-4 p-4 shadow-sm">
@@ -191,7 +193,7 @@
                                         <div class="d-flex align-items-center gap-2">
                                             <h6 class="fw-bold mb-0 text-dark">@userName</h6>
                                             <span class="badge bg-success-subtle text-success small py-1 px-2 rounded-pill">
-                                                <i class="bi bi-patch-check-fill me-1"></i> Verified Athlete
+                                                <i class="bi bi-patch-check-fill me-1"></i> @Localizer["VerifiedAthlete"]
                                             </span>
                                         </div>
                                         <span class="text-muted small">@review.CreatedDate.ToString("dd MMM yyyy")</span>
@@ -232,11 +234,11 @@
         const ratingText = document.getElementById("ratingScoreText");
 
         const descriptions = {
-            1: "1/5 - Poor",
-            2: "2/5 - Fair",
-            3: "3/5 - Good",
-            4: "4/5 - Very Good",
-            5: "5/5 - Outstanding!"
+            1: '@Localizer["Rating1"]',
+            2: '@Localizer["Rating2"]',
+            3: '@Localizer["Rating3"]',
+            4: '@Localizer["Rating4"]',
+            5: '@Localizer["Rating5"]'
         };
 
         function setStars(score) {

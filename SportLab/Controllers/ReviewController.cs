@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using SportLab.Data;
 using SportLab.Models;
 using System.Security.Claims;
@@ -11,10 +12,12 @@ namespace SportLab.Controllers
     public class ReviewController : Controller
     {
         private readonly SportLabContext _context;
+        private readonly IStringLocalizer<ReviewController> _localizer;
 
-        public ReviewController(SportLabContext context)
+        public ReviewController(SportLabContext context, IStringLocalizer<ReviewController> localizer)
         {
             _context = context;
+            _localizer = localizer;
         }
 
         [AllowAnonymous]
@@ -46,13 +49,13 @@ namespace SportLab.Controllers
         {
             if (!ModelState.IsValid)
             {
-                TempData["ErrorMessage"] = "Invalid review data.";
+                TempData["ErrorMessage"] = _localizer["InvalidReviewData"].Value;
                 return RedirectToAction(nameof(Index));
             }
 
             if (rating < 1 || rating > 5 || string.IsNullOrWhiteSpace(comment))
             {
-                TempData["ErrorMessage"] = "Please select a rating and write your review feedback.";
+                TempData["ErrorMessage"] = _localizer["RatingAndCommentRequired"].Value;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -75,7 +78,7 @@ namespace SportLab.Controllers
             _context.Reviews.Add(review);
             _context.SaveChanges();
 
-            TempData["SuccessMessage"] = "Thank you! Your review has been sent for moderation.";
+            TempData["SuccessMessage"] = _localizer["ReviewSubmitted"].Value;
             return RedirectToAction(nameof(Index));
         }
         

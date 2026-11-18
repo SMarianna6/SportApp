@@ -1,7 +1,9 @@
 @model SportLab.Models.Product
 
+@inject IViewLocalizer Localizer
+
 @{
-    ViewData["Title"] = Model.Name + " - SportLab Store";
+    ViewData["Title"] = Model.Name + " - " + Localizer["StoreSuffix"].Value;
     var related = (ViewBag.RelatedProducts as IEnumerable<SportLab.Models.Product>) ?? Enumerable.Empty<SportLab.Models.Product>();
     var isLowStock = Model.StockQuantity > 0 && Model.StockQuantity <= 10;
     var isOutOfStock = Model.StockQuantity <= 0;
@@ -17,8 +19,8 @@
     <!-- Breadcrumb -->
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-decoration-none">Home</a></li>
-            <li class="breadcrumb-item"><a asp-controller="Shop" asp-action="Index" class="text-decoration-none">Shop</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-decoration-none">@Localizer["Home"]</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Shop" asp-action="Index" class="text-decoration-none">@Localizer["Shop"]</a></li>
             <li class="breadcrumb-item"><a asp-controller="Shop" asp-action="Index" asp-route-category="@Model.Category" class="text-decoration-none">@Model.Category</a></li>
             <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
         </ol>
@@ -36,19 +38,19 @@
                 <div class="col-4">
                     <div class="p-3 bg-light rounded-3 border">
                         <i class="bi bi-shield-check text-success fs-4 d-block mb-1"></i>
-                        <span>100% Authentic Quality</span>
+                        <span>@Localizer["AuthenticQuality"]</span>
                     </div>
                 </div>
                 <div class="col-4">
                     <div class="p-3 bg-light rounded-3 border">
                         <i class="bi bi-truck text-primary fs-4 d-block mb-1"></i>
-                        <span>Fast Delivery & Pickup</span>
+                        <span>@Localizer["FastDelivery"]</span>
                     </div>
                 </div>
                 <div class="col-4">
                     <div class="p-3 bg-light rounded-3 border">
                         <i class="bi bi-arrow-repeat text-warning fs-4 d-block mb-1"></i>
-                        <span>Easy 14-Day Returns</span>
+                        <span>@Localizer["EasyReturns"]</span>
                     </div>
                 </div>
             </div>
@@ -72,7 +74,7 @@
                     <i class="bi bi-star-half"></i>
                 </div>
                 <span class="fw-bold small">4.9</span>
-                <span class="text-muted small">• 28 verified customer reviews</span>
+                <span class="text-muted small">• @Localizer["VerifiedReviews"]</span>
             </div>
 
             <!-- Price & Stock -->
@@ -83,22 +85,22 @@
                 <div class="ms-auto">
                     @if (isOutOfStock)
                     {
-                        <span class="badge bg-danger fs-6 px-3 py-2 rounded-pill"><i class="bi bi-x-circle me-1"></i> Out of Stock</span>
+                        <span class="badge bg-danger fs-6 px-3 py-2 rounded-pill"><i class="bi bi-x-circle me-1"></i> @Localizer["OutOfStock"]</span>
                     }
                     else if (isLowStock)
                     {
-                        <span class="badge bg-warning text-dark fs-6 px-3 py-2 rounded-pill"><i class="bi bi-exclamation-triangle me-1"></i> Only @Model.StockQuantity left</span>
+                        <span class="badge bg-warning text-dark fs-6 px-3 py-2 rounded-pill"><i class="bi bi-exclamation-triangle me-1"></i> @Localizer["OnlyLeft", Model.StockQuantity]</span>
                     }
                     else
                     {
-                        <span class="badge bg-success fs-6 px-3 py-2 rounded-pill"><i class="bi bi-check-circle me-1"></i> In Stock (@Model.StockQuantity available)</span>
+                        <span class="badge bg-success fs-6 px-3 py-2 rounded-pill"><i class="bi bi-check-circle me-1"></i> @Localizer["InStockCount", Model.StockQuantity]</span>
                     }
                 </div>
             </div>
 
             <!-- Description -->
             <div class="mb-4">
-                <h5 class="fw-bold text-dark mb-2">Product Description</h5>
+                <h5 class="fw-bold text-dark mb-2">@Localizer["ProductDescriptionTitle"]</h5>
                 <p class="text-muted" style="line-height: 1.6;">
                     @Model.Description
                 </p>
@@ -106,11 +108,11 @@
 
             <!-- Highlights -->
             <div class="mb-4">
-                <h6 class="fw-bold text-uppercase small text-muted mb-2">Key Highlights:</h6>
+                <h6 class="fw-bold text-uppercase small text-muted mb-2">@Localizer["KeyHighlightsTitle"]</h6>
                 <ul class="list-unstyled text-muted small">
-                    <li class="mb-1"><i class="bi bi-check2-circle text-success me-2"></i>Lab-tested and athlete-approved formula & materials</li>
-                    <li class="mb-1"><i class="bi bi-check2-circle text-success me-2"></i>Free in-person pickup available at SportLab fitness desk</li>
-                    <li><i class="bi bi-check2-circle text-success me-2"></i>Eligible for club loyalty reward points on every order</li>
+                    <li class="mb-1"><i class="bi bi-check2-circle text-success me-2"></i>@Localizer["Highlight1"]</li>
+                    <li class="mb-1"><i class="bi bi-check2-circle text-success me-2"></i>@Localizer["Highlight2"]</li>
+                    <li><i class="bi bi-check2-circle text-success me-2"></i>@Localizer["Highlight3"]</li>
                 </ul>
             </div>
 
@@ -127,18 +129,18 @@
                     </div>
 
                     <button type="button" class="btn btn-primary btn-lg rounded-pill px-4 fw-bold flex-grow-1 shadow-sm" id="btnAddToCart">
-                        <i class="bi bi-cart-plus me-1"></i> Add to Cart
+                        <i class="bi bi-cart-plus me-1"></i> @Localizer["AddToCart"]
                     </button>
 
                     <button type="button" class="btn btn-dark btn-lg rounded-pill px-4 fw-bold shadow-sm" id="btnBuyNow">
-                        Buy Now
+                        @Localizer["BuyNow"]
                     </button>
                 </div>
             }
             else
             {
                 <div class="alert alert-secondary">
-                    <i class="bi bi-bell me-2"></i> This product is currently out of stock. Contact the reception desk for restock inquiries.
+                    <i class="bi bi-bell me-2"></i> @Localizer["OutOfStockAlert"]
                 </div>
             }
         </div>
@@ -148,7 +150,7 @@
     @if (related.Any())
     {
         <div class="mt-5 pt-4 border-top">
-            <h3 class="fw-bold mb-4">You May Also Like</h3>
+            <h3 class="fw-bold mb-4">@Localizer["YouMayAlsoLike"]</h3>
             <div class="row g-4">
                 @foreach (var rel in related)
                 {
@@ -168,7 +170,7 @@
                                         <span class="product-currency">₴</span>
                                     </div>
                                     <a asp-action="Details" asp-route-id="@rel.Id" class="btn btn-outline-primary btn-sm">
-                                        View
+                                        @Localizer["ViewBtn"]
                                     </a>
                                 </div>
                             </div>
@@ -187,108 +189,108 @@
             <div class="toast-body d-flex align-items-center gap-2">
                 <i class="bi bi-check-circle-fill text-success fs-5"></i>
                 <div>
-                    <strong>@Model.Name</strong> added to cart!
+                    <strong>@Model.Name</strong> @Localizer["AddedToCart"]
                 </div>
             </div>
             <a asp-controller="Cart" asp-action="Index" class="btn btn-primary btn-sm my-auto me-2 px-3 py-1 text-nowrap">
-                View Cart
+                @Localizer["ViewCartBtn"]
             </a>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="@Localizer["Close"]"></button>
         </div>
     </div>
 </div>
 
 @section Scripts {
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const qtyInput = document.getElementById("inputQuantity");
-        const btnMinus = document.getElementById("btnQtyMinus");
-        const btnPlus = document.getElementById("btnQtyPlus");
-        const maxStock = @Model.StockQuantity;
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const qtyInput = document.getElementById("inputQuantity");
+            const btnMinus = document.getElementById("btnQtyMinus");
+            const btnPlus = document.getElementById("btnQtyPlus");
+            const maxStock = @Model.StockQuantity;
 
-        if (btnMinus && btnPlus) {
-            btnMinus.addEventListener("click", function () {
-                let val = parseInt(qtyInput.value) || 1;
-                if (val > 1) {
-                    qtyInput.value = val - 1;
-                }
-            });
+            if (btnMinus && btnPlus) {
+                btnMinus.addEventListener("click", function () {
+                    let val = parseInt(qtyInput.value) || 1;
+                    if (val > 1) {
+                        qtyInput.value = val - 1;
+                    }
+                });
 
-            btnPlus.addEventListener("click", function () {
-                let val = parseInt(qtyInput.value) || 1;
-                if (val < maxStock) {
-                    qtyInput.value = val + 1;
-                }
-            });
-        }
+                btnPlus.addEventListener("click", function () {
+                    let val = parseInt(qtyInput.value) || 1;
+                    if (val < maxStock) {
+                        qtyInput.value = val + 1;
+                    }
+                });
+            }
 
-        const toastEl = document.getElementById('cartToast');
-        const toast = new bootstrap.Toast(toastEl, { delay: 3500 });
-        const btnAdd = document.getElementById("btnAddToCart");
-        const btnBuyNow = document.getElementById("btnBuyNow");
+            const toastEl = document.getElementById('cartToast');
+            const toast = new bootstrap.Toast(toastEl, { delay: 3500 });
+            const btnAdd = document.getElementById("btnAddToCart");
+            const btnBuyNow = document.getElementById("btnBuyNow");
 
-        async function addToCart(qty) {
-            const response = await fetch('/Cart/AddToCart', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({
-                    'productId': @Model.Id,
-                    'quantity': qty
-                })
-            });
-            return await response.json();
-        }
+            async function addToCart(qty) {
+                const response = await fetch('/Cart/AddToCart', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        'productId': @Model.Id,
+                        'quantity': qty
+                    })
+                });
+                return await response.json();
+            }
 
-        if (btnAdd) {
-            btnAdd.addEventListener("click", async function () {
-                const qty = parseInt(qtyInput.value) || 1;
-                const originalHtml = this.innerHTML;
-                this.disabled = true;
-                this.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Adding...';
+            if (btnAdd) {
+                btnAdd.addEventListener("click", async function () {
+                    const qty = parseInt(qtyInput.value) || 1;
+                    const originalHtml = this.innerHTML;
+                    this.disabled = true;
+                    this.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> @Localizer["AddingText"]';
 
-                try {
-                    const data = await addToCart(qty);
-                    if (data.success) {
-                        toast.show();
-                        const badge = document.getElementById("navCartBadge");
-                        if (badge) {
-                            badge.textContent = data.totalCount;
-                            badge.classList.remove("d-none");
+                    try {
+                        const data = await addToCart(qty);
+                        if (data.success) {
+                            toast.show();
+                            const badge = document.getElementById("navCartBadge");
+                            if (badge) {
+                                badge.textContent = data.totalCount;
+                                badge.classList.remove("d-none");
+                            }
+                        } else {
+                            alert(data.message || '@Localizer["CouldNotAdd"]');
                         }
-                    } else {
-                        alert(data.message || "Could not add to cart");
-                    }
-                } catch (e) {
-                    alert("Network error.");
-                } finally {
-                    this.disabled = false;
-                    this.innerHTML = originalHtml;
-                }
-            });
-        }
-
-        if (btnBuyNow) {
-            btnBuyNow.addEventListener("click", async function () {
-                const qty = parseInt(qtyInput.value) || 1;
-                this.disabled = true;
-                this.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Redirecting...';
-
-                try {
-                    const data = await addToCart(qty);
-                    if (data.success) {
-                        window.location.href = '/Cart/Checkout';
-                    } else {
-                        alert(data.message || "Failed to proceed to checkout");
+                    } catch (e) {
+                        alert('@Localizer["NetworkError"]');
+                    } finally {
                         this.disabled = false;
-                        this.innerHTML = 'Buy Now';
+                        this.innerHTML = originalHtml;
                     }
-                } catch (e) {
-                    alert("Network error.");
-                    this.disabled = false;
-                    this.innerHTML = 'Buy Now';
-                }
-            });
-        }
-    });
-</script>
+                });
+            }
+
+            if (btnBuyNow) {
+                btnBuyNow.addEventListener("click", async function () {
+                    const qty = parseInt(qtyInput.value) || 1;
+                    this.disabled = true;
+                    this.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> @Localizer["RedirectingText"]';
+
+                    try {
+                        const data = await addToCart(qty);
+                        if (data.success) {
+                            window.location.href = '/Cart/Checkout';
+                        } else {
+                            alert(data.message || '@Localizer["CheckoutFailed"]');
+                            this.disabled = false;
+                            this.innerHTML = '@Localizer["BuyNow"]';
+                        }
+                    } catch (e) {
+                        alert('@Localizer["NetworkError"]');
+                        this.disabled = false;
+                        this.innerHTML = '@Localizer["BuyNow"]';
+                    }
+                });
+            }
+        });
+    </script>
 }
