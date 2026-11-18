@@ -11,12 +11,12 @@
         out var parsedUserId
     ) ? parsedUserId : (int?)null;
 
-    bool isClient  = User.IsInRole(SportLab.Models.Roles.Client);
+    bool isClient = User.IsInRole(SportLab.Models.Roles.Client);
     bool isTrainer = User.IsInRole(SportLab.Models.Roles.Trainer);
-    bool isAdmin   = User.IsAdmin();
+    bool isAdmin = User.IsAdmin();
 
-    var today     = DateTime.Today;
-    int diffDays  = ((int)today.DayOfWeek + 6) % 7;
+    var today = DateTime.Today;
+    int diffDays = ((int)today.DayOfWeek + 6) % 7;
     var weekStart = today.AddDays(-diffDays);
 
     var weekDates = Enumerable.Range(0, 7)
@@ -25,19 +25,19 @@
 
     var scheduleData = Model.Select(slot => new
     {
-        id            = slot.Id,
-        day           = ((int)slot.StartTime.DayOfWeek + 6) % 7,
-        hour          = slot.StartTime.Hour,
-        timeStart     = slot.StartTime.ToString("HH:mm"),
-        timeEnd       = slot.EndTime.ToString("HH:mm"),
+        id = slot.Id,
+        day = ((int)slot.StartTime.DayOfWeek + 6) % 7,
+        hour = slot.StartTime.Hour,
+        timeStart = slot.StartTime.ToString("HH:mm"),
+        timeEnd = slot.EndTime.ToString("HH:mm"),
         startDateTime = slot.StartTime.ToString("o"),
-        category      = slot.ActivityName ?? "HIIT",
-        trainer       = slot.Trainer?.Name ?? "TBA",
-        difficulty    = 2,
-        capacity      = slot.Capacity,
-        booked        = slot.Bookings.Count,
-        status        = slot.Status,
-        isBooked      = currentUserId.HasValue &&
+        category = slot.ActivityName ?? "HIIT",
+        trainer = slot.Trainer?.Name ?? "TBA",
+        difficulty = 2,
+        capacity = slot.Capacity,
+        booked = slot.Bookings.Count,
+        status = slot.Status,
+        isBooked = currentUserId.HasValue &&
                        slot.Bookings.Any(b => b.UserId == currentUserId.Value)
     }).ToList();
 }
@@ -101,13 +101,20 @@
             transition: opacity .3s, transform .3s;
         }
 
-        .slot-toast.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
+            .slot-toast.show {
+                opacity: 1;
+                transform: translateY(0);
+            }
 
-        .slot-toast.success { background: #DCFCE7; color: #166534; }
-        .slot-toast.error   { background: #FEE2E2; color: #991B1B; }
+            .slot-toast.success {
+                background: #DCFCE7;
+                color: #166534;
+            }
+
+            .slot-toast.error {
+                background: #FEE2E2;
+                color: #991B1B;
+            }
     </style>
 </head>
 
@@ -228,9 +235,8 @@
         (function () {
             'use strict';
 
-            var DAYS = ['@Localizer["Day1"]', '@Localizer["Day2"]', '@Localizer["Day3"]', '@Localizer["Day4"]', '@Localizer["Day5"]', '@Localizer["Day6"]', '@Localizer["Day7"]'];
+            var DAYS = ['@Localizer["Day1"]', '@Localizer["Day2"]', '@Localizer["Day3"]', '@Localizer["Day4"]', '@Localizer["Day5"].Value.Replace("'", "\\'")', '@Localizer["Day6"]', '@Localizer["Day7"]'];
 
-            // FIX 1: Store today string directly to avoid Razor parse errors
             var TODAY_STR = '@today.ToString("yyyy-MM-dd")';
             var WEEK_DATES = @Html.Raw(JsonSerializer.Serialize(weekDates.Select(d => d.ToString("yyyy-MM-dd")).ToArray()));
 
@@ -332,7 +338,7 @@
                 var unavailable = isUnavailable(s);
 
                 var statusText = alreadyBooked
-                    ? '@Localizer["StatusAlreadyBooked"]'
+                    ? '@Localizer["StatusAlreadyBooked"].Value.Replace("'", "\\'")'
                     : s.status === 'Completed'
                         ? '@Localizer["StatusCompleted"]'
                         : past
@@ -393,11 +399,10 @@
 
                 grid.appendChild(document.createElement('div'));
 
-                // Render Day Headers with Dates
                 DAYS.forEach(function (day, i) {
                     var date = new Date(WEEK_DATES[i] + 'T00:00:00');
                     var dateStr = pad(date.getDate()) + '.' + pad(date.getMonth() + 1);
-                    var isToday = WEEK_DATES[i] === TODAY_STR; // FIX 2
+                    var isToday = WEEK_DATES[i] === TODAY_STR;
 
                     var head = document.createElement('div');
                     head.className = 'rounded-md px-2 py-2 text-center text-xs font-extrabold uppercase tracking-widest ' + (isToday ? 'bg-neon text-ink-900' : 'bg-ink-900 text-white');
@@ -548,7 +553,7 @@
                 var inp = document.querySelector('input[name="__RequestVerificationToken"]');
                 return inp ? inp.value : '';
             }
-            
+
             els.confirm.addEventListener('click', async function () {
                 if (!activeSlot) return;
 
@@ -572,7 +577,7 @@
                         els.success.textContent = result.message || '@Localizer["BookingFailed"]';
                         els.success.classList.remove('hidden');
                         els.success.style.color = '#991B1B';
-                        
+
                         els.confirm.disabled = false;
                         els.confirm.textContent = '@Localizer["ConfirmBooking"]';
 
@@ -581,7 +586,7 @@
                                 window.location.href = '/Tariff';
                             }, 2500);
                         }
-                        
+
                         return;
                     }
 
