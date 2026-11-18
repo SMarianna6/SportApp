@@ -406,7 +406,8 @@
 
                     var head = document.createElement('div');
                     head.className = 'rounded-md px-2 py-2 text-center text-xs font-extrabold uppercase tracking-widest ' + (isToday ? 'bg-neon text-ink-900' : 'bg-ink-900 text-white');
-                    head.innerHTML = '<div>' + day.slice(0, 3) + '</div><div class="mt-0.5 text-[10px] font-semibold opacity-70">' + dateStr + '</div>';
+                    // ВИПРАВЛЕНО: Прибрано .slice(0, 3), тепер показується повна назва дня
+                    head.innerHTML = '<div>' + day + '</div><div class="mt-0.5 text-[10px] font-semibold opacity-70">' + dateStr + '</div>';
                     grid.appendChild(head);
                 });
 
