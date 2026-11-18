@@ -98,4 +98,91 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="Aria.Sidebar" xml:space="preserve">
+    <value>Бічна панель</value>
+  </data>
+	<data name="Aria.CloseMenu" xml:space="preserve">
+    <value>Закрити меню</value>
+  </data>
+	<data name="Aria.MainNav" xml:space="preserve">
+    <value>Головна навігація</value>
+  </data>
+	<data name="Nav.Dashboard" xml:space="preserve">
+    <value>Панель</value>
+  </data>
+	<data name="Nav.Messages" xml:space="preserve">
+    <value>Повідомлення</value>
+  </data>
+	<data name="Nav.Users" xml:space="preserve">
+    <value>Користувачі</value>
+  </data>
+	<data name="Nav.Tariffs" xml:space="preserve">
+    <value>Тарифи</value>
+  </data>
+	<data name="Nav.Shop" xml:space="preserve">
+    <value>Магазин</value>
+  </data>
+	<data name="Nav.Schedule" xml:space="preserve">
+    <value>Розклад</value>
+  </data>
+	<data name="Nav.Orders" xml:space="preserve">
+    <value>Замовлення</value>
+  </data>
+	<data name="Nav.FAQ" xml:space="preserve">
+    <value>Часті питання</value>
+  </data>
+	<data name="Nav.Moderation" xml:space="preserve">
+    <value>Модерація</value>
+  </data>
+	<data name="Nav.Settings" xml:space="preserve">
+    <value>Налаштування</value>
+  </data>
+	<data name="Nav.Clients" xml:space="preserve">
+    <value>Клієнти</value>
+  </data>
+	<data name="Nav.MyProgress" xml:space="preserve">
+    <value>Мій прогрес</value>
+  </data>
+	<data name="Sidebar.Collapse" xml:space="preserve">
+    <value>Згорнути</value>
+  </data>
+	<data name="Search.Placeholder" xml:space="preserve">
+    <value>Пошук користувачів, товарів...</value>
+  </data>
+	<data name="Aria.Notifications" xml:space="preserve">
+    <value>Сповіщення</value>
+  </data>
+	<data name="Notifications.Title" xml:space="preserve">
+    <value>Сповіщення</value>
+  </data>
+	<data name="Notifications.NewCount" xml:space="preserve">
+    <value>{0} нових</value>
+  </data>
+	<data name="Notifications.AllCaughtUp" xml:space="preserve">
+    <value>Все прочитано!</value>
+  </data>
+	<data name="Notifications.Error" xml:space="preserve">
+    <value>Помилка сповіщень</value>
+  </data>
+	<data name="Search.Users" xml:space="preserve">
+    <value>Користувачі</value>
+  </data>
+	<data name="Search.Products" xml:space="preserve">
+    <value>Товари</value>
+  </data>
+	<data name="Search.Tariffs" xml:space="preserve">
+    <value>Тарифи</value>
+  </data>
+	<data name="Search.FAQs" xml:space="preserve">
+    <value>Часті питання</value>
+  </data>
+	<data name="Search.Reviews" xml:space="preserve">
+    <value>Відгуки</value>
+  </data>
+	<data name="Search.NoResults" xml:space="preserve">
+    <value>Нічого не знайдено за запитом "{0}"</value>
+  </data>
+	<data name="Search.Error" xml:space="preserve">
+    <value>Помилка пошуку</value>
+  </data>
 </root>

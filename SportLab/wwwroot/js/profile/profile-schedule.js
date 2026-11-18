@@ -11,6 +11,12 @@
 
     var IS_TRAINER = CONFIG.isTrainer;
     var IS_CLIENT = CONFIG.isClient;
+    var L = CONFIG.loc || {};
+
+    // Fallback function just in case
+    function t(key, fallback) {
+        return L[key] !== undefined ? L[key] : fallback;
+    }
 
     var URLS = {
         list: '/Profile/GetScheduleList',
@@ -20,7 +26,8 @@
         cancelBooking: '/Profile/CancelScheduleBooking'
     };
 
-    var DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    var DAYS = L.Days || ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    var MONTHS = L.Months || ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     var WINDOW_START = 8;
     var WINDOW_END = 20;
@@ -114,8 +121,7 @@
 
     function formatDisplayDate(value) {
         var d = parseDate(value);
-        var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        return pad(d.getDate()) + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+        return pad(d.getDate()) + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear();
     }
 
     function toHour(value) {
@@ -131,7 +137,7 @@
             timeStart: String(slot.timeStart).slice(0, 5),
             timeEnd: String(slot.timeEnd).slice(0, 5),
             type: TYPES[slot.type] ? slot.type : 'Strength',
-            coach: slot.coach || 'TBA',
+            coach: slot.coach || t('TBA', 'TBA'),
             booked: Number(slot.booked) || 0,
             capacity: Number(slot.capacity) || 1,
             status: slot.status || 'Available',
@@ -166,7 +172,7 @@
 
         if (!response.ok) {
             var message = await response.text();
-            throw new Error(message || 'The request could not be completed.');
+            throw new Error(message || t('ErrorRequestFailed', 'The request could not be completed.'));
         }
 
         var contentType = response.headers.get('content-type') || '';
@@ -179,7 +185,7 @@
     async function load() {
         try {
             var response = await fetch(URLS.list);
-            if (!response.ok) throw new Error('Failed to load schedule.');
+            if (!response.ok) throw new Error(t('ErrorFailedLoad', 'Failed to load schedule.'));
             var data = await response.json();
             slots = data.map(normalize);
             render();
@@ -249,8 +255,10 @@
         var percentage = Math.min(slot.booked / slot.capacity, 1) * 100;
         var width = 100 / item.laneCount;
 
-        var statusText = cancelled ? 'Cancelled' : completed ? 'Completed' : full ? 'Fully booked' : 'Available';
+        var statusText = cancelled ? t('StatusCancelled', 'Cancelled') : completed ? t('StatusCompleted', 'Completed') : full ? t('StatusFullyBooked', 'Fully booked') : t('StatusAvailable', 'Available');
         var tooltip = slot.type + ' | ' + slot.timeStart + ' - ' + slot.timeEnd + ' | ' + slot.booked + '/' + slot.capacity + ' | ' + statusText;
+
+        var coachOrClients = IS_TRAINER ? (t('Clients', '{0} clients').replace('{0}', slot.booked)) : slot.coach;
 
         return '<button type="button" ' +
             'class="sh-slot sh-t-' + TYPES[slot.type].cls +
@@ -263,7 +271,7 @@
             '<span class="sh-slot-count">' + slot.booked + '/' + slot.capacity + '</span>' +
             '</span>' +
             '<span class="sh-slot-time">' + slot.timeStart + ' - ' + slot.timeEnd + '</span>' +
-            '<span class="sh-slot-coach">' + SH.esc(IS_TRAINER ? slot.booked + ' clients' : slot.coach) + '</span>' +
+            '<span class="sh-slot-coach">' + SH.esc(coachOrClients) + '</span>' +
             '<span class="sh-slot-bar"><span class="sh-slot-fill" style="width:' + percentage + '%"></span></span>' +
             '</button>';
     }
@@ -338,7 +346,7 @@
                     'data-day="' + day + '" ' +
                     'data-hour="' + hour + '" ' +
                     'style="height:' + ROW + 'px" ' +
-                    'aria-label="' + name + ' at ' + pad(hour) + ':00"></div>';
+                    'aria-label="' + name + ' ' + t('AriaDayAt', 'at') + ' ' + pad(hour) + ':00"></div>';
             }).join('');
 
             html += '<div class="sh-cal-col" data-day="' + day + '">' +
@@ -409,7 +417,7 @@
         endInput.value = pad(Math.min(hour + 1, LAST_HOUR)) + ':00';
         capacityInput.value = '15';
 
-        if (modalTitle) modalTitle.textContent = 'Create workout';
+        if (modalTitle) modalTitle.textContent = t('ModalCreateTitle', 'Create workout');
         if (deleteButton) deleteButton.hidden = true;
 
         showForm();
@@ -420,7 +428,7 @@
         if (!IS_TRAINER || !slot) return;
 
         if (slot.booked > 0) {
-            alert('A workout with existing bookings cannot be edited.');
+            alert(t('AlertCannotEdit', 'A workout with existing bookings cannot be edited.'));
             return;
         }
 
@@ -437,7 +445,7 @@
         endInput.value = slot.timeEnd;
         capacityInput.value = String(slot.capacity);
 
-        if (modalTitle) modalTitle.textContent = 'Edit workout';
+        if (modalTitle) modalTitle.textContent = t('ModalEditTitle', 'Edit workout');
         if (deleteButton) deleteButton.hidden = false;
 
         showForm();
@@ -456,14 +464,18 @@
         document.getElementById('sh-detail-time').textContent = slot.timeStart + ' - ' + slot.timeEnd;
         document.getElementById('sh-detail-coach').textContent = slot.coach;
         document.getElementById('sh-detail-capacity').textContent = slot.booked + ' / ' + slot.capacity;
-        document.getElementById('sh-detail-status').textContent = slot.status;
+
+        var statusText = slot.status === 'Cancelled' ? t('StatusCancelled', 'Cancelled') :
+            slot.status === 'Completed' ? t('StatusCompleted', 'Completed') :
+                slot.status === 'Available' ? t('StatusAvailable', 'Available') : slot.status;
+        document.getElementById('sh-detail-status').textContent = statusText;
 
         if (IS_TRAINER) {
             var clients = document.getElementById('sh-detail-clients');
             if (clients) {
                 clients.innerHTML = slot.clients.length
                     ? '<ul>' + slot.clients.map(function (name) { return '<li>' + SH.esc(name) + '</li>'; }).join('') + '</ul>'
-                    : '<p>No clients have booked this workout yet.</p>';
+                    : '<p>' + t('NoClients', 'No clients have booked this workout yet.') + '</p>';
             }
             if (editButton) editButton.hidden = slot.booked > 0 || slot.status === 'Cancelled' || slot.status === 'Completed';
             if (cancelSlotButton) cancelSlotButton.hidden = slot.status === 'Cancelled' || slot.status === 'Completed';
@@ -477,7 +489,7 @@
                 new Date(slot.date + 'T' + slot.timeStart) <= new Date();
         }
 
-        if (modalTitle) modalTitle.textContent = 'Workout details';
+        if (modalTitle) modalTitle.textContent = t('ModalDetailsTitle', 'Workout details');
 
         showDetails();
         SH.openModal('sh-schedule-modal');
@@ -532,13 +544,13 @@
             };
 
             if (!data.Date || !data.TimeStart || !data.TimeEnd) {
-                return showFormError('Please complete all date and time fields.');
+                return showFormError(t('ErrorFillAllFields', 'Please complete all date and time fields.'));
             }
             if (toHour(data.TimeStart) < WINDOW_START || toHour(data.TimeEnd) > WINDOW_END || toHour(data.TimeEnd) <= toHour(data.TimeStart)) {
-                return showFormError('The workout must be between 08:00 and 20:00, and the end time must be later than the start time.');
+                return showFormError(t('ErrorTimeRange', 'The workout must be between 08:00 and 20:00, and the end time must be later than the start time.'));
             }
             if (!Number.isInteger(Number(data.Capacity)) || Number(data.Capacity) < 1 || Number(data.Capacity) > 1000) {
-                return showFormError('Capacity must be between 1 and 1000.');
+                return showFormError(t('ErrorCapacityRange', 'Capacity must be between 1 and 1000.'));
             }
 
             try {
@@ -559,7 +571,7 @@
 
     if (cancelSlotButton) {
         cancelSlotButton.addEventListener('click', async function () {
-            if (!selectedSlot || !confirm('Cancel this workout? All registered clients will be notified.')) return;
+            if (!selectedSlot || !confirm(t('ConfirmCancelWorkout', 'Cancel this workout? All registered clients will be notified.'))) return;
             try {
                 await post(URLS.cancelSlot, { id: selectedSlot.id });
                 SH.closeModal(modal);
@@ -572,7 +584,7 @@
 
     if (deleteButton) {
         deleteButton.addEventListener('click', async function () {
-            if (!editing || !confirm('Delete this workout?')) return;
+            if (!editing || !confirm(t('ConfirmDeleteWorkout', 'Delete this workout?'))) return;
             try {
                 await post(URLS.deleteSlot, { id: editing.id });
                 SH.closeModal(modal);
@@ -585,7 +597,7 @@
 
     if (cancelBookingButton) {
         cancelBookingButton.addEventListener('click', async function () {
-            if (!selectedSlot || !confirm('Cancel your booking for this workout?')) return;
+            if (!selectedSlot || !confirm(t('ConfirmCancelBooking', 'Cancel your booking for this workout?'))) return;
             try {
                 await post(URLS.cancelBooking, { id: selectedSlot.id });
                 SH.closeModal(modal);

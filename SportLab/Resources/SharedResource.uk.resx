@@ -129,4 +129,34 @@
   <data name="Delete" xml:space="preserve">
     <value>Видалити</value>
   </data>
+	<data name="Common.Loading" xml:space="preserve">
+    <value>Завантаження...</value>
+  </data>
+	<data name="User.LogOut" xml:space="preserve">
+    <value>Вийти</value>
+  </data>
+	<data name="Common.Cancel" xml:space="preserve">
+    <value>Скасувати</value>
+  </data>
+	<data name="Common.FullName" xml:space="preserve">
+	<value>Повне ім'я</value>
+</data>
+	<data name="Common.Email" xml:space="preserve">
+	<value>Електронна пошта</value>
+</data>
+	<data name="Common.SaveChanges" xml:space="preserve">
+	<value>Зберегти зміни</value>
+</data>
+	<data name="Common.Close" xml:space="preserve">
+	<value>Закрити</value>
+</data>
+	<data name="Common.Save" xml:space="preserve">
+	<value>Зберегти</value>
+</data>
+	<data name="Common.Edit" xml:space="preserve">
+	<value>Редагувати</value>
+</data>
+	<data name="Common.Delete" xml:space="preserve">
+	<value>Видалити</value>
+</data>
 </root>

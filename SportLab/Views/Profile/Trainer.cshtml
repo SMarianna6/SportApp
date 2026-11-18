@@ -1,14 +1,17 @@
-﻿@{
+﻿@inject IViewLocalizer Localizer
+@inject IStringLocalizer<SportLab.SharedResource> SharedLocalizer
+
+@{
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
-    ViewData["Title"] = "Trainer Profile";
+    ViewData["Title"] = Localizer["PageTitle"];
 }
 
 @Html.AntiForgeryToken()
 
 <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
     <div>
-        <h2 class="text-3xl font-black uppercase tracking-tighter sm:text-4xl">Welcome back, <span id="header-trainer-name" class="text-neon">Trainer</span></h2>
-        <p class="mt-1 text-sm text-mono/60">Manage your profile, clients and sessions.</p>
+        <h2 class="text-3xl font-black uppercase tracking-tighter sm:text-4xl">@Localizer["Greeting.WelcomeBack"] <span id="header-trainer-name" class="text-neon">@Localizer["Text.TrainerFallback"]</span></h2>
+        <p class="mt-1 text-sm text-mono/60">@Localizer["Greeting.Subtitle"]</p>
     </div>
 </div>
 
@@ -16,7 +19,7 @@
     <!-- Professional information -->
     <section class="rounded-lg bg-card p-5 sm:p-6" aria-labelledby="pro-title">
         <div class="mb-6 flex items-center border-b border-white/5 pb-4 sm:min-h-[3.5rem]">
-            <h3 id="pro-title" class="text-lg font-extrabold uppercase tracking-tight">Professional Information</h3>
+            <h3 id="pro-title" class="text-lg font-extrabold uppercase tracking-tight">@Localizer["Section.ProInfo"]</h3>
         </div>
 
         <div class="grid gap-8 md:grid-cols-12 md:gap-7">
@@ -26,61 +29,61 @@
                     <span aria-hidden="true" class="pointer-events-none absolute -left-px -top-px h-6 w-6 rounded-tl-2xl border-l-2 border-t-2 border-neon"></span>
                     <span aria-hidden="true" class="pointer-events-none absolute -bottom-px -right-px h-6 w-6 rounded-br-2xl border-b-2 border-r-2 border-neon"></span>
                     <div class="relative overflow-hidden rounded-xl bg-shell ring-1 ring-white/10">
-                        <img id="trainer-photo" src="~/images/default-avatar.png" alt="Portrait of trainer" class="aspect-[4/5] w-full object-cover" loading="lazy" />
+                        <img id="trainer-photo" src="~/images/default-avatar.png" alt="@Localizer["Image.AltPortrait"]" class="aspect-[4/5] w-full object-cover" loading="lazy" />
                         <span aria-hidden="true" class="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/50 to-transparent"></span>
                     </div>
                 </div>
                 <button type="button" id="change-photo-btn" class="mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-white/10 bg-shell py-3 text-[11px] font-extrabold uppercase tracking-[0.18em] text-white transition-all duration-200 hover:border-neon hover:text-neon hover:shadow-[0_0_24px_-10px_rgba(170,255,0,0.9)] focus:outline-none focus-visible:ring-2 focus-visible:ring-neon">
                     <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3"/></svg>
-                    Change Photo
+                    @Localizer["Btn.ChangePhoto"]
                 </button>
                 <input type="file" id="photo-input" accept=".jpg,.jpeg,.png,.webp" class="hidden" />
-                <figcaption class="mt-2.5 text-center text-[10px] font-semibold uppercase tracking-[0.16em] text-mono/50">JPG, PNG or WEBP</figcaption>
+                <figcaption class="mt-2.5 text-center text-[10px] font-semibold uppercase tracking-[0.16em] text-mono/50">@Localizer["Text.PhotoFormat"]</figcaption>
             </figure>
 
             <!-- Info Container -->
             <div class="divide-y divide-white/5 md:col-span-7">
                 <div class="editable pb-4" data-field="name">
-                    <p class="mb-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-mono/50">Full name</p>
+                    <p class="mb-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-mono/50">@Localizer["Field.FullName"]</p>
                     <div class="flex items-start justify-between gap-3">
-                        <p class="editable-text min-w-0 flex-1 break-words text-base font-bold leading-snug text-white">Loading...</p>
-                        <button type="button" class="edit-btn -mr-1.5 -mt-1 shrink-0 rounded-lg p-2 text-mono/40 transition-colors duration-200 hover:bg-white/5 hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon" aria-label="Edit full name">
+                        <p class="editable-text min-w-0 flex-1 break-words text-base font-bold leading-snug text-white">@SharedLocalizer["Common.Loading"]</p>
+                        <button type="button" class="edit-btn -mr-1.5 -mt-1 shrink-0 rounded-lg p-2 text-mono/40 transition-colors duration-200 hover:bg-white/5 hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon" aria-label="@Localizer["Aria.EditName"]">
                             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
                         </button>
                     </div>
                 </div>
                 <div class="editable py-4" data-field="dob">
-                    <p class="mb-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-mono/50">Date of birth</p>
+                    <p class="mb-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-mono/50">@Localizer["Field.Dob"]</p>
                     <div class="flex items-start justify-between gap-3">
-                        <p class="editable-text min-w-0 flex-1 break-words text-sm font-semibold leading-snug text-white">Loading...</p>
-                        <button type="button" class="edit-btn -mr-1.5 -mt-1 shrink-0 rounded-lg p-2 text-mono/40 transition-colors duration-200 hover:bg-white/5 hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon" aria-label="Edit date of birth">
+                        <p class="editable-text min-w-0 flex-1 break-words text-sm font-semibold leading-snug text-white">@SharedLocalizer["Common.Loading"]</p>
+                        <button type="button" class="edit-btn -mr-1.5 -mt-1 shrink-0 rounded-lg p-2 text-mono/40 transition-colors duration-200 hover:bg-white/5 hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon" aria-label="@Localizer["Aria.EditDob"]">
                             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
                         </button>
                     </div>
                 </div>
                 <div class="editable py-4" data-field="experience">
-                    <p class="mb-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-mono/50">Experience</p>
+                    <p class="mb-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-mono/50">@Localizer["Field.Experience"]</p>
                     <div class="flex items-start justify-between gap-3">
-                        <p class="editable-text min-w-0 flex-1 break-words text-sm font-semibold leading-snug text-white">Loading...</p>
-                        <button type="button" class="edit-btn -mr-1.5 -mt-1 shrink-0 rounded-lg p-2 text-mono/40 transition-colors duration-200 hover:bg-white/5 hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon" aria-label="Edit experience">
+                        <p class="editable-text min-w-0 flex-1 break-words text-sm font-semibold leading-snug text-white">@SharedLocalizer["Common.Loading"]</p>
+                        <button type="button" class="edit-btn -mr-1.5 -mt-1 shrink-0 rounded-lg p-2 text-mono/40 transition-colors duration-200 hover:bg-white/5 hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon" aria-label="@Localizer["Aria.EditExperience"]">
                             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
                         </button>
                     </div>
                 </div>
                 <div class="editable py-4" data-field="about" data-multiline="true">
-                    <p class="mb-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-mono/50">About me</p>
+                    <p class="mb-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-mono/50">@Localizer["Field.About"]</p>
                     <div class="flex items-start justify-between gap-3">
-                        <p class="editable-text min-w-0 flex-1 break-words text-sm leading-relaxed text-mono">Loading...</p>
-                        <button type="button" class="edit-btn -mr-1.5 -mt-1 shrink-0 rounded-lg p-2 text-mono/40 transition-colors duration-200 hover:bg-white/5 hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon" aria-label="Edit about me">
+                        <p class="editable-text min-w-0 flex-1 break-words text-sm leading-relaxed text-mono">@SharedLocalizer["Common.Loading"]</p>
+                        <button type="button" class="edit-btn -mr-1.5 -mt-1 shrink-0 rounded-lg p-2 text-mono/40 transition-colors duration-200 hover:bg-white/5 hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon" aria-label="@Localizer["Aria.EditAbout"]">
                             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
                         </button>
                     </div>
                 </div>
                 <div class="pt-4">
-                    <p id="spec-label" class="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-mono/50">Specializations</p>
+                    <p id="spec-label" class="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-mono/50">@Localizer["Field.Specializations"]</p>
                     <div class="relative" id="spec-wrap">
                         <button id="spec-trigger" type="button" class="group flex w-full items-center justify-between gap-3 rounded-lg border border-white/10 bg-shell px-3.5 py-3 text-left text-sm font-semibold text-mono transition-colors duration-200 hover:border-white/20 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-neon aria-expanded:border-neon/50 aria-expanded:text-white" aria-haspopup="true" aria-expanded="false" aria-controls="spec-menu">
-                            <span>Select specializations</span>
+                            <span>@Localizer["Text.SelectSpecs"]</span>
                             <svg class="h-4 w-4 shrink-0 text-mono/50 transition-transform duration-200 group-aria-expanded:rotate-180 group-aria-expanded:text-neon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
                         </button>
                         <ul id="spec-menu" class="absolute left-0 right-0 z-20 mt-2 hidden max-h-60 overflow-y-auto rounded-lg border border-white/10 bg-shell p-1.5 shadow-2xl shadow-black/60" role="group" aria-labelledby="spec-label"></ul>
@@ -94,13 +97,13 @@
     <!-- Work schedule -->
     <section class="flex flex-col rounded-lg bg-card p-5 sm:p-6 xl:order-last" aria-labelledby="sched-title">
         <div class="mb-5 flex flex-col gap-3 border-b border-white/5 pb-4 sm:min-h-[3.5rem] sm:flex-row sm:items-center sm:justify-between">
-            <h3 id="sched-title" class="text-lg font-extrabold uppercase tracking-tight">Work Schedule</h3>
+            <h3 id="sched-title" class="text-lg font-extrabold uppercase tracking-tight">@Localizer["Section.Schedule"]</h3>
             <div class="flex items-center gap-2.5">
-                <div class="flex h-10 flex-1 items-stretch rounded-lg border border-white/10 bg-shell p-1 sm:flex-none" role="tablist" aria-label="Schedule day">
-                    <button type="button" role="tab" data-day="today" aria-selected="true" class="day-tab flex flex-1 items-center justify-center rounded-md px-4 text-[11px] font-extrabold uppercase tracking-[0.14em] transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-white bg-neon text-shell shadow-[0_0_18px_-6px_rgba(170,255,0,0.9)]">Today</button>
-                    <button type="button" role="tab" data-day="tomorrow" aria-selected="false" class="day-tab flex flex-1 items-center justify-center rounded-md px-4 text-[11px] font-extrabold uppercase tracking-[0.14em] transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-white text-mono/60 hover:text-white">Tomorrow</button>
+                <div class="flex h-10 flex-1 items-stretch rounded-lg border border-white/10 bg-shell p-1 sm:flex-none" role="tablist" aria-label="@Localizer["Aria.ScheduleDay"]">
+                    <button type="button" role="tab" data-day="today" aria-selected="true" class="day-tab flex flex-1 items-center justify-center rounded-md px-4 text-[11px] font-extrabold uppercase tracking-[0.14em] transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-white bg-neon text-shell shadow-[0_0_18px_-6px_rgba(170,255,0,0.9)]">@Localizer["Tab.Today"]</button>
+                    <button type="button" role="tab" data-day="tomorrow" aria-selected="false" class="day-tab flex flex-1 items-center justify-center rounded-md px-4 text-[11px] font-extrabold uppercase tracking-[0.14em] transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-white text-mono/60 hover:text-white">@Localizer["Tab.Tomorrow"]</button>
                 </div>
-                <button type="button" id="create-slot-btn" class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-neon text-shell shadow-[0_0_24px_-8px_rgba(170,255,0,0.9)] transition duration-200 hover:-translate-y-0.5 hover:brightness-110 active:translate-y-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-white" title="Create Workout" aria-label="Create workout">
+                <button type="button" id="create-slot-btn" class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-neon text-shell shadow-[0_0_24px_-8px_rgba(170,255,0,0.9)] transition duration-200 hover:-translate-y-0.5 hover:brightness-110 active:translate-y-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-white" title="@Localizer["Btn.CreateWorkout"]" aria-label="@Localizer["Btn.CreateWorkout"]">
                     <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14m-7-7h14"/></svg>
                 </button>
             </div>
@@ -111,11 +114,11 @@
             <span class="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl border border-white/10 bg-card text-neon shadow-[0_0_32px_-10px_rgba(170,255,0,0.7)]">
                 <svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M12 14v4M10 16h4"/></svg>
             </span>
-            <p class="text-base font-extrabold uppercase tracking-tight">No workouts</p>
-            <p class="mt-1.5 max-w-xs text-sm leading-relaxed text-mono/60">Your calendar is open. Add availability so clients can book you.</p>
+            <p class="text-base font-extrabold uppercase tracking-tight">@Localizer["Empty.NoWorkouts"]</p>
+            <p class="mt-1.5 max-w-xs text-sm leading-relaxed text-mono/60">@Localizer["Empty.ScheduleDesc"]</p>
             <p class="mt-5 inline-flex items-center gap-2 rounded-full border border-neon/20 bg-neon/5 px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.16em] text-neon">
                 <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14m-7-7h14"/></svg>
-                Use the + button above
+                @Localizer["Empty.UsePlus"]
             </p>
         </div>
     </section>
@@ -123,27 +126,27 @@
     <!-- Clients Widget -->
     <section class="rounded-lg bg-card p-5 sm:p-6 xl:col-span-2 xl:row-start-2" aria-labelledby="clients-title">
         <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <h3 id="clients-title" class="text-lg font-extrabold uppercase tracking-tight">My Clients <span id="clients-count" class="ml-1 text-sm font-semibold text-mono/50"></span></h3>
+            <h3 id="clients-title" class="text-lg font-extrabold uppercase tracking-tight">@Localizer["Section.Clients"] <span id="clients-count" class="ml-1 text-sm font-semibold text-mono/50"></span></h3>
             <div class="flex flex-col gap-2 sm:flex-row">
                 <label class="relative block">
-                    <span class="sr-only">Search clients</span>
+                    <span class="sr-only">@Localizer["Text.SearchClients"]</span>
                     <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-mono/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-                    <input id="client-search" type="search" placeholder="Search clients" class="w-full rounded-md bg-shell py-2.5 pl-9 pr-3 text-sm text-white placeholder:text-mono/40 focus:outline-none focus:ring-2 focus:ring-neon sm:w-56" />
+                    <input id="client-search" type="search" placeholder="@Localizer["Text.SearchClients"]" class="w-full rounded-md bg-shell py-2.5 pl-9 pr-3 text-sm text-white placeholder:text-mono/40 focus:outline-none focus:ring-2 focus:ring-neon sm:w-56" />
                 </label>
                 <label class="block">
-                    <span class="sr-only">Sort clients</span>
+                    <span class="sr-only">@Localizer["Text.SortClients"]</span>
                     <select id="client-sort" class="w-full rounded-md bg-shell px-3 py-2.5 text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-neon sm:w-36">
-                        <option value="recent">Recent</option>
-                        <option value="az">A-Z</option>
-                        <option value="workouts">Most workouts</option>
+                        <option value="recent">@Localizer["Sort.Recent"]</option>
+                        <option value="az">@Localizer["Sort.AZ"]</option>
+                        <option value="workouts">@Localizer["Sort.Workouts"]</option>
                     </select>
                 </label>
             </div>
         </div>
         <div id="clients-grid" class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-            <p class="text-sm text-mono/50 animate-pulse">Loading clients...</p>
+            <p class="text-sm text-mono/50 animate-pulse">@Localizer["Text.LoadingClients"]</p>
         </div>
-        <p id="clients-empty" class="hidden rounded-lg bg-shell p-8 text-center text-sm text-mono/60">No clients match your search.</p>
+        <p id="clients-empty" class="hidden rounded-lg bg-shell p-8 text-center text-sm text-mono/60">@Localizer["Empty.NoClients"]</p>
     </section>
 </div>
 
@@ -154,34 +157,39 @@
         <button type="button" data-close class="absolute right-3 top-3 rounded-md p-2 text-mono/60 hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon">
             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
         </button>
-        <h3 id="slot-title" class="text-2xl font-black uppercase tracking-tighter">Create <span class="text-neon">slot</span></h3>
+        <h3 id="slot-title" class="text-2xl font-black uppercase tracking-tighter">@Localizer["Modal.Create"] <span class="text-neon">@Localizer["Modal.Slot"]</span></h3>
         <form id="slot-form" class="mt-5 space-y-4">
             <div>
-                <label for="slot-date" class="mb-1.5 block text-[11px] font-semibold uppercase tracking-widest text-mono/50">Date</label>
+                <label for="slot-date" class="mb-1.5 block text-[11px] font-semibold uppercase tracking-widest text-mono/50">@Localizer["Modal.Date"]</label>
                 <input id="slot-date" type="date" required class="w-full rounded-md bg-shell px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-neon" />
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label for="slot-start" class="mb-1.5 block text-[11px] font-semibold uppercase tracking-widest text-mono/50">Start time</label>
+                    <label for="slot-start" class="mb-1.5 block text-[11px] font-semibold uppercase tracking-widest text-mono/50">@Localizer["Modal.StartTime"]</label>
                     <input id="slot-start" type="time" required class="w-full rounded-md bg-shell px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-neon" />
                 </div>
                 <div>
-                    <label for="slot-end" class="mb-1.5 block text-[11px] font-semibold uppercase tracking-widest text-mono/50">End time</label>
+                    <label for="slot-end" class="mb-1.5 block text-[11px] font-semibold uppercase tracking-widest text-mono/50">@Localizer["Modal.EndTime"]</label>
                     <input id="slot-end" type="time" required class="w-full rounded-md bg-shell px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-neon" />
                 </div>
             </div>
             <div>
-                <label for="slot-type" class="mb-1.5 block text-[11px] font-semibold uppercase tracking-widest text-mono/50">Workout type</label>
+                <label for="slot-type" class="mb-1.5 block text-[11px] font-semibold uppercase tracking-widest text-mono/50">@Localizer["Modal.WorkoutType"]</label>
                 <select id="slot-type" class="w-full rounded-md bg-shell px-3 py-2.5 text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-neon">
-                    <option>Strength</option><option>Boxing</option><option>Yoga</option><option>Cardio</option><option>HIIT</option><option>Pilates</option>
+                    <option value="Strength">@Localizer["Workout.Strength"]</option>
+                    <option value="Boxing">@Localizer["Workout.Boxing"]</option>
+                    <option value="Yoga">@Localizer["Workout.Yoga"]</option>
+                    <option value="Cardio">@Localizer["Workout.Cardio"]</option>
+                    <option value="HIIT">@Localizer["Workout.HIIT"]</option>
+                    <option value="Pilates">@Localizer["Workout.Pilates"]</option>
                 </select>
             </div>
             <div>
-                <label for="slot-capacity" class="mb-1.5 block text-[11px] font-semibold uppercase tracking-widest text-mono/50">Maximum clients</label>
+                <label for="slot-capacity" class="mb-1.5 block text-[11px] font-semibold uppercase tracking-widest text-mono/50">@Localizer["Modal.MaxClients"]</label>
                 <input id="slot-capacity" type="number" min="1" max="1000" value="15" required class="w-full rounded-md bg-shell px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-neon" />
             </div>
             <p id="slot-error" class="hidden text-sm font-semibold text-[#FF5252]" role="alert"></p>
-            <button type="submit" class="w-full rounded-md bg-neon py-3.5 text-sm font-extrabold uppercase tracking-widest text-shell transition-transform hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">Save Slot</button>
+            <button type="submit" class="w-full rounded-md bg-neon py-3.5 text-sm font-extrabold uppercase tracking-widest text-shell transition-transform hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">@Localizer["Btn.SaveSlot"]</button>
         </form>
     </div>
 </div>
@@ -196,12 +204,12 @@
         <span class="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#FF5252]/15 text-[#FF5252]">
             <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
         </span>
-        <h3 id="cancel-title" class="text-2xl font-black uppercase tracking-tighter">Cancel workout</h3>
-        <p class="mt-2 text-sm text-mono/70">Are you sure you want to cancel this session? The client will be notified.</p>
+        <h3 id="cancel-title" class="text-2xl font-black uppercase tracking-tighter">@Localizer["Modal.CancelWorkout"]</h3>
+        <p class="mt-2 text-sm text-mono/70">@Localizer["Modal.CancelConfirmText"]</p>
         <p id="cancel-summary" class="mt-3 rounded-md bg-shell px-3 py-2 text-xs font-bold text-mono"></p>
         <div class="mt-6 flex gap-3">
-            <button type="button" data-close class="flex-1 rounded-md border border-white/20 py-3 text-xs font-extrabold uppercase tracking-widest text-white transition-colors hover:border-neon hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon">Keep</button>
-            <button type="button" id="cancel-confirm" class="flex-1 rounded-md bg-[#FF5252] py-3 text-xs font-extrabold uppercase tracking-widest text-white transition-transform hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">Confirm Cancel</button>
+            <button type="button" data-close class="flex-1 rounded-md border border-white/20 py-3 text-xs font-extrabold uppercase tracking-widest text-white transition-colors hover:border-neon hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon">@Localizer["Btn.Keep"]</button>
+            <button type="button" id="cancel-confirm" class="flex-1 rounded-md bg-[#FF5252] py-3 text-xs font-extrabold uppercase tracking-widest text-white transition-transform hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">@Localizer["Btn.ConfirmCancel"]</button>
         </div>
     </div>
 </div>
@@ -212,6 +220,73 @@
             'use strict';
             var $ = function (id) { return document.getElementById(id); };
             var token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+
+            var locStrings = {
+                endTimeError: @Html.Raw(Json.Serialize(Localizer["Alert.EndTimeError"].Value)),
+                invalidResponse: @Html.Raw(Json.Serialize(Localizer["Alert.InvalidResponse"].Value)),
+                errorSavingSlot: @Html.Raw(Json.Serialize(Localizer["Alert.ErrorSavingSlot"].Value)),
+                networkError: @Html.Raw(Json.Serialize(Localizer["Alert.NetworkError"].Value)),
+                failedSave: @Html.Raw(Json.Serialize(Localizer["Alert.FailedSave"].Value)),
+                uploadFailed: @Html.Raw(Json.Serialize(Localizer["Alert.UploadFailed"].Value)),
+                cancelling: @Html.Raw(Json.Serialize(Localizer["Alert.Cancelling"].Value)),
+                failedCancel: @Html.Raw(Json.Serialize(Localizer["Alert.FailedCancel"].Value)),
+                networkErrorRetry: @Html.Raw(Json.Serialize(Localizer["Alert.NetworkErrorRetry"].Value)),
+                notSet: @Html.Raw(Json.Serialize(Localizer["Text.NotSet"].Value)),
+                selectSpecs: @Html.Raw(Json.Serialize(Localizer["Text.SelectSpecs"].Value)),
+                selected: @Html.Raw(Json.Serialize(Localizer["Text.Selected"].Value)),
+                noneSelected: @Html.Raw(Json.Serialize(Localizer["Text.NoneSelected"].Value)),
+                noWeightData: @Html.Raw(Json.Serialize(Localizer["Text.NoWeightData"].Value)),
+                notEnoughData: @Html.Raw(Json.Serialize(Localizer["Text.NotEnoughData"].Value)),
+                kg: @Html.Raw(Json.Serialize(Localizer["Text.Kg"].Value)),
+                to: @Html.Raw(Json.Serialize(Localizer["Text.To"].Value)),
+                booked: @Html.Raw(Json.Serialize(Localizer["Text.Booked"].Value)),
+                weight: @Html.Raw(Json.Serialize(Localizer["Text.Weight"].Value)),
+                sessions: @Html.Raw(Json.Serialize(Localizer["Text.Sessions"].Value)),
+                trainerFallback: @Html.Raw(Json.Serialize(Localizer["Text.TrainerFallback"].Value)),
+                removeSpec: @Html.Raw(Json.Serialize(Localizer["Aria.RemoveSpec"].Value)),
+                specCrossFit: @Html.Raw(Json.Serialize(Localizer["Spec.CrossFit"].Value)),
+                specPilates: @Html.Raw(Json.Serialize(Localizer["Spec.Pilates"].Value)),
+                specYoga: @Html.Raw(Json.Serialize(Localizer["Spec.Yoga"].Value)),
+                specStrength: @Html.Raw(Json.Serialize(Localizer["Spec.Strength"].Value)),
+                specHIIT: @Html.Raw(Json.Serialize(Localizer["Spec.HIIT"].Value)),
+                specBoxing: @Html.Raw(Json.Serialize(Localizer["Spec.Boxing"].Value)),
+                specMobility: @Html.Raw(Json.Serialize(Localizer["Spec.Mobility"].Value)),
+                specNutrition: @Html.Raw(Json.Serialize(Localizer["Spec.Nutrition"].Value)),
+                workoutStrength: @Html.Raw(Json.Serialize(Localizer["Workout.Strength"].Value)),
+                workoutBoxing: @Html.Raw(Json.Serialize(Localizer["Workout.Boxing"].Value)),
+                workoutYoga: @Html.Raw(Json.Serialize(Localizer["Workout.Yoga"].Value)),
+                workoutCardio: @Html.Raw(Json.Serialize(Localizer["Workout.Cardio"].Value)),
+                workoutHIIT: @Html.Raw(Json.Serialize(Localizer["Workout.HIIT"].Value)),
+                workoutPilates: @Html.Raw(Json.Serialize(Localizer["Workout.Pilates"].Value)),
+                cultureName: '@System.Globalization.CultureInfo.CurrentUICulture.Name',
+                cancelBtn: @Html.Raw(Json.Serialize(SharedLocalizer["Common.Cancel"].Value))
+            };
+
+            /* Specialization identifiers used for server-side values — kept in English. */
+            var SPEC_LABELS = {
+                'CrossFit': locStrings.specCrossFit,
+                'Pilates': locStrings.specPilates,
+                'Yoga': locStrings.specYoga,
+                'Strength': locStrings.specStrength,
+                'HIIT': locStrings.specHIIT,
+                'Boxing': locStrings.specBoxing,
+                'Mobility': locStrings.specMobility,
+                'Nutrition': locStrings.specNutrition
+            };
+            function specLabel(s) { return SPEC_LABELS[s] || s; }
+
+            /* Map dynamic English activity names to localized labels */
+            function getActivityLabel(name) {
+                if (!name) return '';
+                var n = name.toLowerCase();
+                if (n.includes('box')) return locStrings.workoutBoxing;
+                if (n.includes('yoga')) return locStrings.workoutYoga;
+                if (n.includes('strength')) return locStrings.workoutStrength;
+                if (n.includes('cardio')) return locStrings.workoutCardio;
+                if (n.includes('hiit')) return locStrings.workoutHIIT;
+                if (n.includes('pilates')) return locStrings.workoutPilates;
+                return name; // Fallback if it's a custom type
+            }
 
             function getJsonHeaders() {
                 return { 'Content-Type': 'application/json' };
@@ -226,10 +301,12 @@
                 if (!pills || !trigger) return;
                 var keys = SPECS.filter(function (s) { return selected[s]; });
                 pills.innerHTML = keys.length ? keys.map(function (s) {
-                    return '<li class="inline-flex items-center gap-1.5 rounded-full border border-neon/30 bg-neon/10 py-1 pl-3 pr-1.5 text-[11px] font-bold uppercase tracking-wider text-neon">' + s +
-'<button type="button" data-remove="' + s + '" aria-label="Remove ' + s + '" class="flex h-4 w-4 items-center justify-center rounded-full text-neon/70 transition-colors duration-150 hover:bg-neon hover:text-shell focus:outline-none focus-visible:ring-2 focus-visible:ring-neon"><svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></li>';
-                }).join('') : '<li class="rounded-full border border-dashed border-white/10 px-3 py-1 text-[11px] font-semibold text-mono/50">None selected</li>';
-                trigger.firstElementChild.textContent = keys.length ? keys.length + ' selected' : 'Select specializations';
+                    var lbl = specLabel(s);
+                    var aria = locStrings.removeSpec.replace('{0}', lbl);
+                    return '<li class="inline-flex items-center gap-1.5 rounded-full border border-neon/30 bg-neon/10 py-1 pl-3 pr-1.5 text-[11px] font-bold uppercase tracking-wider text-neon">' + lbl +
+'<button type="button" data-remove="' + s + '" aria-label="' + aria + '" class="flex h-4 w-4 items-center justify-center rounded-full text-neon/70 transition-colors duration-150 hover:bg-neon hover:text-shell focus:outline-none focus-visible:ring-2 focus-visible:ring-neon"><svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></li>';
+                }).join('') : '<li class="rounded-full border border-dashed border-white/10 px-3 py-1 text-[11px] font-semibold text-mono/50">' + locStrings.noneSelected + '</li>';
+                trigger.firstElementChild.textContent = keys.length ? keys.length + ' ' + locStrings.selected : locStrings.selectSpecs;
             }
 
             /* ---------- Fetch Profile Data ---------- */
@@ -244,13 +321,13 @@
 
                     currentProfileData = data;
                     
-                    $('header-trainer-name').textContent = data.name.split(' ')[0] || 'Trainer';
+                    $('header-trainer-name').textContent = data.name.split(' ')[0] || locStrings.trainerFallback;
                     $('trainer-photo').src = data.photoUrl || data.avatarUrl || '/images/default-avatar.png';
                     
                     document.querySelector('.editable[data-field="name"] .editable-text').textContent = data.name;
-                    document.querySelector('.editable[data-field="dob"] .editable-text').textContent = data.dateOfBirth ? new Date(data.dateOfBirth).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Not set';
-                    document.querySelector('.editable[data-field="experience"] .editable-text').textContent = data.experience || 'Not set';
-                    document.querySelector('.editable[data-field="about"] .editable-text').textContent = data.about || 'Not set';
+                    document.querySelector('.editable[data-field="dob"] .editable-text').textContent = data.dateOfBirth ? new Date(data.dateOfBirth).toLocaleDateString(locStrings.cultureName, { year: 'numeric', month: 'long', day: 'numeric' }) : locStrings.notSet;
+                    document.querySelector('.editable[data-field="experience"] .editable-text').textContent = data.experience || locStrings.notSet;
+                    document.querySelector('.editable[data-field="about"] .editable-text').textContent = data.about || locStrings.notSet;
 
                     if (data.specializations) {
                         const specs = data.specializations.split(',').map(s => s.trim());
@@ -323,13 +400,13 @@
                             
                             if (res.ok) {
                                 currentProfileData = payload;
-                                textEl.textContent = box.dataset.field === 'dob' && v ? new Date(v).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : (v || 'Not set');
+                                textEl.textContent = box.dataset.field === 'dob' && v ? new Date(v).toLocaleDateString(locStrings.cultureName, { year: 'numeric', month: 'long', day: 'numeric' }) : (v || locStrings.notSet);
                                 $('header-trainer-name').textContent = payload.name.split(' ')[0];
                             } else {
-                                alert('Failed to save changes.');
+                                alert(locStrings.failedSave);
                             }
                         } catch (e) {
-                            alert('Network error.');
+                            alert(locStrings.networkError);
                         }
 
                         input.remove(); textEl.classList.remove('hidden');
@@ -363,7 +440,7 @@
                         alert(data.message);
                     }
                 } catch (e) {
-                    alert('Upload failed.');
+                    alert(locStrings.uploadFailed);
                 }
             });
 
@@ -371,7 +448,7 @@
             if (menu && trigger && pills) {
                 menu.innerHTML = SPECS.map(function (s) {
                     return '<li><label class="flex cursor-pointer items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-mono transition-colors duration-150 hover:bg-white/5 hover:text-white">' +
-                        '<input type="checkbox" value="' + s + '" class="h-4 w-4 shrink-0 cursor-pointer accent-[#AAFF00]" />' + s + '</label></li>';
+                        '<input type="checkbox" value="' + s + '" class="h-4 w-4 shrink-0 cursor-pointer accent-[#AAFF00]" />' + specLabel(s) + '</label></li>';
                 }).join('');
                 
                 async function saveSpecs() {
@@ -465,16 +542,17 @@
                     const iconKey = s.activityName.toLowerCase().includes('box') ? 'boxing' : s.activityName.toLowerCase().includes('yoga') ? 'yoga' : 'strength';
                     const accent = i % 2 ? '#7D51FE' : '#AAFF00';
                     const fill = s.capacity > 0 ? Math.min(100, Math.round(s.booked / s.capacity * 100)) : 0;
+                    const localizedActivityName = getActivityLabel(s.activityName);
                     
                     return '<li>' +
                         '<button type="button" data-id="' + s.id + '" class="slot-btn group relative flex w-full items-center gap-3 overflow-hidden rounded-xl border border-white/5 bg-shell py-3.5 pl-5 pr-3.5 text-left transition-colors duration-200 hover:border-white/20 hover:bg-black focus:outline-none focus-visible:ring-2 focus-visible:ring-neon sm:gap-4">' +
                         '<span aria-hidden="true" class="absolute inset-y-3 left-0 w-1 rounded-r-full" style="background:' + accent + '"></span>' +
-                        '<span class="flex min-w-[3.25rem] shrink-0 flex-col whitespace-nowrap tabular-nums"><span class="text-lg font-black leading-none tracking-tight text-white">' + s.startTime + '</span><span class="mt-1.5 text-[11px] font-semibold leading-none text-mono/50">to ' + s.endTime + '</span></span>' +
+                        '<span class="flex min-w-[3.25rem] shrink-0 flex-col whitespace-nowrap tabular-nums"><span class="text-lg font-black leading-none tracking-tight text-white">' + s.startTime + '</span><span class="mt-1.5 text-[11px] font-semibold leading-none text-mono/50">' + locStrings.to + ' ' + s.endTime + '</span></span>' +
                         '<span aria-hidden="true" class="hidden h-9 w-px shrink-0 bg-white/10 sm:block"></span>' +
                         '<span class="hidden h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-white/5 bg-card sm:flex" style="color:' + accent + '"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + icons[iconKey] + '</svg></span>' +
-                        '<span class="min-w-0 flex-1"><span class="block break-words text-sm font-extrabold leading-snug text-white">' + s.activityName + '</span>' +
-                        '<span class="mt-2 flex items-center gap-2"><span aria-hidden="true" class="h-1 w-16 overflow-hidden rounded-full bg-white/10"><span class="block h-full rounded-full" style="width:' + fill + '%;background:' + accent + '"></span></span><span class="shrink-0 whitespace-nowrap text-[11px] font-semibold tabular-nums text-mono/60">' + s.booked + '/' + s.capacity + ' booked</span></span></span>' +
-                        '<span class="ml-auto inline-flex shrink-0 items-center gap-1.5 rounded-md border border-white/10 px-2.5 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.14em] text-mono/60 transition-colors duration-200 group-hover:border-[#FF5252]/40 group-hover:bg-[#FF5252]/10 group-hover:text-[#FF5252] group-focus-visible:border-[#FF5252]/40 group-focus-visible:text-[#FF5252]"><svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>Cancel</span></button></li>';
+                        '<span class="min-w-0 flex-1"><span class="block break-words text-sm font-extrabold leading-snug text-white">' + localizedActivityName + '</span>' +
+                        '<span class="mt-2 flex items-center gap-2"><span aria-hidden="true" class="h-1 w-16 overflow-hidden rounded-full bg-white/10"><span class="block h-full rounded-full" style="width:' + fill + '%;background:' + accent + '"></span></span><span class="shrink-0 whitespace-nowrap text-[11px] font-semibold tabular-nums text-mono/60">' + s.booked + '/' + s.capacity + ' ' + locStrings.booked + '</span></span></span>' +
+                        '<span class="ml-auto inline-flex shrink-0 items-center gap-1.5 rounded-md border border-white/10 px-2.5 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.14em] text-mono/60 transition-colors duration-200 group-hover:border-[#FF5252]/40 group-hover:bg-[#FF5252]/10 group-hover:text-[#FF5252] group-focus-visible:border-[#FF5252]/40 group-focus-visible:text-[#FF5252]"><svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>' + locStrings.cancelBtn + '</span></button></li>';
                 }).join('');
 
                 document.querySelectorAll('.day-tab').forEach(function (t) {
@@ -496,7 +574,7 @@
                 errorEl.classList.add('hidden');
                 
                 if ($('slot-start').value >= $('slot-end').value) {
-                    errorEl.textContent = "End time must be later than start time.";
+                    errorEl.textContent = locStrings.endTimeError;
                     errorEl.classList.remove('hidden');
                     return;
                 }
@@ -521,7 +599,7 @@
                     try {
                         data = JSON.parse(text);
                     } catch {
-                        throw new Error("Server returned an invalid response. Check if times are correct.");
+                        throw new Error(locStrings.invalidResponse);
                     }
 
                     if (res.ok && data.success) {
@@ -529,11 +607,11 @@
                         $('slot-form').reset();
                         await loadDashboard();
                     } else {
-                        errorEl.textContent = data.message || "Error saving slot"; 
+                        errorEl.textContent = data.message || locStrings.errorSavingSlot; 
                         errorEl.classList.remove('hidden');
                     }
                 } catch(error) {
-                    errorEl.textContent = error.message || 'Network error.'; 
+                    errorEl.textContent = error.message || locStrings.networkError; 
                     errorEl.classList.remove('hidden');
                 }
             });
@@ -544,8 +622,8 @@
             function trendColor(delta) { return delta > 0.5 ? '#AAFF00' : delta < -0.5 ? '#FF5252' : '#FFD93D'; }
             
             function spark(data) {
-                if (!data || data.length === 0) return '<p class="text-xs text-center text-mono/50 py-4">No weight data</p>';
-                if (data.length === 1) return '<p class="text-xs text-center text-mono/50 py-4">Only 1 record</p>';
+                if (!data || data.length === 0) return '<p class="text-xs text-center text-mono/50 py-4">' + locStrings.noWeightData + '</p>';
+                if (data.length === 1) return '<p class="text-xs text-center text-mono/50 py-4">' + locStrings.notEnoughData + '</p>';
                 
                 var w = 220, h = 90, left = 30, right = 6, top = 8, bottom = 8;
                 var min = Math.min.apply(null, data), max = Math.max.apply(null, data);
@@ -556,7 +634,7 @@
                 var grid = '';
                 [0, 0.5, 1].forEach(function (t) {
                     var v = min + range * (1 - t), y = top + plotH * t, rel = v - base;
-                    var label = (rel > 0.05 ? '+' : rel < -0.05 ? '-' : '') + Math.abs(rel).toFixed(1) + ' kg';
+                    var label = (rel > 0.05 ? '+' : rel < -0.05 ? '-' : '') + Math.abs(rel).toFixed(1) + ' ' + locStrings.kg;
                     grid += '<line x1="' + left + '" y1="' + y.toFixed(1) + '" x2="' + (w - right) + '" y2="' + y.toFixed(1) + '" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1"/>' +
                             '<text x="' + (left - 4) + '" y="' + (y + 2.5).toFixed(1) + '" text-anchor="end" font-size="7" fill="#ffffff" fill-opacity="0.4">' + label + '</text>';
                 });
@@ -601,11 +679,11 @@
                     
                     return '<article class="flex flex-col gap-4 rounded-lg bg-shell p-4 transition-transform duration-200 hover:-translate-y-0.5">' +
                         '<div class="flex items-center gap-3"><div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-sm font-extrabold ' + (colors[idx % colors.length] === '#AAFF00' ? 'bg-neon text-shell' : 'bg-violet text-white') + '">' + initials(c.name) + '</div>' +
-                        '<div class="min-w-0"><h4 class="truncate text-base font-extrabold tracking-tight">' + c.name + '</h4><p class="text-xs text-mono/50">Weight ' + (deltaVal > 0 ? '+' : '') + deltaVal + ' kg</p></div></div>' +
+                        '<div class="min-w-0"><h4 class="truncate text-base font-extrabold tracking-tight">' + c.name + '</h4><p class="text-xs text-mono/50">' + locStrings.weight + ' ' + (deltaVal > 0 ? '+' : '') + deltaVal + ' ' + locStrings.kg + '</p></div></div>' +
                         '<div class="rounded-md bg-card px-3 py-2">' + spark(c.weights || []) + '</div>' +
                         '<div class="flex items-center justify-between">' +
-                            '<p class="text-sm text-mono">Sessions: <span class="font-extrabold text-neon">' + (c.workouts || 0) + '</span></p>' +
-                            '<a href="/Profile/ClientHistory?id=' + c.id + '" class="flex h-9 px-3 items-center justify-center rounded-md bg-card text-xs font-bold text-white transition-colors hover:bg-violet hover:text-white">History</a>' +
+                            '<p class="text-sm text-mono">' + locStrings.sessions + ' <span class="font-extrabold text-neon">' + (c.workouts || 0) + '</span></p>' +
+                            '<a href="/Profile/ClientHistory?id=' + c.id + '" class="flex h-9 px-3 items-center justify-center rounded-md bg-card text-xs font-bold text-white transition-colors hover:bg-violet hover:text-white">@Localizer["Btn.History"]</a>' +
                         '</div></article>';
                 }).join('');
             }
@@ -613,9 +691,7 @@
             if (searchInput) searchInput.addEventListener('input', renderClients);
             if (sortSelect) sortSelect.addEventListener('change', renderClients);
 
-                        // --- ДОДАЙТЕ ЦЕЙ БЛОК КОДУ ---
 
-            // 1. Відкриття модального вікна при кліку на слот
             document.getElementById('timeline').addEventListener('click', function(e) {
                 const btn = e.target.closest('.slot-btn');
                 if (!btn) return;
@@ -625,23 +701,20 @@
                 if (!slot) return;
 
                 pendingCancelId = id;
-                
-                // Заповнюємо дані в модальному вікні
+
                 document.getElementById('cancel-summary').textContent = 
-                    slot.activityName + ' (' + slot.startTime + ' - ' + slot.endTime + ')';
+                    getActivityLabel(slot.activityName) + ' (' + slot.startTime + ' - ' + slot.endTime + ')';
                 
                 openModal('modal-cancel');
             });
 
-            // 2. Підтвердження скасування
             document.getElementById('cancel-confirm').addEventListener('click', async function() {
                 if (!pendingCancelId) return;
                 
                 const btn = this;
                 btn.disabled = true;
-                btn.textContent = 'Cancelling...';
+                btn.textContent = locStrings.cancelling;
 
-                // Підготовка даних форми
                 const formData = new URLSearchParams();
                 formData.append('id', pendingCancelId);
                 formData.append('__RequestVerificationToken', token);
@@ -656,16 +729,16 @@
                     const data = await res.json();
 
                     if (res.ok && data.success) {
-                        closeModal(); // Закриваємо модалку
-                        await loadDashboard(); // Перезавантажуємо розклад
+                        closeModal();
+                        await loadDashboard();
                     } else {
-                        alert(data.message || 'Failed to cancel workout.');
+                        alert(data.message || locStrings.failedCancel);
                     }
                 } catch (err) {
-                    alert('Network error. Please try again.');
+                    alert(locStrings.networkErrorRetry);
                 } finally {
                     btn.disabled = false;
-                    btn.textContent = 'Confirm Cancel';
+                    btn.textContent = '@Localizer["Btn.ConfirmCancel"]';
                     pendingCancelId = null;
                 }
             });
