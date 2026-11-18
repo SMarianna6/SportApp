@@ -31,7 +31,6 @@ namespace SportLab.Controllers
             return View(trainers);
         }
 
-        // напнайю апнмчбюммъ г╡ ярнп╡мйх рпемеп╡б
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]

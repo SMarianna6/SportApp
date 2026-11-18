@@ -104,7 +104,6 @@
             'use strict';
             var $ = function (id) { return document.getElementById(id); };
 
-            // 1. Считуємо контакти з серверної моделі C#
             var CHATS = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Select(c => new {
                 id = c.Id,
                 name = c.Name,
@@ -233,7 +232,6 @@
                 }
             }
 
-            // Обробка кліків по контактах
             $('chat-list').addEventListener('click', function (e) {
                 var b = e.target.closest('.chat-item');
                 if (b && b.dataset.contactId) {
@@ -286,7 +284,6 @@
                 sendMessage(text);
             });
 
-            // Ініціалізація першого активного чату при завантаженні
             if (activeId) {
                 selectChat(activeId);
             } else {

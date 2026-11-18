@@ -230,7 +230,13 @@
                         const badge = document.getElementById("navCartBadge");
                         if (badge) {
                             badge.textContent = data.totalCount;
-                            badge.classList.remove("d-none");
+                            badge.classList.remove("hidden");
+                        }
+
+                        const mobileBadge = document.getElementById("mobileCartBadge");
+                        if (mobileBadge) {
+                            mobileBadge.textContent = data.totalCount;
+                            mobileBadge.classList.remove("hidden");
                         }
                     } else {
                         alert(data.message || "Failed to add product to cart.");

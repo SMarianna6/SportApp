@@ -143,6 +143,7 @@ namespace SportLab.Controllers
             var weights = await _context.MetricLogs
                 .Where(m => m.UserId == userId)
                 .OrderByDescending(m => m.RecordDate)
+                .ThenByDescending(m => m.Id)
                 .Take(10)
                 .Select(m => new
                 {
@@ -315,7 +316,7 @@ namespace SportLab.Controllers
         {
             if (request == null ||
                 request.Weight <= 0 ||
-                request.Weight > 500)
+                request.Weight > 300)
             {
                 return BadRequest(new
                 {
@@ -342,6 +343,31 @@ namespace SportLab.Controllers
                 weight = metric.Weight,
                 recordDate = metric.RecordDate
             });
+        }
+
+        // DELETE WEIGHT RECORD
+        [HttpPost]
+        [Authorize(Roles = Roles.Client)]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteWeight([FromBody] DeleteWeightRequest request)
+        {
+            if (request == null || request.Id <= 0)
+            {
+                return BadRequest(new { success = false, message = "Invalid record." });
+            }
+
+            var metric = await _context.MetricLogs
+                .FirstOrDefaultAsync(m => m.Id == request.Id && m.UserId == CurrentUserId);
+
+            if (metric == null)
+            {
+                return NotFound(new { success = false, message = "Weight record not found." });
+            }
+
+            _context.MetricLogs.Remove(metric);
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, message = "Weight record deleted." });
         }
 
         // AVATAR MANAGEMENT
@@ -934,6 +960,66 @@ namespace SportLab.Controllers
             return Json(new { success = true, message = "Password updated successfully." });
         }
 
+        // DELETE ACCOUNT
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteAccount()
+        {
+            var user = await _context.Users.FindAsync(CurrentUserId);
+
+            if (user == null)
+            {
+                return NotFound(new { success = false, message = "User not found." });
+            }
+
+            try
+            {
+                var metrics = await _context.MetricLogs.Where(m => m.UserId == user.Id).ToListAsync();
+                _context.MetricLogs.RemoveRange(metrics);
+
+                var bookings = await _context.WorkoutBookings.Where(b => b.UserId == user.Id).ToListAsync();
+                _context.WorkoutBookings.RemoveRange(bookings);
+
+                var orders = await _context.Orders
+                    .Include(o => o.OrderDetails)
+                    .Where(o => o.UserId == user.Id)
+                    .ToListAsync();
+                _context.Orders.RemoveRange(orders);
+
+                var messages = await _context.Messages
+                    .Where(m => m.SenderId == user.Id || m.ReceiverId == user.Id)
+                    .ToListAsync();
+                _context.Messages.RemoveRange(messages);
+
+                var subs = await _context.Subscriptions.Where(s => s.UserId == user.Id).ToListAsync();
+                _context.Subscriptions.RemoveRange(subs);
+
+                var reviews = await _context.Reviews.Where(r => r.UserId == user.Id).ToListAsync();
+                _context.Reviews.RemoveRange(reviews);
+
+                var trainerProfile = await _context.TrainerProfiles.FirstOrDefaultAsync(p => p.UserId == user.Id);
+                if (trainerProfile != null)
+                {
+                    _context.TrainerProfiles.Remove(trainerProfile);
+                }
+
+                _context.Users.Remove(user);
+                await _context.SaveChangesAsync();
+
+                await HttpContext.SignOutAsync(Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme);
+
+                return Json(new { success = true, message = "Account deleted successfully." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "DB Error: " + ex.Message
+                });
+            }
+        }
+
         // SHARED PROFILE SCHEDULE
 
         [HttpGet]
@@ -1336,7 +1422,6 @@ namespace SportLab.Controllers
 
             var userIds = bookings.Select(b => b.UserId).Distinct().ToList();
 
-            // Отримуємо ваги клієнтів
             var weights = await _context.MetricLogs
                 .AsNoTracking()
                 .Where(m => userIds.Contains(m.UserId))
@@ -1375,10 +1460,10 @@ namespace SportLab.Controllers
                         name = first.name,
                         email = first.email,
                         goal = string.IsNullOrWhiteSpace(first.goal) ? "Not set" : first.goal,
-                        workouts = g.Count(b => b.status != "Cancelled"), // ДОДАНО
+                        workouts = g.Count(b => b.status != "Cancelled"),
                         lastWorkout,
                         status = membership,
-                        weights = weights.Where(w => w.UserId == g.Key).Select(w => w.Weight).ToList() // ДОДАНО
+                        weights = weights.Where(w => w.UserId == g.Key).Select(w => w.Weight).ToList()
                     };
                 })
                 .OrderByDescending(c => c.lastWorkout)
@@ -1472,6 +1557,11 @@ namespace SportLab.Controllers
     public class AddWeightRequest
     {
         public float Weight { get; set; }
+    }
+
+    public class DeleteWeightRequest
+    {
+        public int Id { get; set; }
     }
 
     public class ProfileScheduleDto
