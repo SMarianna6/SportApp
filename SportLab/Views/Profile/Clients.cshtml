@@ -1,17 +1,25 @@
-﻿@{
+﻿@inject IViewLocalizer Localizer
+@{
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
-    ViewData["Title"] = "Clients";
+    ViewData["Title"] = Localizer["PageTitle"];
+
+    var jsLoc = new Dictionary<string, string>
+    {
+        ["Never"] = Localizer["Text.Never"].Value,
+        ["NoClientsFound"] = Localizer["Text.NoClientsFound"].Value,
+        ["ViewHistory"] = Localizer["Link.ViewHistory"].Value
+    };
 }
 
 <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
     <div>
-        <h2 class="text-3xl font-black uppercase tracking-tighter sm:text-4xl">Clients</h2>
-        <p class="mt-1 text-sm text-mono/60">Goals, activity and subscription status at a glance.</p>
+        <h2 class="text-3xl font-black uppercase tracking-tighter sm:text-4xl">@Localizer["Title.Clients"]</h2>
+        <p class="mt-1 text-sm text-mono/60">@Localizer["Text.Description"]</p>
     </div>
     <label class="relative block">
-        <span class="sr-only">Search clients</span>
+        <span class="sr-only">@Localizer["Aria.SearchClients"]</span>
         <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-mono/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-        <input id="table-search" type="search" placeholder="Search clients" class="w-full rounded-md bg-card py-2.5 pl-9 pr-3 text-sm text-white placeholder:text-mono/40 focus:outline-none focus:ring-2 focus:ring-neon sm:w-64" />
+        <input id="table-search" type="search" placeholder="@Localizer["Placeholder.SearchClients"]" class="w-full rounded-md bg-card py-2.5 pl-9 pr-3 text-sm text-white placeholder:text-mono/40 focus:outline-none focus:ring-2 focus:ring-neon sm:w-64" />
     </label>
 </div>
 
@@ -19,30 +27,37 @@
     <table class="w-full min-w-[760px] text-left text-sm">
         <thead>
             <tr class="border-b border-white/10 text-[11px] font-bold uppercase tracking-widest text-mono/50">
-                <th scope="col" class="px-5 py-4">Client</th>
-                <th scope="col" class="px-5 py-4">Primary goal</th>
-                <th scope="col" class="px-5 py-4">Last workout</th>
-                <th scope="col" class="px-5 py-4">Subscription</th>
-                <th scope="col" class="px-5 py-4 text-right">Actions</th>
+                <th scope="col" class="px-5 py-4">@Localizer["Field.Client"]</th>
+                <th scope="col" class="px-5 py-4">@Localizer["Field.PrimaryGoal"]</th>
+                <th scope="col" class="px-5 py-4">@Localizer["Field.LastWorkout"]</th>
+                <th scope="col" class="px-5 py-4">@Localizer["Field.Subscription"]</th>
+                <th scope="col" class="px-5 py-4 text-right">@Localizer["Field.Actions"]</th>
             </tr>
         </thead>
         <tbody id="clients-table-body" class="divide-y divide-white/5">
-            <tr><td colspan="5" class="p-8 text-center text-sm text-mono/60 animate-pulse">Loading clients...</td></tr>
+            <tr><td colspan="5" class="p-8 text-center text-sm text-mono/60 animate-pulse">@Localizer["Text.LoadingClients"]</td></tr>
         </tbody>
     </table>
-    <p id="table-empty" class="hidden p-8 text-center text-sm text-mono/60">No clients match your search.</p>
+    <p id="table-empty" class="hidden p-8 text-center text-sm text-mono/60">@Localizer["Text.NoClientsMatch"]</p>
 </div>
 
 @section Scripts {
     <script>
         (function () {
             'use strict';
+            const L = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(jsLoc));
             var $ = function (id) { return document.getElementById(id); };
+
+            function escapeHtml(value) {
+                return String(value).replace(/[&<>"']/g, function (character) {
+                    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[character];
+                });
+            }
             let CLIENTS = [];
             
             function initials(n) { return n.split(' ').map(function (x) { return x[0]; }).join('').slice(0, 2); }
             function formatDate(val) {
-                if (!val) return 'Never';
+                if (!val) return L.Never;
                 return new Date(val).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
             }
             
@@ -65,7 +80,7 @@
                 empty.classList.toggle('hidden', rows.length > 0);
                 
                 if (rows.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-sm text-mono/60">No clients found.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-sm text-mono/60">' + escapeHtml(L.NoClientsFound) + '</td></tr>';
                     return;
                 }
 
@@ -83,7 +98,7 @@
                         '<td class="px-5 py-4 text-mono/70">' + formatDate(c.lastWorkout) + '</td>' +
                         '<td class="px-5 py-4"><span class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider ' + badge + '"><span class="h-1.5 w-1.5 rounded-full ' + dot + '"></span>' + c.status + '</span></td>' +
                         '<td class="px-5 py-4"><div class="flex items-center justify-end gap-3">' +
-                            '<a href="/Profile/ClientHistory?id=' + c.id + '" class="text-xs font-bold uppercase tracking-widest text-neon underline-offset-4 hover:underline">View History</a>' +
+                            '<a href="/Profile/ClientHistory?id=' + c.id + '" class="text-xs font-bold uppercase tracking-widest text-neon underline-offset-4 hover:underline">' + escapeHtml(L.ViewHistory) + '</a>' +
                         '</div></td></tr>';
                 }).join('');
             }

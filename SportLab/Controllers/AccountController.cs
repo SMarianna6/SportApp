@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using MimeKit;
 using SportLab.Data;
 using SportLab.Models;
@@ -15,10 +16,12 @@ namespace SportLab.Controllers
     public class AccountController : Controller
     {
         private readonly SportLabContext _context;
+        private readonly IStringLocalizer<AccountController> _localizer;
 
-        public AccountController(SportLabContext context)
+        public AccountController(SportLabContext context, IStringLocalizer<AccountController> localizer)
         {
             _context = context;
+            _localizer = localizer;
         }
 
         [HttpGet]
@@ -37,7 +40,7 @@ namespace SportLab.Controllers
 
             if (user == null || !PasswordHasher.Verify(password, user.Password))
             {
-                ModelState.AddModelError(string.Empty, "Invalid email or password.");
+                ModelState.AddModelError(string.Empty, _localizer["InvalidCredentials"].Value);
                 return View();
             }
 
@@ -49,7 +52,7 @@ namespace SportLab.Controllers
 
             if (user.IsBlocked)
             {
-                ModelState.AddModelError(string.Empty, "Your account is blocked.");
+                ModelState.AddModelError(string.Empty, _localizer["AccountBlocked"].Value);
                 return View();
             }
 
@@ -113,7 +116,7 @@ namespace SportLab.Controllers
 
             if (string.IsNullOrEmpty(email))
             {
-                ModelState.AddModelError(string.Empty, "Email not received from Google.");
+                ModelState.AddModelError(string.Empty, _localizer["EmailNotReceived"].Value);
                 return RedirectToAction("Login");
             }
 
@@ -216,7 +219,7 @@ namespace SportLab.Controllers
 
                 if (!ModelState.IsValid || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
                 {
-                    ModelState.AddModelError(string.Empty, "All fields are required.");
+                    ModelState.AddModelError(string.Empty, _localizer["AllFieldsRequired"].Value);
                     return View();
                 }
 
@@ -232,11 +235,11 @@ namespace SportLab.Controllers
                     var message = new MimeMessage();
                     message.From.Add(new MailboxAddress("SportHub Support", "sporthubproject01@gmail.com"));
                     message.To.Add(new MailboxAddress("", email));
-                    message.Subject = "Registration Verification Code - SportHub";
+                    message.Subject = _localizer["EmailSubject"].Value;
 
                     message.Body = new TextPart("plain")
                     {
-                        Text = $"Welcome to SportHub!\n\nYour registration verification code is: {generatedCode}"
+                        Text = _localizer["EmailBody", generatedCode].Value
                     };
 
                     using (var client = new SmtpClient())
@@ -247,11 +250,11 @@ namespace SportLab.Controllers
                         client.Disconnect(true);
                     }
 
-                    ViewBag.Message = "Verification code has been successfully sent to your email!";
+                    ViewBag.Message = _localizer["VerificationCodeSent"].Value;
                 }
                 catch (Exception ex)
                 {
-                    ModelState.AddModelError(string.Empty, "Error sending email: " + ex.Message);
+                    ModelState.AddModelError(string.Empty, _localizer["ErrorSendingEmail", ex.Message].Value);
                     return View();
                 }
 
@@ -266,13 +269,13 @@ namespace SportLab.Controllers
 
                 if (string.IsNullOrEmpty(savedCode) || code != savedCode || email != savedEmail)
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid verification code or email.");
+                    ModelState.AddModelError(string.Empty, _localizer["InvalidVerificationCode"].Value);
                     return View();
                 }
 
                 if (_context.Users.Any(u => u.Email == savedEmail))
                 {
-                    ModelState.AddModelError(string.Empty, "This email is already registered.");
+                    ModelState.AddModelError(string.Empty, _localizer["EmailAlreadyRegistered"].Value);
                     return View();
                 }
 
@@ -353,7 +356,7 @@ namespace SportLab.Controllers
                     UserId = user.Id,
                     Weight = initialWeight.Value,
                     RecordDate = DateTime.Now,
-                    Notes = "Initial weight"
+                    Notes = _localizer["InitialWeightNote"].Value
                 };
                 _context.MetricLogs.Add(metricLog);
             }

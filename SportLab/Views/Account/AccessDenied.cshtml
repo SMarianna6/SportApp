@@ -1,5 +1,6 @@
-﻿@{
-    ViewData["Title"] = "Access Denied";
+﻿@inject IViewLocalizer Localizer
+@{
+    ViewData["Title"] = Localizer["PageTitle"];
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -17,15 +18,15 @@
         </div>
 
         <p class="sh-denied-code" aria-hidden="true">403</p>
-        <h1 class="sh-denied-title">Access Denied</h1>
+        <h1 class="sh-denied-title">@Localizer["Title"]</h1>
         <p class="sh-denied-text">
-            You do not have the required permissions to view this page.
-            If you believe this is a mistake, please contact support.
+            @Localizer["Text.Description1"]
+            @Localizer["Text.Description2"]
         </p>
 
         <div class="sh-denied-actions">
             <a href="/" class="sh-btn sh-btn-primary sh-denied-btn">
-                <svg class="sh-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>Go Back Home
+                <svg class="sh-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>@Localizer["Btn.GoHome"]
             </a>
         </div>
     </div>

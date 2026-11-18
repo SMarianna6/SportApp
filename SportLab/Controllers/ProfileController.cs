@@ -5,6 +5,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using SportLab.Data;
 using SportLab.Models;
 using SportLab.Services;
@@ -16,13 +17,16 @@ namespace SportLab.Controllers
     {
         private readonly SportLabContext _context;
         private readonly IWebHostEnvironment _environment;
+        private readonly IStringLocalizer<ProfileController> _localizer;
 
         public ProfileController(
             SportLabContext context,
-            IWebHostEnvironment environment)
+            IWebHostEnvironment environment,
+            IStringLocalizer<ProfileController> localizer)
         {
             _context = context;
             _environment = environment;
+            _localizer = localizer;
         }
 
         private int CurrentUserId =>
@@ -80,6 +84,7 @@ namespace SportLab.Controllers
         {
             int userId = CurrentUserId;
             var now = DateTime.Now;
+            var notAssigned = _localizer["NotAssigned"].Value;
 
             var subscription = await _context.Subscriptions
                 .Include(s => s.Plan)
@@ -115,7 +120,7 @@ namespace SportLab.Controllers
                     endTime = b.WorkoutSlot.EndTime,
                     trainerName = b.WorkoutSlot.Trainer != null
                         ? b.WorkoutSlot.Trainer.Name
-                        : "Not assigned"
+                        : notAssigned
                 })
                 .FirstOrDefaultAsync();
 
@@ -201,7 +206,7 @@ namespace SportLab.Controllers
                 return BadRequest(new
                 {
                     success = false,
-                    message = "Name is required."
+                    message = _localizer["NameRequired"].Value
                 });
             }
 
@@ -212,7 +217,7 @@ namespace SportLab.Controllers
                 return BadRequest(new
                 {
                     success = false,
-                    message = "Name must be between 2 and 100 characters."
+                    message = _localizer["NameLength"].Value
                 });
             }
 
@@ -223,7 +228,7 @@ namespace SportLab.Controllers
                 return NotFound(new
                 {
                     success = false,
-                    message = "User not found."
+                    message = _localizer["UserNotFound"].Value
                 });
             }
 
@@ -253,7 +258,7 @@ namespace SportLab.Controllers
                 return BadRequest(new
                 {
                     success = false,
-                    message = "Invalid booking."
+                    message = _localizer["InvalidBooking"].Value
                 });
             }
 
@@ -271,7 +276,7 @@ namespace SportLab.Controllers
                 return NotFound(new
                 {
                     success = false,
-                    message = "Booking not found."
+                    message = _localizer["BookingNotFound"].Value
                 });
             }
 
@@ -284,7 +289,7 @@ namespace SportLab.Controllers
                 return BadRequest(new
                 {
                     success = false,
-                    message = "This booking can no longer be cancelled."
+                    message = _localizer["BookingCannotCancel"].Value
                 });
             }
 
@@ -302,7 +307,7 @@ namespace SportLab.Controllers
             return Json(new
             {
                 success = true,
-                message = "Your booking has been cancelled."
+                message = _localizer["BookingCancelled"].Value
             });
         }
 
@@ -321,7 +326,7 @@ namespace SportLab.Controllers
                 return BadRequest(new
                 {
                     success = false,
-                    message = "Enter a valid weight."
+                    message = _localizer["InvalidWeight"].Value
                 });
             }
 
@@ -353,7 +358,7 @@ namespace SportLab.Controllers
         {
             if (request == null || request.Id <= 0)
             {
-                return BadRequest(new { success = false, message = "Invalid record." });
+                return BadRequest(new { success = false, message = _localizer["InvalidRecord"].Value });
             }
 
             var metric = await _context.MetricLogs
@@ -361,13 +366,13 @@ namespace SportLab.Controllers
 
             if (metric == null)
             {
-                return NotFound(new { success = false, message = "Weight record not found." });
+                return NotFound(new { success = false, message = _localizer["WeightRecordNotFound"].Value });
             }
 
             _context.MetricLogs.Remove(metric);
             await _context.SaveChangesAsync();
 
-            return Json(new { success = true, message = "Weight record deleted." });
+            return Json(new { success = true, message = _localizer["WeightRecordDeleted"].Value });
         }
 
         // AVATAR MANAGEMENT
@@ -386,7 +391,7 @@ namespace SportLab.Controllers
                 return BadRequest(new
                 {
                     success = false,
-                    message = "Please select an image."
+                    message = _localizer["SelectImage"].Value
                 });
             }
 
@@ -397,7 +402,7 @@ namespace SportLab.Controllers
                 return BadRequest(new
                 {
                     success = false,
-                    message = "Image size must not exceed 5 MB."
+                    message = _localizer["ImageTooLarge"].Value
                 });
             }
 
@@ -418,7 +423,7 @@ namespace SportLab.Controllers
                 return BadRequest(new
                 {
                     success = false,
-                    message = "Only valid JPG, PNG and WEBP images are allowed."
+                    message = _localizer["InvalidImageFormat"].Value
                 });
             }
 
@@ -615,14 +620,14 @@ namespace SportLab.Controllers
             [FromBody] UpdateTrainerProfileRequest request)
         {
             if (request == null)
-                return BadRequest(new { success = false, message = "Invalid request." });
+                return BadRequest(new { success = false, message = _localizer["InvalidRequest"].Value });
 
             int trainerId = CurrentUserId;
 
             var user = await _context.Users.FindAsync(trainerId);
 
             if (user == null)
-                return NotFound(new { success = false, message = "User not found." });
+                return NotFound(new { success = false, message = _localizer["UserNotFound"].Value });
 
             // Update User.Name if provided
             if (!string.IsNullOrWhiteSpace(request.Name))
@@ -633,7 +638,7 @@ namespace SportLab.Controllers
                     return BadRequest(new
                     {
                         success = false,
-                        message = "Name must be between 2 and 100 characters."
+                        message = _localizer["NameLength"].Value
                     });
 
                 user.Name = trimmed;
@@ -788,18 +793,18 @@ namespace SportLab.Controllers
         public async Task<IActionResult> UploadTrainerPhoto(IFormFile photo)
         {
             if (photo == null || photo.Length == 0)
-                return BadRequest(new { success = false, message = "Please select an image." });
+                return BadRequest(new { success = false, message = _localizer["SelectImage"].Value });
 
             const long maxFileSize = 5 * 1024 * 1024;
 
             if (photo.Length > maxFileSize)
-                return BadRequest(new { success = false, message = "Image size must not exceed 5 MB." });
+                return BadRequest(new { success = false, message = _localizer["ImageTooLarge"].Value });
 
             var extension = Path.GetExtension(photo.FileName).ToLowerInvariant();
             var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
 
             if (!allowedExtensions.Contains(extension) || !HasValidImageSignature(photo))
-                return BadRequest(new { success = false, message = "Only valid JPG, PNG and WEBP images are allowed." });
+                return BadRequest(new { success = false, message = _localizer["InvalidImageFormat"].Value });
 
             var folder = Path.Combine(_environment.WebRootPath, "images", "avatars");
             Directory.CreateDirectory(folder);
@@ -852,7 +857,7 @@ namespace SportLab.Controllers
                 .FirstOrDefaultAsync();
 
             if (user == null)
-                return NotFound(new { success = false, message = "User not found." });
+                return NotFound(new { success = false, message = _localizer["UserNotFound"].Value });
 
             return Json(new { success = true, name = user.Name, email = user.Email });
         }
@@ -862,7 +867,7 @@ namespace SportLab.Controllers
             [FromBody] UpdateAccountRequest request)
         {
             if (request == null)
-                return BadRequest(new { success = false, message = "Invalid request." });
+                return BadRequest(new { success = false, message = _localizer["InvalidRequest"].Value });
 
             var name  = request.Name?.Trim();
             var email = request.Email?.Trim();
@@ -871,7 +876,7 @@ namespace SportLab.Controllers
                 return BadRequest(new
                 {
                     success = false,
-                    message = "Full name must be between 2 and 100 characters."
+                    message = _localizer["FullNameLength"].Value
                 });
 
             if (string.IsNullOrWhiteSpace(email) ||
@@ -879,13 +884,13 @@ namespace SportLab.Controllers
                     email,
                     @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
             {
-                return BadRequest(new { success = false, message = "Invalid email address." });
+                return BadRequest(new { success = false, message = _localizer["InvalidEmail"].Value });
             }
 
             var user = await _context.Users.FindAsync(CurrentUserId);
 
             if (user == null)
-                return NotFound(new { success = false, message = "User not found." });
+                return NotFound(new { success = false, message = _localizer["UserNotFound"].Value });
 
             // Check email uniqueness
             bool emailTaken = await _context.Users
@@ -895,7 +900,7 @@ namespace SportLab.Controllers
                 return Conflict(new
                 {
                     success = false,
-                    message = "This email is already in use by another account."
+                    message = _localizer["EmailInUse"].Value
                 });
 
             user.Name  = name;
@@ -915,13 +920,13 @@ namespace SportLab.Controllers
             [FromBody] UpdatePasswordRequest request)
         {
             if (request == null)
-                return BadRequest(new { success = false, message = "Invalid request." });
+                return BadRequest(new { success = false, message = _localizer["InvalidRequest"].Value });
 
             if (string.IsNullOrWhiteSpace(request.CurrentPassword))
                 return BadRequest(new
                 {
                     success = false,
-                    message = "Current password is required."
+                    message = _localizer["CurrentPasswordRequired"].Value
                 });
 
             if (string.IsNullOrWhiteSpace(request.NewPassword) ||
@@ -930,7 +935,7 @@ namespace SportLab.Controllers
                 return BadRequest(new
                 {
                     success = false,
-                    message = "New password must be at least 6 characters."
+                    message = _localizer["NewPasswordMinLength"].Value
                 });
             }
 
@@ -938,26 +943,26 @@ namespace SportLab.Controllers
                 return BadRequest(new
                 {
                     success = false,
-                    message = "Passwords do not match."
+                    message = _localizer["PasswordsMismatch"].Value
                 });
 
             var user = await _context.Users.FindAsync(CurrentUserId);
 
             if (user == null)
-                return NotFound(new { success = false, message = "User not found." });
+                return NotFound(new { success = false, message = _localizer["UserNotFound"].Value });
 
             if (!PasswordHasher.Verify(request.CurrentPassword, user.Password))
                 return BadRequest(new
                 {
                     success = false,
-                    message = "Current password is incorrect."
+                    message = _localizer["CurrentPasswordIncorrect"].Value
                 });
 
             user.Password = PasswordHasher.Hash(request.NewPassword);
 
             await _context.SaveChangesAsync();
 
-            return Json(new { success = true, message = "Password updated successfully." });
+            return Json(new { success = true, message = _localizer["PasswordUpdated"].Value });
         }
 
         // DELETE ACCOUNT
@@ -969,7 +974,7 @@ namespace SportLab.Controllers
 
             if (user == null)
             {
-                return NotFound(new { success = false, message = "User not found." });
+                return NotFound(new { success = false, message = _localizer["UserNotFound"].Value });
             }
 
             try
@@ -1008,14 +1013,14 @@ namespace SportLab.Controllers
 
                 await HttpContext.SignOutAsync(Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme);
 
-                return Json(new { success = true, message = "Account deleted successfully." });
+                return Json(new { success = true, message = _localizer["AccountDeleted"].Value });
             }
             catch (Exception ex)
             {
                 return BadRequest(new
                 {
                     success = false,
-                    message = "DB Error: " + ex.Message
+                    message = _localizer["DbError", ex.Message].Value
                 });
             }
         }
@@ -1122,7 +1127,7 @@ namespace SportLab.Controllers
                 timeStart = w.StartTime.ToString("HH:mm"),
                 timeEnd = w.EndTime.ToString("HH:mm"),
                 type = w.ActivityName,
-                coach = w.Trainer?.Name ?? "TBA",
+                coach = w.Trainer?.Name ?? _localizer["Tba"].Value,
                 booked = w.Bookings.Count,
                 capacity = w.Capacity,
                 status = w.Status,
@@ -1147,18 +1152,18 @@ namespace SportLab.Controllers
             [FromForm] ProfileScheduleDto dto)
         {
             if (dto == null || !ModelState.IsValid)
-                return BadRequest("Invalid schedule data.");
+                return BadRequest(_localizer["InvalidScheduleData"].Value);
 
             if (string.IsNullOrWhiteSpace(dto.Type) ||
                 dto.Type.Trim().Length < 2 ||
                 dto.Type.Trim().Length > 100)
             {
                 return BadRequest(
-                    "Activity name must contain between 2 and 100 characters.");
+                    _localizer["ActivityNameLength"].Value);
             }
 
             if (dto.Capacity < 1 || dto.Capacity > 1000)
-                return BadRequest("Capacity must be between 1 and 1000.");
+                return BadRequest(_localizer["CapacityRange"].Value);
 
             if (!DateTime.TryParseExact(
                 dto.Date,
@@ -1167,13 +1172,13 @@ namespace SportLab.Controllers
                 DateTimeStyles.None,
                 out var date))
             {
-                return BadRequest("Invalid date.");
+                return BadRequest(_localizer["InvalidDate"].Value);
             }
 
             if (!TimeSpan.TryParse(dto.TimeStart, out var startTime) ||
                 !TimeSpan.TryParse(dto.TimeEnd, out var endTime))
             {
-                return BadRequest("Invalid time.");
+                return BadRequest(_localizer["InvalidTime"].Value);
             }
 
             if (startTime < TimeSpan.FromHours(8) ||
@@ -1181,14 +1186,14 @@ namespace SportLab.Controllers
                 endTime <= startTime)
             {
                 return BadRequest(
-                    "The workout must be between 08:00 and 20:00, and the end time must be later than the start time.");
+                    _localizer["TimeRange"].Value);
             }
 
             var startDateTime = date.Date.Add(startTime);
             var endDateTime = date.Date.Add(endTime);
 
             if (startDateTime <= DateTime.Now)
-                return BadRequest("A workout must be scheduled for a future time.");
+                return BadRequest(_localizer["FutureTimeRequired"].Value);
 
             int trainerId = CurrentUserId;
 
@@ -1209,14 +1214,14 @@ namespace SportLab.Controllers
                 if (slot.Bookings.Any())
                 {
                     return BadRequest(
-                        "A workout with existing bookings cannot be edited.");
+                        _localizer["WorkoutWithBookingsCannotEdit"].Value);
                 }
 
                 if (slot.Status == "Cancelled" ||
                     slot.Status == "Completed")
                 {
                     return BadRequest(
-                        "Cancelled or completed workouts cannot be edited.");
+                        _localizer["CancelledOrCompletedCannotEdit"].Value);
                 }
 
                 slot.ActivityName = dto.Type.Trim();
@@ -1260,7 +1265,7 @@ namespace SportLab.Controllers
             [FromForm] int id)
         {
             if (id <= 0)
-                return BadRequest("Invalid workout ID.");
+                return BadRequest(_localizer["InvalidWorkoutId"].Value);
 
             var slot = await _context.WorkoutSlots
                 .Include(w => w.Bookings)
@@ -1273,11 +1278,11 @@ namespace SportLab.Controllers
                 return Forbid();
 
             if (slot.Status == "Cancelled")
-                return BadRequest("This workout is already cancelled.");
+                return BadRequest(_localizer["WorkoutAlreadyCancelled"].Value);
 
             if (slot.Status == "Completed")
                 return BadRequest(
-                    "A completed workout cannot be cancelled.");
+                    _localizer["CompletedWorkoutCannotCancel"].Value);
 
             foreach (var booking in slot.Bookings)
             {
@@ -1285,10 +1290,7 @@ namespace SportLab.Controllers
                 {
                     SenderId = CurrentUserId,
                     ReceiverId = booking.UserId,
-                    Text =
-                        $"Your training session \"{slot.ActivityName}\" on " +
-                        $"{slot.StartTime:dd.MM.yyyy HH:mm} was cancelled by the trainer. " +
-                        "Please book another slot if needed.",
+                    Text = _localizer["CancellationNotice", slot.ActivityName, slot.StartTime.ToString("dd.MM.yyyy HH:mm")].Value,
                     SentDate = DateTime.Now
                 });
             }
@@ -1300,7 +1302,7 @@ namespace SportLab.Controllers
             return Json(new
             {
                 success = true,
-                message = "Workout cancelled successfully."
+                message = _localizer["WorkoutCancelled"].Value
             });
         }
 
@@ -1313,7 +1315,7 @@ namespace SportLab.Controllers
             [FromForm] int id)
         {
             if (id <= 0)
-                return BadRequest("Invalid workout ID.");
+                return BadRequest(_localizer["InvalidWorkoutId"].Value);
 
             var slot = await _context.WorkoutSlots
                 .Include(w => w.Bookings)
@@ -1328,7 +1330,7 @@ namespace SportLab.Controllers
             if (slot.Bookings.Any())
             {
                 return BadRequest(
-                    "A workout with bookings cannot be deleted. Cancel it instead.");
+                    _localizer["WorkoutWithBookingsCannotDelete"].Value);
             }
 
             _context.WorkoutSlots.Remove(slot);
@@ -1350,7 +1352,7 @@ namespace SportLab.Controllers
             [FromForm] int id)
         {
             if (id <= 0)
-                return BadRequest("Invalid workout ID.");
+                return BadRequest(_localizer["InvalidWorkoutId"].Value);
 
             int userId = CurrentUserId;
 
@@ -1369,14 +1371,14 @@ namespace SportLab.Controllers
             if (slot.StartTime <= DateTime.Now)
             {
                 return BadRequest(
-                    "You cannot cancel a workout that has already started.");
+                    _localizer["WorkoutAlreadyStarted"].Value);
             }
 
             if (slot.Status == "Cancelled" ||
                 slot.Status == "Completed")
             {
                 return BadRequest(
-                    "This workout is no longer available.");
+                    _localizer["WorkoutNoLongerAvailable"].Value);
             }
 
             _context.WorkoutBookings.Remove(booking);
@@ -1393,7 +1395,7 @@ namespace SportLab.Controllers
             return Json(new
             {
                 success = true,
-                message = "Your booking has been cancelled."
+                message = _localizer["BookingCancelled"].Value
             });
         }
 
@@ -1459,7 +1461,7 @@ namespace SportLab.Controllers
                         id = g.Key,
                         name = first.name,
                         email = first.email,
-                        goal = string.IsNullOrWhiteSpace(first.goal) ? "Not set" : first.goal,
+                        goal = string.IsNullOrWhiteSpace(first.goal) ? _localizer["NotSet"].Value : first.goal,
                         workouts = g.Count(b => b.status != "Cancelled"),
                         lastWorkout,
                         status = membership,

@@ -1,5 +1,6 @@
-﻿@{
-    ViewData["Title"] = "Complete Your Profile";
+﻿@inject IViewLocalizer Localizer
+@{
+    ViewData["Title"] = Localizer["PageTitle"];
     Layout = null;
 }
 @model SportLab.Models.User
@@ -19,23 +20,23 @@
         <div class="w-100" style="max-width: 420px;">
 
             <div class="card p-4 rounded-4 shadow-lg text-light" style="background-color: #1e1e1e; border: 1px solid #2d2d2d;">
-                <h3 class="mb-2 text-center fw-bold text-white">WELCOME!</h3>
-                <p class="text-white-50 text-center small mb-4">You can set up your profile details now or skip this step.</p>
+                <h3 class="mb-2 text-center fw-bold text-white">@Localizer["Title"]</h3>
+                <p class="text-white-50 text-center small mb-4">@Localizer["Subtitle"]</p>
 
                 <form method="post">
                     <div class="mb-3">
-                        <label class="form-label text-light small fw-semibold">Full Name</label>
-                        <input type="text" name="name" class="form-control bg-dark text-light border-secondary" value="@Model.Name" placeholder="Enter your name">
-                        <div class="form-text text-white-50" style="font-size: 0.75rem;">If left blank, it will default to your email prefix.</div>
+                        <label class="form-label text-light small fw-semibold">@Localizer["Field.FullName"]</label>
+                        <input type="text" name="name" class="form-control bg-dark text-light border-secondary" value="@Model.Name" placeholder="@Localizer["Placeholder.Name"]">
+                        <div class="form-text text-white-50" style="font-size: 0.75rem;">@Localizer["Hint.Name"]</div>
                     </div>
 
                     <div class="mb-4">
-                        <label class="form-label text-light small fw-semibold">Current Weight (kg)</label>
-                        <input type="number" step="0.1" name="initialWeight" class="form-control bg-dark text-light border-secondary" placeholder="e.g. 75.5" min="20" max="300">
+                        <label class="form-label text-light small fw-semibold">@Localizer["Field.CurrentWeight"]</label>
+                        <input type="number" step="0.1" name="initialWeight" class="form-control bg-dark text-light border-secondary" placeholder="@Localizer["Placeholder.Weight"]" min="20" max="300">
                     </div>
 
-                    <button type="submit" class="btn btn-primary w-100 mb-2 py-2 fw-bold rounded-pill shadow-sm">Save & Continue</button>
-                    <a asp-controller="Profile" asp-action="Client" class="btn btn-outline-light w-100 py-2 rounded-pill">Skip for now</a>
+                    <button type="submit" class="btn btn-primary w-100 mb-2 py-2 fw-bold rounded-pill shadow-sm">@Localizer["Btn.SaveContinue"]</button>
+                    <a asp-controller="Profile" asp-action="Client" class="btn btn-outline-light w-100 py-2 rounded-pill">@Localizer["Btn.Skip"]</a>
                 </form>
             </div>
 

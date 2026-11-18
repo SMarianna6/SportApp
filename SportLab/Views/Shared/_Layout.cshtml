@@ -124,12 +124,12 @@
             </a>
 
             <ul class="hidden items-center gap-8 md:flex">
-                <li><a asp-controller="Home" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">@Localizer["Nav.Home"]</a></li>
-                <li><a asp-controller="Schedule" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">@Localizer["Nav.Schedule"]</a></li>
-                <li><a asp-controller="Tariff" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">@Localizer["Nav.Tariffs"]</a></li>
-                <li><a asp-controller="Trainer" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">@Localizer["Nav.Trainers"]</a></li>
-                <li><a asp-controller="Shop" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">@Localizer["Nav.Shop"]</a></li>
-                <li><a asp-controller="Review" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">@Localizer["Nav.Reviews"]</a></li>
+                <li><a asp-controller="Home" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">@SharedLocalizer["Nav.Home"]</a></li>
+                <li><a asp-controller="Schedule" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">@SharedLocalizer["Nav.Schedule"]</a></li>
+                <li><a asp-controller="Tariff" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">@SharedLocalizer["Nav.Tariffs"]</a></li>
+                <li><a asp-controller="Trainer" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">@SharedLocalizer["Nav.Trainers"]</a></li>
+                <li><a asp-controller="Shop" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">@SharedLocalizer["Nav.Shop"]</a></li>
+                <li><a asp-controller="Review" asp-action="Index" class="text-xs font-semibold uppercase tracking-widest text-mono/80 transition-colors duration-300 hover:text-neon">@SharedLocalizer["Nav.Reviews"]</a></li>
             </ul>
 
             <div class="hidden items-center gap-3 md:flex">
@@ -139,7 +139,7 @@
                     var fullName = currentUser?.Name ?? User.FindFirst("FullName")?.Value ?? User.Identity?.Name ?? "Athlete";
                     var firstName = fullName.Split(' ')[0];
 
-                    <a asp-controller="Cart" asp-action="Index" class="relative flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-mono/80 transition-all duration-300 hover:border-neon/60 hover:bg-white/10 hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon mr-1" title="@Localizer["Nav.Cart"]" id="navCartLink">
+                    <a asp-controller="Cart" asp-action="Index" class="relative flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-mono/80 transition-all duration-300 hover:border-neon/60 hover:bg-white/10 hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon mr-1" title="@SharedLocalizer["Nav.Cart"]" id="navCartLink">
                         <i class="bi bi-cart3 text-lg"></i>
                         <span id="navCartBadge" class="hidden absolute -right-1.5 -top-1.5 rounded-full bg-red-600 px-1.5 py-0.5 text-[10px] font-bold text-white shadow-sm">0</span>
                     </a>
@@ -160,7 +160,7 @@
                                 <div class="flex items-center gap-3 border-b border-white/10 px-4 py-3.5" role="presentation">
                                     <img id="navbar-user-avatar-menu" src="@avatarUrl" alt="" class="h-9 w-9 rounded-full border border-neon/70 object-cover" />
                                     <div class="min-w-0">
-                                        <p class="text-[10px] font-bold uppercase tracking-widest text-mono/50">@Localizer["User.Welcome"]</p>
+                                        <p class="text-[10px] font-bold uppercase tracking-widest text-mono/50">@SharedLocalizer["User.Welcome"]</p>
                                         <p id="nav-user-name-dropdown" class="truncate text-sm font-black uppercase tracking-tight text-white">@firstName</p>
                                     </div>
                                 </div>
@@ -171,7 +171,7 @@
                                             <circle cx="12" cy="8" r="4" />
                                             <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" />
                                         </svg>
-                                        @Localizer["User.MyProfile"]
+                                        @SharedLocalizer["User.MyProfile"]
                                     </a>
 
                                     <div class="my-1.5 h-px bg-white/10" role="separator"></div>
@@ -183,7 +183,7 @@
                                                 <path d="m16 17 5-5-5-5" />
                                                 <path d="M21 12H9" />
                                             </svg>
-                                            @Localizer["User.LogOut"]
+                                            @SharedLocalizer["User.LogOut"]
                                         </button>
                                     </form>
                                 </div>
@@ -193,8 +193,8 @@
                 }
                 else
                 {
-                    <a asp-controller="Account" asp-action="Login" class="px-3 py-2 text-xs font-semibold uppercase tracking-widest text-white transition-colors duration-300 hover:text-neon">@Localizer["User.SignIn"]</a>
-                    <a asp-controller="Account" asp-action="Register" class="rounded-md bg-neon px-4 py-2.5 text-xs font-extrabold uppercase tracking-widest text-charcoal transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-neon/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">@Localizer["User.SignUp"]</a>
+                    <a asp-controller="Account" asp-action="Login" class="px-3 py-2 text-xs font-semibold uppercase tracking-widest text-white transition-colors duration-300 hover:text-neon">@SharedLocalizer["User.SignIn"]</a>
+                    <a asp-controller="Account" asp-action="Register" class="rounded-md bg-neon px-4 py-2.5 text-xs font-extrabold uppercase tracking-widest text-charcoal transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-neon/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">@SharedLocalizer["User.SignUp"]</a>
                 }
             </div>
 
@@ -211,16 +211,16 @@
         <div id="mobile-menu" class="grid grid-rows-[0fr] bg-charcoal transition-[grid-template-rows] duration-300 ease-out md:hidden" aria-hidden="true">
             <div class="overflow-hidden">
                 <ul class="border-t border-white/10 px-4 py-3 sm:px-6">
-                    <li><a asp-controller="Home" asp-action="Index" class="block border-b border-white/5 py-3.5 text-sm font-semibold uppercase tracking-widest text-mono transition-colors hover:text-neon">@Localizer["Nav.Home"]</a></li>
-                    <li><a asp-controller="Schedule" asp-action="Index" class="block border-b border-white/5 py-3.5 text-sm font-semibold uppercase tracking-widest text-mono transition-colors hover:text-neon">@Localizer["Nav.Schedule"]</a></li>
-                    <li><a asp-controller="Tariff" asp-action="Index" class="block border-b border-white/5 py-3.5 text-sm font-semibold uppercase tracking-widest text-mono transition-colors hover:text-neon">@Localizer["Nav.Tariffs"]</a></li>
-                    <li><a asp-controller="Trainer" asp-action="Index" class="block border-b border-white/5 py-3.5 text-sm font-semibold uppercase tracking-widest text-mono transition-colors hover:text-neon">@Localizer["Nav.Trainers"]</a></li>
-                    <li><a asp-controller="Shop" asp-action="Index" class="block border-b border-white/5 py-3.5 text-sm font-semibold uppercase tracking-widest text-mono transition-colors hover:text-neon">@Localizer["Nav.Shop"]</a></li>
-                    <li><a asp-controller="Review" asp-action="Index" class="block py-3.5 text-sm font-semibold uppercase tracking-widest text-mono transition-colors hover:text-neon">@Localizer["Nav.Reviews"]</a></li>
+                    <li><a asp-controller="Home" asp-action="Index" class="block border-b border-white/5 py-3.5 text-sm font-semibold uppercase tracking-widest text-mono transition-colors hover:text-neon">@SharedLocalizer["Nav.Home"]</a></li>
+                    <li><a asp-controller="Schedule" asp-action="Index" class="block border-b border-white/5 py-3.5 text-sm font-semibold uppercase tracking-widest text-mono transition-colors hover:text-neon">@SharedLocalizer["Nav.Schedule"]</a></li>
+                    <li><a asp-controller="Tariff" asp-action="Index" class="block border-b border-white/5 py-3.5 text-sm font-semibold uppercase tracking-widest text-mono transition-colors hover:text-neon">@SharedLocalizer["Nav.Tariffs"]</a></li>
+                    <li><a asp-controller="Trainer" asp-action="Index" class="block border-b border-white/5 py-3.5 text-sm font-semibold uppercase tracking-widest text-mono transition-colors hover:text-neon">@SharedLocalizer["Nav.Trainers"]</a></li>
+                    <li><a asp-controller="Shop" asp-action="Index" class="block border-b border-white/5 py-3.5 text-sm font-semibold uppercase tracking-widest text-mono transition-colors hover:text-neon">@SharedLocalizer["Nav.Shop"]</a></li>
+                    <li><a asp-controller="Review" asp-action="Index" class="block py-3.5 text-sm font-semibold uppercase tracking-widest text-mono transition-colors hover:text-neon">@SharedLocalizer["Nav.Reviews"]</a></li>
 
                     <li class="flex flex-col gap-3 border-t border-white/10 pb-3 pt-4">
                         <div class="flex items-center justify-between">
-                            <span class="text-[10px] font-bold uppercase tracking-widest text-mono/50">@Localizer["Mobile.Language"]</span>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-mono/50">@SharedLocalizer["Mobile.Language"]</span>
                             @await Html.PartialAsync("_LanguageSwitcher")
                         </div>
                         @if (User.Identity?.IsAuthenticated == true)
@@ -234,7 +234,7 @@
                                 <div class="flex items-center gap-4 px-4 py-4">
                                     <img id="mobile-user-avatar" src="@avatarUrl" alt="" class="h-14 w-14 shrink-0 rounded-full border-2 border-neon object-cover" />
                                     <div class="min-w-0">
-                                        <p class="text-[10px] font-bold uppercase tracking-widest text-mono/50">@Localizer["User.SignedInAs"]</p>
+                                        <p class="text-[10px] font-bold uppercase tracking-widest text-mono/50">@SharedLocalizer["User.SignedInAs"]</p>
                                         <p id="mobile-user-name" class="truncate text-lg font-black uppercase leading-tight tracking-tighter text-white">@firstName</p>
                                     </div>
                                 </div>
@@ -244,7 +244,7 @@
                                         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                             <circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" /><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
                                         </svg>
-                                        @Localizer["Mobile.MyCart"]
+                                        @SharedLocalizer["Mobile.MyCart"]
                                         <span id="mobileCartBadge" class="hidden rounded-full bg-red-600 px-1.5 py-0.5 text-[10px] font-bold text-white ml-1">0</span>
                                     </a>
                                     <a asp-controller="Profile" asp-action="Client" class="flex w-full items-center justify-center gap-2 rounded-md border border-white/20 py-3 text-xs font-bold uppercase tracking-widest text-white transition-all duration-300 hover:border-neon hover:bg-neon/10 hover:text-neon focus:outline-none focus-visible:ring-2 focus-visible:ring-neon active:scale-[0.98]">
@@ -252,7 +252,7 @@
                                             <circle cx="12" cy="8" r="4" />
                                             <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" />
                                         </svg>
-                                        @Localizer["User.MyProfile"]
+                                        @SharedLocalizer["User.MyProfile"]
                                     </a>
 
                                     <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
@@ -262,7 +262,7 @@
                                                 <path d="m16 17 5-5-5-5" />
                                                 <path d="M21 12H9" />
                                             </svg>
-                                            @Localizer["User.LogOut"]
+                                            @SharedLocalizer["User.LogOut"]
                                         </button>
                                     </form>
                                 </div>
@@ -271,8 +271,8 @@
                         else
                         {
                             <div class="flex gap-3">
-                                <a asp-controller="Account" asp-action="Login" class="flex-1 rounded-md border border-white/20 py-3 text-center text-xs font-bold uppercase tracking-widest text-white transition-colors hover:border-neon hover:text-neon">@Localizer["User.SignIn"]</a>
-                                <a asp-controller="Account" asp-action="Register" class="flex-1 rounded-md bg-neon py-3 text-center text-xs font-extrabold uppercase tracking-widest text-charcoal">@Localizer["User.SignUp"]</a>
+                                <a asp-controller="Account" asp-action="Login" class="flex-1 rounded-md border border-white/20 py-3 text-center text-xs font-bold uppercase tracking-widest text-white transition-colors hover:border-neon hover:text-neon">@SharedLocalizer["User.SignIn"]</a>
+                                <a asp-controller="Account" asp-action="Register" class="flex-1 rounded-md bg-neon py-3 text-center text-xs font-extrabold uppercase tracking-widest text-charcoal">@SharedLocalizer["User.SignUp"]</a>
                             </div>
                         }
                     </li>
@@ -444,15 +444,15 @@
                 <ul class="mt-5 space-y-3.5 text-base font-medium">
                     <li><a asp-controller="Trainer" asp-action="Index" class="text-white/75 transition-colors duration-300 hover:text-neon focus:outline-none focus-visible:text-neon">@Localizer["Footer.Coaches"]</a></li>
                     <li><a asp-controller="Tariff" asp-action="Index" class="text-white/75 transition-colors duration-300 hover:text-neon focus:outline-none focus-visible:text-neon">@Localizer["Footer.Memberships"]</a></li>
-                    <li><a asp-controller="Schedule" asp-action="Index" class="text-white/75 transition-colors duration-300 hover:text-neon focus:outline-none focus-visible:text-neon">@Localizer["Nav.Schedule"]</a></li>
-                    <li><a asp-controller="Shop" asp-action="Index" class="text-white/75 transition-colors duration-300 hover:text-neon focus:outline-none focus-visible:text-neon">@Localizer["Nav.Shop"]</a></li>
+                    <li><a asp-controller="Schedule" asp-action="Index" class="text-white/75 transition-colors duration-300 hover:text-neon focus:outline-none focus-visible:text-neon">@SharedLocalizer["Nav.Schedule"]</a></li>
+                    <li><a asp-controller="Shop" asp-action="Index" class="text-white/75 transition-colors duration-300 hover:text-neon focus:outline-none focus-visible:text-neon">@SharedLocalizer["Nav.Shop"]</a></li>
                 </ul>
             </nav>
 
             <nav aria-label="Account and support">
                 <h3 class="text-sm font-extrabold uppercase tracking-widest text-neon">@Localizer["Footer.AccountSupportTitle"]</h3>
                 <ul class="mt-5 space-y-3.5 text-base font-medium">
-                    <li><a asp-controller="Account" asp-action="Login" class="text-white/75 transition-colors duration-300 hover:text-neon focus:outline-none focus-visible:text-neon">@Localizer["User.SignIn"]</a></li>
+                    <li><a asp-controller="Account" asp-action="Login" class="text-white/75 transition-colors duration-300 hover:text-neon focus:outline-none focus-visible:text-neon">@SharedLocalizer["User.SignIn"]</a></li>
                     <li><a href="#" style="color: rgba(255, 255, 255, 0.75) !important;" class="text-white/75 transition-colors duration-300 hover:text-neon focus:outline-none focus-visible:text-neon">@Localizer["Footer.Privacy"]</a></li>
                     <li><a href="#" style="color: rgba(255, 255, 255, 0.75) !important;" class="text-white/75 transition-colors duration-300 hover:text-neon focus:outline-none focus-visible:text-neon">@Localizer["Footer.Terms"]</a></li>
                     <li><a asp-controller="Faq" asp-action="Index" class="text-white/75 transition-colors duration-300 hover:text-neon focus:outline-none focus-visible:text-neon">@Localizer["Footer.FAQ"]</a></li>

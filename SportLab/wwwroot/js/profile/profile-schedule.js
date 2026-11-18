@@ -45,6 +45,12 @@
         Boxing: { cls: 'boxing' }
     };
 
+    var TYPE_LABELS = L.Types || {};
+
+    function typeLabel(type) {
+        return TYPE_LABELS[type] || type;
+    }
+
     var slots = [];
     var editing = null;
     var selectedSlot = null;
@@ -256,7 +262,7 @@
         var width = 100 / item.laneCount;
 
         var statusText = cancelled ? t('StatusCancelled', 'Cancelled') : completed ? t('StatusCompleted', 'Completed') : full ? t('StatusFullyBooked', 'Fully booked') : t('StatusAvailable', 'Available');
-        var tooltip = slot.type + ' | ' + slot.timeStart + ' - ' + slot.timeEnd + ' | ' + slot.booked + '/' + slot.capacity + ' | ' + statusText;
+        var tooltip = typeLabel(slot.type) + ' | ' + slot.timeStart + ' - ' + slot.timeEnd + ' | ' + slot.booked + '/' + slot.capacity + ' | ' + statusText;
 
         var coachOrClients = IS_TRAINER ? (t('Clients', '{0} clients').replace('{0}', slot.booked)) : slot.coach;
 
@@ -267,7 +273,7 @@
             'style="top:' + (top + 1) + 'px;height:' + Math.max(height - 2, 20) +
             'px;left:calc(' + (item.lane * width) + '% + 2px);width:calc(' + width + '% - 4px)">' +
             '<span class="sh-slot-head">' +
-            '<span class="sh-slot-act">' + SH.esc(slot.type) + '</span>' +
+            '<span class="sh-slot-act">' + SH.esc(typeLabel(slot.type)) + '</span>' +
             '<span class="sh-slot-count">' + slot.booked + '/' + slot.capacity + '</span>' +
             '</span>' +
             '<span class="sh-slot-time">' + slot.timeStart + ' - ' + slot.timeEnd + '</span>' +
@@ -364,7 +370,7 @@
         legend.innerHTML = Object.keys(TYPES).map(function (type) {
             return '<label class="sh-legend-item sh-t-' + TYPES[type].cls + '">' +
                 '<input type="checkbox" data-type="' + type + '"' + (visible[type] ? ' checked' : '') + ' />' +
-                '<span class="sh-legend-swatch"></span><span>' + type + '</span></label>';
+                '<span class="sh-legend-swatch"></span><span>' + typeLabel(type) + '</span></label>';
         }).join('');
     }
 
@@ -459,7 +465,7 @@
         editing = null;
         showDetailError('');
 
-        document.getElementById('sh-detail-type').textContent = slot.type;
+        document.getElementById('sh-detail-type').textContent = typeLabel(slot.type);
         document.getElementById('sh-detail-date').textContent = formatDisplayDate(slot.date);
         document.getElementById('sh-detail-time').textContent = slot.timeStart + ' - ' + slot.timeEnd;
         document.getElementById('sh-detail-coach').textContent = slot.coach;

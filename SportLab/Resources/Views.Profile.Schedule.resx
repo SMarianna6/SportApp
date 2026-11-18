@@ -113,9 +113,6 @@
 	<data name="Aria.FilterWorkouts" xml:space="preserve">
 	<value>Filter workouts by type</value>
 </data>
-	<data name="Modal.DetailsTitle" xml:space="preserve">
-	<value>Workout details</value>
-</data>
 	<data name="Field.ActivityType" xml:space="preserve">
 	<value>Activity Type</value>
 </data>
