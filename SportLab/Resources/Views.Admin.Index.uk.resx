@@ -141,4 +141,11 @@
   <data name="RecentEventsHeader" xml:space="preserve">
     <value>Останні події</value>
   </data>
+	<data name="StatRevenue" xml:space="preserve"><value>Дохід</value></data>
+	<data name="StatActiveMembers" xml:space="preserve"><value>Активні учасники</value></data>
+	<data name="StatClassBookings" xml:space="preserve"><value>Бронювання занять</value></data>
+	<data name="StatShopSales" xml:space="preserve"><value>Продажі магазину</value></data>
+	<data name="TooltipRevenue" xml:space="preserve"><value>Дохід</value></data>
+	<data name="TooltipNewUsers" xml:space="preserve"><value>Нові користувачі</value></data>
+	<data name="LoadFailedError" xml:space="preserve"><value>Не вдалося завантажити дані.</value></data>
 </root>
