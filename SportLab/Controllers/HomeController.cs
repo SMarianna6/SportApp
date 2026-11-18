@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using SportLab.Data;
 using SportLab.Models;
 
@@ -10,11 +11,13 @@ namespace SportLab.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly SportLabContext _context;
+        private readonly IStringLocalizer<HomeController> _localizer;
 
-        public HomeController(ILogger<HomeController> logger, SportLabContext context)
+        public HomeController(ILogger<HomeController> logger, SportLabContext context, IStringLocalizer<HomeController> localizer)
         {
             _logger = logger;
             _context = context;
+            _localizer = localizer;
         }
 
         public async Task<IActionResult> Index()

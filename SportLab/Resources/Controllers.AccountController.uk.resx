@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+	<data name="InvalidCredentials" xml:space="preserve">
+	<value>Невірний email або пароль.</value>
+</data>
+	<data name="AccountBlocked" xml:space="preserve">
+	<value>Ваш обліковий запис заблоковано.</value>
+</data>
+	<data name="EmailNotReceived" xml:space="preserve">
+	<value>Email не отримано від Google.</value>
+</data>
+	<data name="AllFieldsRequired" xml:space="preserve">
+	<value>Усі поля є обов'язковими.</value>
+</data>
+	<data name="VerificationCodeSent" xml:space="preserve">
+	<value>Код підтвердження успішно надіслано на вашу електронну пошту!</value>
+</data>
+	<data name="ErrorSendingEmail" xml:space="preserve">
+	<value>Помилка надсилання email: {0}</value>
+</data>
+	<data name="InvalidVerificationCode" xml:space="preserve">
+	<value>Невірний код підтвердження або email.</value>
+</data>
+	<data name="EmailAlreadyRegistered" xml:space="preserve">
+	<value>Цей email уже зареєстровано.</value>
+</data>
+	<data name="EmailSubject" xml:space="preserve">
+	<value>Код підтвердження реєстрації - SportHub</value>
+</data>
+	<data name="EmailBody" xml:space="preserve">
+	<value>Вітаємо в SportHub!
+
+Ваш код підтвердження реєстрації: {0}</value>
+</data>
+	<data name="InitialWeightNote" xml:space="preserve">
+	<value>Початкова вага</value>
+</data>
+</root>

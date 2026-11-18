@@ -1,6 +1,7 @@
 ﻿@model SportLab.Models.User
+@inject IViewLocalizer Localizer
 @{
-    ViewData["Title"] = "Sign up Page";
+    ViewData["Title"] = Localizer["PageTitle"];
     var codeSent = Context.Session.GetString("RegCode") != null;
 }
 
@@ -8,7 +9,7 @@
 
 <div class="login-page-wrapper">
     <div class="login-card">
-        <h3 class="mb-3 text-center">SIGN UP</h3>
+        <h3 class="mb-3 text-center">@Localizer["Title"]</h3>
 
         @if (ViewBag.Message != null)
         {
@@ -19,13 +20,13 @@
 
         <form method="post" autocomplete="off">
             <div class="mb-3">
-                <label class="form-label">Email</label>
+                <label class="form-label">@Localizer["Field.Email"]</label>
                 <input asp-for="Email" class="form-control" autocomplete="off">
                 <span asp-validation-for="Email" class="text-danger small"></span>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Password</label>
+                <label class="form-label">@Localizer["Field.Password"]</label>
                 <input asp-for="Password" type="password" class="form-control" value="@ViewBag.Password" autocomplete="new-password">
                 <span asp-validation-for="Password" class="text-danger small"></span>
             </div>
@@ -33,21 +34,21 @@
             @if (codeSent)
             {
                 <div class="mb-3">
-                    <label class="form-label">Code</label>
-                    <input type="text" name="code" class="form-control" placeholder="Enter 6-digit code" required autocomplete="off">
+                    <label class="form-label">@Localizer["Field.Code"]</label>
+                    <input type="text" name="code" class="form-control" placeholder="@Localizer["Placeholder.Code"]" required autocomplete="off">
                 </div>
-                <button type="submit" class="btn btn-primary w-100 mb-2" name="action" value="verify">Verify & Register</button>
+                <button type="submit" class="btn btn-primary w-100 mb-2" name="action" value="verify">@Localizer["Btn.VerifyRegister"]</button>
             }
             else
             {
-                <button type="submit" class="btn btn-primary w-100 mb-2" name="action" value="send">Send Code</button>
+                <button type="submit" class="btn btn-primary w-100 mb-2" name="action" value="send">@Localizer["Btn.SendCode"]</button>
             }
         </form>
 
         @if (!codeSent)
         {
             <div class="text-center my-1">
-                <span class="text-muted small">OR</span>
+                <span class="text-muted small">@Localizer["Text.Or"]</span>
             </div>
 
             <a asp-action="ExternalLogin" asp-route-provider="Google" class="btn btn-light border w-100 d-flex align-items-center justify-content-center gap-2 py-2 mb-2 rounded-pill text-dark text-decoration-none">
@@ -57,12 +58,12 @@
                     <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
                     <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.46-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
                 </svg>
-                <span class="fw-semibold">Continue with Google</span>
+                <span class="fw-semibold">@Localizer["Btn.ContinueGoogle"]</span>
             </a>
         }
 
         <div class="text-center">
-            <h5 class="fs-6 text-muted">Already have an account? <a asp-controller="Account" asp-action="Login" class="text-primary fw-bold text-decoration-none">Log in</a></h5>
+            <h5 class="fs-6 text-muted">@Localizer["Text.HaveAccount"] <a asp-controller="Account" asp-action="Login" class="text-primary fw-bold text-decoration-none">@Localizer["Link.LogIn"]</a></h5>
         </div>
     </div>
 </div>

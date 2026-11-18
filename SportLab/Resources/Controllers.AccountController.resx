@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+	<data name="InvalidCredentials" xml:space="preserve">
+	<value>Invalid email or password.</value>
+</data>
+	<data name="AccountBlocked" xml:space="preserve">
+	<value>Your account is blocked.</value>
+</data>
+	<data name="EmailNotReceived" xml:space="preserve">
+	<value>Email not received from Google.</value>
+</data>
+	<data name="AllFieldsRequired" xml:space="preserve">
+	<value>All fields are required.</value>
+</data>
+	<data name="VerificationCodeSent" xml:space="preserve">
+	<value>Verification code has been successfully sent to your email!</value>
+</data>
+	<data name="ErrorSendingEmail" xml:space="preserve">
+	<value>Error sending email: {0}</value>
+</data>
+	<data name="InvalidVerificationCode" xml:space="preserve">
+	<value>Invalid verification code or email.</value>
+</data>
+	<data name="EmailAlreadyRegistered" xml:space="preserve">
+	<value>This email is already registered.</value>
+</data>
+	<data name="EmailSubject" xml:space="preserve">
+	<value>Registration Verification Code - SportHub</value>
+</data>
+	<data name="EmailBody" xml:space="preserve">
+	<value>Welcome to SportHub!
+
+Your registration verification code is: {0}</value>
+</data>
+	<data name="InitialWeightNote" xml:space="preserve">
+	<value>Initial weight</value>
+</data>
+</root>

@@ -113,9 +113,6 @@
 	<data name="Aria.FilterWorkouts" xml:space="preserve">
 	<value>Фільтрувати тренування за типом</value>
 </data>
-	<data name="Modal.DetailsTitle" xml:space="preserve">
-	<value>Деталі тренування</value>
-</data>
 	<data name="Field.ActivityType" xml:space="preserve">
 	<value>Тип активності</value>
 </data>

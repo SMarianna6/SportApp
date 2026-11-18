@@ -1,6 +1,15 @@
-﻿@{
+﻿@inject IViewLocalizer Localizer
+@{
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
-    ViewData["Title"] = "Client History";
+    ViewData["Title"] = Localizer["PageTitle"];
+
+    var jsLoc = new Dictionary<string, string>
+    {
+        ["FailedLoadClient"] = Localizer["Error.LoadClientData"].Value,
+        ["NoWeights"] = Localizer["Text.NoWeights"].Value,
+        ["NoPastWorkouts"] = Localizer["Text.NoPastWorkouts"].Value,
+        ["UnitKg"] = Localizer["Unit.Kg"].Value
+    };
 }
 
 <div class="mb-6 flex items-center gap-4">
@@ -8,26 +17,26 @@
         <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
     </a>
     <div>
-        <h2 class="text-3xl font-black uppercase tracking-tighter sm:text-4xl">History: <span id="client-name" class="text-neon">Loading...</span></h2>
-        <p class="mt-1 text-sm text-mono/60">Past workouts and weight logs.</p>
+        <h2 class="text-3xl font-black uppercase tracking-tighter sm:text-4xl">@Localizer["Text.History"] <span id="client-name" class="text-neon">@Localizer["Text.Loading"]</span></h2>
+        <p class="mt-1 text-sm text-mono/60">@Localizer["Text.Description"]</p>
     </div>
 </div>
 
 <div class="grid grid-cols-1 gap-5 lg:grid-cols-2">
     <!-- Weight Logs -->
     <section class="rounded-lg bg-card p-5">
-        <h3 class="text-lg font-extrabold uppercase tracking-tight mb-4">Weight Logs</h3>
+        <h3 class="text-lg font-extrabold uppercase tracking-tight mb-4">@Localizer["Title.WeightLogs"]</h3>
         <div class="overflow-x-auto">
             <table class="w-full min-w-[300px] text-left text-sm">
                 <thead>
                     <tr class="border-b border-white/10 text-[11px] font-bold uppercase tracking-widest text-mono/50">
-                        <th class="py-3 px-4">Date</th>
-                        <th class="py-3 px-4">Weight</th>
-                        <th class="py-3 px-4">Notes</th>
+                        <th class="py-3 px-4">@Localizer["Field.Date"]</th>
+                        <th class="py-3 px-4">@Localizer["Field.Weight"]</th>
+                        <th class="py-3 px-4">@Localizer["Field.Notes"]</th>
                     </tr>
                 </thead>
                 <tbody id="weight-table" class="divide-y divide-white/5">
-                    <tr><td colspan="3" class="py-4 text-center text-mono/50 animate-pulse">Loading...</td></tr>
+                    <tr><td colspan="3" class="py-4 text-center text-mono/50 animate-pulse">@Localizer["Text.Loading"]</td></tr>
                 </tbody>
             </table>
         </div>
@@ -35,18 +44,18 @@
 
     <!-- Past Workouts -->
     <section class="rounded-lg bg-card p-5">
-        <h3 class="text-lg font-extrabold uppercase tracking-tight mb-4">Past Workouts</h3>
+        <h3 class="text-lg font-extrabold uppercase tracking-tight mb-4">@Localizer["Title.PastWorkouts"]</h3>
         <div class="overflow-x-auto">
             <table class="w-full min-w-[300px] text-left text-sm">
                 <thead>
                     <tr class="border-b border-white/10 text-[11px] font-bold uppercase tracking-widest text-mono/50">
-                        <th class="py-3 px-4">Date</th>
-                        <th class="py-3 px-4">Activity</th>
-                        <th class="py-3 px-4">Status</th>
+                        <th class="py-3 px-4">@Localizer["Field.Date"]</th>
+                        <th class="py-3 px-4">@Localizer["Field.Activity"]</th>
+                        <th class="py-3 px-4">@Localizer["Field.Status"]</th>
                     </tr>
                 </thead>
                 <tbody id="workout-table" class="divide-y divide-white/5">
-                    <tr><td colspan="3" class="py-4 text-center text-mono/50 animate-pulse">Loading...</td></tr>
+                    <tr><td colspan="3" class="py-4 text-center text-mono/50 animate-pulse">@Localizer["Text.Loading"]</td></tr>
                 </tbody>
             </table>
         </div>
@@ -57,6 +66,14 @@
     <script>
         (function () {
             'use strict';
+            const L = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(jsLoc));
+
+            function escapeHtml(value) {
+                return String(value).replace(/[&<>"']/g, function (character) {
+                    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[character];
+                });
+            }
+
             const urlParams = new URLSearchParams(window.location.search);
             const clientId = urlParams.get('id');
 
@@ -71,7 +88,7 @@
                     const data = await res.json();
 
                     if (!data.success) {
-                        alert('Failed to load client data');
+                        alert(L.FailedLoadClient);
                         return;
                     }
 
@@ -80,12 +97,12 @@
                     // Render Weights
                     const weightTable = document.getElementById('weight-table');
                     if (data.weights.length === 0) {
-                        weightTable.innerHTML = '<tr><td colspan="3" class="py-4 text-center text-mono/50">No weight records.</td></tr>';
+                        weightTable.innerHTML = '<tr><td colspan="3" class="py-4 text-center text-mono/50">' + escapeHtml(L.NoWeights) + '</td></tr>';
                     } else {
                         weightTable.innerHTML = data.weights.map(w => `
                             <tr class="hover:bg-shell/50 transition-colors">
                                 <td class="py-3 px-4 text-mono/70">${new Date(w.recordDate).toLocaleDateString()}</td>
-                                <td class="py-3 px-4 font-bold text-white">${w.weight.toFixed(1)} kg</td>
+                                <td class="py-3 px-4 font-bold text-white">${w.weight.toFixed(1)} ${escapeHtml(L.UnitKg)}</td>
                                 <td class="py-3 px-4 text-mono/60 text-xs">${w.notes || '-'}</td>
                             </tr>
                         `).join('');
@@ -94,7 +111,7 @@
                     // Render Workouts
                     const workoutTable = document.getElementById('workout-table');
                     if (data.workouts.length === 0) {
-                        workoutTable.innerHTML = '<tr><td colspan="3" class="py-4 text-center text-mono/50">No past workouts.</td></tr>';
+                        workoutTable.innerHTML = '<tr><td colspan="3" class="py-4 text-center text-mono/50">' + escapeHtml(L.NoPastWorkouts) + '</td></tr>';
                     } else {
                         workoutTable.innerHTML = data.workouts.map(w => `
                             <tr class="hover:bg-shell/50 transition-colors">

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+	<data name="NameRequired" xml:space="preserve">
+	<value>Name is required.</value>
+</data>
+	<data name="NameLength" xml:space="preserve">
+	<value>Name must be between 2 and 100 characters.</value>
+</data>
+	<data name="UserNotFound" xml:space="preserve">
+	<value>User not found.</value>
+</data>
+	<data name="InvalidBooking" xml:space="preserve">
+	<value>Invalid booking.</value>
+</data>
+	<data name="BookingNotFound" xml:space="preserve">
+	<value>Booking not found.</value>
+</data>
+	<data name="BookingCannotCancel" xml:space="preserve">
+	<value>This booking can no longer be cancelled.</value>
+</data>
+	<data name="BookingCancelled" xml:space="preserve">
+	<value>Your booking has been cancelled.</value>
+</data>
+	<data name="InvalidWeight" xml:space="preserve">
+	<value>Enter a valid weight.</value>
+</data>
+	<data name="InvalidRecord" xml:space="preserve">
+	<value>Invalid record.</value>
+</data>
+	<data name="WeightRecordNotFound" xml:space="preserve">
+	<value>Weight record not found.</value>
+</data>
+	<data name="WeightRecordDeleted" xml:space="preserve">
+	<value>Weight record deleted.</value>
+</data>
+	<data name="SelectImage" xml:space="preserve">
+	<value>Please select an image.</value>
+</data>
+	<data name="ImageTooLarge" xml:space="preserve">
+	<value>Image size must not exceed 5 MB.</value>
+</data>
+	<data name="InvalidImageFormat" xml:space="preserve">
+	<value>Only valid JPG, PNG and WEBP images are allowed.</value>
+</data>
+	<data name="InvalidRequest" xml:space="preserve">
+	<value>Invalid request.</value>
+</data>
+	<data name="FullNameLength" xml:space="preserve">
+	<value>Full name must be between 2 and 100 characters.</value>
+</data>
+	<data name="InvalidEmail" xml:space="preserve">
+	<value>Invalid email address.</value>
+</data>
+	<data name="EmailInUse" xml:space="preserve">
+	<value>This email is already in use by another account.</value>
+</data>
+	<data name="CurrentPasswordRequired" xml:space="preserve">
+	<value>Current password is required.</value>
+</data>
+	<data name="NewPasswordMinLength" xml:space="preserve">
+	<value>New password must be at least 6 characters.</value>
+</data>
+	<data name="PasswordsMismatch" xml:space="preserve">
+	<value>Passwords do not match.</value>
+</data>
+	<data name="CurrentPasswordIncorrect" xml:space="preserve">
+	<value>Current password is incorrect.</value>
+</data>
+	<data name="PasswordUpdated" xml:space="preserve">
+	<value>Password updated successfully.</value>
+</data>
+	<data name="AccountDeleted" xml:space="preserve">
+	<value>Account deleted successfully.</value>
+</data>
+	<data name="DbError" xml:space="preserve">
+	<value>DB Error: {0}</value>
+</data>
+	<data name="Tba" xml:space="preserve">
+	<value>TBA</value>
+</data>
+	<data name="InvalidScheduleData" xml:space="preserve">
+	<value>Invalid schedule data.</value>
+</data>
+	<data name="ActivityNameLength" xml:space="preserve">
+	<value>Activity name must contain between 2 and 100 characters.</value>
+</data>
+	<data name="CapacityRange" xml:space="preserve">
+	<value>Capacity must be between 1 and 1000.</value>
+</data>
+	<data name="InvalidDate" xml:space="preserve">
+	<value>Invalid date.</value>
+</data>
+	<data name="InvalidTime" xml:space="preserve">
+	<value>Invalid time.</value>
+</data>
+	<data name="TimeRange" xml:space="preserve">
+	<value>The workout must be between 08:00 and 20:00, and the end time must be later than the start time.</value>
+</data>
+	<data name="FutureTimeRequired" xml:space="preserve">
+	<value>A workout must be scheduled for a future time.</value>
+</data>
+	<data name="WorkoutWithBookingsCannotEdit" xml:space="preserve">
+	<value>A workout with existing bookings cannot be edited.</value>
+</data>
+	<data name="CancelledOrCompletedCannotEdit" xml:space="preserve">
+	<value>Cancelled or completed workouts cannot be edited.</value>
+</data>
+	<data name="InvalidWorkoutId" xml:space="preserve">
+	<value>Invalid workout ID.</value>
+</data>
+	<data name="WorkoutAlreadyCancelled" xml:space="preserve">
+	<value>This workout is already cancelled.</value>
+</data>
+	<data name="CompletedWorkoutCannotCancel" xml:space="preserve">
+	<value>A completed workout cannot be cancelled.</value>
+</data>
+	<data name="WorkoutWithBookingsCannotDelete" xml:space="preserve">
+	<value>A workout with bookings cannot be deleted. Cancel it instead.</value>
+</data>
+	<data name="WorkoutAlreadyStarted" xml:space="preserve">
+	<value>You cannot cancel a workout that has already started.</value>
+</data>
+	<data name="WorkoutNoLongerAvailable" xml:space="preserve">
+	<value>This workout is no longer available.</value>
+</data>
+	<data name="WorkoutCancelled" xml:space="preserve">
+	<value>Workout cancelled successfully.</value>
+</data>
+	<data name="CancellationNotice" xml:space="preserve">
+	<value>Your training session "{0}" on {1} was cancelled by the trainer. Please book another slot if needed.</value>
+</data>
+	<data name="NotAssigned" xml:space="preserve">
+	<value>Not assigned</value>
+</data>
+	<data name="NotSet" xml:space="preserve">
+	<value>Not set</value>
+</data>
+</root>
