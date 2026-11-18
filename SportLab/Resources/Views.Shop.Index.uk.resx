@@ -98,4 +98,94 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="ShopTitle" xml:space="preserve">
+    <value>Магазин SportLab</value>
+  </data>
+	<data name="PromoCode" xml:space="preserve">
+    <value>Промокод:</value>
+  </data>
+	<data name="PromoDiscount" xml:space="preserve">
+    <value>на 10% знижки</value>
+  </data>
+	<data name="ShopHeroTitle" xml:space="preserve">
+    <value>Фітнес-магазин SportLab</value>
+  </data>
+	<data name="ShopHeroText" xml:space="preserve">
+    <value>Офіційний спортивний магазин: спортивне харчування, професійне екіпірування для тренувань, аксесуари для відновлення та клубний одяг.</value>
+  </data>
+	<data name="ViewCartBtn" xml:space="preserve">
+    <value>Кошик</value>
+  </data>
+	<data name="FilterAll" xml:space="preserve">
+    <value>Усі</value>
+  </data>
+	<data name="FilterNutrition" xml:space="preserve">
+    <value>Харчування</value>
+  </data>
+	<data name="FilterAccessories" xml:space="preserve">
+    <value>Аксесуари</value>
+  </data>
+	<data name="FilterApparel" xml:space="preserve">
+    <value>Одяг</value>
+  </data>
+	<data name="FilterEquipment" xml:space="preserve">
+    <value>Обладнання</value>
+  </data>
+	<data name="SearchPlaceholder" xml:space="preserve">
+    <value>Пошук товарів...</value>
+  </data>
+	<data name="SortLabel" xml:space="preserve">
+    <value>Сортування:</value>
+  </data>
+	<data name="SortDefault" xml:space="preserve">
+    <value>Популярні / Нові</value>
+  </data>
+	<data name="SortPriceAsc" xml:space="preserve">
+    <value>Ціна: від низької до високої</value>
+  </data>
+	<data name="SortPriceDesc" xml:space="preserve">
+    <value>Ціна: від високої до низької</value>
+  </data>
+	<data name="SortName" xml:space="preserve">
+    <value>Назва: А–Я</value>
+  </data>
+	<data name="SortStock" xml:space="preserve">
+    <value>Спочатку в наявності</value>
+  </data>
+	<data name="NoProductsTitle" xml:space="preserve">
+    <value>Товарів не знайдено</value>
+  </data>
+	<data name="NoProductsText" xml:space="preserve">
+    <value>Спробуйте змінити фільтри або пошуковий запит.</value>
+  </data>
+	<data name="ShowAllProducts" xml:space="preserve">
+    <value>Показати всі товари</value>
+  </data>
+	<data name="OutOfStock" xml:space="preserve">
+    <value>Немає в наявності</value>
+  </data>
+	<data name="OnlyLeft" xml:space="preserve">
+    <value>Залишилось: {0}</value>
+  </data>
+	<data name="InStock" xml:space="preserve">
+    <value>В наявності</value>
+  </data>
+	<data name="ViewDetailsTitle" xml:space="preserve">
+    <value>Переглянути деталі</value>
+  </data>
+	<data name="AddBtn" xml:space="preserve">
+    <value>Додати</value>
+  </data>
+	<data name="AddedToCart" xml:space="preserve">
+    <value>додано до кошика!</value>
+  </data>
+	<data name="AddFailed" xml:space="preserve">
+    <value>Не вдалося додати товар до кошика.</value>
+  </data>
+	<data name="NetworkErrorRetry" xml:space="preserve">
+    <value>Помилка мережі. Спробуйте ще раз.</value>
+  </data>
+	<data name="Close" xml:space="preserve">
+    <value>Закрити</value>
+  </data>
 </root>

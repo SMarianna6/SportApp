@@ -98,4 +98,169 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="PageTitle" xml:space="preserve">
+    <value>Розклад тренувань</value>
+  </data>
+	<data name="HtmlTitle" xml:space="preserve">
+    <value>Розклад тренувань | Sport HUB</value>
+  </data>
+	<data name="MetaDescription" xml:space="preserve">
+    <value>Переглядайте та бронюйте щотижневі заняття за тренером і категорією.</value>
+  </data>
+	<data name="WeekSchedule" xml:space="preserve">
+    <value>Розклад на тиждень</value>
+  </data>
+	<data name="HeroPart1" xml:space="preserve">
+    <value>Тренуйся</value>
+  </data>
+	<data name="HeroHighlight" xml:space="preserve">
+    <value>Сильніше.</value>
+  </data>
+	<data name="HeroPart2" xml:space="preserve">
+    <value>Бронюй швидше.</value>
+  </data>
+	<data name="HeroText" xml:space="preserve">
+    <value>Обери заняття, перевір зал і забронюй своє місце.</value>
+  </data>
+	<data name="FiltersAria" xml:space="preserve">
+    <value>Фільтри</value>
+  </data>
+	<data name="Trainer" xml:space="preserve">
+    <value>Тренер</value>
+  </data>
+	<data name="Category" xml:space="preserve">
+    <value>Категорія</value>
+  </data>
+	<data name="ResetFilters" xml:space="preserve">
+    <value>Скинути фільтри</value>
+  </data>
+	<data name="LegendAria" xml:space="preserve">
+    <value>Легенда категорій</value>
+  </data>
+	<data name="WeeklyScheduleAria" xml:space="preserve">
+    <value>Тижневий розклад</value>
+  </data>
+	<data name="ByDayAria" xml:space="preserve">
+    <value>Тижневий розклад за днями</value>
+  </data>
+	<data name="NoClasses" xml:space="preserve">
+    <value>Немає занять, що відповідають вашим фільтрам.</value>
+  </data>
+	<data name="Close" xml:space="preserve">
+    <value>Закрити</value>
+  </data>
+	<data name="Day" xml:space="preserve">
+    <value>День</value>
+  </data>
+	<data name="Time" xml:space="preserve">
+    <value>Час</value>
+  </data>
+	<data name="Intensity" xml:space="preserve">
+    <value>Інтенсивність</value>
+  </data>
+	<data name="Availability" xml:space="preserve">
+    <value>Наявність місць</value>
+  </data>
+	<data name="ConfirmBooking" xml:space="preserve">
+    <value>Підтвердити бронювання</value>
+  </data>
+	<data name="CancelBooking" xml:space="preserve">
+    <value>Скасувати бронювання</value>
+  </data>
+	<data name="SignInLink" xml:space="preserve">
+    <value>Увійдіть</value>
+  </data>
+	<data name="LoginHintSuffix" xml:space="preserve">
+    <value>як клієнт, щоб забронювати це заняття.</value>
+  </data>
+	<data name="Day1" xml:space="preserve">
+    <value>Понеділок</value>
+  </data>
+	<data name="Day2" xml:space="preserve">
+    <value>Вівторок</value>
+  </data>
+	<data name="Day3" xml:space="preserve">
+    <value>Середа</value>
+  </data>
+	<data name="Day4" xml:space="preserve">
+    <value>Четвер</value>
+  </data>
+	<data name="Day5" xml:space="preserve">
+    <value>П'ятниця</value>
+  </data>
+	<data name="Day6" xml:space="preserve">
+    <value>Субота</value>
+  </data>
+	<data name="Day7" xml:space="preserve">
+    <value>Неділя</value>
+  </data>
+	<data name="IntensityAria" xml:space="preserve">
+    <value>Інтенсивність</value>
+  </data>
+	<data name="IntensityOf" xml:space="preserve">
+    <value>з 3</value>
+  </data>
+	<data name="StatusAlreadyBooked" xml:space="preserve">
+    <value>Вже заброньовано</value>
+  </data>
+	<data name="StatusCompleted" xml:space="preserve">
+    <value>Завершено</value>
+  </data>
+	<data name="StatusStarted" xml:space="preserve">
+    <value>Заняття розпочалося</value>
+  </data>
+	<data name="StatusFullyBooked" xml:space="preserve">
+    <value>Місць немає</value>
+  </data>
+	<data name="SpotsLeftSuffix" xml:space="preserve">
+    <value>місць залишилось</value>
+  </data>
+	<data name="AllTrainers" xml:space="preserve">
+    <value>Усі тренери</value>
+  </data>
+	<data name="AllCategories" xml:space="preserve">
+    <value>Усі категорії</value>
+  </data>
+	<data name="LegendOpen" xml:space="preserve">
+    <value>Вільно</value>
+  </data>
+	<data name="LegendFilling" xml:space="preserve">
+    <value>Заповнюється</value>
+  </data>
+	<data name="LegendAlmostFull" xml:space="preserve">
+    <value>Майже повно</value>
+  </data>
+	<data name="GroupClass" xml:space="preserve">
+    <value>Групове заняття</value>
+  </data>
+	<data name="SpotsBookedSuffix" xml:space="preserve">
+    <value>місць заброньовано</value>
+  </data>
+	<data name="BookingInProgress" xml:space="preserve">
+    <value>Бронювання...</value>
+  </data>
+	<data name="BookingFailed" xml:space="preserve">
+    <value>Не вдалося забронювати.</value>
+  </data>
+	<data name="ToastBooked" xml:space="preserve">
+    <value>Тренування успішно заброньовано!</value>
+  </data>
+	<data name="TryAgain" xml:space="preserve">
+    <value>Спробувати ще раз</value>
+  </data>
+	<data name="CouldNotBook" xml:space="preserve">
+    <value>Не вдалося забронювати це заняття. Спробуйте ще раз.</value>
+  </data>
+	<data name="Cancelling" xml:space="preserve">
+    <value>Скасування...</value>
+  </data>
+	<data name="CouldNotCancel" xml:space="preserve">
+    <value>Не вдалося скасувати бронювання.</value>
+  </data>
+	<data name="ToastCancelled" xml:space="preserve">
+    <value>Ваше бронювання скасовано.</value>
+  </data>
+	<data name="CouldNotCancelRetry" xml:space="preserve">
+    <value>Не вдалося скасувати бронювання. Спробуйте ще раз.</value>
+  </data>
 </root>

@@ -98,4 +98,58 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="PageTitle" xml:space="preserve">
+    <value>Замовлення підтверджено - SportLab</value>
+  </data>
+	<data name="CustomerFallback" xml:space="preserve">
+    <value>Клієнт SportLab</value>
+  </data>
+	<data name="DeliveryMethodFallback" xml:space="preserve">
+    <value>Самовивіз зі стійки SportLab</value>
+  </data>
+	<data name="DeliveryAddressFallback" xml:space="preserve">
+    <value>Центральна рецепція SportLab</value>
+  </data>
+	<data name="PaymentMethodFallback" xml:space="preserve">
+    <value>Картка</value>
+  </data>
+	<data name="ThankYou" xml:space="preserve">
+    <value>Дякуємо за ваше замовлення!</value>
+  </data>
+	<data name="OrderPlaced" xml:space="preserve">
+    <value>Ваше замовлення успішно оформлено та підтверджено.</value>
+  </data>
+	<data name="OrderStatus" xml:space="preserve">
+    <value>Статус замовлення:</value>
+  </data>
+	<data name="SuccessfullyProcessed" xml:space="preserve">
+    <value>Успішно оброблено</value>
+  </data>
+	<data name="Customer" xml:space="preserve">
+    <value>Клієнт:</value>
+  </data>
+	<data name="OrderDate" xml:space="preserve">
+    <value>Дата замовлення:</value>
+  </data>
+	<data name="Delivery" xml:space="preserve">
+    <value>Доставка:</value>
+  </data>
+	<data name="Destination" xml:space="preserve">
+    <value>Адреса:</value>
+  </data>
+	<data name="OrderedProducts" xml:space="preserve">
+    <value>Замовлені товари:</value>
+  </data>
+	<data name="ProductFallback" xml:space="preserve">
+    <value>Продукт SportLab</value>
+  </data>
+	<data name="TotalAmount" xml:space="preserve">
+    <value>Загальна сума:</value>
+  </data>
+	<data name="ContinueShopping" xml:space="preserve">
+    <value>Продовжити покупки</value>
+  </data>
+	<data name="MyProfile" xml:space="preserve">
+    <value>Мій профіль і замовлення</value>
+  </data>
 </root>

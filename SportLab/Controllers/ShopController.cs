@@ -5,22 +5,23 @@ using SportLab.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Localization;
 
 namespace SportLab.Controllers
 {
     public class ShopController : Controller
     {
         private readonly SportLabContext _context;
+        private readonly IStringLocalizer<ShopController> _localizer;
 
-        public ShopController(SportLabContext context)
+        public ShopController(SportLabContext context, IStringLocalizer<ShopController> localizer)
         {
             _context = context;
+            _localizer = localizer;
         }
 
         public IActionResult Index(string? category, string? sort, string? search)
         {
-            // Removed the SeedDefaultProducts() check
-
             var query = _context.Products.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(search))

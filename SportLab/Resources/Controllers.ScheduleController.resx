@@ -98,4 +98,43 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="InvalidWorkout" xml:space="preserve">
+    <value>Invalid workout.</value>
+  </data>
+	<data name="NeedMembership" xml:space="preserve">
+    <value>You need an active membership to book a session. Please choose a plan.</value>
+  </data>
+	<data name="WorkoutNotFound" xml:space="preserve">
+    <value>Workout not found.</value>
+  </data>
+	<data name="NoLongerAvailable" xml:space="preserve">
+    <value>This workout is no longer available.</value>
+  </data>
+	<data name="AlreadyStartedFinished" xml:space="preserve">
+    <value>This workout has already started or finished.</value>
+  </data>
+	<data name="CannotBookOwn" xml:space="preserve">
+    <value>You cannot book your own workout.</value>
+  </data>
+	<data name="AlreadyBooked" xml:space="preserve">
+    <value>You have already booked this workout.</value>
+  </data>
+	<data name="FullyBooked" xml:space="preserve">
+    <value>This workout is fully booked.</value>
+  </data>
+	<data name="BookedSuccess" xml:space="preserve">
+    <value>Workout booked successfully!</value>
+  </data>
+	<data name="InvalidBooking" xml:space="preserve">
+    <value>Invalid booking.</value>
+  </data>
+	<data name="BookingNotFound" xml:space="preserve">
+    <value>Booking not found.</value>
+  </data>
+	<data name="CannotCancelStarted" xml:space="preserve">
+    <value>Cannot cancel a workout that has already started.</value>
+  </data>
+	<data name="BookingCancelled" xml:space="preserve">
+    <value>Your booking has been cancelled.</value>
+  </data>
 </root>

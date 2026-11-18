@@ -98,4 +98,133 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="PageTitle" xml:space="preserve">
+    <value>Order Checkout - SportLab</value>
+  </data>
+	<data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+	<data name="Cart" xml:space="preserve">
+    <value>Cart</value>
+  </data>
+	<data name="Checkout" xml:space="preserve">
+    <value>Checkout</value>
+  </data>
+	<data name="CompleteOrder" xml:space="preserve">
+    <value>Complete Your Order</value>
+  </data>
+	<data name="ContactDetails" xml:space="preserve">
+    <value>Contact Details</value>
+  </data>
+	<data name="FullName" xml:space="preserve">
+    <value>Full Name</value>
+  </data>
+	<data name="FullNamePlaceholder" xml:space="preserve">
+    <value>Alexander Smith</value>
+  </data>
+	<data name="PhoneNumber" xml:space="preserve">
+    <value>Phone Number</value>
+  </data>
+	<data name="EmailAddress" xml:space="preserve">
+    <value>Email Address</value>
+  </data>
+	<data name="EmailPlaceholder" xml:space="preserve">
+    <value>client@example.com</value>
+  </data>
+	<data name="DeliveryOptions" xml:space="preserve">
+    <value>Delivery Options</value>
+  </data>
+	<data name="PickupTitle" xml:space="preserve">
+    <value>Self-Pickup at SportLab Front Desk</value>
+  </data>
+	<data name="PickupText" xml:space="preserve">
+    <value>123 Fitness Avenue, Khmelnytskyi (Ready today)</value>
+  </data>
+	<data name="Free" xml:space="preserve">
+    <value>Free</value>
+  </data>
+	<data name="CourierTitle" xml:space="preserve">
+    <value>Courier Doorstep Delivery</value>
+  </data>
+	<data name="CourierText" xml:space="preserve">
+    <value>Direct delivery to your home or office address</value>
+  </data>
+	<data name="PostTitle" xml:space="preserve">
+    <value>Nova Poshta / Parcel Locker</value>
+  </data>
+	<data name="PostText" xml:space="preserve">
+    <value>Delivery to your nearest post branch or automated locker</value>
+  </data>
+	<data name="CityLabel" xml:space="preserve">
+    <value>City / Town</value>
+  </data>
+	<data name="CityPlaceholder" xml:space="preserve">
+    <value>Khmelnytskyi</value>
+  </data>
+	<data name="AddressLabel" xml:space="preserve">
+    <value>Street Address / Post Branch #</value>
+  </data>
+	<data name="AddressPlaceholder" xml:space="preserve">
+    <value>e.g. Branch #12 or 45 Soborna St, Apt 22</value>
+  </data>
+	<data name="NotesLabel" xml:space="preserve">
+    <value>Delivery Notes (Optional)</value>
+  </data>
+	<data name="NotesPlaceholder" xml:space="preserve">
+    <value>Gate code, convenient delivery time, etc.</value>
+  </data>
+	<data name="PaymentMethod" xml:space="preserve">
+    <value>Payment Method</value>
+  </data>
+	<data name="CardTitle" xml:space="preserve">
+    <value>Credit / Debit Card</value>
+  </data>
+	<data name="CardText" xml:space="preserve">
+    <value>Pay securely with your bank card</value>
+  </data>
+	<data name="OnlinePayment" xml:space="preserve">
+    <value>Online Payment</value>
+  </data>
+	<data name="CashTitle" xml:space="preserve">
+    <value>Cash on Delivery / Pickup</value>
+  </data>
+	<data name="CashText" xml:space="preserve">
+    <value>Pay when you receive your order</value>
+  </data>
+	<data name="PayLater" xml:space="preserve">
+    <value>Pay Later</value>
+  </data>
+	<data name="CardDetails" xml:space="preserve">
+    <value>Card Details (Simulation)</value>
+  </data>
+	<data name="TermsText" xml:space="preserve">
+    <value>I confirm that the entered order information is correct and agree to SportLab store terms.</value>
+  </data>
+	<data name="TermsError" xml:space="preserve">
+    <value>You must agree to the terms before placing an order.</value>
+  </data>
+	<data name="PlaceOrder" xml:space="preserve">
+    <value>Place Order Now</value>
+  </data>
+	<data name="ItemsInOrder" xml:space="preserve">
+    <value>Items in Order ({0})</value>
+  </data>
+	<data name="Qty" xml:space="preserve">
+    <value>Qty:</value>
+  </data>
+	<data name="SubtotalLabel" xml:space="preserve">
+    <value>Subtotal:</value>
+  </data>
+	<data name="ShippingHandling" xml:space="preserve">
+    <value>Shipping &amp; Handling:</value>
+  </data>
+	<data name="Total" xml:space="preserve">
+    <value>Total:</value>
+  </data>
+	<data name="GuaranteeTitle" xml:space="preserve">
+    <value>SportLab Guarantee:</value>
+  </data>
+	<data name="GuaranteeText" xml:space="preserve">
+    <value>Track your order in real-time or pick it up at the gym front desk today.</value>
+  </data>
 </root>

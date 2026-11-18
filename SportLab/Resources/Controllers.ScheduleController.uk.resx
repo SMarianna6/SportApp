@@ -98,4 +98,43 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="InvalidWorkout" xml:space="preserve">
+    <value>Невірне тренування.</value>
+  </data>
+	<data name="NeedMembership" xml:space="preserve">
+    <value>Для бронювання заняття потрібен активний абонемент. Оберіть план.</value>
+  </data>
+	<data name="WorkoutNotFound" xml:space="preserve">
+    <value>Тренування не знайдено.</value>
+  </data>
+	<data name="NoLongerAvailable" xml:space="preserve">
+    <value>Це тренування більше недоступне.</value>
+  </data>
+	<data name="AlreadyStartedFinished" xml:space="preserve">
+    <value>Це тренування вже розпочалося або завершилося.</value>
+  </data>
+	<data name="CannotBookOwn" xml:space="preserve">
+    <value>Ви не можете забронювати власне тренування.</value>
+  </data>
+	<data name="AlreadyBooked" xml:space="preserve">
+    <value>Ви вже забронювали це тренування.</value>
+  </data>
+	<data name="FullyBooked" xml:space="preserve">
+    <value>На це тренування немає вільних місць.</value>
+  </data>
+	<data name="BookedSuccess" xml:space="preserve">
+    <value>Тренування успішно заброньовано!</value>
+  </data>
+	<data name="InvalidBooking" xml:space="preserve">
+    <value>Невірне бронювання.</value>
+  </data>
+	<data name="BookingNotFound" xml:space="preserve">
+    <value>Бронювання не знайдено.</value>
+  </data>
+	<data name="CannotCancelStarted" xml:space="preserve">
+    <value>Не можна скасувати тренування, яке вже розпочалося.</value>
+  </data>
+	<data name="BookingCancelled" xml:space="preserve">
+    <value>Ваше бронювання скасовано.</value>
+  </data>
 </root>

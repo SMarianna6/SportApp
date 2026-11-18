@@ -98,4 +98,94 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="PageTitle" xml:space="preserve">
+    <value>Відгуки учасників - SportLab</value>
+  </data>
+	<data name="CommunityBadge" xml:space="preserve">
+    <value>Довіра та відгуки спільноти</value>
+  </data>
+	<data name="Title" xml:space="preserve">
+    <value>Відгуки та враження учасників</value>
+  </data>
+	<data name="Subtitle" xml:space="preserve">
+    <value>Справжні відгуки наших спортсменів, пауерліфтерів та любителів фітнесу в SportLab.</value>
+  </data>
+	<data name="Close" xml:space="preserve">
+    <value>Закрити</value>
+  </data>
+	<data name="BasedOn" xml:space="preserve">
+    <value>На основі {0} перевірених відгуків</value>
+  </data>
+	<data name="FilterByRating" xml:space="preserve">
+    <value>Фільтр за оцінкою:</value>
+  </data>
+	<data name="AllReviews" xml:space="preserve">
+    <value>Усі відгуки ({0})</value>
+  </data>
+	<data name="Stars5" xml:space="preserve">
+    <value>5 зірок</value>
+  </data>
+	<data name="Stars4" xml:space="preserve">
+    <value>4 зірки</value>
+  </data>
+	<data name="Stars3" xml:space="preserve">
+    <value>3 зірки</value>
+  </data>
+	<data name="ShareExperience" xml:space="preserve">
+    <value>Поділіться своїми враженнями</value>
+  </data>
+	<data name="ShareHint" xml:space="preserve">
+    <value>Ваш відгук допомагає нам постійно вдосконалювати обладнання та тренувальні програми.</value>
+  </data>
+	<data name="OverallRating" xml:space="preserve">
+    <value>Загальна оцінка</value>
+  </data>
+	<data name="Rating5" xml:space="preserve">
+    <value>5/5 - Відмінно!</value>
+  </data>
+	<data name="Rating4" xml:space="preserve">
+    <value>4/5 - Дуже добре</value>
+  </data>
+	<data name="Rating3" xml:space="preserve">
+    <value>3/5 - Добре</value>
+  </data>
+	<data name="Rating2" xml:space="preserve">
+    <value>2/5 - Задовільно</value>
+  </data>
+	<data name="Rating1" xml:space="preserve">
+    <value>1/5 - Погано</value>
+  </data>
+	<data name="YourReview" xml:space="preserve">
+    <value>Ваш відгук</value>
+  </data>
+	<data name="ReviewPlaceholder" xml:space="preserve">
+    <value>Розкажіть про тренерів, обладнання, заняття чи атмосферу...</value>
+  </data>
+	<data name="SubmitReview" xml:space="preserve">
+    <value>Надіслати відгук</value>
+  </data>
+	<data name="OnlyClients" xml:space="preserve">
+    <value>Залишати відгуки можуть лише клієнти.</value>
+  </data>
+	<data name="MustLogin" xml:space="preserve">
+    <value>Ви повинні увійти, щоб залишити відгук.</value>
+  </data>
+	<data name="LoginToReview" xml:space="preserve">
+    <value>Увійти, щоб залишити відгук</value>
+  </data>
+	<data name="PublishedReviews" xml:space="preserve">
+    <value>Опубліковані відгуки ({0})</value>
+  </data>
+	<data name="NoReviews" xml:space="preserve">
+    <value>Відгуків не знайдено</value>
+  </data>
+	<data name="NoReviewsHint" xml:space="preserve">
+    <value>Будьте першим, хто поділиться враженнями про SportLab!</value>
+  </data>
+	<data name="MemberFallback" xml:space="preserve">
+    <value>Учасник</value>
+  </data>
+	<data name="VerifiedAthlete" xml:space="preserve">
+    <value>Перевірений спортсмен</value>
+  </data>
 </root>

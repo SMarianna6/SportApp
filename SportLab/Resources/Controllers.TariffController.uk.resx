@@ -98,4 +98,58 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="InvalidRequestData" xml:space="preserve">
+    <value>Невірні дані запиту.</value>
+  </data>
+	<data name="InvalidPayload" xml:space="preserve">
+    <value>Невірне тіло запиту.</value>
+  </data>
+	<data name="PlanNotFound" xml:space="preserve">
+    <value>Обраний план абонемента не знайдено.</value>
+  </data>
+	<data name="SignInRequired" xml:space="preserve">
+    <value>Будь ласка, увійдіть, щоб придбати абонемент.</value>
+  </data>
+	<data name="EmailFromName" xml:space="preserve">
+    <value>Фітнес-клуб SportHub</value>
+  </data>
+	<data name="EmailSubject" xml:space="preserve">
+    <value>Дякуємо за вибір {0}! 🏋️‍♂</value>
+  </data>
+	<data name="EmailWelcomeTitle" xml:space="preserve">
+    <value>Вітаємо в SportHub!</value>
+  </data>
+	<data name="EmailWelcomeSubtitle" xml:space="preserve">
+    <value>Ваш шлях до фітнесу починається тут</value>
+  </data>
+	<data name="EmailHello" xml:space="preserve">
+    <value>Вітаємо, {0}!</value>
+  </data>
+	<data name="EmailIntro" xml:space="preserve">
+    <value>Дякуємо за придбання нашого абонемента. Ми раді вітати вас у нашій спільноті! Нижче — деталі вашого активного абонемента:</value>
+  </data>
+	<data name="EmailPlan" xml:space="preserve">
+    <value>План:</value>
+  </data>
+	<data name="EmailDuration" xml:space="preserve">
+    <value>Тривалість:</value>
+  </data>
+	<data name="EmailDurationValue" xml:space="preserve">
+    <value>{0} дн.</value>
+  </data>
+	<data name="EmailValidity" xml:space="preserve">
+    <value>Дійсність:</value>
+  </data>
+	<data name="EmailTotalPaid" xml:space="preserve">
+    <value>Сплачено:</value>
+  </data>
+	<data name="EmailProfileNote" xml:space="preserve">
+    <value>Ви можете переглянути цифрову перепустку в будь-який час, увійшовши до свого профілю на нашому сайті.</value>
+  </data>
+	<data name="EmailRights" xml:space="preserve">
+    <value>© {0} Фітнес-клуб SportHub. Усі права захищено.</value>
+  </data>
+	<data name="SuccessMessage" xml:space="preserve">
+    <value>Абонемент успішно активовано! Лист із підтвердженням надіслано.</value>
+  </data>
 </root>

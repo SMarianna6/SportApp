@@ -98,4 +98,76 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="InvalidSelection" xml:space="preserve">
+    <value>Invalid product selection.</value>
+  </data>
+	<data name="ProductNotFound" xml:space="preserve">
+    <value>Product not found.</value>
+  </data>
+	<data name="OutOfStock" xml:space="preserve">
+    <value>Product is currently out of stock.</value>
+  </data>
+	<data name="ItemAdded" xml:space="preserve">
+    <value>Item added to cart.</value>
+  </data>
+	<data name="ItemNotFound" xml:space="preserve">
+    <value>Item not found in cart.</value>
+  </data>
+	<data name="DefaultClientName" xml:space="preserve">
+    <value>SportLab Client</value>
+  </data>
+	<data name="EmailFromName" xml:space="preserve">
+    <value>SportLab Store</value>
+  </data>
+	<data name="EmailSubject" xml:space="preserve">
+    <value>Your SportLab Order Confirmation 🎉</value>
+  </data>
+	<data name="EmailQty" xml:space="preserve">
+    <value>Qty: {0}</value>
+  </data>
+	<data name="EmailHeaderSubtitle" xml:space="preserve">
+    <value>Order Confirmation</value>
+  </data>
+	<data name="EmailHi" xml:space="preserve">
+    <value>Hi {0},</value>
+  </data>
+	<data name="EmailThanks" xml:space="preserve">
+    <value>Thank you for your purchase! Your order has been successfully placed and is now being processed.</value>
+  </data>
+	<data name="EmailOrderSummary" xml:space="preserve">
+    <value>Order Summary</value>
+  </data>
+	<data name="EmailTotalAmount" xml:space="preserve">
+    <value>Total Amount:</value>
+  </data>
+	<data name="EmailPaymentMethod" xml:space="preserve">
+    <value>Payment Method:</value>
+  </data>
+	<data name="EmailDeliveryOption" xml:space="preserve">
+    <value>Delivery Option:</value>
+  </data>
+	<data name="EmailDeliveryAddress" xml:space="preserve">
+    <value>Delivery Address:</value>
+  </data>
+	<data name="EmailContactSoon" xml:space="preserve">
+    <value>We will contact you shortly to confirm your delivery details.</value>
+  </data>
+	<data name="EmailRights" xml:space="preserve">
+    <value>© {0} SportLab Store. All rights reserved.</value>
+  </data>
+	<data name="DefaultDeliveryAddress" xml:space="preserve">
+    <value>SportLab Reception Desk (Pickup)</value>
+  </data>
+	<data name="CustomerFallback" xml:space="preserve">
+    <value>SportLab Customer</value>
+  </data>
+	<data name="DeliveryMethodFallback" xml:space="preserve">
+    <value>Pickup at SportLab Front Desk</value>
+  </data>
+	<data name="DeliveryAddressFallback" xml:space="preserve">
+    <value>SportLab Gym Central Reception</value>
+  </data>
+	<data name="PaymentMethodFallback" xml:space="preserve">
+    <value>Card</value>
+  </data>
 </root>

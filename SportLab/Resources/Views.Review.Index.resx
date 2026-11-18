@@ -98,4 +98,94 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="PageTitle" xml:space="preserve">
+    <value>Member Reviews - SportLab</value>
+  </data>
+	<data name="CommunityBadge" xml:space="preserve">
+    <value>Community Trust &amp; Feedback</value>
+  </data>
+	<data name="Title" xml:space="preserve">
+    <value>Member Reviews &amp; Experiences</value>
+  </data>
+	<data name="Subtitle" xml:space="preserve">
+    <value>Real testimonials from our athletes, powerlifters, and fitness enthusiasts at SportLab.</value>
+  </data>
+	<data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+	<data name="BasedOn" xml:space="preserve">
+    <value>Based on {0} verified reviews</value>
+  </data>
+	<data name="FilterByRating" xml:space="preserve">
+    <value>Filter by Star Rating:</value>
+  </data>
+	<data name="AllReviews" xml:space="preserve">
+    <value>All Reviews ({0})</value>
+  </data>
+	<data name="Stars5" xml:space="preserve">
+    <value>5 Stars</value>
+  </data>
+	<data name="Stars4" xml:space="preserve">
+    <value>4 Stars</value>
+  </data>
+	<data name="Stars3" xml:space="preserve">
+    <value>3 Stars</value>
+  </data>
+	<data name="ShareExperience" xml:space="preserve">
+    <value>Share Your Experience</value>
+  </data>
+	<data name="ShareHint" xml:space="preserve">
+    <value>Your feedback helps us continuously improve our facilities and training programs.</value>
+  </data>
+	<data name="OverallRating" xml:space="preserve">
+    <value>Overall Rating</value>
+  </data>
+	<data name="Rating5" xml:space="preserve">
+    <value>5/5 - Outstanding!</value>
+  </data>
+	<data name="Rating4" xml:space="preserve">
+    <value>4/5 - Very Good</value>
+  </data>
+	<data name="Rating3" xml:space="preserve">
+    <value>3/5 - Good</value>
+  </data>
+	<data name="Rating2" xml:space="preserve">
+    <value>2/5 - Fair</value>
+  </data>
+	<data name="Rating1" xml:space="preserve">
+    <value>1/5 - Poor</value>
+  </data>
+	<data name="YourReview" xml:space="preserve">
+    <value>Your Review</value>
+  </data>
+	<data name="ReviewPlaceholder" xml:space="preserve">
+    <value>Tell us about the trainers, equipment, classes, or atmosphere...</value>
+  </data>
+	<data name="SubmitReview" xml:space="preserve">
+    <value>Submit Review</value>
+  </data>
+	<data name="OnlyClients" xml:space="preserve">
+    <value>Only clients can leave reviews.</value>
+  </data>
+	<data name="MustLogin" xml:space="preserve">
+    <value>You must be logged in to leave a review.</value>
+  </data>
+	<data name="LoginToReview" xml:space="preserve">
+    <value>Log in to Review</value>
+  </data>
+	<data name="PublishedReviews" xml:space="preserve">
+    <value>Published Reviews ({0})</value>
+  </data>
+	<data name="NoReviews" xml:space="preserve">
+    <value>No reviews found</value>
+  </data>
+	<data name="NoReviewsHint" xml:space="preserve">
+    <value>Be the first to share your thoughts about SportLab!</value>
+  </data>
+	<data name="MemberFallback" xml:space="preserve">
+    <value>Member</value>
+  </data>
+	<data name="VerifiedAthlete" xml:space="preserve">
+    <value>Verified Athlete</value>
+  </data>
 </root>

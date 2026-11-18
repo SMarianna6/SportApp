@@ -98,4 +98,121 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="PageTitle" xml:space="preserve">
+    <value>Підтвердження покупки абонемента</value>
+  </data>
+	<data name="Home" xml:space="preserve">
+    <value>Головна</value>
+  </data>
+	<data name="Memberships" xml:space="preserve">
+    <value>Абонементи</value>
+  </data>
+	<data name="ConfirmPurchaseBreadcrumb" xml:space="preserve">
+    <value>Підтвердити покупку</value>
+  </data>
+	<data name="CheckoutTitle" xml:space="preserve">
+    <value>Оформлення абонемента</value>
+  </data>
+	<data name="CheckoutSubtitle" xml:space="preserve">
+    <value>Введіть свої дані, щоб активувати клубну перепустку SportLab</value>
+  </data>
+	<data name="CustomerInfo" xml:space="preserve">
+    <value>1. Інформація про клієнта</value>
+  </data>
+	<data name="FullName" xml:space="preserve">
+    <value>Повне ім'я</value>
+  </data>
+	<data name="FullNamePlaceholder" xml:space="preserve">
+    <value>Олександр Шевченко</value>
+  </data>
+	<data name="PhoneNumber" xml:space="preserve">
+    <value>Номер телефону</value>
+  </data>
+	<data name="EmailLabel" xml:space="preserve">
+    <value>Email (для доставки цифрової перепустки)</value>
+  </data>
+	<data name="EmailPlaceholder" xml:space="preserve">
+    <value>client@example.com</value>
+  </data>
+	<data name="ActivationDetails" xml:space="preserve">
+    <value>2. Деталі активації</value>
+  </data>
+	<data name="StartDate" xml:space="preserve">
+    <value>Дата початку</value>
+  </data>
+	<data name="StartDateHint" xml:space="preserve">
+    <value>Оберіть сьогодні або будь-яку зручну дату початку.</value>
+  </data>
+	<data name="ValidityPeriod" xml:space="preserve">
+    <value>Термін дії</value>
+  </data>
+	<data name="DurationDays" xml:space="preserve">
+    <value>{0} дн.</value>
+  </data>
+	<data name="ValidUntilInline" xml:space="preserve">
+    <value>дійсний до</value>
+  </data>
+	<data name="PaymentMethodTitle" xml:space="preserve">
+    <value>3. Спосіб оплати</value>
+  </data>
+	<data name="PaymentCard" xml:space="preserve">
+    <value>Кредитна / дебетова картка</value>
+  </data>
+	<data name="PaymentApple" xml:space="preserve">
+    <value>Apple / Google Pay</value>
+  </data>
+	<data name="PaymentDesk" xml:space="preserve">
+    <value>На рецепції клубу</value>
+  </data>
+	<data name="AgreePrefix" xml:space="preserve">
+    <value>Я погоджуюся з</value>
+  </data>
+	<data name="AgreeLink" xml:space="preserve">
+    <value>правилами та умовами SportLab</value>
+  </data>
+	<data name="AgreeSuffix" xml:space="preserve">
+    <value>та політикою обробки персональних даних.</value>
+  </data>
+	<data name="ConfirmPay" xml:space="preserve">
+    <value>Підтвердити покупку та оплатити</value>
+  </data>
+	<data name="BackToPlans" xml:space="preserve">
+    <value>Назад до планів</value>
+  </data>
+	<data name="DurationLabel" xml:space="preserve">
+    <value>Тривалість:</value>
+  </data>
+	<data name="MembershipPrice" xml:space="preserve">
+    <value>Вартість абонемента:</value>
+  </data>
+	<data name="TaxesFees" xml:space="preserve">
+    <value>Податки та збори:</value>
+  </data>
+	<data name="TaxesIncluded" xml:space="preserve">
+    <value>0 ₴ (включено)</value>
+  </data>
+	<data name="IntroWorkout" xml:space="preserve">
+    <value>Вступне тренування:</value>
+  </data>
+	<data name="Complimentary" xml:space="preserve">
+    <value>Безкоштовно</value>
+  </data>
+	<data name="TotalToPay" xml:space="preserve">
+    <value>До сплати:</value>
+  </data>
+	<data name="IncludedServices" xml:space="preserve">
+    <value>Включені послуги та переваги:</value>
+  </data>
+	<data name="ServiceFallback1" xml:space="preserve">
+    <value>Необмежений доступ до залу та кардіо</value>
+  </data>
+	<data name="ServiceFallback2" xml:space="preserve">
+    <value>Сучасні роздягальні та душові</value>
+  </data>
+	<data name="SecurityGuarantee" xml:space="preserve">
+    <value>Гарантія безпеки</value>
+  </data>
+	<data name="SecurityGuaranteeText" xml:space="preserve">
+    <value>Миттєве створення цифрової картки абонемента у вашому профілі після підтвердження.</value>
+  </data>
 </root>

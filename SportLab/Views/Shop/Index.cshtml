@@ -1,7 +1,9 @@
 @model IEnumerable<SportLab.Models.Product>
 
+@inject IViewLocalizer Localizer
+
 @{
-    ViewData["Title"] = "SportLab Store";
+    ViewData["Title"] = Localizer["ShopTitle"];
     var currentCat = (ViewBag.CurrentCategory as string) ?? "all";
     var currentSort = (ViewBag.CurrentSort as string) ?? "default";
     var currentSearch = (ViewBag.CurrentSearch as string) ?? "";
@@ -16,16 +18,16 @@
         <div class="row align-items-center">
             <div class="col-lg-8">
                 <span class="badge bg-warning text-dark fw-bold text-uppercase px-3 py-2 rounded-pill mb-3">
-                    <i class="bi bi-tag-fill me-1"></i> Promo Code: <strong>SPORT10</strong> for 10% OFF
+                    <i class="bi bi-tag-fill me-1"></i> @Localizer["PromoCode"] <strong>SPORT10</strong> @Localizer["PromoDiscount"]
                 </span>
-                <h1 class="display-5 fw-bold mb-2 text-white">SportLab Fitness Shop</h1>
+                <h1 class="display-5 fw-bold mb-2 text-white">@Localizer["ShopHeroTitle"]</h1>
                 <p class="lead text-light mb-0" style="opacity: 0.9;">
-                    Official athletic store: sports nutrition, professional workout gear, recovery accessories, and club apparel.
+                    @Localizer["ShopHeroText"]
                 </p>
             </div>
             <div class="col-lg-4 text-center text-md-end mt-4 mt-lg-0">
                 <a asp-controller="Cart" asp-action="Index" class="btn btn-outline-light px-4 py-2 rounded-pill shadow-sm">
-                    <i class="bi bi-cart3 me-1"></i> View Cart
+                    <i class="bi bi-cart3 me-1"></i> @Localizer["ViewCartBtn"]
                 </a>
             </div>
         </div>
@@ -39,19 +41,19 @@
                 <div class="col-lg-6">
                     <div class="d-flex gap-2 flex-wrap">
                         <button type="button" class="btn btn-sm rounded-pill px-3 @(currentCat == "all" ? "btn-dark fw-bold" : "btn-outline-secondary") filter-cat-btn" data-cat="all">
-                            All
+                            @Localizer["FilterAll"]
                         </button>
                         <button type="button" class="btn btn-sm rounded-pill px-3 @(currentCat == "nutrition" ? "btn-dark fw-bold" : "btn-outline-secondary") filter-cat-btn" data-cat="nutrition">
-                            <i class="bi bi-cup-hot me-1"></i> Nutrition
+                            <i class="bi bi-cup-hot me-1"></i> @Localizer["FilterNutrition"]
                         </button>
                         <button type="button" class="btn btn-sm rounded-pill px-3 @(currentCat == "accessories" ? "btn-dark fw-bold" : "btn-outline-secondary") filter-cat-btn" data-cat="accessories">
-                            <i class="bi bi-droplet me-1"></i> Accessories
+                            <i class="bi bi-droplet me-1"></i> @Localizer["FilterAccessories"]
                         </button>
                         <button type="button" class="btn btn-sm rounded-pill px-3 @(currentCat == "apparel" ? "btn-dark fw-bold" : "btn-outline-secondary") filter-cat-btn" data-cat="apparel">
-                            <i class="bi bi-bag me-1"></i> Apparel
+                            <i class="bi bi-bag me-1"></i> @Localizer["FilterApparel"]
                         </button>
                         <button type="button" class="btn btn-sm rounded-pill px-3 @(currentCat == "equipment" ? "btn-dark fw-bold" : "btn-outline-secondary") filter-cat-btn" data-cat="equipment">
-                            <i class="bi bi-activity me-1"></i> Equipment
+                            <i class="bi bi-activity me-1"></i> @Localizer["FilterEquipment"]
                         </button>
                     </div>
                     <input type="hidden" name="category" id="hiddenCategory" value="@currentCat" />
@@ -61,7 +63,7 @@
                 <div class="col-lg-3 col-md-6">
                     <div class="input-group input-group-sm">
                         <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
-                        <input type="text" name="search" class="form-control" placeholder="Search products..." value="@currentSearch" id="searchInput" />
+                        <input type="text" name="search" class="form-control" placeholder="@Localizer["SearchPlaceholder"]" value="@currentSearch" id="searchInput" />
                         @if (!string.IsNullOrEmpty(currentSearch))
                         {
                             <a asp-action="Index" asp-route-category="@currentCat" class="btn btn-outline-secondary"><i class="bi bi-x-lg"></i></a>
@@ -72,13 +74,13 @@
                 <!-- Sorting Select -->
                 <div class="col-lg-3 col-md-6 text-end">
                     <div class="d-flex align-items-center justify-content-lg-end gap-2">
-                        <label for="sortSelect" class="small text-muted mb-0 text-nowrap"><i class="bi bi-arrow-down-up"></i> Sort:</label>
+                        <label for="sortSelect" class="small text-muted mb-0 text-nowrap"><i class="bi bi-arrow-down-up"></i> @Localizer["SortLabel"]</label>
                         <select name="sort" id="sortSelect" class="form-select form-select-sm" style="max-width: 190px;" onchange="this.form.submit()">
-                            <option value="default" selected="@(currentSort == "default")">Popular / Newest</option>
-                            <option value="price_asc" selected="@(currentSort == "price_asc")">Price: Low to High</option>
-                            <option value="price_desc" selected="@(currentSort == "price_desc")">Price: High to Low</option>
-                            <option value="name" selected="@(currentSort == "name")">Name: A to Z</option>
-                            <option value="stock" selected="@(currentSort == "stock")">Availability</option>
+                            <option value="default" selected="@(currentSort == "default")">@Localizer["SortDefault"]</option>
+                            <option value="price_asc" selected="@(currentSort == "price_asc")">@Localizer["SortPriceAsc"]</option>
+                            <option value="price_desc" selected="@(currentSort == "price_desc")">@Localizer["SortPriceDesc"]</option>
+                            <option value="name" selected="@(currentSort == "name")">@Localizer["SortName"]</option>
+                            <option value="stock" selected="@(currentSort == "stock")">@Localizer["SortStock"]</option>
                         </select>
                     </div>
                 </div>
@@ -93,9 +95,9 @@
             <div class="col-12 text-center py-5">
                 <div class="p-5 bg-light rounded-4 border">
                     <i class="bi bi-bag-x display-3 text-muted mb-3 d-block"></i>
-                    <h4 class="fw-bold">No products match your criteria</h4>
-                    <p class="text-muted">Try clearing search filters or browse other categories.</p>
-                    <a asp-action="Index" class="btn btn-primary rounded-pill px-4">Show All Products</a>
+                    <h4 class="fw-bold">@Localizer["NoProductsTitle"]</h4>
+                    <p class="text-muted">@Localizer["NoProductsText"]</p>
+                    <a asp-action="Index" class="btn btn-primary rounded-pill px-4">@Localizer["ShowAllProducts"]</a>
                 </div>
             </div>
         }
@@ -105,9 +107,9 @@
             {
                 var isLowStock = item.StockQuantity > 0 && item.StockQuantity <= 10;
                 var isOutOfStock = item.StockQuantity <= 0;
-                var photo = string.IsNullOrWhiteSpace(item.PhotoUrl) 
-                    ? "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&h=450&fit=crop" 
-                    : item.PhotoUrl;
+                var photo = string.IsNullOrWhiteSpace(item.PhotoUrl)
+                ? "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&h=450&fit=crop"
+                : item.PhotoUrl;
 
                 <div class="col-xl-3 col-lg-4 col-md-6">
                     <div class="product-card">
@@ -118,15 +120,15 @@
 
                             @if (isOutOfStock)
                             {
-                                <span class="badge bg-danger product-stock-badge">Out of Stock</span>
+                                <span class="badge bg-danger product-stock-badge">@Localizer["OutOfStock"]</span>
                             }
                             else if (isLowStock)
                             {
-                                <span class="badge bg-warning text-dark product-stock-badge">Only @item.StockQuantity left</span>
+                                <span class="badge bg-warning text-dark product-stock-badge">@Localizer["OnlyLeft", item.StockQuantity]</span>
                             }
                             else
                             {
-                                <span class="badge bg-success product-stock-badge">In Stock</span>
+                                <span class="badge bg-success product-stock-badge">@Localizer["InStock"]</span>
                             }
                         </div>
 
@@ -145,15 +147,15 @@
                                 </div>
 
                                 <div class="d-flex gap-2">
-                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-secondary btn-sm" title="View details">
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-secondary btn-sm" title="@Localizer["ViewDetailsTitle"]">
                                         <i class="bi bi-eye"></i>
                                     </a>
-                                    <button type="button" 
-                                            class="btn-add-cart btn-ajax-add-cart" 
-                                            data-product-id="@item.Id" 
+                                    <button type="button"
+                                            class="btn-add-cart btn-ajax-add-cart"
+                                            data-product-id="@item.Id"
                                             data-product-name="@item.Name"
                                             @(isOutOfStock ? "disabled" : "")>
-                                        <i class="bi bi-cart-plus"></i> Add
+                                        <i class="bi bi-cart-plus"></i> @Localizer["AddBtn"]
                                     </button>
                                 </div>
                             </div>
@@ -172,83 +174,80 @@
             <div class="toast-body d-flex align-items-center gap-2">
                 <i class="bi bi-check-circle-fill text-success fs-5"></i>
                 <div>
-                    <strong id="toastProductName">Item</strong> added to cart!
+                    <strong id="toastProductName">Item</strong> @Localizer["AddedToCart"]
                 </div>
             </div>
             <a asp-controller="Cart" asp-action="Index" class="btn btn-primary btn-sm my-auto me-2 px-3 py-1 text-nowrap">
-                View Cart
+                @Localizer["ViewCartBtn"]
             </a>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="@Localizer["Close"]"></button>
         </div>
     </div>
 </div>
 
 @section Scripts {
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Category pill click handler
-        const filterForm = document.getElementById("shopFilterForm");
-        const hiddenCategory = document.getElementById("hiddenCategory");
-        document.querySelectorAll(".filter-cat-btn").forEach(btn => {
-            btn.addEventListener("click", function () {
-                hiddenCategory.value = this.getAttribute("data-cat");
-                filterForm.submit();
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const filterForm = document.getElementById("shopFilterForm");
+            const hiddenCategory = document.getElementById("hiddenCategory");
+            document.querySelectorAll(".filter-cat-btn").forEach(btn => {
+                btn.addEventListener("click", function () {
+                    hiddenCategory.value = this.getAttribute("data-cat");
+                    filterForm.submit();
+                });
             });
-        });
 
-        // AJAX Add to Cart
-        const toastEl = document.getElementById('cartToast');
-        const toast = new bootstrap.Toast(toastEl, { delay: 3500 });
+            const toastEl = document.getElementById('cartToast');
+            const toast = new bootstrap.Toast(toastEl, { delay: 3500 });
 
-        document.querySelectorAll(".btn-ajax-add-cart").forEach(btn => {
-            btn.addEventListener("click", async function () {
-                const productId = this.getAttribute("data-product-id");
-                const productName = this.getAttribute("data-product-name");
-                const originalHtml = this.innerHTML;
+            document.querySelectorAll(".btn-ajax-add-cart").forEach(btn => {
+                btn.addEventListener("click", async function () {
+                    const productId = this.getAttribute("data-product-id");
+                    const productName = this.getAttribute("data-product-name");
+                    const originalHtml = this.innerHTML;
 
-                this.disabled = true;
-                this.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+                    this.disabled = true;
+                    this.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
 
-                try {
-                    const response = await fetch('/Cart/AddToCart', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: new URLSearchParams({
-                            'productId': productId,
-                            'quantity': 1
-                        })
-                    });
+                    try {
+                        const response = await fetch('/Cart/AddToCart', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: new URLSearchParams({
+                                'productId': productId,
+                                'quantity': 1
+                            })
+                        });
 
-                    const data = await response.json();
-                    if (data.success) {
-                        document.getElementById("toastProductName").textContent = productName;
-                        toast.show();
+                        const data = await response.json();
+                        if (data.success) {
+                            document.getElementById("toastProductName").textContent = productName;
+                            toast.show();
 
-                        // Update global cart badge if present
-                        const badge = document.getElementById("navCartBadge");
-                        if (badge) {
-                            badge.textContent = data.totalCount;
-                            badge.classList.remove("hidden");
+                            const badge = document.getElementById("navCartBadge");
+                            if (badge) {
+                                badge.textContent = data.totalCount;
+                                badge.classList.remove("hidden");
+                            }
+
+                            const mobileBadge = document.getElementById("mobileCartBadge");
+                            if (mobileBadge) {
+                                mobileBadge.textContent = data.totalCount;
+                                mobileBadge.classList.remove("hidden");
+                            }
+                        } else {
+                            alert(data.message || '@Localizer["AddFailed"]');
                         }
-
-                        const mobileBadge = document.getElementById("mobileCartBadge");
-                        if (mobileBadge) {
-                            mobileBadge.textContent = data.totalCount;
-                            mobileBadge.classList.remove("hidden");
-                        }
-                    } else {
-                        alert(data.message || "Failed to add product to cart.");
+                    } catch (err) {
+                        alert('@Localizer["NetworkErrorRetry"]');
+                    } finally {
+                        this.disabled = false;
+                        this.innerHTML = originalHtml;
                     }
-                } catch (err) {
-                    alert("Network error. Please try again.");
-                } finally {
-                    this.disabled = false;
-                    this.innerHTML = originalHtml;
-                }
+                });
             });
         });
-    });
-</script>
+    </script>
 }

@@ -98,4 +98,121 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="PageTitle" xml:space="preserve">
+    <value>Confirm Membership Purchase</value>
+  </data>
+	<data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+	<data name="Memberships" xml:space="preserve">
+    <value>Memberships</value>
+  </data>
+	<data name="ConfirmPurchaseBreadcrumb" xml:space="preserve">
+    <value>Confirm Purchase</value>
+  </data>
+	<data name="CheckoutTitle" xml:space="preserve">
+    <value>Membership Checkout</value>
+  </data>
+	<data name="CheckoutSubtitle" xml:space="preserve">
+    <value>Enter your details to activate your SportLab club pass</value>
+  </data>
+	<data name="CustomerInfo" xml:space="preserve">
+    <value>1. Customer Information</value>
+  </data>
+	<data name="FullName" xml:space="preserve">
+    <value>Full Name</value>
+  </data>
+	<data name="FullNamePlaceholder" xml:space="preserve">
+    <value>Alexander Smith</value>
+  </data>
+	<data name="PhoneNumber" xml:space="preserve">
+    <value>Phone Number</value>
+  </data>
+	<data name="EmailLabel" xml:space="preserve">
+    <value>Email (for digital pass delivery)</value>
+  </data>
+	<data name="EmailPlaceholder" xml:space="preserve">
+    <value>client@example.com</value>
+  </data>
+	<data name="ActivationDetails" xml:space="preserve">
+    <value>2. Activation Details</value>
+  </data>
+	<data name="StartDate" xml:space="preserve">
+    <value>Start Date</value>
+  </data>
+	<data name="StartDateHint" xml:space="preserve">
+    <value>Choose today or any convenient start date.</value>
+  </data>
+	<data name="ValidityPeriod" xml:space="preserve">
+    <value>Validity Period</value>
+  </data>
+	<data name="DurationDays" xml:space="preserve">
+    <value>{0} days</value>
+  </data>
+	<data name="ValidUntilInline" xml:space="preserve">
+    <value>valid until</value>
+  </data>
+	<data name="PaymentMethodTitle" xml:space="preserve">
+    <value>3. Payment Method</value>
+  </data>
+	<data name="PaymentCard" xml:space="preserve">
+    <value>Credit / Debit Card</value>
+  </data>
+	<data name="PaymentApple" xml:space="preserve">
+    <value>Apple / Google Pay</value>
+  </data>
+	<data name="PaymentDesk" xml:space="preserve">
+    <value>At Club Reception</value>
+  </data>
+	<data name="AgreePrefix" xml:space="preserve">
+    <value>I agree to the</value>
+  </data>
+	<data name="AgreeLink" xml:space="preserve">
+    <value>SportLab rules &amp; terms</value>
+  </data>
+	<data name="AgreeSuffix" xml:space="preserve">
+    <value>and personal data processing policy.</value>
+  </data>
+	<data name="ConfirmPay" xml:space="preserve">
+    <value>Confirm Purchase &amp; Pay</value>
+  </data>
+	<data name="BackToPlans" xml:space="preserve">
+    <value>Back to Plans</value>
+  </data>
+	<data name="DurationLabel" xml:space="preserve">
+    <value>Duration:</value>
+  </data>
+	<data name="MembershipPrice" xml:space="preserve">
+    <value>Membership Price:</value>
+  </data>
+	<data name="TaxesFees" xml:space="preserve">
+    <value>Taxes &amp; Fees:</value>
+  </data>
+	<data name="TaxesIncluded" xml:space="preserve">
+    <value>0 ₴ (Included)</value>
+  </data>
+	<data name="IntroWorkout" xml:space="preserve">
+    <value>Introductory Workout:</value>
+  </data>
+	<data name="Complimentary" xml:space="preserve">
+    <value>Complimentary</value>
+  </data>
+	<data name="TotalToPay" xml:space="preserve">
+    <value>Total to Pay:</value>
+  </data>
+	<data name="IncludedServices" xml:space="preserve">
+    <value>Included Services &amp; Perks:</value>
+  </data>
+	<data name="ServiceFallback1" xml:space="preserve">
+    <value>Unlimited gym &amp; cardio access</value>
+  </data>
+	<data name="ServiceFallback2" xml:space="preserve">
+    <value>Modern locker rooms &amp; shower facilities</value>
+  </data>
+	<data name="SecurityGuarantee" xml:space="preserve">
+    <value>Security Guarantee</value>
+  </data>
+	<data name="SecurityGuaranteeText" xml:space="preserve">
+    <value>Instant digital membership card generation in your profile upon confirmation.</value>
+  </data>
 </root>

@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using SportLab.Data;
 using SportLab.Models;
 
@@ -11,10 +12,12 @@ namespace SportLab.Controllers
     public class ScheduleController : Controller
     {
         private readonly SportLabContext _context;
+        private readonly IStringLocalizer<ScheduleController> _localizer;
 
-        public ScheduleController(SportLabContext context)
+        public ScheduleController(SportLabContext context, IStringLocalizer<ScheduleController> localizer)
         {
             _context = context;
+            _localizer = localizer;
         }
 
         // PUBLIC SCHEDULE � returns current-week valid slots only
@@ -132,7 +135,7 @@ namespace SportLab.Controllers
         public async Task<IActionResult> BookJson([FromForm] int id)
         {
             if (id <= 0)
-                return BadRequest(new { success = false, message = "Invalid workout." });
+                return BadRequest(new { success = false, message = _localizer["InvalidWorkout"].Value });
 
             int userId = CurrentUserId();
 
@@ -145,7 +148,7 @@ namespace SportLab.Controllers
                 {
                     success = false,
                     requireSubscription = true,
-                    message = "You need an active membership to book a session. Please choose a plan."
+                    message = _localizer["NeedMembership"].Value
                 });
             }
             // -------------------------------
@@ -157,19 +160,19 @@ namespace SportLab.Controllers
                 .FirstOrDefaultAsync(w => w.Id == id);
 
             if (slot == null)
-                return NotFound(new { success = false, message = "Workout not found." });
+                return NotFound(new { success = false, message = _localizer["WorkoutNotFound"].Value });
 
             if (slot.Status == "Cancelled" || slot.Status == "Completed")
-                return BadRequest(new { success = false, message = "This workout is no longer available." });
+                return BadRequest(new { success = false, message = _localizer["NoLongerAvailable"].Value });
 
             if (slot.StartTime <= DateTime.Now)
-                return BadRequest(new { success = false, message = "This workout has already started or finished." });
+                return BadRequest(new { success = false, message = _localizer["AlreadyStartedFinished"].Value });
 
             if (slot.TrainerId == userId)
-                return BadRequest(new { success = false, message = "You cannot book your own workout." });
+                return BadRequest(new { success = false, message = _localizer["CannotBookOwn"].Value });
 
             if (slot.Bookings.Any(b => b.UserId == userId))
-                return BadRequest(new { success = false, message = "You have already booked this workout." });
+                return BadRequest(new { success = false, message = _localizer["AlreadyBooked"].Value });
 
             int current = slot.Bookings.Count;
 
@@ -179,7 +182,7 @@ namespace SportLab.Controllers
                 slot.Status = "Booked";
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
-                return BadRequest(new { success = false, message = "This workout is fully booked." });
+                return BadRequest(new { success = false, message = _localizer["FullyBooked"].Value });
             }
 
             _context.WorkoutBookings.Add(new WorkoutBooking
@@ -199,7 +202,7 @@ namespace SportLab.Controllers
             return Json(new
             {
                 success = true,
-                message = "Workout booked successfully!",
+                message = _localizer["BookedSuccess"].Value,
                 booked = slot.Booked,
                 status = slot.Status,
                 capacity = slot.Capacity
@@ -213,7 +216,7 @@ namespace SportLab.Controllers
         public async Task<IActionResult> CancelBookingJson([FromForm] int id)
         {
             if (id <= 0)
-                return BadRequest(new { success = false, message = "Invalid booking." });
+                return BadRequest(new { success = false, message = _localizer["InvalidBooking"].Value });
 
             int userId = CurrentUserId();
 
@@ -227,15 +230,15 @@ namespace SportLab.Controllers
                     b.UserId == userId);
 
             if (booking == null)
-                return NotFound(new { success = false, message = "Booking not found." });
+                return NotFound(new { success = false, message = _localizer["BookingNotFound"].Value });
 
             var slot = booking.WorkoutSlot!;
 
             if (slot.StartTime <= DateTime.Now)
-                return BadRequest(new { success = false, message = "Cannot cancel a workout that has already started." });
+                return BadRequest(new { success = false, message = _localizer["CannotCancelStarted"].Value });
 
             if (slot.Status == "Cancelled" || slot.Status == "Completed")
-                return BadRequest(new { success = false, message = "This workout is no longer available." });
+                return BadRequest(new { success = false, message = _localizer["NoLongerAvailable"].Value });
 
             _context.WorkoutBookings.Remove(booking);
 
@@ -249,7 +252,7 @@ namespace SportLab.Controllers
             return Json(new
             {
                 success = true,
-                message = "Your booking has been cancelled.",
+                message = _localizer["BookingCancelled"].Value,
                 booked = slot.Booked,
                 status = slot.Status,
                 capacity = slot.Capacity

@@ -98,4 +98,58 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="InvalidRequestData" xml:space="preserve">
+    <value>Invalid request data.</value>
+  </data>
+	<data name="InvalidPayload" xml:space="preserve">
+    <value>Invalid request payload.</value>
+  </data>
+	<data name="PlanNotFound" xml:space="preserve">
+    <value>Selected membership plan was not found.</value>
+  </data>
+	<data name="SignInRequired" xml:space="preserve">
+    <value>Please sign in to purchase a membership.</value>
+  </data>
+	<data name="EmailFromName" xml:space="preserve">
+    <value>SportHub Fitness Club</value>
+  </data>
+	<data name="EmailSubject" xml:space="preserve">
+    <value>Thank you for choosing {0}! 🏋️‍♂</value>
+  </data>
+	<data name="EmailWelcomeTitle" xml:space="preserve">
+    <value>Welcome to SportHub!</value>
+  </data>
+	<data name="EmailWelcomeSubtitle" xml:space="preserve">
+    <value>Your fitness journey starts here</value>
+  </data>
+	<data name="EmailHello" xml:space="preserve">
+    <value>Hello, {0}!</value>
+  </data>
+	<data name="EmailIntro" xml:space="preserve">
+    <value>Thank you for purchasing our membership plan. We are thrilled to welcome you to our community! Below are the details of your active pass:</value>
+  </data>
+	<data name="EmailPlan" xml:space="preserve">
+    <value>Plan:</value>
+  </data>
+	<data name="EmailDuration" xml:space="preserve">
+    <value>Duration:</value>
+  </data>
+	<data name="EmailDurationValue" xml:space="preserve">
+    <value>{0} days</value>
+  </data>
+	<data name="EmailValidity" xml:space="preserve">
+    <value>Validity:</value>
+  </data>
+	<data name="EmailTotalPaid" xml:space="preserve">
+    <value>Total Paid:</value>
+  </data>
+	<data name="EmailProfileNote" xml:space="preserve">
+    <value>You can check your digital membership pass anytime by logging into your profile on our website.</value>
+  </data>
+	<data name="EmailRights" xml:space="preserve">
+    <value>© {0} SportHub Fitness Club. All rights reserved.</value>
+  </data>
+	<data name="SuccessMessage" xml:space="preserve">
+    <value>Membership successfully activated! A confirmation email has been sent.</value>
+  </data>
 </root>

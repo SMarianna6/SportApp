@@ -98,4 +98,88 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="StoreSuffix" xml:space="preserve">
+    <value>SportLab Store</value>
+  </data>
+	<data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+	<data name="Shop" xml:space="preserve">
+    <value>Shop</value>
+  </data>
+	<data name="AuthenticQuality" xml:space="preserve">
+    <value>Authentic Quality</value>
+  </data>
+	<data name="FastDelivery" xml:space="preserve">
+    <value>Fast Delivery</value>
+  </data>
+	<data name="EasyReturns" xml:space="preserve">
+    <value>Easy Returns</value>
+  </data>
+	<data name="VerifiedReviews" xml:space="preserve">
+    <value>Verified Reviews</value>
+  </data>
+	<data name="OutOfStock" xml:space="preserve">
+    <value>Out of Stock</value>
+  </data>
+	<data name="OnlyLeft" xml:space="preserve">
+    <value>Only {0} left</value>
+  </data>
+	<data name="InStockCount" xml:space="preserve">
+    <value>{0} in stock</value>
+  </data>
+	<data name="ProductDescriptionTitle" xml:space="preserve">
+    <value>Product Description</value>
+  </data>
+	<data name="KeyHighlightsTitle" xml:space="preserve">
+    <value>Key Highlights</value>
+  </data>
+	<data name="Highlight1" xml:space="preserve">
+    <value>Premium quality materials</value>
+  </data>
+	<data name="Highlight2" xml:space="preserve">
+    <value>Ideal for daily training</value>
+  </data>
+	<data name="Highlight3" xml:space="preserve">
+    <value>Official SportLab product</value>
+  </data>
+	<data name="AddToCart" xml:space="preserve">
+    <value>Add to Cart</value>
+  </data>
+	<data name="BuyNow" xml:space="preserve">
+    <value>Buy Now</value>
+  </data>
+	<data name="OutOfStockAlert" xml:space="preserve">
+    <value>This product is currently out of stock. Check back soon!</value>
+  </data>
+	<data name="YouMayAlsoLike" xml:space="preserve">
+    <value>You May Also Like</value>
+  </data>
+	<data name="ViewBtn" xml:space="preserve">
+    <value>View</value>
+  </data>
+	<data name="AddedToCart" xml:space="preserve">
+    <value>added to cart!</value>
+  </data>
+	<data name="ViewCartBtn" xml:space="preserve">
+    <value>View Cart</value>
+  </data>
+	<data name="AddingText" xml:space="preserve">
+    <value>Adding...</value>
+  </data>
+	<data name="RedirectingText" xml:space="preserve">
+    <value>Redirecting...</value>
+  </data>
+	<data name="CouldNotAdd" xml:space="preserve">
+    <value>Could not add to cart</value>
+  </data>
+	<data name="NetworkError" xml:space="preserve">
+    <value>Network error.</value>
+  </data>
+	<data name="CheckoutFailed" xml:space="preserve">
+    <value>Failed to proceed to checkout</value>
+  </data>
+	<data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
 </root>

@@ -98,4 +98,91 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="PageTitle" xml:space="preserve">
+    <value>Shopping Cart - SportLab</value>
+  </data>
+	<data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+	<data name="Shop" xml:space="preserve">
+    <value>Shop</value>
+  </data>
+	<data name="ShoppingCart" xml:space="preserve">
+    <value>Shopping Cart</value>
+  </data>
+	<data name="YourCart" xml:space="preserve">
+    <value>Your Shopping Cart</value>
+  </data>
+	<data name="ItemsLabel" xml:space="preserve">
+    <value>items</value>
+  </data>
+	<data name="EmptyCartTitle" xml:space="preserve">
+    <value>Your cart is currently empty</value>
+  </data>
+	<data name="EmptyCartText" xml:space="preserve">
+    <value>Looks like you haven't added any fitness gear or nutrition yet.</value>
+  </data>
+	<data name="StartShopping" xml:space="preserve">
+    <value>Start Shopping</value>
+  </data>
+	<data name="Product" xml:space="preserve">
+    <value>Product</value>
+  </data>
+	<data name="Price" xml:space="preserve">
+    <value>Price</value>
+  </data>
+	<data name="Quantity" xml:space="preserve">
+    <value>Quantity</value>
+  </data>
+	<data name="Subtotal" xml:space="preserve">
+    <value>Subtotal</value>
+  </data>
+	<data name="Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+	<data name="ContinueShopping" xml:space="preserve">
+    <value>Continue Shopping</value>
+  </data>
+	<data name="ClearCartConfirm" xml:space="preserve">
+    <value>Clear all items from your cart?</value>
+  </data>
+	<data name="ClearCart" xml:space="preserve">
+    <value>Clear Cart</value>
+  </data>
+	<data name="OrderSummary" xml:space="preserve">
+    <value>Order Summary</value>
+  </data>
+	<data name="ItemsSubtotal" xml:space="preserve">
+    <value>Items Subtotal:</value>
+  </data>
+	<data name="Shipping" xml:space="preserve">
+    <value>Shipping:</value>
+  </data>
+	<data name="FreePickup" xml:space="preserve">
+    <value>Free (Pickup)</value>
+  </data>
+	<data name="PromoPlaceholder" xml:space="preserve">
+    <value>Promo code (e.g. SPORT10)</value>
+  </data>
+	<data name="Apply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+	<data name="PromoApplied" xml:space="preserve">
+    <value>10% discount applied!</value>
+  </data>
+	<data name="Total" xml:space="preserve">
+    <value>Total:</value>
+  </data>
+	<data name="ProceedToCheckout" xml:space="preserve">
+    <value>Proceed to Checkout</value>
+  </data>
+	<data name="SecurePayments" xml:space="preserve">
+    <value>100% Encrypted and Safe Payments</value>
+  </data>
+	<data name="InvalidPromo" xml:space="preserve">
+    <value>Invalid promo code. Try SPORT10 for 10% off.</value>
+  </data>
+	<data name="NetworkError" xml:space="preserve">
+    <value>Network error.</value>
+  </data>
 </root>

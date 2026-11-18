@@ -98,4 +98,94 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="ShopTitle" xml:space="preserve">
+    <value>SportLab Store</value>
+  </data>
+	<data name="PromoCode" xml:space="preserve">
+    <value>Promo Code:</value>
+  </data>
+	<data name="PromoDiscount" xml:space="preserve">
+    <value>for 10% OFF</value>
+  </data>
+	<data name="ShopHeroTitle" xml:space="preserve">
+    <value>SportLab Fitness Shop</value>
+  </data>
+	<data name="ShopHeroText" xml:space="preserve">
+    <value>Official athletic store: sports nutrition, professional workout gear, recovery accessories, and club apparel.</value>
+  </data>
+	<data name="ViewCartBtn" xml:space="preserve">
+    <value>View Cart</value>
+  </data>
+	<data name="FilterAll" xml:space="preserve">
+    <value>All</value>
+  </data>
+	<data name="FilterNutrition" xml:space="preserve">
+    <value>Nutrition</value>
+  </data>
+	<data name="FilterAccessories" xml:space="preserve">
+    <value>Accessories</value>
+  </data>
+	<data name="FilterApparel" xml:space="preserve">
+    <value>Apparel</value>
+  </data>
+	<data name="FilterEquipment" xml:space="preserve">
+    <value>Equipment</value>
+  </data>
+	<data name="SearchPlaceholder" xml:space="preserve">
+    <value>Search products...</value>
+  </data>
+	<data name="SortLabel" xml:space="preserve">
+    <value>Sort:</value>
+  </data>
+	<data name="SortDefault" xml:space="preserve">
+    <value>Popular / Newest</value>
+  </data>
+	<data name="SortPriceAsc" xml:space="preserve">
+    <value>Price: Low to High</value>
+  </data>
+	<data name="SortPriceDesc" xml:space="preserve">
+    <value>Price: High to Low</value>
+  </data>
+	<data name="SortName" xml:space="preserve">
+    <value>Name: A to Z</value>
+  </data>
+	<data name="SortStock" xml:space="preserve">
+    <value>In Stock First</value>
+  </data>
+	<data name="NoProductsTitle" xml:space="preserve">
+    <value>No products found</value>
+  </data>
+	<data name="NoProductsText" xml:space="preserve">
+    <value>Try changing the filters or search query.</value>
+  </data>
+	<data name="ShowAllProducts" xml:space="preserve">
+    <value>Show All Products</value>
+  </data>
+	<data name="OutOfStock" xml:space="preserve">
+    <value>Out of Stock</value>
+  </data>
+	<data name="OnlyLeft" xml:space="preserve">
+    <value>Only {0} left</value>
+  </data>
+	<data name="InStock" xml:space="preserve">
+    <value>In Stock</value>
+  </data>
+	<data name="ViewDetailsTitle" xml:space="preserve">
+    <value>View details</value>
+  </data>
+	<data name="AddBtn" xml:space="preserve">
+    <value>Add</value>
+  </data>
+	<data name="AddedToCart" xml:space="preserve">
+    <value>added to cart!</value>
+  </data>
+	<data name="AddFailed" xml:space="preserve">
+    <value>Failed to add product to cart.</value>
+  </data>
+	<data name="NetworkErrorRetry" xml:space="preserve">
+    <value>Network error. Please try again.</value>
+  </data>
+	<data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
 </root>

@@ -98,4 +98,58 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="PageTitle" xml:space="preserve">
+    <value>Абонемент успішно активовано!</value>
+  </data>
+	<data name="Title" xml:space="preserve">
+    <value>Абонемент успішно активовано!</value>
+  </data>
+	<data name="ThanksPrefix" xml:space="preserve">
+    <value>Дякуємо за вибір</value>
+  </data>
+	<data name="ThanksSuffix" xml:space="preserve">
+    <value>. Ваша клубна перепустка вже активна та готова до використання.</value>
+  </data>
+	<data name="MemberPassId" xml:space="preserve">
+    <value>Перепустка учасника №{0}</value>
+  </data>
+	<data name="PassFallback" xml:space="preserve">
+    <value>Перепустка SportLab</value>
+  </data>
+	<data name="StatusActive" xml:space="preserve">
+    <value>Статус: АКТИВНА</value>
+  </data>
+	<data name="PassHolder" xml:space="preserve">
+    <value>Власник перепустки:</value>
+  </data>
+	<data name="ValidityPeriod" xml:space="preserve">
+    <value>Термін дії:</value>
+  </data>
+	<data name="ClientFallback" xml:space="preserve">
+    <value>Клієнт SportLab</value>
+  </data>
+	<data name="SportPassId" xml:space="preserve">
+    <value>ID SportPass</value>
+  </data>
+	<data name="NextSteps" xml:space="preserve">
+    <value>Наступні кроки:</value>
+  </data>
+	<data name="NextStep1" xml:space="preserve">
+    <value>Покажіть цифрову QR-перепустку адміністратору рецепції під час першого візиту.</value>
+  </data>
+	<data name="NextStep2" xml:space="preserve">
+    <value>Запишіться на безкоштовне вступне тренування в розкладі.</value>
+  </data>
+	<data name="NextStep3" xml:space="preserve">
+    <value>Переглядайте та бронюйте місця на заняттях онлайн у будь-який час.</value>
+  </data>
+	<data name="WorkoutSchedule" xml:space="preserve">
+    <value>Розклад тренувань</value>
+  </data>
+	<data name="UserProfile" xml:space="preserve">
+    <value>Профіль користувача</value>
+  </data>
+	<data name="BrowsePlans" xml:space="preserve">
+    <value>Переглянути плани</value>
+  </data>
 </root>

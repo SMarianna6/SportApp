@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using SportLab.Data;
 using SportLab.Models;
 
@@ -10,10 +11,12 @@ namespace SportLab.Controllers
     {
         private const string CartSessionKey = "SportLab_Cart_Items";
         private readonly SportLabContext _context;
+        private readonly IStringLocalizer<CartController> _localizer;
 
-        public CartController(SportLabContext context)
+        public CartController(SportLabContext context, IStringLocalizer<CartController> localizer)
         {
             _context = context;
+            _localizer = localizer;
         }
 
         public IActionResult Index()
@@ -27,13 +30,13 @@ namespace SportLab.Controllers
         {
             if (productId <= 0 || quantity <= 0)
             {
-                return Json(new { success = false, message = "Invalid product selection." });
+                return Json(new { success = false, message = _localizer["InvalidSelection"].Value });
             }
 
             var product = _context.Products.Find(productId);
             if (product == null)
             {
-                return Json(new { success = false, message = "Product not found." });
+                return Json(new { success = false, message = _localizer["ProductNotFound"].Value });
             }
 
             var cart = GetCart();
@@ -53,7 +56,7 @@ namespace SportLab.Controllers
                 var qty = Math.Min(quantity, product.StockQuantity);
                 if (qty <= 0)
                 {
-                    return Json(new { success = false, message = "Product is currently out of stock." });
+                    return Json(new { success = false, message = _localizer["OutOfStock"].Value });
                 }
 
                 cart.Add(new CartItem
@@ -73,7 +76,7 @@ namespace SportLab.Controllers
             return Json(new
             {
                 success = true,
-                message = "Item added to cart.",
+                message = _localizer["ItemAdded"].Value,
                 totalCount = cart.Sum(i => i.Quantity),
                 totalAmount = cart.Sum(i => i.Subtotal)
             });
@@ -87,7 +90,7 @@ namespace SportLab.Controllers
 
             if (item == null)
             {
-                return Json(new { success = false, message = "Item not found in cart." });
+                return Json(new { success = false, message = _localizer["ItemNotFound"].Value });
             }
 
             var product = _context.Products.Find(productId);
@@ -203,7 +206,7 @@ namespace SportLab.Controllers
             {
                 user = new User
                 {
-                    Name = string.IsNullOrWhiteSpace(model.FullName) ? "SportLab Client" : model.FullName.Trim(),
+                    Name = string.IsNullOrWhiteSpace(model.FullName) ? _localizer["DefaultClientName"].Value : model.FullName.Trim(),
                     Email = string.IsNullOrWhiteSpace(model.Email) ? $"guest_{Guid.NewGuid().ToString()[..8]}@sportlab.ua" : model.Email.Trim(),
                     Password = "UserPass123!",
                     Role = "Client",
@@ -247,11 +250,11 @@ namespace SportLab.Controllers
             try
             {
                 var emailMessage = new MimeKit.MimeMessage();
-                emailMessage.From.Add(new MimeKit.MailboxAddress("SportLab Store", "sporthubproject01@gmail.com"));
+                emailMessage.From.Add(new MimeKit.MailboxAddress(_localizer["EmailFromName"].Value, "sporthubproject01@gmail.com"));
 
                 emailMessage.To.Add(new MimeKit.MailboxAddress(model.FullName, model.Email));
 
-                emailMessage.Subject = "Your SportLab Order Confirmation 🎉";
+                emailMessage.Subject = _localizer["EmailSubject"].Value;
 
                 var itemsHtml = new System.Text.StringBuilder();
                 foreach (var item in cart)
@@ -267,7 +270,7 @@ namespace SportLab.Controllers
                             </td>
                             <td style='padding: 12px; border-bottom: 1px solid #eee;'>
                                 <strong style='color: #333;'>{item.ProductName}</strong><br/>
-                                <span style='color: #777; font-size: 13px;'>Qty: {item.Quantity}</span>
+                                <span style='color: #777; font-size: 13px;'>{_localizer["EmailQty", item.Quantity]}</span>
                             </td>
                             <td style='padding: 12px; border-bottom: 1px solid #eee; text-align: right; font-weight: bold; color: #111;'>
                                 {item.Subtotal:N2} ₴
@@ -283,43 +286,43 @@ namespace SportLab.Controllers
                             <!-- Header -->
                             <div style='background-color: #0d6efd; padding: 25px; text-align: center; color: #ffffff;'>
                                 <h1 style='margin: 0; font-size: 24px; font-weight: bold; letter-spacing: 1px;'>SPORTHUB</h1>
-                                <p style='margin: 5px 0 0 0; font-size: 14px; opacity: 0.9;'>Order Confirmation</p>
+                                <p style='margin: 5px 0 0 0; font-size: 14px; opacity: 0.9;'>{_localizer["EmailHeaderSubtitle"]}</p>
                             </div>
 
                             <!-- Body Content -->
                             <div style='padding: 30px;'>
-                                <h2 style='color: #2c3e50; font-size: 20px; margin-top: 0;'>Hi {model.FullName},</h2>
+                                <h2 style='color: #2c3e50; font-size: 20px; margin-top: 0;'>{_localizer["EmailHi", model.FullName]}</h2>
                                 <p style='color: #555; line-height: 1.6; font-size: 15px;'>
-                                    Thank you for your purchase! Your order has been successfully placed and is now being processed.
+                                    {_localizer["EmailThanks"]}
                                 </p>
 
                                 <!-- Order Summary Table -->
-                                <h3 style='color: #333; font-size: 16px; border-bottom: 2px solid #0d6efd; padding-bottom: 8px; margin-top: 25px;'>Order Summary</h3>
+                                <h3 style='color: #333; font-size: 16px; border-bottom: 2px solid #0d6efd; padding-bottom: 8px; margin-top: 25px;'>{_localizer["EmailOrderSummary"]}</h3>
                                 <table style='width: 100%; border-collapse: collapse; margin-top: 10px;'>
                                     {itemsHtml}
                                 </table>
 
                                 <!-- Total Amount -->
                                 <div style='text-align: right; padding-top: 15px; font-size: 18px;'>
-                                    <span style='color: #555;'>Total Amount: </span>
+                                    <span style='color: #555;'>{_localizer["EmailTotalAmount"]} </span>
                                     <strong style='color: #0d6efd; font-size: 22px;'>{order.TotalAmount:N2} ₴</strong>
                                 </div>
 
                                 <!-- Details Box -->
                                 <div style='background-color: #f8f9fa; border-radius: 8px; padding: 15px; margin-top: 25px; font-size: 14px; color: #555;'>
-                                    <p style='margin: 3px 0;'><strong>Payment Method:</strong> {model.PaymentMethod.ToUpper()}</p>
-                                    <p style='margin: 3px 0;'><strong>Delivery Option:</strong> {model.DeliveryMethod}</p>
-                                    {(string.IsNullOrWhiteSpace(model.Address) ? "" : $"<p style='margin: 3px 0;'><strong>Delivery Address:</strong> {model.Address}</p>")}
+                                    <p style='margin: 3px 0;'><strong>{_localizer["EmailPaymentMethod"]}</strong> {model.PaymentMethod.ToUpper()}</p>
+                                    <p style='margin: 3px 0;'><strong>{_localizer["EmailDeliveryOption"]}</strong> {model.DeliveryMethod}</p>
+                                    {(string.IsNullOrWhiteSpace(model.Address) ? "" : $"<p style='margin: 3px 0;'><strong>{_localizer["EmailDeliveryAddress"]}</strong> {model.Address}</p>")}
                                 </div>
 
                                 <p style='color: #777; font-size: 13px; margin-top: 30px; text-align: center;'>
-                                    We will contact you shortly to confirm your delivery details.
+                                    {_localizer["EmailContactSoon"]}
                                 </p>
                             </div>
 
                             <!-- Footer -->
                             <div style='background-color: #f1f3f5; padding: 15px; text-align: center; color: #888; font-size: 12px;'>
-                                © {DateTime.Now.Year} SportLab Store. All rights reserved.
+                                {_localizer["EmailRights", DateTime.Now.Year]}
                             </div>
                         </div>
                     </div>";
@@ -344,7 +347,7 @@ namespace SportLab.Controllers
             TempData["CustomerName"] = model.FullName;
             TempData["CustomerPhone"] = model.Phone;
             TempData["DeliveryMethod"] = model.DeliveryMethod;
-            TempData["DeliveryAddress"] = model.Address ?? "SportLab Reception Desk (Pickup)";
+            TempData["DeliveryAddress"] = model.Address ?? _localizer["DefaultDeliveryAddress"].Value;
             TempData["PaymentMethod"] = model.PaymentMethod;
 
             return RedirectToAction(nameof(OrderSuccess), new { id = order.Id });
@@ -354,7 +357,7 @@ namespace SportLab.Controllers
             TempData["CustomerName"] = model.FullName;
             TempData["CustomerPhone"] = model.Phone;
             TempData["DeliveryMethod"] = model.DeliveryMethod;
-            TempData["DeliveryAddress"] = model.Address ?? "SportLab Reception Desk (Pickup)";
+            TempData["DeliveryAddress"] = model.Address ?? _localizer["DefaultDeliveryAddress"].Value;
             TempData["PaymentMethod"] = model.PaymentMethod;
 
             return RedirectToAction(nameof(OrderSuccess), new { id = order.Id });
@@ -373,11 +376,11 @@ namespace SportLab.Controllers
                 return RedirectToAction("Index", "Shop");
             }
 
-            ViewBag.CustomerName = TempData["CustomerName"] as string ?? order.User?.Name ?? "SportLab Customer";
+            ViewBag.CustomerName = TempData["CustomerName"] as string ?? order.User?.Name ?? _localizer["CustomerFallback"].Value;
             ViewBag.CustomerPhone = TempData["CustomerPhone"] as string ?? "+380 (97) 123-45-67";
-            ViewBag.DeliveryMethod = TempData["DeliveryMethod"] as string ?? "Pickup at SportLab Front Desk";
-            ViewBag.DeliveryAddress = TempData["DeliveryAddress"] as string ?? "SportLab Gym Central Reception";
-            ViewBag.PaymentMethod = TempData["PaymentMethod"] as string ?? "Card";
+            ViewBag.DeliveryMethod = TempData["DeliveryMethod"] as string ?? _localizer["DeliveryMethodFallback"].Value;
+            ViewBag.DeliveryAddress = TempData["DeliveryAddress"] as string ?? _localizer["DeliveryAddressFallback"].Value;
+            ViewBag.PaymentMethod = TempData["PaymentMethod"] as string ?? _localizer["PaymentMethodFallback"].Value;
 
             return View(order);
         }

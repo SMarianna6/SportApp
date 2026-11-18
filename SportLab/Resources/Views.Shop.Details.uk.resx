@@ -98,4 +98,88 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="StoreSuffix" xml:space="preserve">
+    <value>Магазин SportLab</value>
+  </data>
+	<data name="Home" xml:space="preserve">
+    <value>Головна</value>
+  </data>
+	<data name="Shop" xml:space="preserve">
+    <value>Магазин</value>
+  </data>
+	<data name="AuthenticQuality" xml:space="preserve">
+    <value>Оригінальна якість</value>
+  </data>
+	<data name="FastDelivery" xml:space="preserve">
+    <value>Швидка доставка</value>
+  </data>
+	<data name="EasyReturns" xml:space="preserve">
+    <value>Легке повернення</value>
+  </data>
+	<data name="VerifiedReviews" xml:space="preserve">
+    <value>Перевірені відгуки</value>
+  </data>
+	<data name="OutOfStock" xml:space="preserve">
+    <value>Немає в наявності</value>
+  </data>
+	<data name="OnlyLeft" xml:space="preserve">
+    <value>Залишилось: {0}</value>
+  </data>
+	<data name="InStockCount" xml:space="preserve">
+    <value>В наявності: {0}</value>
+  </data>
+	<data name="ProductDescriptionTitle" xml:space="preserve">
+    <value>Опис товару</value>
+  </data>
+	<data name="KeyHighlightsTitle" xml:space="preserve">
+    <value>Ключові особливості</value>
+  </data>
+	<data name="Highlight1" xml:space="preserve">
+    <value>Матеріали преміальної якості</value>
+  </data>
+	<data name="Highlight2" xml:space="preserve">
+    <value>Ідеально для щоденних тренувань</value>
+  </data>
+	<data name="Highlight3" xml:space="preserve">
+    <value>Офіційний продукт SportLab</value>
+  </data>
+	<data name="AddToCart" xml:space="preserve">
+    <value>Додати до кошика</value>
+  </data>
+	<data name="BuyNow" xml:space="preserve">
+    <value>Купити зараз</value>
+  </data>
+	<data name="OutOfStockAlert" xml:space="preserve">
+    <value>Цей товар наразі відсутній. Завітайте пізніше!</value>
+  </data>
+	<data name="YouMayAlsoLike" xml:space="preserve">
+    <value>Вам також може сподобатися</value>
+  </data>
+	<data name="ViewBtn" xml:space="preserve">
+    <value>Переглянути</value>
+  </data>
+	<data name="AddedToCart" xml:space="preserve">
+    <value>додано до кошика!</value>
+  </data>
+	<data name="ViewCartBtn" xml:space="preserve">
+    <value>Кошик</value>
+  </data>
+	<data name="AddingText" xml:space="preserve">
+    <value>Додавання...</value>
+  </data>
+	<data name="RedirectingText" xml:space="preserve">
+    <value>Перенаправлення...</value>
+  </data>
+	<data name="CouldNotAdd" xml:space="preserve">
+    <value>Не вдалося додати до кошика</value>
+  </data>
+	<data name="NetworkError" xml:space="preserve">
+    <value>Помилка мережі.</value>
+  </data>
+	<data name="CheckoutFailed" xml:space="preserve">
+    <value>Не вдалося перейти до оформлення</value>
+  </data>
+	<data name="Close" xml:space="preserve">
+    <value>Закрити</value>
+  </data>
 </root>
