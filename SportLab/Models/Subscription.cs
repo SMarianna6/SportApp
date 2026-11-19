@@ -8,14 +8,14 @@ namespace SportLab.Models
         public int Id { get; set; }
 
         [Required]
-        [Display(Name = "User")]
+        [Display(Name = "Field.User")]
         public int UserId { get; set; }
 
         [ForeignKey(nameof(UserId))]
         public User? User { get; set; }
 
         [Required]
-        [Display(Name = "Tariff")]
+        [Display(Name = "Field.Tariff")]
         public int PlanId { get; set; }
 
         [ForeignKey(nameof(PlanId))]
@@ -36,18 +36,18 @@ namespace SportLab.Models
         }
 
         [Required]
-        [Display(Name = "Start Date")]
+        [Display(Name = "Field.StartDate")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime StartDate { get; set; } = DateTime.Today;
 
         [Required]
-        [Display(Name = "End Date")]
+        [Display(Name = "Field.EndDate")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime EndDate { get; set; } = DateTime.Today.AddDays(30);
 
-        [Display(Name = "Is Active")]
+        [Display(Name = "Field.IsActive")]
         public bool IsActive { get; set; } = true;
     }
 }

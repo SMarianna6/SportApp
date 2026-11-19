@@ -107,17 +107,20 @@ namespace SportLab.Controllers
                 .Select(p => new { id = p.Id, name = p.Name, subtitle = p.Price + " ₴", url = $"/Admin/Tariffs?openTariff={p.Id}" })
                 .ToListAsync();
 
+            var faqLabel = _localizer["FaqLabel"].Value;
+            var reviewByPrefix = _localizer["ReviewByPrefix"].Value;
+
             var faqs = await _context.FAQs
                 .Where(f => f.Question.Contains(q))
                 .Take(3)
-                .Select(f => new { id = f.Id, name = f.Question, subtitle = "FAQ", url = $"/Admin/FAQ?openFAQ={f.Id}" })
+                .Select(f => new { id = f.Id, name = f.Question, subtitle = faqLabel, url = $"/Admin/FAQ?openFAQ={f.Id}" })
                 .ToListAsync();
 
             var reviews = await _context.Reviews
                 .Include(r => r.User)
                 .Where(r => r.Comment.Contains(q))
                 .Take(3)
-                .Select(r => new { id = r.Id, name = $"Review by {r.User.Name}", subtitle = r.Comment, url = $"/Admin/Moderation?openReview={r.Id}" })
+                .Select(r => new { id = r.Id, name = reviewByPrefix + r.User.Name, subtitle = r.Comment, url = $"/Admin/Moderation?openReview={r.Id}" })
                 .ToListAsync();
 
             return Json(new { users, products, tariffs, faqs, reviews });
@@ -126,6 +129,9 @@ namespace SportLab.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUsersList()
         {
+            var staffLabel = _localizer["Staff"].Value;
+            var noPlanLabel = _localizer["NoPlan"].Value;
+
             var users = await _context.Users
                 .Include(u => u.Subscriptions)
                 .ThenInclude(s => s.Plan)
@@ -141,7 +147,7 @@ namespace SportLab.Controllers
                     .Where(s => s.Plan != null)
                     .Select(s => s.Plan!.Name)
                     .FirstOrDefault()
-                    ?? (u.Role == "Trainer" || u.Role == "Staff" ? "Staff" : "No Plan")
+                    ?? (u.Role == "Trainer" || u.Role == "Staff" ? staffLabel : noPlanLabel)
                 })
                 .ToListAsync();
 
@@ -746,8 +752,17 @@ namespace SportLab.Controllers
             var recentOrders = await _context.Orders
                 .OrderByDescending(o => o.OrderDate)
                 .Take(2)
-                .Select(o => new { Text = $"New order #{o.Id} placed (₴{o.TotalAmount})", Date = o.OrderDate })
+                .Select(o => new { o.Id, o.TotalAmount, o.OrderDate })
                 .ToListAsync();
+
+            foreach (var o in recentOrders)
+            {
+                events.Add(new
+                {
+                    Text = _localizer["ActivityNewOrder", o.Id, o.TotalAmount].Value,
+                    Date = o.OrderDate
+                });
+            }
 
             var recentSubscriptions = await _context.Subscriptions
                 .Include(s => s.User)
@@ -755,28 +770,50 @@ namespace SportLab.Controllers
                 .Where(s => s.Plan != null && s.User != null)
                 .OrderByDescending(s => s.StartDate)
                 .Take(2)
-                .Select(s => new { Text = $"{s.User.Name} bought {s.Plan.Name} membership", Date = s.StartDate })
+                .Select(s => new { UserName = s.User!.Name, PlanName = s.Plan!.Name, s.StartDate })
                 .ToListAsync();
+
+            foreach (var s in recentSubscriptions)
+            {
+                events.Add(new
+                {
+                    Text = _localizer["ActivitySubscription", s.UserName, s.PlanName].Value,
+                    Date = s.StartDate
+                });
+            }
 
             var recentUsers = await _context.Users
                 .Where(u => u.Role == Roles.Client)
                 .OrderByDescending(u => u.Id)
                 .Take(2)
-                .Select(u => new { Text = $"New member registered: {u.Name}", Date = DateTime.Now.AddHours(-2) })
+                .Select(u => new { u.Name })
                 .ToListAsync();
+
+            foreach (var u in recentUsers)
+            {
+                events.Add(new
+                {
+                    Text = _localizer["ActivityNewUser", u.Name].Value,
+                    Date = DateTime.Now.AddHours(-2)
+                });
+            }
 
             var recentBookings = await _context.WorkoutBookings
                 .Include(b => b.User)
                 .Include(b => b.WorkoutSlot)
                 .OrderByDescending(b => b.BookingDate)
                 .Take(1)
-                .Select(b => new { Text = $"{b.User.Name} booked {b.WorkoutSlot.ActivityName}", Date = b.BookingDate })
+                .Select(b => new { UserName = b.User!.Name, ActivityName = b.WorkoutSlot!.ActivityName, b.BookingDate })
                 .ToListAsync();
 
-            events.AddRange(recentBookings);
-            events.AddRange(recentSubscriptions);
-            events.AddRange(recentOrders);
-            events.AddRange(recentUsers);
+            foreach (var b in recentBookings)
+            {
+                events.Add(new
+                {
+                    Text = _localizer["ActivityNewBooking", b.UserName, b.ActivityName].Value,
+                    Date = b.BookingDate
+                });
+            }
 
             var sortedEvents = events
                 .OrderByDescending(e => ((dynamic)e).Date)
@@ -793,14 +830,18 @@ namespace SportLab.Controllers
         private string FormatTimeAgo(DateTime date)
         {
             var span = DateTime.Now - date;
-            if (span.TotalMinutes < 60) return $"{(int)span.TotalMinutes} min ago";
-            if (span.TotalHours < 24) return $"{(int)span.TotalHours} h ago";
-            return $"{(int)span.TotalDays} days ago";
+            if (span.TotalMinutes < 60) return _localizer["TimeMinAgo", (int)span.TotalMinutes].Value;
+            if (span.TotalHours < 24) return _localizer["TimeHoursAgo", (int)span.TotalHours].Value;
+            return _localizer["TimeDaysAgo", (int)span.TotalDays].Value;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetOrdersList()
         {
+            var unknownCustomer = _localizer["Unknown"].Value;
+            var notAvailable = _localizer["NotAvailable"].Value;
+            var unknownProduct = _localizer["UnknownProduct"].Value;
+
             var orders = await _context.Orders
                 .Include(o => o.User)
                 .Include(o => o.OrderDetails)
@@ -809,15 +850,15 @@ namespace SportLab.Controllers
                 .Select(o => new
                 {
                     id = o.Id,
-                    customerName = o.User != null ? o.User.Name : "Unknown",
-                    customerEmail = o.User != null ? o.User.Email : "N/A",
+                    customerName = o.User != null ? o.User.Name : unknownCustomer,
+                    customerEmail = o.User != null ? o.User.Email : notAvailable,
                     orderDate = o.OrderDate,
                     totalAmount = o.TotalAmount,
                     status = o.Status,
                     itemsCount = o.OrderDetails.Sum(od => od.Quantity),
                     items = o.OrderDetails.Select(od => new
                     {
-                        productName = od.Product != null ? od.Product.Name : "Unknown Product",
+                        productName = od.Product != null ? od.Product.Name : unknownProduct,
                         quantity = od.Quantity,
                         unitPrice = od.UnitPrice,
                         photoUrl = od.Product != null ? od.Product.PhotoUrl : null

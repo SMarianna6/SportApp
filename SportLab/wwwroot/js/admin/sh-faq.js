@@ -1,6 +1,7 @@
 ﻿(function () {
     'use strict';
     var SH = window.SH;
+    var L = window.SH_LOC || {};
 
     var URLS = {
         list: '/Admin/GetFaqList',
@@ -43,10 +44,10 @@
     function render() {
         if (!list) return;
         var items = sorted();
-        count.textContent = items.length + (items.length === 1 ? ' question' : ' questions');
+        count.textContent = (items.length === 1 ? (L.questionCount || '{0} question') : (L.questionsCount || '{0} questions')).replace('{0}', items.length);
 
         if (!items.length) {
-            list.innerHTML = '<div class="sh-card sh-accordion-empty">No FAQs yet. Click "Add FAQ" to create the first one.</div>';
+            list.innerHTML = '<div class="sh-card sh-accordion-empty">' + (L.noFaqs || 'No FAQs yet. Click "Add FAQ" to create the first one.') + '</div>';
             return;
         }
 
@@ -57,12 +58,12 @@
                 '<div class="sh-accordion-header" role="button" tabindex="0" aria-expanded="' + open + '">' +
                 chevron +
                 '<span class="sh-accordion-question">' + q + '</span>' +
-                '<button type="button" class="sh-status ' + (f.isActive ? 'is-active' : 'is-inactive') + '" data-act="toggle" title="Toggle status">' + (f.isActive ? 'Active' : 'Inactive') + '</button>' +
+                '<button type="button" class="sh-status ' + (f.isActive ? 'is-active' : 'is-inactive') + '" data-act="toggle" title="' + SH.esc(L.toggleStatus || 'Toggle status') + '">' + (f.isActive ? SH.esc(L.active || 'Active') : SH.esc(L.inactive || 'Inactive')) + '</button>' +
                 '<div class="sh-actions">' +
-                '<button type="button" class="sh-icon-btn" data-act="up" aria-label="Move up: ' + q + '"' + (i === 0 ? ' disabled' : '') + '>' + arrowUp + '</button>' +
-                '<button type="button" class="sh-icon-btn" data-act="down" aria-label="Move down: ' + q + '"' + (i === items.length - 1 ? ' disabled' : '') + '>' + arrowDown + '</button>' +
-                '<button type="button" class="sh-icon-btn" data-act="edit" aria-label="Edit: ' + q + '">' + SH.icon.pencil() + '</button>' +
-                '<button type="button" class="sh-icon-btn sh-danger" data-act="delete" aria-label="Delete: ' + q + '">' + SH.icon.trash() + '</button>' +
+                '<button type="button" class="sh-icon-btn" data-act="up" aria-label="' + SH.esc((L.moveUp || 'Move up: {0}').replace('{0}', f.question)) + '"' + (i === 0 ? ' disabled' : '') + '>' + arrowUp + '</button>' +
+                '<button type="button" class="sh-icon-btn" data-act="down" aria-label="' + SH.esc((L.moveDown || 'Move down: {0}').replace('{0}', f.question)) + '"' + (i === items.length - 1 ? ' disabled' : '') + '>' + arrowDown + '</button>' +
+                '<button type="button" class="sh-icon-btn" data-act="edit" aria-label="' + SH.esc((L.editLabel || 'Edit: {0}').replace('{0}', f.question)) + '">' + SH.icon.pencil() + '</button>' +
+                '<button type="button" class="sh-icon-btn sh-danger" data-act="delete" aria-label="' + SH.esc((L.deleteLabel || 'Delete: {0}').replace('{0}', f.question)) + '">' + SH.icon.trash() + '</button>' +
                 '</div>' +
                 '</div>' +
                 '<div class="sh-accordion-body"' + (open ? '' : ' hidden') + '>' + SH.esc(f.answer) + '</div>' +
@@ -80,7 +81,7 @@
 
     function openForm(faq) {
         editing = faq;
-        title.textContent = faq ? 'Edit FAQ' : 'Add FAQ';
+        title.textContent = faq ? (L.editFaq || 'Edit FAQ') : (L.addFaq || 'Add FAQ');
 
         if (form.elements.Question) form.elements.Question.value = faq ? faq.question : '';
         if (form.elements.Answer) form.elements.Answer.value = faq ? faq.answer : '';
@@ -166,7 +167,7 @@
             }
 
             if (act === 'delete') {
-                if (confirm('Are you sure you want to delete this FAQ?')) {
+                if (confirm(L.deleteFaqConfirm || 'Are you sure you want to delete this FAQ?')) {
                     await fetch(URLS.remove + '?id=' + id, { method: 'POST' });
                     loadFaqs();
                 }

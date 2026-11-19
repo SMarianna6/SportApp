@@ -2,6 +2,7 @@
 @using Microsoft.AspNetCore.Localization
 @using Microsoft.Extensions.Options
 @inject IOptions<RequestLocalizationOptions> LocOptions
+@inject IViewLocalizer Localizer
 @{
     var requestCulture = Context.Features.Get<IRequestCultureFeature>();
     var cultureItems = LocOptions.Value.SupportedUICultures
@@ -11,7 +12,7 @@
     var currentCulture = requestCulture?.RequestCulture.UICulture.Name;
 }
 <form asp-controller="Language" asp-action="SetLanguage" asp-route-returnUrl="@returnUrl" method="post" class="m-0 shrink-0">
-    <div role="group" aria-label="Switch language" class="inline-flex items-center gap-0.5 rounded-full border border-white/10 bg-white/5 p-1">
+    <div role="group" aria-label="@Localizer["SwitchLanguage"]" class="inline-flex items-center gap-0.5 rounded-full border border-white/10 bg-white/5 p-1">
         @foreach (var item in cultureItems)
         {
             var code = item.Value == "uk" ? "UA" : "EN";

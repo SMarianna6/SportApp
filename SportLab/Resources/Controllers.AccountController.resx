@@ -47,4 +47,7 @@ Your registration verification code is: {0}</value>
 	<data name="InitialWeightNote" xml:space="preserve">
 	<value>Initial weight</value>
 </data>
+	<data name="EmailSenderName" xml:space="preserve">
+	<value>SportHub Support</value>
+</data>
 </root>

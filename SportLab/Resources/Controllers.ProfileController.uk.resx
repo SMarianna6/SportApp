@@ -147,4 +147,13 @@
 	<data name="NotSet" xml:space="preserve">
 	<value>Не вказано</value>
 </data>
+	<data name="StatusActive" xml:space="preserve">
+	<value>Активний</value>
+</data>
+	<data name="StatusExpiring" xml:space="preserve">
+	<value>Спливає</value>
+</data>
+	<data name="StatusInactive" xml:space="preserve">
+	<value>Неактивний</value>
+</data>
 </root>

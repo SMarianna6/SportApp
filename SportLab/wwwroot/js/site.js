@@ -2,7 +2,8 @@
     'use strict';
 
     var TOAST_MS = 3000;
-    var TRAINERS = ['Oleksandr Tkachenko', 'Anastasiia Kravchenko', 'Andrii Polishchuk', 'Mariia Bondarenko', 'Dmytro Boyko'];
+    var L = window.SITE_LOC || {};
+    var locale = L.culture || 'en';
     var SUBSCRIPTIONS = {
         valid: { active: true, left: 5, total: 12 },
         none: { active: false, left: 0, total: 0 }
@@ -85,18 +86,29 @@
     }
 
     /* ---------- Form data ---------- */
+    function formatDay(date, options) {
+        try {
+            return new Intl.DateTimeFormat(locale, options).format(date);
+        } catch (e) {
+            return date.toLocaleDateString();
+        }
+    }
+
     function buildOptions() {
         var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-        var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        var html = '<option value="">Select date</option>';
+        var html = '<option value="">' + (L.selectDate || 'Select date') + '</option>';
         for (var i = 0; i < 7; i++) {
             var d = new Date();
             d.setDate(d.getDate() + i);
-            var label = (i === 0 ? 'Today' : i === 1 ? 'Tomorrow' : days[d.getDay()]) + ', ' + months[d.getMonth()] + ' ' + d.getDate();
+            var dayName = i === 0
+                ? (L.today || 'Today')
+                : i === 1
+                    ? (L.tomorrow || 'Tomorrow')
+                    : formatDay(d, { weekday: 'short' }) || days[d.getDay()];
+            var label = dayName + ', ' + formatDay(d, { month: 'short', day: 'numeric' });
             html += '<option value="' + label + '">' + label + '</option>';
         }
         if (el.date) el.date.innerHTML = html;
-        if (el.trainer) el.trainer.innerHTML = '<option value="">Select trainer</option>' + TRAINERS.map(function (t) { return '<option>' + t + '</option>'; }).join('');
     }
 
     function initials(name) {
@@ -109,15 +121,15 @@
         var filled = [type, date, trainer].filter(Boolean).length;
         var complete = filled === 3;
 
-        el.slotType.textContent = type || 'Your slot';
+        el.slotType.textContent = type || (L.yourSlot || 'Your slot');
         el.slotType.className = 'text-2xl font-black uppercase leading-none tracking-tighter ' + (type ? 'text-white' : 'text-white/30');
-        el.slotDate.textContent = date || 'Pick a date';
+        el.slotDate.textContent = date || (L.pickDate || 'Pick a date');
         el.slotDate.className = 'mt-1.5 text-sm font-semibold ' + (date ? 'text-neon' : 'text-mono/40');
-        el.slotTrainer.textContent = trainer || 'Not selected';
+        el.slotTrainer.textContent = trainer || (L.notSelected || 'Not selected');
         el.slotTrainer.className = 'text-sm font-bold ' + (trainer ? 'text-white' : 'text-mono/40');
         el.slotAvatar.textContent = trainer ? initials(trainer) : '?';
         el.slotAvatar.className = 'flex h-9 w-9 items-center justify-center rounded-md text-xs font-black ' + (trainer ? 'bg-violet text-white' : 'bg-white/10 text-mono/40');
-        el.slotChip.textContent = complete ? 'Ready' : filled + '/3';
+        el.slotChip.textContent = complete ? (L.ready || 'Ready') : filled + '/3';
         el.slotChip.className = 'rounded-md px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-widest ' + (complete ? 'bg-neon text-ink' : 'bg-white/10 text-mono/50');
         el.slotAccent.className = 'w-1.5 transition-colors duration-300 ' + (complete ? 'bg-neon' : filled ? 'bg-violet' : 'bg-white/10');
         el.slotCard.className = 'mt-6 overflow-hidden rounded-lg border bg-card/60 transition-all duration-300 ' + (complete ? 'border-neon/60 shadow-lg shadow-neon/10' : 'border-dashed border-white/20');
@@ -133,9 +145,9 @@
     function updateSubscription() {
         var s = currentSub;
         if (!s.active) {
-            el.visitsLabel.innerHTML = '<span class="text-mono/50">No plan</span>';
+            el.visitsLabel.innerHTML = '<span class="text-mono/50">' + (L.noPlan || 'No plan') + '</span>';
             el.visitsBar.style.width = '0%';
-            el.visitsHint.textContent = 'Buy a membership to start booking.';
+            el.visitsHint.textContent = L.buyFirst || 'Buy a membership to start booking.';
             el.submit.className = 'mt-5 w-full cursor-pointer rounded-md bg-card py-3.5 text-base font-black uppercase tracking-wider text-white/40 transition-all duration-300 hover:text-white/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet';
             el.submit.setAttribute('aria-disabled', 'true');
             return;
@@ -144,7 +156,7 @@
         var color = visitsColor(ratio);
         var textColor = ratio > 0.5 ? '#AAFF00' : ratio > 0.2 ? '#FFD93D' : '#FF5252';
 
-        el.visitsLabel.innerHTML = 'Visits left: <span style="color:' + textColor + '">' + s.left + '/' + s.total + '</span>';
+        el.visitsLabel.innerHTML = (L.visitsLeft || 'Visits left') + ': <span style="color:' + textColor + '">' + s.left + '/' + s.total + '</span>';
         el.visitsBar.style.background = color;
         el.visitsBar.style.width = '0%';
 
@@ -152,7 +164,11 @@
             requestAnimationFrame(function () { el.visitsBar.style.width = (ratio * 100) + '%'; });
         });
 
-        el.visitsHint.textContent = ratio > 0.5 ? 'Plenty of visits left.' : ratio > 0.2 ? 'Running low. Consider renewing soon.' : 'Almost out of visits.';
+        el.visitsHint.textContent = ratio > 0.5
+            ? (L.plentyLeft || 'Plenty of visits left.')
+            : ratio > 0.2
+                ? (L.runningLow || 'Running low. Consider renewing soon.')
+                : (L.almostOut || 'Almost out of visits.');
         el.submit.className = 'mt-5 w-full rounded-md bg-neon py-3.5 text-base font-black uppercase tracking-wider text-ink shadow-lg shadow-neon/30 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-neon/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-ink active:translate-y-0';
         el.submit.setAttribute('aria-disabled', 'false');
     }
@@ -187,12 +203,15 @@
     function submitBooking() {
         if (!currentSub.active) { showView('nosub'); return; }
         if (!el.type.value || !el.date.value || !el.trainer.value) {
-            showToast('error', 'Missing details', 'Select type, date and trainer to continue.');
+            showToast('error', L.missingDetails || 'Missing details', L.missingDetailsText || 'Select type, date and trainer to continue.');
             return;
         }
-        var summary = el.type.value + ' with ' + el.trainer.value + ', ' + el.date.value;
+        var summary = (L.bookingSummary || '{0} with {1}, {2}')
+            .replace('{0}', el.type.value)
+            .replace('{1}', el.trainer.value)
+            .replace('{2}', el.date.value);
         closeModal();
-        showToast('success', 'Booking confirmed', summary);
+        showToast('success', L.bookingConfirmed || 'Booking confirmed', summary);
     }
 
     /* ---------- Events ---------- */
@@ -205,7 +224,7 @@
 
     el.buy.addEventListener('click', function () {
         closeModal();
-        showToast('success', 'Redirecting', 'Taking you to membership plans.');
+        showToast('success', L.redirecting || 'Redirecting', L.redirectingText || 'Taking you to membership plans.');
     });
 
     document.addEventListener('keydown', function (e) {

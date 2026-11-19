@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using SportLab.Data;
 using SportLab.Models;
 
@@ -15,10 +16,12 @@ namespace SportLab.Controllers
     public class MessagesController : Controller
     {
         private readonly SportLabContext _context;
+        private readonly IStringLocalizer<MessagesController> _localizer;
 
-        public MessagesController(SportLabContext context)
+        public MessagesController(SportLabContext context, IStringLocalizer<MessagesController> localizer)
         {
             _context = context;
+            _localizer = localizer;
         }
 
         public async Task<IActionResult> Index()
@@ -57,7 +60,7 @@ namespace SportLab.Controllers
                 contacts.Add(new ContactViewModel
                 {
                     Id = "BROADCAST_TRAINERS",
-                    Name = "📢 All Trainers",
+                    Name = _localizer["AllTrainers"].Value,
                     Role = "Broadcast",
                     UnreadCount = 0,
                     HasConversation = true,
@@ -166,7 +169,7 @@ namespace SportLab.Controllers
 
             if (contactId == "BROADCAST_TRAINERS")
             {
-                return Ok(new[] { new { id = "BROADCAST_TRAINERS", name = "📢 All Trainers", msgs = new object[0] } });
+                return Ok(new[] { new { id = "BROADCAST_TRAINERS", name = _localizer["AllTrainers"].Value, msgs = new object[0] } });
             }
 
             if (!int.TryParse(contactId, out int targetId))
@@ -183,7 +186,7 @@ namespace SportLab.Controllers
             var conversation = new
             {
                 id = targetId,
-                name = otherUser?.Name ?? "Unknown",
+                name = otherUser?.Name ?? _localizer["Unknown"].Value,
                 msgs = messages.Select(m => new
                 {
                     from = m.SenderId == userId ? "out" : "in",

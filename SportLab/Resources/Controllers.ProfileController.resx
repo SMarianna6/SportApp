@@ -147,4 +147,13 @@
 	<data name="NotSet" xml:space="preserve">
 	<value>Not set</value>
 </data>
+	<data name="StatusActive" xml:space="preserve">
+	<value>Active</value>
+</data>
+	<data name="StatusExpiring" xml:space="preserve">
+	<value>Expiring</value>
+</data>
+	<data name="StatusInactive" xml:space="preserve">
+	<value>Inactive</value>
+</data>
 </root>

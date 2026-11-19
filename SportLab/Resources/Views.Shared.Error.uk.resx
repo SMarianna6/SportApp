@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+	<data name="PageTitle" xml:space="preserve">
+	<value>Помилка</value>
+</data>
+	<data name="Heading" xml:space="preserve">
+	<value>Помилка.</value>
+</data>
+	<data name="Intro" xml:space="preserve">
+	<value>Під час обробки вашого запиту сталася помилка.</value>
+</data>
+	<data name="RequestId" xml:space="preserve">
+	<value>Ідентифікатор запиту:</value>
+</data>
+	<data name="DevelopmentMode" xml:space="preserve">
+	<value>Режим розробки</value>
+</data>
+	<data name="DevDescPart1" xml:space="preserve">
+	<value>Перемикання на</value>
+</data>
+	<data name="DevDescBold" xml:space="preserve">
+	<value>режим розробки</value>
+</data>
+	<data name="DevDescPart2" xml:space="preserve">
+	<value>покаже детальнішу інформацію про помилку, що сталася.</value>
+</data>
+	<data name="WarningBold" xml:space="preserve">
+	<value>Режим розробки не слід вмикати для розгорнутих застосунків.</value>
+</data>
+	<data name="WarningText" xml:space="preserve">
+	<value>Це може призвести до показу кінцевим користувачам конфіденційної інформації з винятків. Для локального налагодження увімкніть режим розробки, встановивши для змінної середовища ASPNETCORE_ENVIRONMENT значення Development, і перезапустіть застосунок.</value>
+</data>
+</root>

@@ -1,6 +1,7 @@
 ﻿(function () {
     'use strict';
     var SH = window.SH;
+    var L = window.SH_LOC || {};
 
     var URLS = {
         list: '/Admin/GetTariffsList',
@@ -29,7 +30,7 @@
         if (!grid) return;
 
         if (!tariffs.length) {
-            grid.innerHTML = '<div class="sh-card sh-tariff-empty">No tariffs available. Click "Add Tariff" to create one.</div>';
+            grid.innerHTML = '<div class="sh-card sh-tariff-empty">' + (L.noTariffs || 'No tariffs available. Click "Add Tariff" to create one.') + '</div>';
             return;
         }
 
@@ -37,11 +38,11 @@
             return '<div class="sh-card sh-tariff" data-id="' + t.id + '">' +
                 '<div class="sh-tariff-top"><h3 class="sh-tariff-name">' + SH.esc(t.name) + '</h3><span class="sh-tariff-type">' + SH.esc(t.type) + '</span></div>' +
                 '<p class="sh-tariff-price">$' + SH.esc(t.price) + '</p>' +
-                '<p class="sh-tariff-days">' + SH.esc(t.days) + ' ' + (t.days === 1 ? 'day' : 'days') + '</p>' +
+                '<p class="sh-tariff-days">' + SH.esc(t.days) + ' ' + (t.days === 1 ? (L.day || 'day') : (L.days || 'days')) + '</p>' +
                 '<p class="sh-tariff-desc">' + SH.esc(t.description) + '</p>' +
                 '<div class="sh-tariff-actions">' +
-                '<button type="button" class="sh-tariff-btn sh-edit" data-act="edit">' + SH.icon.pencil('sh-ico-sm') + 'Edit</button>' +
-                '<button type="button" class="sh-tariff-btn sh-del" data-act="delete">' + SH.icon.trash('sh-ico-sm') + 'Delete</button>' +
+                '<button type="button" class="sh-tariff-btn sh-edit" data-act="edit">' + SH.icon.pencil('sh-ico-sm') + SH.esc(L.editBtn || 'Edit') + '</button>' +
+                '<button type="button" class="sh-tariff-btn sh-del" data-act="delete">' + SH.icon.trash('sh-ico-sm') + SH.esc(L.deleteBtn || 'Delete') + '</button>' +
                 '</div></div>';
         }).join('');
     }
@@ -95,7 +96,7 @@
         }
 
         if (title) {
-            title.textContent = t ? 'Edit Tariff' : 'Add Tariff';
+            title.textContent = t ? (L.editTariff || 'Edit Tariff') : (L.addTariff || 'Add Tariff');
         }
 
         SH.openModal('sh-tariff-modal');
@@ -123,7 +124,7 @@
             }
 
             if (act === 'delete') {
-                if (confirm('Are you sure you want to delete this tariff?')) {
+                if (confirm(L.deleteTariffConfirm || 'Are you sure you want to delete this tariff?')) {
                     await fetch(URLS.remove + '?id=' + id, { method: 'POST' });
                     loadTariffs();
                 }

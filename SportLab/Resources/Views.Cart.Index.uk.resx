@@ -185,4 +185,7 @@
 	<data name="NetworkError" xml:space="preserve">
     <value>Помилка мережі.</value>
   </data>
+	<data name="Aria.Breadcrumb" xml:space="preserve">
+	<value>Навігаційний ланцюжок</value>
+</data>
 </root>

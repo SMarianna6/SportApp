@@ -6,18 +6,18 @@ namespace SportLab.Models
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Question is required")]
-        [Display(Name = "Question")]
+        [Required(ErrorMessage = "Validation.QuestionRequired")]
+        [Display(Name = "Field.Question")]
         public required string Question { get; set; }
 
-        [Required(ErrorMessage = "Answer is required")]
-        [Display(Name = "Answer")]
+        [Required(ErrorMessage = "Validation.AnswerRequired")]
+        [Display(Name = "Field.Answer")]
         public required string Answer { get; set; }
 
-        [Display(Name = "Sort Order")]
+        [Display(Name = "Field.SortOrder")]
         public int SortOrder { get; set; }
 
-        [Display(Name = "Is Active")]
+        [Display(Name = "Field.IsActive")]
         public bool IsActive { get; set; }
     }
 }

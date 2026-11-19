@@ -117,4 +117,28 @@
 	<data name="CoachLabel" xml:space="preserve"><value>Тренер</value></data>
 	<data name="SelectTrainerPrompt" xml:space="preserve"><value>Виберіть тренера</value></data>
 	<data name="CapacityLabel" xml:space="preserve"><value>Місткість</value></data>
+	<data name="TypeHIIT" xml:space="preserve">
+	<value>HIIT</value>
+</data>
+	<data name="TypePilates" xml:space="preserve">
+	<value>Пілатес</value>
+</data>
+	<data name="TypeYoga" xml:space="preserve">
+	<value>Йога</value>
+</data>
+	<data name="TypeStrength" xml:space="preserve">
+	<value>Силові</value>
+</data>
+	<data name="TypeCycling" xml:space="preserve">
+	<value>Сайклінг</value>
+</data>
+	<data name="TypeBoxing" xml:space="preserve">
+	<value>Бокс</value>
+</data>
+	<data name="CoachTooltip" xml:space="preserve">
+	<value>Тренер</value>
+</data>
+	<data name="BookedTooltip" xml:space="preserve">
+	<value>заброньовано</value>
+</data>
 </root>

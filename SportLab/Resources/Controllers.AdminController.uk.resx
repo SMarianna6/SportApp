@@ -112,4 +112,46 @@
 	<data name="ReviewHiddenMsg" xml:space="preserve"><value>Відгук приховано.</value></data>
 	<data name="ReviewDeletedMsg" xml:space="preserve"><value>Відгук видалено.</value></data>
 	<data name="OrderNotFoundError" xml:space="preserve"><value>Замовлення не знайдено</value></data>
+	<data name="FaqLabel" xml:space="preserve">
+	<value>FAQ</value>
+</data>
+	<data name="ReviewByPrefix" xml:space="preserve">
+	<value>Відгук від </value>
+</data>
+	<data name="Staff" xml:space="preserve">
+	<value>Персонал</value>
+</data>
+	<data name="NoPlan" xml:space="preserve">
+	<value>Без тарифу</value>
+</data>
+	<data name="ActivityNewOrder" xml:space="preserve">
+	<value>Нове замовлення #{0} на суму ₴{1}</value>
+</data>
+	<data name="ActivitySubscription" xml:space="preserve">
+	<value>{0} придбав(-ла) тариф {1}</value>
+</data>
+	<data name="ActivityNewUser" xml:space="preserve">
+	<value>Зареєстровано нового клієнта: {0}</value>
+</data>
+	<data name="ActivityNewBooking" xml:space="preserve">
+	<value>{0} забронював(-ла) {1}</value>
+</data>
+	<data name="TimeMinAgo" xml:space="preserve">
+	<value>{0} хв тому</value>
+</data>
+	<data name="TimeHoursAgo" xml:space="preserve">
+	<value>{0} год тому</value>
+</data>
+	<data name="TimeDaysAgo" xml:space="preserve">
+	<value>{0} дн. тому</value>
+</data>
+	<data name="NotAvailable" xml:space="preserve">
+	<value>—</value>
+</data>
+	<data name="UnknownProduct" xml:space="preserve">
+	<value>Невідомий товар</value>
+</data>
+	<data name="Unknown" xml:space="preserve">
+	<value>Невідомо</value>
+</data>
 </root>

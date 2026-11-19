@@ -263,4 +263,22 @@
 	<data name="CouldNotCancelRetry" xml:space="preserve">
     <value>Could not cancel your booking. Please try again.</value>
   </data>
+	<data name="CategoryHIIT" xml:space="preserve">
+	<value>HIIT</value>
+</data>
+	<data name="CategoryPilates" xml:space="preserve">
+	<value>Pilates</value>
+</data>
+	<data name="CategoryYoga" xml:space="preserve">
+	<value>Yoga</value>
+</data>
+	<data name="CategoryStrength" xml:space="preserve">
+	<value>Strength</value>
+</data>
+	<data name="CategoryCycling" xml:space="preserve">
+	<value>Cycling</value>
+</data>
+	<data name="CategoryBoxing" xml:space="preserve">
+	<value>Boxing</value>
+</data>
 </root>

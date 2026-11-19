@@ -145,7 +145,47 @@
 	<data name="StatActiveMembers" xml:space="preserve"><value>Активні учасники</value></data>
 	<data name="StatClassBookings" xml:space="preserve"><value>Бронювання занять</value></data>
 	<data name="StatShopSales" xml:space="preserve"><value>Продажі магазину</value></data>
-	<data name="TooltipRevenue" xml:space="preserve"><value>Дохід</value></data>
-	<data name="TooltipNewUsers" xml:space="preserve"><value>Нові користувачі</value></data>
 	<data name="LoadFailedError" xml:space="preserve"><value>Не вдалося завантажити дані.</value></data>
+	<data name="MonthJan" xml:space="preserve">
+	<value>Січ</value>
+</data>
+	<data name="MonthFeb" xml:space="preserve">
+	<value>Лют</value>
+</data>
+	<data name="MonthMar" xml:space="preserve">
+	<value>Бер</value>
+</data>
+	<data name="MonthApr" xml:space="preserve">
+	<value>Кві</value>
+</data>
+	<data name="MonthMay" xml:space="preserve">
+	<value>Тра</value>
+</data>
+	<data name="MonthJun" xml:space="preserve">
+	<value>Чер</value>
+</data>
+	<data name="MonthJul" xml:space="preserve">
+	<value>Лип</value>
+</data>
+	<data name="MonthAug" xml:space="preserve">
+	<value>Сер</value>
+</data>
+	<data name="MonthSep" xml:space="preserve">
+	<value>Вер</value>
+</data>
+	<data name="MonthOct" xml:space="preserve">
+	<value>Жов</value>
+</data>
+	<data name="MonthNov" xml:space="preserve">
+	<value>Лис</value>
+</data>
+	<data name="MonthDec" xml:space="preserve">
+	<value>Гру</value>
+</data>
+	<data name="TooltipRevenue" xml:space="preserve">
+	<value>Дохід: ₴{0}</value>
+</data>
+	<data name="TooltipNewUsers" xml:space="preserve">
+	<value>Нові користувачі: {0}</value>
+</data>
 </root>

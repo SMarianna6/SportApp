@@ -123,9 +123,9 @@
   <data name="WeightChartHeader" xml:space="preserve">
     <value>Графік ваги</value>
   </data>
-  <data name="Views.MetricLogs.Edit" xml:space="preserve">
-    <value>Мій прогрес</value>
-  </data>
+	<data name="MetricLogsIndexTitle" xml:space="preserve">
+	<value>Мій прогрес</value>
+</data>
   <data name="HistoryHeader" xml:space="preserve">
     <value>Історія</value>
   </data>

@@ -227,4 +227,7 @@
 	<data name="GuaranteeText" xml:space="preserve">
     <value>Відстежуйте замовлення в реальному часі або заберіть його на стійці спортзалу вже сьогодні.</value>
   </data>
+	<data name="Aria.Breadcrumb" xml:space="preserve">
+	<value>Навігаційний ланцюжок</value>
+</data>
 </root>

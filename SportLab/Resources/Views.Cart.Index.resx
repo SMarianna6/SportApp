@@ -185,4 +185,7 @@
 	<data name="NetworkError" xml:space="preserve">
     <value>Network error.</value>
   </data>
+	<data name="Aria.Breadcrumb" xml:space="preserve">
+	<value>Breadcrumb</value>
+</data>
 </root>

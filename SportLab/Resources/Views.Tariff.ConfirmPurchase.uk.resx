@@ -215,4 +215,7 @@
 	<data name="SecurityGuaranteeText" xml:space="preserve">
     <value>Миттєве створення цифрової картки абонемента у вашому профілі після підтвердження.</value>
   </data>
+	<data name="Aria.Breadcrumb" xml:space="preserve">
+	<value>Навігаційний ланцюжок</value>
+</data>
 </root>

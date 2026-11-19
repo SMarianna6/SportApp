@@ -6,31 +6,31 @@ namespace SportLab.Models
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "User is required")]
-        [Display(Name = "User")]
+        [Required(ErrorMessage = "Validation.UserRequired")]
+        [Display(Name = "Field.User")]
         public int UserId { get; set; }
         public User? User { get; set; }
 
 
-        [Required(ErrorMessage = "Please write a comment")]
-        [StringLength(1000, MinimumLength = 3, ErrorMessage = "Comment must be between 3 and 1000 characters")]
-        [Display(Name = "Comment")]
+        [Required(ErrorMessage = "Validation.CommentRequired")]
+        [StringLength(1000, MinimumLength = 3, ErrorMessage = "Validation.CommentLength")]
+        [Display(Name = "Field.Comment")]
         public string? Comment { get; set; }
 
-        [Required(ErrorMessage = "Rating is required")]
-        [Range(1, 5, ErrorMessage = "Rating must be between 1 and 5")]
-        [Display(Name = "Rating")]
+        [Required(ErrorMessage = "Validation.RatingRequired")]
+        [Range(1, 5, ErrorMessage = "Validation.RatingRange")]
+        [Display(Name = "Field.Rating")]
         public int Rating { get; set; }
 
 
         [Required]
-        [Display(Name = "Date Created")]
+        [Display(Name = "Field.DateCreated")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime CreatedDate { get; set; } = DateTime.Now;
 
-        [Required(ErrorMessage = "Moderation status is required")]
-        [Display(Name = "Moderation Status")]
+        [Required(ErrorMessage = "Validation.ModerationStatusRequired")]
+        [Display(Name = "Field.ModerationStatus")]
         public required string ModerationStatus { get; set; }
     }
 }

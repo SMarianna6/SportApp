@@ -117,4 +117,28 @@
 	<data name="CoachLabel" xml:space="preserve"><value>Coach</value></data>
 	<data name="SelectTrainerPrompt" xml:space="preserve"><value>Select a trainer</value></data>
 	<data name="CapacityLabel" xml:space="preserve"><value>Capacity</value></data>
+	<data name="TypeHIIT" xml:space="preserve">
+	<value>HIIT</value>
+</data>
+	<data name="TypePilates" xml:space="preserve">
+	<value>Pilates</value>
+</data>
+	<data name="TypeYoga" xml:space="preserve">
+	<value>Yoga</value>
+</data>
+	<data name="TypeStrength" xml:space="preserve">
+	<value>Strength</value>
+</data>
+	<data name="TypeCycling" xml:space="preserve">
+	<value>Cycling</value>
+</data>
+	<data name="TypeBoxing" xml:space="preserve">
+	<value>Boxing</value>
+</data>
+	<data name="CoachTooltip" xml:space="preserve">
+	<value>Coach</value>
+</data>
+	<data name="BookedTooltip" xml:space="preserve">
+	<value>booked</value>
+</data>
 </root>

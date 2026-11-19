@@ -249,4 +249,52 @@
 	<data name="Footer.Copyright" xml:space="preserve">
     <value>© 2026 SportHUB. Створено для сили.</value>
   </data>
+	<data name="QuickBook.Today" xml:space="preserve">
+	<value>Сьогодні</value>
+</data>
+	<data name="QuickBook.Tomorrow" xml:space="preserve">
+	<value>Завтра</value>
+</data>
+	<data name="QuickBook.SelectDate" xml:space="preserve">
+	<value>Оберіть дату</value>
+</data>
+	<data name="QuickBook.Ready" xml:space="preserve">
+	<value>Готово</value>
+</data>
+	<data name="QuickBook.NoPlan" xml:space="preserve">
+	<value>Немає тарифу</value>
+</data>
+	<data name="QuickBook.VisitsLeft" xml:space="preserve">
+	<value>Залишилось відвідувань</value>
+</data>
+	<data name="QuickBook.BuyFirst" xml:space="preserve">
+	<value>Придбайте абонемент, щоб почати бронювання.</value>
+</data>
+	<data name="QuickBook.PlentyLeft" xml:space="preserve">
+	<value>Ще багато відвідувань.</value>
+</data>
+	<data name="QuickBook.RunningLow" xml:space="preserve">
+	<value>Залишилось мало. Варто продовжити абонемент.</value>
+</data>
+	<data name="QuickBook.AlmostOut" xml:space="preserve">
+	<value>Відвідування майже закінчилися.</value>
+</data>
+	<data name="QuickBook.MissingDetails" xml:space="preserve">
+	<value>Не всі дані заповнено</value>
+</data>
+	<data name="QuickBook.MissingDetailsText" xml:space="preserve">
+	<value>Оберіть тариф, дату й тренера, щоб продовжити.</value>
+</data>
+	<data name="QuickBook.BookingConfirmed" xml:space="preserve">
+	<value>Бронювання підтверджено</value>
+</data>
+	<data name="QuickBook.BookingSummary" xml:space="preserve">
+	<value>{0} з {1}, {2}</value>
+</data>
+	<data name="QuickBook.Redirecting" xml:space="preserve">
+	<value>Перенаправлення</value>
+</data>
+	<data name="QuickBook.RedirectingText" xml:space="preserve">
+	<value>Переходимо до тарифів абонементів.</value>
+</data>
 </root>

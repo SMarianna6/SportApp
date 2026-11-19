@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SportLab.Models
@@ -20,7 +20,7 @@ namespace SportLab.Models
         public User? User { get; set; }
 
         [Required]
-        [Display(Name = "Booked At")]
+        [Display(Name = "Field.BookedAt")]
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}", ApplyFormatInEditMode = false)]
         public DateTime BookingDate { get; set; } = DateTime.Now;

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.Extensions.Localization;
 
 namespace SportLab.Models
 {
@@ -7,19 +8,19 @@ namespace SportLab.Models
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Activity name is required")]
-        [StringLength(100, MinimumLength = 2, ErrorMessage = "Activity name must be between 2 and 100 characters")]
-        [Display(Name = "Activity Name")]
+        [Required(ErrorMessage = "Validation.ActivityNameRequired")]
+        [StringLength(100, MinimumLength = 2, ErrorMessage = "Validation.ActivityNameLength")]
+        [Display(Name = "Field.ActivityName")]
         public string? ActivityName { get; set; }
 
-        [Required(ErrorMessage = "Trainer must be specified")]
-        [Display(Name = "Trainer")]
+        [Required(ErrorMessage = "Validation.TrainerRequired")]
+        [Display(Name = "Field.Trainer")]
         public int TrainerId { get; set; }
 
         [ForeignKey(nameof(TrainerId))]
         public User? Trainer { get; set; }
 
-        [Display(Name = "Client")]
+        [Display(Name = "Field.Client")]
         public int? UserId { get; set; }
 
         [ForeignKey(nameof(UserId))]
@@ -39,26 +40,26 @@ namespace SportLab.Models
             set => User = value;
         }
 
-        [Required(ErrorMessage = "Start time is required")]
-        [Display(Name = "Start Time")]
+        [Required(ErrorMessage = "Validation.StartTimeRequired")]
+        [Display(Name = "Field.StartTime")]
         [DataType(DataType.DateTime)]
         public DateTime StartTime { get; set; }
 
-        [Required(ErrorMessage = "End time is required")]
-        [Display(Name = "End Time")]
+        [Required(ErrorMessage = "Validation.EndTimeRequired")]
+        [Display(Name = "Field.EndTime")]
         [DataType(DataType.DateTime)]
         public DateTime EndTime { get; set; }
 
         [Required]
-        [Display(Name = "Status")]
+        [Display(Name = "Field.Status")]
         public string Status { get; set; } = "Available"; // "Available", "Booked", "Completed", "Cancelled"
 
-        [Display(Name = "Capacity")]
-        [Range(1, 1000, ErrorMessage = "Capacity must be between 1 and 1000")]
+        [Display(Name = "Field.Capacity")]
+        [Range(1, 1000, ErrorMessage = "Validation.CapacityRange")]
         public int Capacity { get; set; } = 15;
 
-        [Display(Name = "Booked Spots")]
-        [Range(0, 1000, ErrorMessage = "Booked spots cannot be negative")]
+        [Display(Name = "Field.BookedSpots")]
+        [Range(0, 1000, ErrorMessage = "Validation.BookedSpotsRange")]
         public int Booked { get; set; } = 0;
 
         [Timestamp]
@@ -83,17 +84,22 @@ namespace SportLab.Models
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
+            var localizer = validationContext.GetService(typeof(IStringLocalizer<SharedResource>))
+                as IStringLocalizer<SharedResource>;
+
             if (EndTime <= StartTime)
             {
                 yield return new ValidationResult(
-                    "End time must be later than the start time.",
+                    localizer?["Validation.EndTimeAfterStart"].Value
+                        ?? "End time must be later than the start time.",
                     new[] { nameof(EndTime) });
             }
 
             if (Booked > Capacity)
             {
                 yield return new ValidationResult(
-                    "Booked spots cannot exceed capacity.",
+                    localizer?["Validation.BookedExceedsCapacity"].Value
+                        ?? "Booked spots cannot exceed capacity.",
                     new[] { nameof(Booked) });
             }
         }

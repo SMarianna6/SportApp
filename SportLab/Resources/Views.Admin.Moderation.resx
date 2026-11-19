@@ -112,4 +112,19 @@
 	<data name="ConfirmDeleteScript" xml:space="preserve"><value>Delete this review permanently?</value></data>
 	<data name="ReviewDeletedScript" xml:space="preserve"><value>Review deleted.</value></data>
 	<data name="NetworkErrorScript" xml:space="preserve"><value>Network error.</value></data>
+	<data name="ActionFailedScript" xml:space="preserve">
+	<value>Action failed.</value>
+</data>
+	<data name="Status.Pending" xml:space="preserve">
+	<value>Pending</value>
+</data>
+	<data name="Status.Approved" xml:space="preserve">
+	<value>Approved</value>
+</data>
+	<data name="Status.Published" xml:space="preserve">
+	<value>Published</value>
+</data>
+	<data name="Status.Hidden" xml:space="preserve">
+	<value>Hidden</value>
+</data>
 </root>

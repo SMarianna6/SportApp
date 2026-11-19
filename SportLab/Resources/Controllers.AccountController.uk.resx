@@ -47,4 +47,7 @@
 	<data name="InitialWeightNote" xml:space="preserve">
 	<value>Початкова вага</value>
 </data>
+	<data name="EmailSenderName" xml:space="preserve">
+	<value>Підтримка SportHub</value>
+</data>
 </root>

@@ -182,4 +182,7 @@
 	<data name="Close" xml:space="preserve">
     <value>Закрити</value>
   </data>
+	<data name="Aria.Breadcrumb" xml:space="preserve">
+	<value>Навігаційний ланцюжок</value>
+</data>
 </root>

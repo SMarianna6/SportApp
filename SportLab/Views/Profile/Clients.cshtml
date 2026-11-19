@@ -96,7 +96,7 @@
                             '<div><span class="block font-extrabold">' + c.name + '</span><span class="text-xs text-mono/50">' + c.email + '</span></div></div></td>' +
                         '<td class="px-5 py-4 text-mono">' + c.goal + '</td>' +
                         '<td class="px-5 py-4 text-mono/70">' + formatDate(c.lastWorkout) + '</td>' +
-                        '<td class="px-5 py-4"><span class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider ' + badge + '"><span class="h-1.5 w-1.5 rounded-full ' + dot + '"></span>' + c.status + '</span></td>' +
+                        '<td class="px-5 py-4"><span class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider ' + badge + '"><span class="h-1.5 w-1.5 rounded-full ' + dot + '"></span>' + escapeHtml(c.statusLabel || c.status) + '</span></td>' +
                         '<td class="px-5 py-4"><div class="flex items-center justify-end gap-3">' +
                             '<a href="/Profile/ClientHistory?id=' + c.id + '" class="text-xs font-bold uppercase tracking-widest text-neon underline-offset-4 hover:underline">' + escapeHtml(L.ViewHistory) + '</a>' +
                         '</div></td></tr>';

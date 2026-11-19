@@ -182,4 +182,7 @@
 	<data name="Close" xml:space="preserve">
     <value>Close</value>
   </data>
+	<data name="Aria.Breadcrumb" xml:space="preserve">
+	<value>Breadcrumb</value>
+</data>
 </root>

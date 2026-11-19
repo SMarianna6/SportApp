@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using SportLab.Data;
 using SportLab.Models;
 using System.Security.Claims;
@@ -11,10 +12,12 @@ namespace SportLab.Controllers
     public class NotificationController : Controller
     {
         private readonly SportLabContext _context;
+        private readonly IStringLocalizer<NotificationController> _localizer;
 
-        public NotificationController(SportLabContext context)
+        public NotificationController(SportLabContext context, IStringLocalizer<NotificationController> localizer)
         {
             _context = context;
+            _localizer = localizer;
         }
 
         [HttpGet]
@@ -40,7 +43,7 @@ namespace SportLab.Controllers
                 notifications.Add(new
                 {
                     type = "message",
-                    title = $"New message from {msg.SenderName}",
+                    title = _localizer["NewMessageFrom", msg.SenderName].Value,
                     text = msg.Text.Length > 40 ? msg.Text.Substring(0, 40) + "..." : msg.Text,
                     date = msg.SentDate,
                     url = "/Messages"
@@ -64,8 +67,11 @@ namespace SportLab.Controllers
                     notifications.Add(new
                     {
                         type = "workout",
-                        title = "Upcoming Workout",
-                        text = $"{booking.WorkoutSlot.ActivityName} with {booking.WorkoutSlot.Trainer.Name} at {booking.WorkoutSlot.StartTime:HH:mm}",
+                        title = _localizer["UpcomingWorkout"].Value,
+                        text = _localizer["UpcomingWorkoutText",
+                            booking.WorkoutSlot.ActivityName,
+                            booking.WorkoutSlot.Trainer.Name,
+                            booking.WorkoutSlot.StartTime.ToString("HH:mm")].Value,
                         date = now,
                         url = "/Profile/Schedule"
                     });
@@ -84,8 +90,10 @@ namespace SportLab.Controllers
                     notifications.Add(new
                     {
                         type = "danger",
-                        title = "Workout Cancelled",
-                        text = $"Your {cancel.WorkoutSlot.ActivityName} session on {cancel.WorkoutSlot.StartTime:MMM dd} was cancelled.",
+                        title = _localizer["WorkoutCancelled"].Value,
+                        text = _localizer["WorkoutCancelledText",
+                            cancel.WorkoutSlot.ActivityName,
+                            cancel.WorkoutSlot.StartTime.ToString("MMM dd")].Value,
                         date = now,
                         url = "/Schedule"
                     });
@@ -105,8 +113,11 @@ namespace SportLab.Controllers
                     notifications.Add(new
                     {
                         type = "workout",
-                        title = "Upcoming Session",
-                        text = $"{slot.ActivityName} starts at {slot.StartTime:HH:mm} ({slot.Booked} booked)",
+                        title = _localizer["UpcomingSession"].Value,
+                        text = _localizer["UpcomingSessionText",
+                            slot.ActivityName,
+                            slot.StartTime.ToString("HH:mm"),
+                            slot.Booked].Value,
                         date = now,
                         url = "/Profile/Schedule"
                     });
@@ -125,8 +136,8 @@ namespace SportLab.Controllers
                     notifications.Add(new
                     {
                         type = "warning",
-                        title = "Low Stock Alert",
-                        text = $"{prod.Name} only has {prod.StockQuantity} left in stock!",
+                        title = _localizer["LowStockAlert"].Value,
+                        text = _localizer["LowStockText", prod.Name, prod.StockQuantity].Value,
                         date = now,
                         url = "/Admin/Shop"
                     });
@@ -143,8 +154,8 @@ namespace SportLab.Controllers
                     notifications.Add(new
                     {
                         type = "user",
-                        title = "New Client Registered",
-                        text = $"{usr.Name} just joined SportLab.",
+                        title = _localizer["NewClientRegistered"].Value,
+                        text = _localizer["NewClientText", usr.Name].Value,
                         date = now,
                         url = "/Admin/Users"
                     });

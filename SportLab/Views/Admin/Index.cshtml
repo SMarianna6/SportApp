@@ -41,15 +41,25 @@
         </div>
     </div>
 </div>
+
 <script>
-    window.DashboardLoc = {
-        revenue: "@Localizer["TooltipRevenue"]",
-        newUsers: "@Localizer["TooltipNewUsers"]",
-        loadFailed: "@Localizer["LoadFailedError"]",
-        statRevenue: "@Localizer["StatRevenue"]",
-        statActiveMembers: "@Localizer["StatActiveMembers"]",
-        statClassBookings: "@Localizer["StatClassBookings"]",
-        statShopSales: "@Localizer["StatShopSales"]"
+    window.ADMIN_DASH_LOC = {
+        months: @Html.Raw(Json.Serialize(new[] {
+            Localizer["MonthJan"].Value,
+            Localizer["MonthFeb"].Value,
+            Localizer["MonthMar"].Value,
+            Localizer["MonthApr"].Value,
+            Localizer["MonthMay"].Value,
+            Localizer["MonthJun"].Value,
+            Localizer["MonthJul"].Value,
+            Localizer["MonthAug"].Value,
+            Localizer["MonthSep"].Value,
+            Localizer["MonthOct"].Value,
+            Localizer["MonthNov"].Value,
+            Localizer["MonthDec"].Value
+        })),
+        tooltipRevenue: @Html.Raw(Json.Serialize(Localizer["TooltipRevenue"].Value)),
+        tooltipNewUsers: @Html.Raw(Json.Serialize(Localizer["TooltipNewUsers"].Value))
     };
 </script>
 <script src="~/js/admin/sh-common.js" asp-append-version="true"></script>

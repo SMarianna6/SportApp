@@ -1,5 +1,7 @@
 ﻿(function () {
     'use strict';
+    var L = window.SH_LOC || {};
+    var locale = L.culture || 'en-US';
 
     document.addEventListener('DOMContentLoaded', function () {
         const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
@@ -24,14 +26,22 @@
         }
 
         function formatDate(dateStr) {
-            return new Date(dateStr).toLocaleDateString('en-US', {
+            return new Date(dateStr).toLocaleDateString(locale, {
                 year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
             });
         }
 
+        function statusLabel(status) {
+            return L['status' + status] || status;
+        }
+
+        function money(value) {
+            return '₴' + Number(value).toFixed(2);
+        }
+
         function getStatusOptions(currentStatus) {
             const statuses = ['Pending', 'Processing', 'Shipped', 'Completed', 'Cancelled'];
-            return statuses.map(s => `<option value="${s}" ${s === currentStatus ? 'selected' : ''}>${s}</option>`).join('');
+            return statuses.map(s => `<option value="${s}" ${s === currentStatus ? 'selected' : ''}>${statusLabel(s)}</option>`).join('');
         }
 
         async function loadOrders() {
@@ -42,13 +52,13 @@
                 renderTable();
             } catch (e) {
                 console.error(e);
-                tbody.innerHTML = '<tr><td colspan="6" class="p-8 text-center text-[#FF5252]">Failed to load orders.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" class="p-8 text-center text-[#FF5252]">' + (L.failedLoadOrders || 'Failed to load orders.') + '</td></tr>';
             }
         }
 
         function renderTable() {
             if (filteredOrders.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" class="p-8 text-center text-white/50">No orders found.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" class="p-8 text-center text-white/50">' + (L.noOrders || 'No orders found.') + '</td></tr>';
                 return;
             }
 
@@ -66,7 +76,7 @@
                             <div class="text-xs text-white/50">${o.customerEmail}</div>
                         </td>
                         <td class="px-5 py-4 text-white/70 whitespace-nowrap">${formatDate(o.orderDate)}</td>
-                        <td class="px-5 py-4 font-bold text-neon">₴${o.totalAmount.toFixed(2)} <span class="text-xs text-white/50 font-normal">(${o.itemsCount} items)</span></td>
+                        <td class="px-5 py-4 font-bold text-neon">${money(o.totalAmount)} <span class="text-xs text-white/50 font-normal">${(L.itemsCount || '({0} items)').replace('{0}', o.itemsCount)}</span></td>
                         <td class="px-5 py-4">
                             <select class="status-select rounded-md border border-white/10 bg-[#111] px-3 py-1.5 text-xs font-bold uppercase tracking-wider focus:outline-none ${statusColor}" data-id="${o.id}">
                                 ${getStatusOptions(o.status)}
@@ -74,7 +84,7 @@
                         </td>
                         <td class="px-5 py-4 text-right">
                             <button type="button" class="btn-view rounded-md bg-white/10 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-white/20" data-id="${o.id}">
-                                View
+                                ${L.viewBtn || 'View'}
                             </button>
                         </td>
                     </tr>
@@ -105,7 +115,7 @@
 
                 const data = await res.json();
                 if (data.success) {
-                    showToast(`Order #${id} updated to ${newStatus}`);
+                    showToast((L.orderUpdated || 'Order #{0} updated to {1}').replace('{0}', id).replace('{1}', statusLabel(newStatus)));
                     // Update local data
                     const order = ORDERS.find(o => o.id == id);
                     if (order) order.status = newStatus;
@@ -119,11 +129,11 @@
                     // Reset classes
                     select.className = `status-select rounded-md border border-white/10 bg-[#111] px-3 py-1.5 text-xs font-bold uppercase tracking-wider focus:outline-none ${statusColor}`;
                 } else {
-                    showToast('Failed to update status.', true);
+                    showToast(L.statusUpdateFailed || 'Failed to update status.', true);
                     select.value = ORDERS.find(o => o.id == id).status; // revert
                 }
             } catch (err) {
-                showToast('Network error.', true);
+                showToast(L.networkError || 'Network error.', true);
             } finally {
                 select.disabled = false;
             }
@@ -141,7 +151,7 @@
             document.getElementById('modal-client').textContent = order.customerName;
             document.getElementById('modal-email').textContent = order.customerEmail;
             document.getElementById('modal-date').textContent = formatDate(order.orderDate);
-            document.getElementById('modal-total').textContent = `Total: ₴${order.totalAmount.toFixed(2)}`;
+            document.getElementById('modal-total').textContent = (L.total || 'Total: {0}').replace('{0}', money(order.totalAmount));
 
             const itemsHtml = order.items.map(item => `
                 <div class="flex items-center gap-4 rounded-lg bg-[#222] p-3 border border-white/5">
@@ -153,10 +163,10 @@
                     </div>
                     <div class="flex-1">
                         <p class="font-bold text-sm text-white">${item.productName}</p>
-                        <p class="text-xs text-white/50">${item.quantity} × ₴${item.unitPrice.toFixed(2)}</p>
+                        <p class="text-xs text-white/50">${item.quantity} × ${money(item.unitPrice)}</p>
                     </div>
                     <div class="font-black text-neon">
-                        ₴${(item.quantity * item.unitPrice).toFixed(2)}
+                        ${money(item.quantity * item.unitPrice)}
                     </div>
                 </div>
             `).join('');

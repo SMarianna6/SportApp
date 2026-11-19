@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+	<data name="NewMessageFrom" xml:space="preserve">
+	<value>New message from {0}</value>
+</data>
+	<data name="UpcomingWorkout" xml:space="preserve">
+	<value>Upcoming Workout</value>
+</data>
+	<data name="UpcomingWorkoutText" xml:space="preserve">
+	<value>{0} with {1} at {2}</value>
+</data>
+	<data name="WorkoutCancelled" xml:space="preserve">
+	<value>Workout Cancelled</value>
+</data>
+	<data name="WorkoutCancelledText" xml:space="preserve">
+	<value>Your {0} session on {1} was cancelled.</value>
+</data>
+	<data name="UpcomingSession" xml:space="preserve">
+	<value>Upcoming Session</value>
+</data>
+	<data name="UpcomingSessionText" xml:space="preserve">
+	<value>{0} starts at {1} ({2} booked)</value>
+</data>
+	<data name="LowStockAlert" xml:space="preserve">
+	<value>Low Stock Alert</value>
+</data>
+	<data name="LowStockText" xml:space="preserve">
+	<value>{0} only has {1} left in stock!</value>
+</data>
+	<data name="NewClientRegistered" xml:space="preserve">
+	<value>New Client Registered</value>
+</data>
+	<data name="NewClientText" xml:space="preserve">
+	<value>{0} just joined SportLab.</value>
+</data>
+</root>

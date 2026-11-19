@@ -7,24 +7,24 @@ namespace SportLab.Models
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "User is required")]
-        [Display(Name = "User")]
+        [Required(ErrorMessage = "Validation.UserRequired")]
+        [Display(Name = "Field.User")]
         public int UserId { get; set; }
 
         public User? User { get; set; }
 
-        [Required(ErrorMessage = "Please enter current weight")]
-        [Display(Name = "Weight (kg)")]
-        [Range(20.0, 300.0, ErrorMessage = "Weight must be between 20 and 300 kg")]
+        [Required(ErrorMessage = "Validation.WeightRequired")]
+        [Display(Name = "Field.WeightKg")]
+        [Range(20.0, 300.0, ErrorMessage = "Validation.WeightRange")]
         public float Weight { get; set; }
 
         [Required]
-        [Display(Name = "Record Date")]
+        [Display(Name = "Field.RecordDate")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime RecordDate { get; set; } = DateTime.Now;
 
-        [Display(Name = "Notes")]
+        [Display(Name = "Field.Notes")]
         [StringLength(250)]
         public string? Notes { get; set; }
     }

@@ -57,4 +57,16 @@
 	<data name="Unit.Kg" xml:space="preserve">
 	<value>кг</value>
 </data>
+	<data name="Status.Available" xml:space="preserve">
+	<value>Доступно</value>
+</data>
+	<data name="Status.Booked" xml:space="preserve">
+	<value>Заброньовано</value>
+</data>
+	<data name="Status.Completed" xml:space="preserve">
+	<value>Завершено</value>
+</data>
+	<data name="Status.Cancelled" xml:space="preserve">
+	<value>Скасовано</value>
+</data>
 </root>

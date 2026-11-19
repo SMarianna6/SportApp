@@ -3,8 +3,20 @@
 (function () {
     'use strict';
     var SH = window.SH;
+    var L = window.SH_LOC || {};
 
     var users = [];
+
+    function roleLabel(role) {
+        var map = {
+            Client: L.roleClient,
+            Trainer: L.roleTrainer,
+            Administrator: L.roleAdministrator,
+            Admin: L.roleAdmin,
+            Moderator: L.roleModerator
+        };
+        return map[role] || role;
+    }
     var tariffDataEl = document.getElementById('sh-tariffs-data');
     var tariffNames = tariffDataEl ? JSON.parse(tariffDataEl.textContent) : ['Basic', 'Pro', 'Elite'];
     var editing = null;
@@ -30,17 +42,17 @@
     }
 
     function render() {
-        count.textContent = users.length + ' registered accounts';
+        count.textContent = (L.registeredAccounts || '{0} registered accounts').replace('{0}', users.length);
         body.innerHTML = users.map(function (u) {
             return '<tr data-id="' + u.id + '">' +
                 '<td class="sh-strong">' + SH.esc(u.name) + '</td>' +
                 '<td>' + SH.esc(u.email) + '</td>' +
-                '<td>' + SH.esc(u.role) + '</td>' +
+                '<td>' + SH.esc(roleLabel(u.role)) + '</td>' +
                 '<td><span class="sh-badge-violet">' + SH.esc(u.tariff) + '</span></td>' +
-                '<td><button type="button" class="sh-status ' + (u.active ? 'is-active' : 'is-inactive') + '" data-act="toggle" title="Toggle status">' + (u.active ? 'Active' : 'Inactive') + '</button></td>' +
+                '<td><button type="button" class="sh-status ' + (u.active ? 'is-active' : 'is-inactive') + '" data-act="toggle" title="' + SH.esc(L.toggleStatus || 'Toggle status') + '">' + (u.active ? SH.esc(L.active || 'Active') : SH.esc(L.inactive || 'Inactive')) + '</button></td>' +
                 '<td><div class="sh-actions">' +
-                '<button type="button" class="sh-icon-btn" data-act="edit" aria-label="Edit ' + SH.esc(u.name) + '">' + SH.icon.pencil() + '</button>' +
-                '<button type="button" class="sh-icon-btn sh-danger" data-act="delete" aria-label="Delete ' + SH.esc(u.name) + '">' + SH.icon.trash() + '</button>' +
+                '<button type="button" class="sh-icon-btn" data-act="edit" aria-label="' + SH.esc((L.editLabel || 'Edit: {0}').replace('{0}', u.name)) + '">' + SH.icon.pencil() + '</button>' +
+                '<button type="button" class="sh-icon-btn sh-danger" data-act="delete" aria-label="' + SH.esc((L.deleteLabel || 'Delete: {0}').replace('{0}', u.name)) + '">' + SH.icon.trash() + '</button>' +
                 '</div></td></tr>';
         }).join('');
     }
@@ -66,7 +78,7 @@
 
             if (f.Password) {
                 f.Password.value = '';
-                f.Password.placeholder = user ? 'Leave blank to keep' : '';
+                f.Password.placeholder = user ? (L.leaveBlankToKeep || 'Leave blank to keep') : '';
             }
 
             if (f.Role) {
@@ -94,7 +106,7 @@
                     $(f.Password).rules('add', {
                         required: true,
                         messages: {
-                            required: 'Password is required'
+                            required: L.passwordRequired || 'Password is required'
                         }
                     });
                 }
@@ -115,7 +127,7 @@
         }
 
         if (title) {
-            title.textContent = user ? 'Edit User' : 'Add User';
+            title.textContent = user ? (L.editUser || 'Edit User') : (L.addUser || 'Add User');
         }
 
         SH.openModal('sh-user-modal');
@@ -131,7 +143,7 @@
         var act = btn.getAttribute('data-act');
         if (act === 'edit') openForm(user);
         if (act === 'delete') {
-            if (confirm('Are you sure you want to delete this user?')) {
+            if (confirm(L.deleteUserConfirm || 'Are you sure you want to delete this user?')) {
                 await fetch('/Admin/DeleteUserApi?id=' + id, { method: 'POST' });
                 loadUsers();
             }

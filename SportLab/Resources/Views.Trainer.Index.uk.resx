@@ -159,4 +159,43 @@
   <data name="BookSessionBtn" xml:space="preserve">
     <value>Записатися</value>
   </data>
+	<data name="CloseAria" xml:space="preserve">
+	<value>Закрити</value>
+</data>
+	<data name="FilterBySpecialtyAria" xml:space="preserve">
+	<value>Фільтрувати тренерів за спеціалізацією</value>
+</data>
+	<data name="AboutFallback" xml:space="preserve">
+	<value>Досвідчений фітнес-тренер, готовий допомогти вам досягти поставлених цілей.</value>
+</data>
+	<data name="SpecialtyBoxing" xml:space="preserve">
+	<value>Бокс</value>
+</data>
+	<data name="SpecialtyStrength" xml:space="preserve">
+	<value>Силові</value>
+</data>
+	<data name="SpecialtyYoga" xml:space="preserve">
+	<value>Йога</value>
+</data>
+	<data name="SpecialtyMobility" xml:space="preserve">
+	<value>Мобільність</value>
+</data>
+	<data name="SpecialtyCombat" xml:space="preserve">
+	<value>Єдиноборства</value>
+</data>
+	<data name="SpecialtyFunctional" xml:space="preserve">
+	<value>Функціональні</value>
+</data>
+	<data name="SpecialtyPilates" xml:space="preserve">
+	<value>Пілатес</value>
+</data>
+	<data name="SpecialtyHIIT" xml:space="preserve">
+	<value>HIIT</value>
+</data>
+	<data name="SpecialtyCycling" xml:space="preserve">
+	<value>Сайклінг</value>
+</data>
+	<data name="SpecialtyCardio" xml:space="preserve">
+	<value>Кардіо</value>
+</data>
 </root>

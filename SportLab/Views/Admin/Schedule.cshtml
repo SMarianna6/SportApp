@@ -6,6 +6,16 @@
 @{
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
     ViewData["Title"] = Localizer["ScheduleTitle"];
+
+    var typeLabels = new Dictionary<string, string>
+    {
+        ["HIIT"] = Localizer["TypeHIIT"].Value,
+        ["Pilates"] = Localizer["TypePilates"].Value,
+        ["Yoga"] = Localizer["TypeYoga"].Value,
+        ["Strength"] = Localizer["TypeStrength"].Value,
+        ["Cycling"] = Localizer["TypeCycling"].Value,
+        ["Boxing"] = Localizer["TypeBoxing"].Value
+    };
 }
 
 <link rel="stylesheet" href="~/css/admin/sporthub.css" asp-append-version="true" />
@@ -112,5 +122,12 @@
     </div>
 </div>
 
+<script>
+    window.ADMIN_SCHEDULE_LOC = {
+        types: @Html.Raw(Json.Serialize(typeLabels)),
+        coach: @Html.Raw(Json.Serialize(Localizer["CoachTooltip"].Value)),
+        booked: @Html.Raw(Json.Serialize(Localizer["BookedTooltip"].Value))
+    };
+</script>
 <script src="~/js/admin/sh-common.js" asp-append-version="true"></script>
 <script src="~/js/admin/sh-schedule.js" asp-append-version="true"></script>

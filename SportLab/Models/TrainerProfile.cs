@@ -18,15 +18,15 @@ namespace SportLab.Models
         public User? User { get; set; }
 
         [DataType(DataType.Date)]
-        [Display(Name = "Date of Birth")]
+        [Display(Name = "Field.DateOfBirth")]
         public DateTime? DateOfBirth { get; set; }
 
         [StringLength(1000)]
-        [Display(Name = "About")]
+        [Display(Name = "Field.About")]
         public string? About { get; set; }
 
         [StringLength(255)]
-        [Display(Name = "Experience")]
+        [Display(Name = "Field.Experience")]
         public string? Experience { get; set; }
 
         /// <summary>
@@ -34,11 +34,11 @@ namespace SportLab.Models
         /// e.g. "CrossFit,Strength,HIIT"
         /// </summary>
         [StringLength(500)]
-        [Display(Name = "Specializations")]
+        [Display(Name = "Field.Specializations")]
         public string? Specializations { get; set; }
 
         [StringLength(500)]
-        [Display(Name = "Photo URL")]
+        [Display(Name = "Field.PhotoUrl")]
         public string? PhotoUrl { get; set; }
     }
 }

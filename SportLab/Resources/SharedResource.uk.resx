@@ -228,4 +228,568 @@
 	<data name="Mobile.MyCart" xml:space="preserve">
 	<value>Мій кошик</value>
 </data>
+	<data name="Field.FullName" xml:space="preserve">
+	<value>Повне ім'я</value>
+</data>
+	<data name="Field.Email" xml:space="preserve">
+	<value>Електронна пошта</value>
+</data>
+	<data name="Field.Password" xml:space="preserve">
+	<value>Пароль</value>
+</data>
+	<data name="Field.Role" xml:space="preserve">
+	<value>Роль</value>
+</data>
+	<data name="Field.IsBlocked" xml:space="preserve">
+	<value>Заблоковано</value>
+</data>
+	<data name="Field.Avatar" xml:space="preserve">
+	<value>Аватар</value>
+</data>
+	<data name="Field.Goal" xml:space="preserve">
+	<value>Мета</value>
+</data>
+	<data name="Field.Question" xml:space="preserve">
+	<value>Запитання</value>
+</data>
+	<data name="Field.Answer" xml:space="preserve">
+	<value>Відповідь</value>
+</data>
+	<data name="Field.SortOrder" xml:space="preserve">
+	<value>Порядок сортування</value>
+</data>
+	<data name="Field.IsActive" xml:space="preserve">
+	<value>Активно</value>
+</data>
+	<data name="Field.Sender" xml:space="preserve">
+	<value>Відправник</value>
+</data>
+	<data name="Field.Receiver" xml:space="preserve">
+	<value>Отримувач</value>
+</data>
+	<data name="Field.Message" xml:space="preserve">
+	<value>Повідомлення</value>
+</data>
+	<data name="Field.DateSent" xml:space="preserve">
+	<value>Дата надсилання</value>
+</data>
+	<data name="Field.IsRead" xml:space="preserve">
+	<value>Прочитано</value>
+</data>
+	<data name="Field.User" xml:space="preserve">
+	<value>Користувач</value>
+</data>
+	<data name="Field.WeightKg" xml:space="preserve">
+	<value>Вага (кг)</value>
+</data>
+	<data name="Field.RecordDate" xml:space="preserve">
+	<value>Дата запису</value>
+</data>
+	<data name="Field.Notes" xml:space="preserve">
+	<value>Нотатки</value>
+</data>
+	<data name="Field.Order" xml:space="preserve">
+	<value>Замовлення</value>
+</data>
+	<data name="Field.Product" xml:space="preserve">
+	<value>Товар</value>
+</data>
+	<data name="Field.Quantity" xml:space="preserve">
+	<value>Кількість</value>
+</data>
+	<data name="Field.UnitPrice" xml:space="preserve">
+	<value>Ціна за одиницю</value>
+</data>
+	<data name="Field.OrderDate" xml:space="preserve">
+	<value>Дата замовлення</value>
+</data>
+	<data name="Field.TotalAmount" xml:space="preserve">
+	<value>Загальна сума</value>
+</data>
+	<data name="Field.Status" xml:space="preserve">
+	<value>Статус</value>
+</data>
+	<data name="Field.PlanName" xml:space="preserve">
+	<value>Назва тарифу</value>
+</data>
+	<data name="Field.Description" xml:space="preserve">
+	<value>Опис</value>
+</data>
+	<data name="Field.Price" xml:space="preserve">
+	<value>Ціна</value>
+</data>
+	<data name="Field.DurationDays" xml:space="preserve">
+	<value>Тривалість (днів)</value>
+</data>
+	<data name="Field.PlanType" xml:space="preserve">
+	<value>Тип тарифу</value>
+</data>
+	<data name="Field.ProductName" xml:space="preserve">
+	<value>Назва товару</value>
+</data>
+	<data name="Field.StockQuantity" xml:space="preserve">
+	<value>Кількість на складі</value>
+</data>
+	<data name="Field.PhotoUrl" xml:space="preserve">
+	<value>URL фото</value>
+</data>
+	<data name="Field.Category" xml:space="preserve">
+	<value>Категорія</value>
+</data>
+	<data name="Field.Rating" xml:space="preserve">
+	<value>Рейтинг</value>
+</data>
+	<data name="Field.Comment" xml:space="preserve">
+	<value>Коментар</value>
+</data>
+	<data name="Field.DateCreated" xml:space="preserve">
+	<value>Дата створення</value>
+</data>
+	<data name="Field.ModerationStatus" xml:space="preserve">
+	<value>Статус модерації</value>
+</data>
+	<data name="Field.Tariff" xml:space="preserve">
+	<value>Тариф</value>
+</data>
+	<data name="Field.StartDate" xml:space="preserve">
+	<value>Дата початку</value>
+</data>
+	<data name="Field.EndDate" xml:space="preserve">
+	<value>Дата завершення</value>
+</data>
+	<data name="Field.DateOfBirth" xml:space="preserve">
+	<value>Дата народження</value>
+</data>
+	<data name="Field.About" xml:space="preserve">
+	<value>Про себе</value>
+</data>
+	<data name="Field.Experience" xml:space="preserve">
+	<value>Досвід</value>
+</data>
+	<data name="Field.Specializations" xml:space="preserve">
+	<value>Спеціалізації</value>
+</data>
+	<data name="Field.BookedAt" xml:space="preserve">
+	<value>Дата бронювання</value>
+</data>
+	<data name="Field.ActivityName" xml:space="preserve">
+	<value>Назва активності</value>
+</data>
+	<data name="Field.Trainer" xml:space="preserve">
+	<value>Тренер</value>
+</data>
+	<data name="Field.Client" xml:space="preserve">
+	<value>Клієнт</value>
+</data>
+	<data name="Field.StartTime" xml:space="preserve">
+	<value>Час початку</value>
+</data>
+	<data name="Field.EndTime" xml:space="preserve">
+	<value>Час завершення</value>
+</data>
+	<data name="Field.Capacity" xml:space="preserve">
+	<value>Місткість</value>
+</data>
+	<data name="Field.BookedSpots" xml:space="preserve">
+	<value>Заброньовано місць</value>
+</data>
+	<data name="Validation.QuestionRequired" xml:space="preserve">
+	<value>Запитання обов'язкове.</value>
+</data>
+	<data name="Validation.AnswerRequired" xml:space="preserve">
+	<value>Відповідь обов'язкова.</value>
+</data>
+	<data name="Validation.SenderRequired" xml:space="preserve">
+	<value>Відправник обов'язковий.</value>
+</data>
+	<data name="Validation.ReceiverRequired" xml:space="preserve">
+	<value>Отримувач обов'язковий.</value>
+</data>
+	<data name="Validation.MessageRequired" xml:space="preserve">
+	<value>Текст повідомлення не може бути порожнім.</value>
+</data>
+	<data name="Validation.MessageLength" xml:space="preserve">
+	<value>Повідомлення має містити від 1 до 2000 символів.</value>
+</data>
+	<data name="Validation.UserRequired" xml:space="preserve">
+	<value>Користувач обов'язковий.</value>
+</data>
+	<data name="Validation.WeightRequired" xml:space="preserve">
+	<value>Введіть поточну вагу.</value>
+</data>
+	<data name="Validation.WeightRange" xml:space="preserve">
+	<value>Вага має бути від 20 до 300 кг.</value>
+</data>
+	<data name="Validation.TotalAmountRequired" xml:space="preserve">
+	<value>Загальна сума обов'язкова.</value>
+</data>
+	<data name="Validation.TotalAmountRange" xml:space="preserve">
+	<value>Загальна сума має бути більшою за 0.</value>
+</data>
+	<data name="Validation.StatusRequired" xml:space="preserve">
+	<value>Статус обов'язковий.</value>
+</data>
+	<data name="Validation.QuantityRequired" xml:space="preserve">
+	<value>Кількість обов'язкова.</value>
+</data>
+	<data name="Validation.QuantityRange" xml:space="preserve">
+	<value>Кількість має бути від 1 до 1000.</value>
+</data>
+	<data name="Validation.UnitPriceRequired" xml:space="preserve">
+	<value>Ціна за одиницю обов'язкова.</value>
+</data>
+	<data name="Validation.PlanNameRequired" xml:space="preserve">
+	<value>Назва тарифу обов'язкова.</value>
+</data>
+	<data name="Validation.PlanNameLength" xml:space="preserve">
+	<value>Назва не може перевищувати 100 символів.</value>
+</data>
+	<data name="Validation.DescriptionRequired" xml:space="preserve">
+	<value>Опис обов'язковий.</value>
+</data>
+	<data name="Validation.PriceRange" xml:space="preserve">
+	<value>Ціна має бути від 0.01 до 100000.</value>
+</data>
+	<data name="Validation.DurationRange" xml:space="preserve">
+	<value>Тривалість має бути від 1 до 3650 днів.</value>
+</data>
+	<data name="Validation.PlanTypeRequired" xml:space="preserve">
+	<value>Тип тарифу обов'язковий.</value>
+</data>
+	<data name="Validation.ProductNameRequired" xml:space="preserve">
+	<value>Назва товару обов'язкова.</value>
+</data>
+	<data name="Validation.ProductPriceRequired" xml:space="preserve">
+	<value>Ціна обов'язкова.</value>
+</data>
+	<data name="Validation.StockQuantityRequired" xml:space="preserve">
+	<value>Кількість на складі обов'язкова.</value>
+</data>
+	<data name="Validation.CommentRequired" xml:space="preserve">
+	<value>Будь ласка, напишіть коментар.</value>
+</data>
+	<data name="Validation.CommentLength" xml:space="preserve">
+	<value>Коментар має містити від 3 до 1000 символів.</value>
+</data>
+	<data name="Validation.RatingRequired" xml:space="preserve">
+	<value>Оцінка обов'язкова.</value>
+</data>
+	<data name="Validation.RatingRange" xml:space="preserve">
+	<value>Оцінка має бути від 1 до 5.</value>
+</data>
+	<data name="Validation.ModerationStatusRequired" xml:space="preserve">
+	<value>Статус модерації обов'язковий.</value>
+</data>
+	<data name="Validation.NameRequired" xml:space="preserve">
+	<value>Ім'я обов'язкове.</value>
+</data>
+	<data name="Validation.NameLength" xml:space="preserve">
+	<value>Ім'я має містити від 2 до 100 символів.</value>
+</data>
+	<data name="Validation.EmailRequired" xml:space="preserve">
+	<value>Електронна пошта обов'язкова.</value>
+</data>
+	<data name="Validation.EmailFormat" xml:space="preserve">
+	<value>Невірний формат електронної пошти.</value>
+</data>
+	<data name="Validation.EmailLength" xml:space="preserve">
+	<value>Електронна пошта не може перевищувати 150 символів.</value>
+</data>
+	<data name="Validation.PasswordRequired" xml:space="preserve">
+	<value>Пароль обов'язковий.</value>
+</data>
+	<data name="Validation.PasswordLength" xml:space="preserve">
+	<value>Пароль має містити від 6 до 256 символів.</value>
+</data>
+	<data name="Validation.RoleRequired" xml:space="preserve">
+	<value>Роль обов'язкова.</value>
+</data>
+	<data name="Validation.RoleLength" xml:space="preserve">
+	<value>Роль не може перевищувати 50 символів.</value>
+</data>
+	<data name="Validation.ActivityNameRequired" xml:space="preserve">
+	<value>Назва активності обов'язкова.</value>
+</data>
+	<data name="Validation.ActivityNameLength" xml:space="preserve">
+	<value>Назва активності має містити від 2 до 100 символів.</value>
+</data>
+	<data name="Validation.TrainerRequired" xml:space="preserve">
+	<value>Потрібно вказати тренера.</value>
+</data>
+	<data name="Validation.StartTimeRequired" xml:space="preserve">
+	<value>Час початку обов'язковий.</value>
+</data>
+	<data name="Validation.EndTimeRequired" xml:space="preserve">
+	<value>Час завершення обов'язковий.</value>
+</data>
+	<data name="Validation.CapacityRange" xml:space="preserve">
+	<value>Місткість має бути від 1 до 1000.</value>
+</data>
+	<data name="Validation.BookedSpotsRange" xml:space="preserve">
+	<value>Кількість заброньованих місць не може бути від'ємною.</value>
+</data>
+	<data name="Validation.EndTimeAfterStart" xml:space="preserve">
+	<value>Час завершення має бути пізніше часу початку.</value>
+</data>
+	<data name="Validation.BookedExceedsCapacity" xml:space="preserve">
+	<value>Кількість заброньованих місць не може перевищувати місткість.</value>
+</data>
+	<data name="Aria.MainNavigation" xml:space="preserve">
+	<value>Головна навігація</value>
+</data>
+	<data name="Aria.OpenMenu" xml:space="preserve">
+	<value>Відкрити меню</value>
+</data>
+	<data name="Aria.ServicesNavigation" xml:space="preserve">
+	<value>Послуги SportHUB</value>
+</data>
+	<data name="Aria.AccountNavigation" xml:space="preserve">
+	<value>Акаунт і підтримка</value>
+</data>
+	<data name="AdminJs.QuestionsCount" xml:space="preserve">
+	<value>{0} запитань</value>
+</data>
+	<data name="AdminJs.QuestionCount" xml:space="preserve">
+	<value>{0} запитання</value>
+</data>
+	<data name="AdminJs.NoFaqs" xml:space="preserve">
+	<value>Ще немає запитань. Натисніть "Додати запитання", щоб створити перше.</value>
+</data>
+	<data name="AdminJs.ToggleStatus" xml:space="preserve">
+	<value>Змінити статус</value>
+</data>
+	<data name="AdminJs.MoveUp" xml:space="preserve">
+	<value>Перемістити вгору: {0}</value>
+</data>
+	<data name="AdminJs.MoveDown" xml:space="preserve">
+	<value>Перемістити вниз: {0}</value>
+</data>
+	<data name="AdminJs.EditLabel" xml:space="preserve">
+	<value>Редагувати: {0}</value>
+</data>
+	<data name="AdminJs.DeleteLabel" xml:space="preserve">
+	<value>Видалити: {0}</value>
+</data>
+	<data name="AdminJs.Active" xml:space="preserve">
+	<value>Активний</value>
+</data>
+	<data name="AdminJs.Inactive" xml:space="preserve">
+	<value>Неактивний</value>
+</data>
+	<data name="AdminJs.EditFaq" xml:space="preserve">
+	<value>Редагувати запитання</value>
+</data>
+	<data name="AdminJs.AddFaq" xml:space="preserve">
+	<value>Додати запитання</value>
+</data>
+	<data name="AdminJs.DeleteFaqConfirm" xml:space="preserve">
+	<value>Ви впевнені, що хочете видалити це запитання?</value>
+</data>
+	<data name="AdminJs.FailedLoadOrders" xml:space="preserve">
+	<value>Не вдалося завантажити замовлення.</value>
+</data>
+	<data name="AdminJs.NoOrders" xml:space="preserve">
+	<value>Замовлень не знайдено.</value>
+</data>
+	<data name="AdminJs.StatusUpdateFailed" xml:space="preserve">
+	<value>Не вдалося оновити статус.</value>
+</data>
+	<data name="AdminJs.NetworkError" xml:space="preserve">
+	<value>Помилка мережі.</value>
+</data>
+	<data name="AdminJs.EditClass" xml:space="preserve">
+	<value>Редагувати заняття</value>
+</data>
+	<data name="AdminJs.AddClass" xml:space="preserve">
+	<value>Додати заняття</value>
+</data>
+	<data name="AdminJs.StartEndRequired" xml:space="preserve">
+	<value>Потрібно вказати час початку та завершення.</value>
+</data>
+	<data name="AdminJs.ClassTimeRange" xml:space="preserve">
+	<value>Заняття мають бути між 08:00 та 20:00.</value>
+</data>
+	<data name="AdminJs.EndAfterStart" xml:space="preserve">
+	<value>Час завершення має бути пізніше часу початку.</value>
+</data>
+	<data name="AdminJs.CoachRequired" xml:space="preserve">
+	<value>Потрібно вказати тренера.</value>
+</data>
+	<data name="AdminJs.CapacityPositive" xml:space="preserve">
+	<value>Місткість має бути більшою за нуль.</value>
+</data>
+	<data name="AdminJs.SaveClassFailed" xml:space="preserve">
+	<value>Не вдалося зберегти заняття.</value>
+</data>
+	<data name="AdminJs.SaveClassError" xml:space="preserve">
+	<value>Під час збереження заняття сталася помилка.</value>
+</data>
+	<data name="AdminJs.DeleteClassConfirm" xml:space="preserve">
+	<value>Видалити це заняття?</value>
+</data>
+	<data name="AdminJs.DeleteClassFailed" xml:space="preserve">
+	<value>Не вдалося видалити заняття.</value>
+</data>
+	<data name="AdminJs.DeleteClassError" xml:space="preserve">
+	<value>Під час видалення заняття сталася помилка.</value>
+</data>
+	<data name="AdminJs.AccountUpdated" xml:space="preserve">
+	<value>Акаунт успішно оновлено.</value>
+</data>
+	<data name="AdminJs.AccountUpdateFailed" xml:space="preserve">
+	<value>Не вдалося оновити акаунт.</value>
+</data>
+	<data name="AdminJs.PasswordsMismatch" xml:space="preserve">
+	<value>Паролі не збігаються.</value>
+</data>
+	<data name="AdminJs.PasswordUpdated" xml:space="preserve">
+	<value>Пароль успішно оновлено.</value>
+</data>
+	<data name="AdminJs.PasswordUpdateFailed" xml:space="preserve">
+	<value>Не вдалося оновити пароль.</value>
+</data>
+	<data name="AdminJs.ChooseFile" xml:space="preserve">
+	<value>Обрати файл</value>
+</data>
+	<data name="AdminJs.EditProduct" xml:space="preserve">
+	<value>Редагувати товар</value>
+</data>
+	<data name="AdminJs.AddProduct" xml:space="preserve">
+	<value>Додати товар</value>
+</data>
+	<data name="AdminJs.ShowLess" xml:space="preserve">
+	<value>Згорнути</value>
+</data>
+	<data name="AdminJs.ReadMore" xml:space="preserve">
+	<value>Читати далі</value>
+</data>
+	<data name="AdminJs.NoTariffs" xml:space="preserve">
+	<value>Немає тарифів. Натисніть "Додати тариф", щоб створити перший.</value>
+</data>
+	<data name="AdminJs.Day" xml:space="preserve">
+	<value>день</value>
+</data>
+	<data name="AdminJs.Days" xml:space="preserve">
+	<value>днів</value>
+</data>
+	<data name="AdminJs.EditBtn" xml:space="preserve">
+	<value>Редагувати</value>
+</data>
+	<data name="AdminJs.DeleteBtn" xml:space="preserve">
+	<value>Видалити</value>
+</data>
+	<data name="AdminJs.EditTariff" xml:space="preserve">
+	<value>Редагувати тариф</value>
+</data>
+	<data name="AdminJs.AddTariff" xml:space="preserve">
+	<value>Додати тариф</value>
+</data>
+	<data name="AdminJs.DeleteTariffConfirm" xml:space="preserve">
+	<value>Ви впевнені, що хочете видалити цей тариф?</value>
+</data>
+	<data name="AdminJs.RegisteredAccounts" xml:space="preserve">
+	<value>Зареєстрованих акаунтів: {0}</value>
+</data>
+	<data name="AdminJs.LeaveBlankToKeep" xml:space="preserve">
+	<value>Залиште порожнім, щоб не змінювати</value>
+</data>
+	<data name="AdminJs.PasswordRequired" xml:space="preserve">
+	<value>Потрібно вказати пароль</value>
+</data>
+	<data name="AdminJs.EditUser" xml:space="preserve">
+	<value>Редагувати користувача</value>
+</data>
+	<data name="AdminJs.AddUser" xml:space="preserve">
+	<value>Додати користувача</value>
+</data>
+	<data name="AdminJs.DeleteUserConfirm" xml:space="preserve">
+	<value>Ви впевнені, що хочете видалити цього користувача?</value>
+</data>
+	<data name="AdminJs.StatRevenue" xml:space="preserve">
+	<value>Дохід</value>
+</data>
+	<data name="AdminJs.StatActiveMembers" xml:space="preserve">
+	<value>Активні учасники</value>
+</data>
+	<data name="AdminJs.StatClassBookings" xml:space="preserve">
+	<value>Бронювання занять</value>
+</data>
+	<data name="AdminJs.StatShopSales" xml:space="preserve">
+	<value>Продажі магазину</value>
+</data>
+	<data name="AdminJs.LoadDataFailed" xml:space="preserve">
+	<value>Не вдалося завантажити дані.</value>
+</data>
+	<data name="AdminJs.AddClassAria" xml:space="preserve">
+	<value>Додати заняття в {0} о {1}</value>
+</data>
+	<data name="Aria.CloseMenu" xml:space="preserve">
+	<value>Закрити меню</value>
+</data>
+	<data name="AdminJs.ViewPhoto" xml:space="preserve">
+	<value>Переглянути фото: {0}</value>
+</data>
+	<data name="AdminJs.NoPhoto" xml:space="preserve">
+	<value>Немає фото: {0}</value>
+</data>
+	<data name="AdminJs.DecreaseStock" xml:space="preserve">
+	<value>Зменшити: {0}</value>
+</data>
+	<data name="AdminJs.IncreaseStock" xml:space="preserve">
+	<value>Збільшити: {0}</value>
+</data>
+	<data name="Role.Client" xml:space="preserve">
+	<value>Клієнт</value>
+</data>
+	<data name="Role.Trainer" xml:space="preserve">
+	<value>Тренер</value>
+</data>
+	<data name="Role.Administrator" xml:space="preserve">
+	<value>Адміністратор</value>
+</data>
+	<data name="Role.Moderator" xml:space="preserve">
+	<value>Модератор</value>
+</data>
+	<data name="Role.Admin" xml:space="preserve">
+	<value>Адмін</value>
+</data>
+	<data name="Specialty.Coach" xml:space="preserve">
+	<value>Тренер</value>
+</data>
+	<data name="AdminJs.StatusPending" xml:space="preserve">
+	<value>В очікуванні</value>
+</data>
+	<data name="AdminJs.StatusApproved" xml:space="preserve">
+	<value>Схвалено</value>
+</data>
+	<data name="AdminJs.StatusProcessing" xml:space="preserve">
+	<value>В обробці</value>
+</data>
+	<data name="AdminJs.StatusShipped" xml:space="preserve">
+	<value>Відправлено</value>
+</data>
+	<data name="AdminJs.StatusCompleted" xml:space="preserve">
+	<value>Виконано</value>
+</data>
+	<data name="AdminJs.StatusCancelled" xml:space="preserve">
+	<value>Скасовано</value>
+</data>
+	<data name="AdminJs.StatusHidden" xml:space="preserve">
+	<value>Приховано</value>
+</data>
+	<data name="AdminJs.StatusPublished" xml:space="preserve">
+	<value>Опубліковано</value>
+</data>
+	<data name="AdminJs.ViewBtn" xml:space="preserve">
+	<value>Переглянути</value>
+</data>
+	<data name="AdminJs.ItemsCount" xml:space="preserve">
+	<value>({0} шт.)</value>
+</data>
+	<data name="AdminJs.Total" xml:space="preserve">
+	<value>Разом: {0}</value>
+</data>
+	<data name="AdminJs.OrderUpdated" xml:space="preserve">
+	<value>Замовлення №{0} оновлено до {1}</value>
+</data>
 </root>

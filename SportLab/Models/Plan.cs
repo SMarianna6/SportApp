@@ -8,28 +8,28 @@ namespace SportLab.Models
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Plan name is required")]
-        [StringLength(100, ErrorMessage = "Name cannot exceed 100 characters")]
-        [Display(Name = "Plan Name")]
+        [Required(ErrorMessage = "Validation.PlanNameRequired")]
+        [StringLength(100, ErrorMessage = "Validation.PlanNameLength")]
+        [Display(Name = "Field.PlanName")]
         public required string Name { get; set; }
 
-        [Required(ErrorMessage = "Description is required")]
-        [Display(Name = "Description")]
+        [Required(ErrorMessage = "Validation.DescriptionRequired")]
+        [Display(Name = "Field.Description")]
         public required string Description { get; set; }
 
-        [Range(0.01, 100000.00, ErrorMessage = "Price must be between 0.01 and 100000")]
+        [Range(0.01, 100000.00, ErrorMessage = "Validation.PriceRange")]
         [Column(TypeName = "decimal(18,2)")]
-        [Display(Name = "Price")]
+        [Display(Name = "Field.Price")]
         [DataType(DataType.Currency)]
         [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
         public decimal Price { get; set; }
 
-        [Range(1, 3650, ErrorMessage = "Duration must be between 1 and 3650 days")]
-        [Display(Name = "Duration (days)")]
+        [Range(1, 3650, ErrorMessage = "Validation.DurationRange")]
+        [Display(Name = "Field.DurationDays")]
         public int Duration { get; set; }
 
-        [Required(ErrorMessage = "Plan type is required")]
-        [Display(Name = "Plan Type")]
+        [Required(ErrorMessage = "Validation.PlanTypeRequired")]
+        [Display(Name = "Field.PlanType")]
         public string? Type { get; set; }
 
         public ICollection<Subscription> Subscriptions { get; set; } = new List<Subscription>();

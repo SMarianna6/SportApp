@@ -112,4 +112,19 @@
 	<data name="ConfirmDeleteScript" xml:space="preserve"><value>Видалити цей відгук назавжди?</value></data>
 	<data name="ReviewDeletedScript" xml:space="preserve"><value>Відгук видалено.</value></data>
 	<data name="NetworkErrorScript" xml:space="preserve"><value>Помилка мережі.</value></data>
+	<data name="ActionFailedScript" xml:space="preserve">
+	<value>Не вдалося виконати дію.</value>
+</data>
+	<data name="Status.Pending" xml:space="preserve">
+	<value>В очікуванні</value>
+</data>
+	<data name="Status.Approved" xml:space="preserve">
+	<value>Схвалено</value>
+</data>
+	<data name="Status.Published" xml:space="preserve">
+	<value>Опубліковано</value>
+</data>
+	<data name="Status.Hidden" xml:space="preserve">
+	<value>Приховано</value>
+</data>
 </root>

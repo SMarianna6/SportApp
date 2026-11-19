@@ -215,4 +215,7 @@
 	<data name="SecurityGuaranteeText" xml:space="preserve">
     <value>Instant digital membership card generation in your profile upon confirmation.</value>
   </data>
+	<data name="Aria.Breadcrumb" xml:space="preserve">
+	<value>Breadcrumb</value>
+</data>
 </root>

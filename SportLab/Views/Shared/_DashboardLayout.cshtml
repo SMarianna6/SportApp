@@ -291,7 +291,7 @@
                         
                         <div class="hidden text-left sm:block pr-2">
                             <span id="nav-user-name" class="block text-sm font-bold text-ink">@firstName</span>
-                            <span class="block text-[11px] uppercase text-ink/50">@userRole</span>
+                            <span class="block text-[11px] uppercase text-ink/50">@SharedLocalizer["Role." + userRole]</span>
                         </div>
                         <svg class="hidden lg:block h-4 w-4 text-ink/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
                     </button>
@@ -532,6 +532,89 @@
                 }
             }, 500);
         });
+    </script>
+
+    <script>
+        window.SH_LOC = {
+            culture: '@System.Globalization.CultureInfo.CurrentUICulture.Name',
+            questionsCount: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.QuestionsCount"].Value)),
+            questionCount: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.QuestionCount"].Value)),
+            noFaqs: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.NoFaqs"].Value)),
+            toggleStatus: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.ToggleStatus"].Value)),
+            moveUp: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.MoveUp"].Value)),
+            moveDown: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.MoveDown"].Value)),
+            editLabel: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.EditLabel"].Value)),
+            deleteLabel: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.DeleteLabel"].Value)),
+            active: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.Active"].Value)),
+            inactive: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.Inactive"].Value)),
+            editFaq: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.EditFaq"].Value)),
+            addFaq: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.AddFaq"].Value)),
+            deleteFaqConfirm: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.DeleteFaqConfirm"].Value)),
+            failedLoadOrders: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.FailedLoadOrders"].Value)),
+            noOrders: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.NoOrders"].Value)),
+            statusUpdateFailed: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.StatusUpdateFailed"].Value)),
+            networkError: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.NetworkError"].Value)),
+            editClass: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.EditClass"].Value)),
+            addClass: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.AddClass"].Value)),
+            startEndRequired: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.StartEndRequired"].Value)),
+            classTimeRange: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.ClassTimeRange"].Value)),
+            endAfterStart: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.EndAfterStart"].Value)),
+            coachRequired: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.CoachRequired"].Value)),
+            capacityPositive: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.CapacityPositive"].Value)),
+            saveClassFailed: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.SaveClassFailed"].Value)),
+            saveClassError: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.SaveClassError"].Value)),
+            deleteClassConfirm: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.DeleteClassConfirm"].Value)),
+            deleteClassFailed: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.DeleteClassFailed"].Value)),
+            deleteClassError: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.DeleteClassError"].Value)),
+            addClassAria: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.AddClassAria"].Value)),
+            accountUpdated: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.AccountUpdated"].Value)),
+            accountUpdateFailed: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.AccountUpdateFailed"].Value)),
+            passwordsMismatch: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.PasswordsMismatch"].Value)),
+            passwordUpdated: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.PasswordUpdated"].Value)),
+            passwordUpdateFailed: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.PasswordUpdateFailed"].Value)),
+            chooseFile: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.ChooseFile"].Value)),
+            editProduct: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.EditProduct"].Value)),
+            viewPhoto: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.ViewPhoto"].Value)),
+            noPhoto: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.NoPhoto"].Value)),
+            decreaseStock: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.DecreaseStock"].Value)),
+            increaseStock: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.IncreaseStock"].Value)),
+            addProduct: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.AddProduct"].Value)),
+            showLess: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.ShowLess"].Value)),
+            readMore: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.ReadMore"].Value)),
+            noTariffs: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.NoTariffs"].Value)),
+            day: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.Day"].Value)),
+            days: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.Days"].Value)),
+            editBtn: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.EditBtn"].Value)),
+            deleteBtn: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.DeleteBtn"].Value)),
+            editTariff: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.EditTariff"].Value)),
+            addTariff: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.AddTariff"].Value)),
+            deleteTariffConfirm: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.DeleteTariffConfirm"].Value)),
+            registeredAccounts: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.RegisteredAccounts"].Value)),
+            leaveBlankToKeep: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.LeaveBlankToKeep"].Value)),
+            passwordRequired: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.PasswordRequired"].Value)),
+            editUser: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.EditUser"].Value)),
+            addUser: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.AddUser"].Value)),
+            deleteUserConfirm: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.DeleteUserConfirm"].Value)),
+            statRevenue: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.StatRevenue"].Value)),
+            statActiveMembers: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.StatActiveMembers"].Value)),
+            statClassBookings: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.StatClassBookings"].Value)),
+            statShopSales: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.StatShopSales"].Value)),
+            loadDataFailed: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.LoadDataFailed"].Value)),
+            statusPending: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.StatusPending"].Value)),
+            statusProcessing: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.StatusProcessing"].Value)),
+            statusShipped: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.StatusShipped"].Value)),
+            statusCompleted: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.StatusCompleted"].Value)),
+            statusCancelled: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.StatusCancelled"].Value)),
+            viewBtn: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.ViewBtn"].Value)),
+            itemsCount: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.ItemsCount"].Value)),
+            total: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.Total"].Value)),
+            orderUpdated: @Html.Raw(Json.Serialize(SharedLocalizer["AdminJs.OrderUpdated"].Value)),
+            roleClient: @Html.Raw(Json.Serialize(SharedLocalizer["Role.Client"].Value)),
+            roleTrainer: @Html.Raw(Json.Serialize(SharedLocalizer["Role.Trainer"].Value)),
+            roleAdministrator: @Html.Raw(Json.Serialize(SharedLocalizer["Role.Administrator"].Value)),
+            roleModerator: @Html.Raw(Json.Serialize(SharedLocalizer["Role.Moderator"].Value)),
+            roleAdmin: @Html.Raw(Json.Serialize(SharedLocalizer["Role.Admin"].Value))
+        };
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)

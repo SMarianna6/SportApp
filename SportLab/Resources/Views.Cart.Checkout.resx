@@ -227,4 +227,7 @@
 	<data name="GuaranteeText" xml:space="preserve">
     <value>Track your order in real-time or pick it up at the gym front desk today.</value>
   </data>
+	<data name="Aria.Breadcrumb" xml:space="preserve">
+	<value>Breadcrumb</value>
+</data>
 </root>

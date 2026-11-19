@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using SportLab.Data;
 using SportLab.Models;
 
@@ -14,10 +15,12 @@ namespace SportLab.Controllers
     public class ModerationController : Controller
     {
         private readonly SportLabContext _context;
+        private readonly IStringLocalizer<ModerationController> _localizer;
 
-        public ModerationController(SportLabContext context)
+        public ModerationController(SportLabContext context, IStringLocalizer<ModerationController> localizer)
         {
             _context = context;
+            _localizer = localizer;
         }
 
         public async Task<IActionResult> Index()
@@ -44,7 +47,7 @@ namespace SportLab.Controllers
             review.ModerationStatus = "Approved";
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Review approved and published.";
+            TempData["SuccessMessage"] = _localizer["ReviewApproved"].Value;
             return RedirectToAction(nameof(Index));
         }
 
@@ -61,7 +64,7 @@ namespace SportLab.Controllers
             review.ModerationStatus = "Hidden";
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Review hidden from the public page.";
+            TempData["SuccessMessage"] = _localizer["ReviewHidden"].Value;
             return RedirectToAction(nameof(Index));
         }
 
@@ -74,7 +77,7 @@ namespace SportLab.Controllers
             {
                 _context.Reviews.Remove(review);
                 await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Review deleted.";
+                TempData["SuccessMessage"] = _localizer["ReviewDeleted"].Value;
             }
 
             return RedirectToAction(nameof(Index));

@@ -3,6 +3,7 @@ using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using SportLab.Data;
 using SportLab.Models;
 
@@ -12,10 +13,12 @@ namespace SportLab.Controllers
     public class TrainerController : Controller
     {
         private readonly SportLabContext _context;
+        private readonly IStringLocalizer<TrainerController> _localizer;
 
-        public TrainerController(SportLabContext context)
+        public TrainerController(SportLabContext context, IStringLocalizer<TrainerController> localizer)
         {
             _context = context;
+            _localizer = localizer;
         }
 
         [AllowAnonymous]
@@ -38,13 +41,13 @@ namespace SportLab.Controllers
         {
             if (User.Identity?.IsAuthenticated != true)
             {
-                TempData["ErrorMessage"] = "Please log in or register to book a session.";
+                TempData["ErrorMessage"] = _localizer["LoginRequired"].Value;
                 return RedirectToAction("Login", "Account");
             }
 
             if (!User.IsInRole(Roles.Client))
             {
-                TempData["ErrorMessage"] = "Only clients can book training sessions. You are logged in as a different role.";
+                TempData["ErrorMessage"] = _localizer["ClientsOnly"].Value;
 
                 return RedirectToAction(nameof(Index));
             }
@@ -59,11 +62,11 @@ namespace SportLab.Controllers
 
             if (!hasActiveSubscription)
             {
-                TempData["ErrorMessage"] = "You need an active membership to book a session. Please choose a plan.";
+                TempData["ErrorMessage"] = _localizer["MembershipRequired"].Value;
                 return RedirectToAction("Index", "Tariff");
             }
 
-            TempData["SuccessMessage"] = "Membership verified! Please select a time slot below to complete your booking.";
+            TempData["SuccessMessage"] = _localizer["MembershipVerified"].Value;
 
             return RedirectToAction("Index", "Schedule", new { trainerId = trainerId });
         }

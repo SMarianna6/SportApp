@@ -110,7 +110,47 @@
 	<data name="StatActiveMembers" xml:space="preserve"><value>Active Members</value></data>
 	<data name="StatClassBookings" xml:space="preserve"><value>Class Bookings</value></data>
 	<data name="StatShopSales" xml:space="preserve"><value>Shop Sales</value></data>
-	<data name="TooltipRevenue" xml:space="preserve"><value>Revenue</value></data>
-	<data name="TooltipNewUsers" xml:space="preserve"><value>New users</value></data>
 	<data name="LoadFailedError" xml:space="preserve"><value>Failed to load data.</value></data>
+	<data name="MonthJan" xml:space="preserve">
+	<value>Jan</value>
+</data>
+	<data name="MonthFeb" xml:space="preserve">
+	<value>Feb</value>
+</data>
+	<data name="MonthMar" xml:space="preserve">
+	<value>Mar</value>
+</data>
+	<data name="MonthApr" xml:space="preserve">
+	<value>Apr</value>
+</data>
+	<data name="MonthMay" xml:space="preserve">
+	<value>May</value>
+</data>
+	<data name="MonthJun" xml:space="preserve">
+	<value>Jun</value>
+</data>
+	<data name="MonthJul" xml:space="preserve">
+	<value>Jul</value>
+</data>
+	<data name="MonthAug" xml:space="preserve">
+	<value>Aug</value>
+</data>
+	<data name="MonthSep" xml:space="preserve">
+	<value>Sep</value>
+</data>
+	<data name="MonthOct" xml:space="preserve">
+	<value>Oct</value>
+</data>
+	<data name="MonthNov" xml:space="preserve">
+	<value>Nov</value>
+</data>
+	<data name="MonthDec" xml:space="preserve">
+	<value>Dec</value>
+</data>
+	<data name="TooltipRevenue" xml:space="preserve">
+	<value>Revenue: ₴{0}</value>
+</data>
+	<data name="TooltipNewUsers" xml:space="preserve">
+	<value>New users: {0}</value>
+</data>
 </root>

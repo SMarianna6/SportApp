@@ -2,10 +2,19 @@
 (function () {
     'use strict';
     var SH = window.SH;
+    var L = Object.assign({}, window.SH_LOC || {}, window.ADMIN_SCHEDULE_LOC || {});
 
     var URLS = { list: '/Admin/GetScheduleList', save: '/Admin/SaveScheduleApi', remove: '/Admin/DeleteScheduleApi' };
 
     var DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    var DAY_LABELS = (function () {
+        try {
+            var fmt = new Intl.DateTimeFormat(L.culture || 'en', { weekday: 'short' });
+            return DAYS.map(function (_, i) { return fmt.format(new Date(2024, 0, 1 + i)); });
+        } catch (e) {
+            return DAYS.slice();
+        }
+    })();
     var FIRST_HOUR = 8, LAST_HOUR = 20;
     var ROW = 64; // px per hour
     var HOURS = [];
@@ -35,6 +44,7 @@
     /* ---------- helpers ---------- */
     function pad(n) { return String(n).padStart(2, '0'); }
     function hhmm(v) { return pad(Math.floor(v)) + ':' + pad(Math.round((v % 1) * 60)); }
+    function typeLabel(t) { return (L.types && L.types[t]) || t; }
     function toHour(t) { var p = String(t).split(':').map(Number); return p[0] + (p[1] || 0) / 60; }
 
     function normDay(d) {
@@ -93,11 +103,11 @@
         var full = s.booked >= s.capacity;
         var pct = Math.min(s.booked / s.capacity, 1) * 100;
         var width = 100 / c.laneCount;
-        var tip = s.type + ' | ' + s.timeStart + ' - ' + s.timeEnd + ' | Coach: ' + s.coach + ' | ' + s.booked + '/' + s.capacity + ' booked';
+        var tip = typeLabel(s.type) + ' | ' + s.timeStart + ' - ' + s.timeEnd + ' | ' + (L.coach || 'Coach') + ': ' + s.coach + ' | ' + s.booked + '/' + s.capacity + ' ' + (L.booked || 'booked');
 
         return '<button type="button" class="sh-slot sh-t-' + TYPES[s.type].cls + ' ' + size + (full ? ' is-full' : '') + '" data-id="' + s.id + '" title="' + SH.esc(tip) + '" ' +
             'style="top:' + (top + 1) + 'px;height:' + (height - 2) + 'px;left:calc(' + (c.lane * width) + '% + 2px);width:calc(' + width + '% - 4px)">' +
-            '<span class="sh-slot-head"><span class="sh-slot-act">' + SH.esc(s.type) + '</span><span class="sh-slot-count">' + s.booked + '/' + s.capacity + '</span></span>' +
+            '<span class="sh-slot-head"><span class="sh-slot-act">' + SH.esc(typeLabel(s.type)) + '</span><span class="sh-slot-count">' + s.booked + '/' + s.capacity + '</span></span>' +
             '<span class="sh-slot-time">' + s.timeStart + ' - ' + s.timeEnd + '</span>' +
             '<span class="sh-slot-coach">' + SH.esc(s.coach) + '</span>' +
             '<span class="sh-slot-bar"><span class="sh-slot-fill" style="width:' + pct + '%"></span></span>' +
@@ -108,7 +118,7 @@
     function render() {
         if (!cal) return;
         var html = '<div class="sh-cal-head"><div></div>' +
-            DAYS.map(function (d) { return '<div class="sh-cal-day">' + d + '</div>'; }).join('') + '</div>';
+            DAY_LABELS.map(function (d) { return '<div class="sh-cal-day">' + d + '</div>'; }).join('') + '</div>';
 
         html += '<div class="sh-cal-body"><div class="sh-cal-times">' +
             HOURS.map(function (h) { return '<div class="sh-cal-hour" style="height:' + ROW + 'px">' + hhmm(h) + '</div>'; }).join('') + '</div>';
@@ -118,7 +128,7 @@
             var items = slots.filter(function (s) { return s.day === day && visible[s.type]; });
             html += '<div class="sh-cal-col" data-day="' + day + '">' +
                 HOURS.map(function (h) {
-                    return '<div class="sh-cal-cell" data-day="' + day + '" data-hour="' + h + '" style="height:' + ROW + 'px" aria-label="Add class on ' + name + ' at ' + hhmm(h) + '"></div>';
+                    return '<div class="sh-cal-cell" data-day="' + day + '" data-hour="' + h + '" style="height:' + ROW + 'px" aria-label="' + SH.esc((L.addClassAria || 'Add class on {0} at {1}').replace('{0}', name).replace('{1}', hhmm(h))) + '"></div>';
                 }).join('') +
                 '<div class="sh-cal-layer">' + layoutDay(items).map(slotHtml).join('') + '</div></div>';
         });
@@ -130,7 +140,7 @@
         legend.innerHTML = Object.keys(TYPES).map(function (t) {
             return '<label class="sh-legend-item sh-t-' + TYPES[t].cls + '">' +
                 '<input type="checkbox" data-type="' + t + '"' + (visible[t] ? ' checked' : '') + ' />' +
-                '<span class="sh-legend-swatch"></span><span>' + t + '</span></label>';
+                '<span class="sh-legend-swatch"></span><span>' + SH.esc(typeLabel(t)) + '</span></label>';
         }).join('');
     }
 
@@ -146,7 +156,7 @@
     /* ---------- modal ---------- */
     var typeSelect = document.getElementById('sh-schedule-type');
     if (typeSelect) {
-        typeSelect.innerHTML = Object.keys(TYPES).map(function (t) { return '<option>' + t + '</option>'; }).join('');
+        typeSelect.innerHTML = Object.keys(TYPES).map(function (t) { return '<option value="' + t + '">' + SH.esc(typeLabel(t)) + '</option>'; }).join('');
     }
 
     function showError(msg) {
@@ -203,7 +213,7 @@
         }
 
         if (modalTitle) {
-            modalTitle.textContent = slot ? 'Edit Class' : 'Add Class';
+            modalTitle.textContent = slot ? (L.editClass || 'Edit Class') : (L.addClass || 'Add Class');
         }
 
         if (deleteBtn) {
@@ -246,11 +256,11 @@
                 capacity: f.Capacity ? parseInt(f.Capacity.value, 10) : 15
             };
 
-            if (!data.timeStart || !data.timeEnd) return showError('Start and end time are required.');
-            if (toHour(data.timeStart) < FIRST_HOUR || toHour(data.timeEnd) > LAST_HOUR) return showError('Classes must be between 08:00 and 20:00.');
-            if (toHour(data.timeEnd) <= toHour(data.timeStart)) return showError('End time must be after start time.');
-            if (!data.coach) return showError('Coach is required.');
-            if (!Number.isInteger(data.capacity) || data.capacity < 1) return showError('Capacity must be greater than zero.');
+            if (!data.timeStart || !data.timeEnd) return showError(L.startEndRequired || 'Start and end time are required.');
+            if (toHour(data.timeStart) < FIRST_HOUR || toHour(data.timeEnd) > LAST_HOUR) return showError(L.classTimeRange || 'Classes must be between 08:00 and 20:00.');
+            if (toHour(data.timeEnd) <= toHour(data.timeStart)) return showError(L.endAfterStart || 'End time must be after start time.');
+            if (!data.coach) return showError(L.coachRequired || 'Coach is required.');
+            if (!Number.isInteger(data.capacity) || data.capacity < 1) return showError(L.capacityPositive || 'Capacity must be greater than zero.');
 
             try {
                 const response = await fetch(URLS.save, {
@@ -261,13 +271,13 @@
 
                 if (!response.ok) {
                     const message = await response.text();
-                    return showError(message || 'Failed to save class.');
+                    return showError(message || (L.saveClassFailed || 'Failed to save class.'));
                 }
 
                 SH.closeModal('sh-schedule-modal');
                 await load();
             } catch (error) {
-                showError('An error occurred while saving the class.');
+                showError(L.saveClassError || 'An error occurred while saving the class.');
             }
         });
     }
@@ -282,7 +292,7 @@
         deleteBtn.addEventListener('click', async function () {
             if (!editing) return;
 
-            if (!confirm('Delete this class?')) return;
+            if (!confirm(L.deleteClassConfirm || 'Delete this class?')) return;
 
             try {
                 const response = await fetch(URLS.remove, {
@@ -293,13 +303,13 @@
 
                 if (!response.ok) {
                     const message = await response.text();
-                    return showError(message || 'Failed to delete class.');
+                    return showError(message || (L.deleteClassFailed || 'Failed to delete class.'));
                 }
 
                 SH.closeModal('sh-schedule-modal');
                 await load();
             } catch (error) {
-                showError('An error occurred while deleting the class.');
+                showError(L.deleteClassError || 'An error occurred while deleting the class.');
             }
         });
     }

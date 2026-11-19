@@ -1456,6 +1456,13 @@ namespace SportLab.Controllers
                         membership = sub.EndDate.Date <= today.AddDays(7) ? "Expiring" : "Active";
                     }
 
+                    string membershipLabel = membership switch
+                    {
+                        "Active" => _localizer["StatusActive"].Value,
+                        "Expiring" => _localizer["StatusExpiring"].Value,
+                        _ => _localizer["StatusInactive"].Value
+                    };
+
                     return new
                     {
                         id = g.Key,
@@ -1465,6 +1472,7 @@ namespace SportLab.Controllers
                         workouts = g.Count(b => b.status != "Cancelled"),
                         lastWorkout,
                         status = membership,
+                        statusLabel = membershipLabel,
                         weights = weights.Where(w => w.UserId == g.Key).Select(w => w.Weight).ToList()
                     };
                 })

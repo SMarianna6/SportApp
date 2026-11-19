@@ -249,4 +249,52 @@
 	<data name="Footer.Copyright" xml:space="preserve">
     <value>© 2026 SportHUB. Built for strength.</value>
   </data>
+	<data name="QuickBook.Today" xml:space="preserve">
+	<value>Today</value>
+</data>
+	<data name="QuickBook.Tomorrow" xml:space="preserve">
+	<value>Tomorrow</value>
+</data>
+	<data name="QuickBook.SelectDate" xml:space="preserve">
+	<value>Select date</value>
+</data>
+	<data name="QuickBook.Ready" xml:space="preserve">
+	<value>Ready</value>
+</data>
+	<data name="QuickBook.NoPlan" xml:space="preserve">
+	<value>No plan</value>
+</data>
+	<data name="QuickBook.VisitsLeft" xml:space="preserve">
+	<value>Visits left</value>
+</data>
+	<data name="QuickBook.BuyFirst" xml:space="preserve">
+	<value>Buy a membership to start booking.</value>
+</data>
+	<data name="QuickBook.PlentyLeft" xml:space="preserve">
+	<value>Plenty of visits left.</value>
+</data>
+	<data name="QuickBook.RunningLow" xml:space="preserve">
+	<value>Running low. Consider renewing soon.</value>
+</data>
+	<data name="QuickBook.AlmostOut" xml:space="preserve">
+	<value>Almost out of visits.</value>
+</data>
+	<data name="QuickBook.MissingDetails" xml:space="preserve">
+	<value>Missing details</value>
+</data>
+	<data name="QuickBook.MissingDetailsText" xml:space="preserve">
+	<value>Select type, date and trainer to continue.</value>
+</data>
+	<data name="QuickBook.BookingConfirmed" xml:space="preserve">
+	<value>Booking confirmed</value>
+</data>
+	<data name="QuickBook.BookingSummary" xml:space="preserve">
+	<value>{0} with {1}, {2}</value>
+</data>
+	<data name="QuickBook.Redirecting" xml:space="preserve">
+	<value>Redirecting</value>
+</data>
+	<data name="QuickBook.RedirectingText" xml:space="preserve">
+	<value>Taking you to membership plans.</value>
+</data>
 </root>

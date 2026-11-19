@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+	<data name="LoginRequired" xml:space="preserve">
+	<value>Please log in or register to book a session.</value>
+</data>
+	<data name="ClientsOnly" xml:space="preserve">
+	<value>Only clients can book training sessions. You are logged in as a different role.</value>
+</data>
+	<data name="MembershipRequired" xml:space="preserve">
+	<value>You need an active membership to book a session. Please choose a plan.</value>
+</data>
+	<data name="MembershipVerified" xml:space="preserve">
+	<value>Membership verified! Please select a time slot below to complete your booking.</value>
+</data>
+</root>

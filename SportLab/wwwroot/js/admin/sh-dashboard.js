@@ -2,9 +2,11 @@
 (function () {
     'use strict';
     var SH = window.SH;
-    var Loc = window.DashboardLoc || {};
+    var L = Object.assign({}, window.SH_LOC || {}, window.ADMIN_DASH_LOC || {});
 
-    var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var MONTHS = (L.months && L.months.length === 12)
+        ? L.months
+        : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     var W = 700, H = 220;
 
     var revenue = [];
@@ -28,40 +30,34 @@
         })
         .catch(function (err) {
             console.error("Failed to load dashboard data", err);
-            var errMsg = Loc.loadFailed || 'Failed to load data.';
-            document.getElementById('sh-stats').innerHTML = '<p style="color:red">' + errMsg + '</p>';
+            document.getElementById('sh-stats').innerHTML = '<p style="color:red">' + (L.loadDataFailed || 'Failed to load data.') + '</p>';
         });
 
     function renderStats(stats) {
-        var lblRevenue = Loc.statRevenue || 'Revenue';
-        var lblActiveMembers = Loc.statActiveMembers || 'Active Members';
-        var lblClassBookings = Loc.statClassBookings || 'Class Bookings';
-        var lblShopSales = Loc.statShopSales || 'Shop Sales';
-
         var html = `
             <div class="sh-card sh-stat">
-                <p class="sh-stat-label">${lblRevenue}</p>
+                <p class="sh-stat-label">${L.statRevenue || 'Revenue'}</p>
                 <div class="sh-stat-row">
                     <span class="sh-stat-value">₴${stats.revenue.toLocaleString()}</span>
                     <span class="sh-trend">${SH.icon.trend('sh-ico-sm')} +5.2%</span>
                 </div>
             </div>
             <div class="sh-card sh-stat">
-                <p class="sh-stat-label">${lblActiveMembers}</p>
+                <p class="sh-stat-label">${L.statActiveMembers || 'Active Members'}</p>
                 <div class="sh-stat-row">
                     <span class="sh-stat-value">${stats.activeMembers.toLocaleString()}</span>
                     <span class="sh-trend">${SH.icon.trend('sh-ico-sm')} +3.1%</span>
                 </div>
             </div>
             <div class="sh-card sh-stat">
-                <p class="sh-stat-label">${lblClassBookings}</p>
+                <p class="sh-stat-label">${L.statClassBookings || 'Class Bookings'}</p>
                 <div class="sh-stat-row">
                     <span class="sh-stat-value">${stats.classBookings.toLocaleString()}</span>
                     <span class="sh-trend">${SH.icon.trend('sh-ico-sm')} +8.7%</span>
                 </div>
             </div>
             <div class="sh-card sh-stat">
-                <p class="sh-stat-label">${lblShopSales}</p>
+                <p class="sh-stat-label">${L.statShopSales || 'Shop Sales'}</p>
                 <div class="sh-stat-row">
                     <span class="sh-stat-value">₴${stats.shopSales.toLocaleString()}</span>
                     <span class="sh-trend">${SH.icon.trend('sh-ico-sm')} +2.4%</span>
@@ -127,19 +123,16 @@
             var maxRev = Math.max.apply(null, revenue) || 1;
             var maxUsr = Math.max.apply(null, newUsers) || 1;
 
-            var revText = Loc.revenue || 'Revenue';
-            var usrText = Loc.newUsers || 'New users';
-
             var hoverHtml = '<line x1="' + x(i) + '" x2="' + x(i) + '" y1="0" y2="' + H + '" stroke="#fff" stroke-opacity=".25"/>';
             var tooltipHtml = '<p style="font-weight:700;text-transform:uppercase;color:#f2f2f4">' + MONTHS[i] + '</p>';
 
             if (showRevenue) {
                 hoverHtml += '<circle cx="' + x(i) + '" cy="' + (H - revenue[i] * H / maxRev) + '" r="5" fill="#AAFF00"/>';
-                tooltipHtml += '<p style="color:#aaff00">' + revText + ': ₴' + revenue[i].toLocaleString() + '</p>';
+                tooltipHtml += '<p style="color:#aaff00">' + (L.tooltipRevenue || 'Revenue: ₴{0}').replace('{0}', revenue[i].toLocaleString()) + '</p>';
             }
             if (showUsers) {
                 hoverHtml += '<circle cx="' + x(i) + '" cy="' + (H - newUsers[i] * H / maxUsr) + '" r="5" fill="#7D51FE"/>';
-                tooltipHtml += '<p style="color:#7d51fe">' + usrText + ': ' + newUsers[i] + '</p>';
+                tooltipHtml += '<p style="color:#7d51fe">' + (L.tooltipNewUsers || 'New users: {0}').replace('{0}', newUsers[i]) + '</p>';
             }
 
             hoverLayer.innerHTML = hoverHtml;

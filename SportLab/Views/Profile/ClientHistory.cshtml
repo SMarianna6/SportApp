@@ -8,7 +8,11 @@
         ["FailedLoadClient"] = Localizer["Error.LoadClientData"].Value,
         ["NoWeights"] = Localizer["Text.NoWeights"].Value,
         ["NoPastWorkouts"] = Localizer["Text.NoPastWorkouts"].Value,
-        ["UnitKg"] = Localizer["Unit.Kg"].Value
+        ["UnitKg"] = Localizer["Unit.Kg"].Value,
+        ["StatusAvailable"] = Localizer["Status.Available"].Value,
+        ["StatusBooked"] = Localizer["Status.Booked"].Value,
+        ["StatusCompleted"] = Localizer["Status.Completed"].Value,
+        ["StatusCancelled"] = Localizer["Status.Cancelled"].Value
     };
 }
 
@@ -74,6 +78,16 @@
                 });
             }
 
+            function statusLabel(status) {
+                var map = {
+                    'Available': L.StatusAvailable,
+                    'Booked': L.StatusBooked,
+                    'Completed': L.StatusCompleted,
+                    'Cancelled': L.StatusCancelled
+                };
+                return map[status] || status;
+            }
+
             const urlParams = new URLSearchParams(window.location.search);
             const clientId = urlParams.get('id');
 
@@ -118,7 +132,7 @@
                                 <td class="py-3 px-4 text-mono/70">${new Date(w.startTime).toLocaleDateString()}</td>
                                 <td class="py-3 px-4 font-bold text-white">${w.activityName}</td>
                                 <td class="py-3 px-4">
-                                    <span class="inline-flex rounded-full bg-neon/15 px-2 py-0.5 text-xs font-bold text-neon uppercase">${w.status}</span>
+                                    <span class="inline-flex rounded-full bg-neon/15 px-2 py-0.5 text-xs font-bold text-neon uppercase">${escapeHtml(statusLabel(w.status))}</span>
                                 </td>
                             </tr>
                         `).join('');

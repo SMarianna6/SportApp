@@ -263,4 +263,22 @@
 	<data name="CouldNotCancelRetry" xml:space="preserve">
     <value>Не вдалося скасувати бронювання. Спробуйте ще раз.</value>
   </data>
+	<data name="CategoryHIIT" xml:space="preserve">
+	<value>HIIT</value>
+</data>
+	<data name="CategoryPilates" xml:space="preserve">
+	<value>Пілатес</value>
+</data>
+	<data name="CategoryYoga" xml:space="preserve">
+	<value>Йога</value>
+</data>
+	<data name="CategoryStrength" xml:space="preserve">
+	<value>Силові</value>
+</data>
+	<data name="CategoryCycling" xml:space="preserve">
+	<value>Сайклінг</value>
+</data>
+	<data name="CategoryBoxing" xml:space="preserve">
+	<value>Бокс</value>
+</data>
 </root>

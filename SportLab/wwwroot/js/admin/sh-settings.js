@@ -1,5 +1,6 @@
 ﻿(function () {
     'use strict';
+    var L = window.SH_LOC || {};
 
     document.addEventListener('DOMContentLoaded', function () {
         const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
@@ -67,12 +68,12 @@
                 });
                 const data = await res.json();
                 if (res.ok && data.success) {
-                    showMsg('admin-acc-msg', 'Account updated successfully.', true);
+                    showMsg('admin-acc-msg', L.accountUpdated || 'Account updated successfully.', true);
                 } else {
-                    showMsg('admin-acc-msg', data.message || 'Failed to update account.', false);
+                    showMsg('admin-acc-msg', data.message || (L.accountUpdateFailed || 'Failed to update account.'), false);
                 }
             } catch (err) {
-                showMsg('admin-acc-msg', 'Network error.', false);
+                showMsg('admin-acc-msg', L.networkError || 'Network error.', false);
             } finally {
                 btn.disabled = false;
             }
@@ -86,7 +87,7 @@
             const confirmPw = document.getElementById('admin-pw-confirm').value;
 
             if (newPw !== confirmPw) {
-                showMsg('admin-pw-msg', 'Passwords do not match.', false);
+                showMsg('admin-pw-msg', L.passwordsMismatch || 'Passwords do not match.', false);
                 return;
             }
 
@@ -105,13 +106,13 @@
                 });
                 const data = await res.json();
                 if (res.ok && data.success) {
-                    showMsg('admin-pw-msg', 'Password updated successfully.', true);
+                    showMsg('admin-pw-msg', L.passwordUpdated || 'Password updated successfully.', true);
                     document.getElementById('admin-security-form').reset();
                 } else {
-                    showMsg('admin-pw-msg', data.message || 'Failed to update password.', false);
+                    showMsg('admin-pw-msg', data.message || (L.passwordUpdateFailed || 'Failed to update password.'), false);
                 }
             } catch (err) {
-                showMsg('admin-pw-msg', 'Network error.', false);
+                showMsg('admin-pw-msg', L.networkError || 'Network error.', false);
             } finally {
                 btn.disabled = false;
             }

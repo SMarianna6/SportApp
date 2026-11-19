@@ -7,39 +7,39 @@ namespace SportLab.Models
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Name is required")]
+        [Required(ErrorMessage = "Validation.NameRequired")]
         [StringLength(100, MinimumLength = 2,
-            ErrorMessage = "Name must be between 2 and 100 characters")]
-        [Display(Name = "Full Name")]
+            ErrorMessage = "Validation.NameLength")]
+        [Display(Name = "Field.FullName")]
         public required string Name { get; set; }
 
-        [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Invalid email format")]
-        [StringLength(150, ErrorMessage = "Email cannot exceed 150 characters")]
-        [Display(Name = "Email Address")]
+        [Required(ErrorMessage = "Validation.EmailRequired")]
+        [EmailAddress(ErrorMessage = "Validation.EmailFormat")]
+        [StringLength(150, ErrorMessage = "Validation.EmailLength")]
+        [Display(Name = "Field.Email")]
         public required string Email { get; set; }
 
-        [Required(ErrorMessage = "Password is required")]
+        [Required(ErrorMessage = "Validation.PasswordRequired")]
         [StringLength(256, MinimumLength = 6,
-            ErrorMessage = "Password must be between 6 and 256 characters")]
+            ErrorMessage = "Validation.PasswordLength")]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Field.Password")]
         public required string Password { get; set; }
 
-        [Required(ErrorMessage = "Role is required")]
-        [StringLength(50, ErrorMessage = "Role cannot exceed 50 characters")]
-        [Display(Name = "Role")]
+        [Required(ErrorMessage = "Validation.RoleRequired")]
+        [StringLength(50, ErrorMessage = "Validation.RoleLength")]
+        [Display(Name = "Field.Role")]
         public required string Role { get; set; }
 
-        [Display(Name = "Is Blocked")]
+        [Display(Name = "Field.IsBlocked")]
         public bool IsBlocked { get; set; }
 
-        [Display(Name = "Avatar")]
+        [Display(Name = "Field.Avatar")]
         [StringLength(500)]
         public string? AvatarUrl { get; set; }
 
         [StringLength(120)]
-        [Display(Name = "Goal")]
+        [Display(Name = "Field.Goal")]
         public string? Goal { get; set; }
 
         public TrainerProfile? TrainerProfile { get; set; }

@@ -233,7 +233,7 @@ namespace SportLab.Controllers
                 try
                 {
                     var message = new MimeMessage();
-                    message.From.Add(new MailboxAddress("SportHub Support", "sporthubproject01@gmail.com"));
+                    message.From.Add(new MailboxAddress(_localizer["EmailSenderName"].Value, "sporthubproject01@gmail.com"));
                     message.To.Add(new MailboxAddress("", email));
                     message.Subject = _localizer["EmailSubject"].Value;
 

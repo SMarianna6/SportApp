@@ -1,9 +1,28 @@
 @model IEnumerable<SportLab.Models.User>
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
+@inject IStringLocalizer<SportLab.SharedResource> SharedLocalizer
 
 @{
     ViewData["Title"] = Localizer["TrainersTitle"];
+
+    var specLabels = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Boxing"] = Localizer["SpecialtyBoxing"].Value,
+        ["Strength"] = Localizer["SpecialtyStrength"].Value,
+        ["Yoga"] = Localizer["SpecialtyYoga"].Value,
+        ["Mobility"] = Localizer["SpecialtyMobility"].Value,
+        ["Combat"] = Localizer["SpecialtyCombat"].Value,
+        ["Functional"] = Localizer["SpecialtyFunctional"].Value,
+        ["Pilates"] = Localizer["SpecialtyPilates"].Value,
+        ["HIIT"] = Localizer["SpecialtyHIIT"].Value,
+        ["Cycling"] = Localizer["SpecialtyCycling"].Value,
+        ["Cardio"] = Localizer["SpecialtyCardio"].Value,
+        ["Coach"] = SharedLocalizer["Specialty.Coach"].Value
+    };
+
+    Func<string, string> localizeSpec = spec =>
+        specLabels.TryGetValue(spec.Trim(), out var label) ? label : spec;
 }
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -263,12 +282,12 @@
     {
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             @TempData["ErrorMessage"]
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="@Localizer["CloseAria"]"></button>
         </div>
     }
 
     <!-- Filter Buttons -->
-    <div class="mb-4 d-flex gap-2 flex-wrap" role="group" aria-label="Filter trainers by specialty">
+    <div class="mb-4 d-flex gap-2 flex-wrap" role="group" aria-label="@Localizer["FilterBySpecialtyAria"]">
         <button type="button" class="btn btn-sm btn-dark filter-btn active" onclick="filterTrainers('all', this)">@Localizer["FilterAllSpecs"]</button>
         <button type="button" class="btn btn-sm btn-outline-dark filter-btn" onclick="filterTrainers('strength', this)">@Localizer["FilterStrength"]</button>
         <button type="button" class="btn btn-sm btn-outline-dark filter-btn" onclick="filterTrainers('functional', this)">@Localizer["FilterFunctional"]</button>
@@ -301,8 +320,8 @@
                 ? profile.Specializations.Split(',').Select(s => s.Trim()).ToList()
                 : new List<string> { "Coach" };
 
-                var firstSpec = specs.First();
-                var allSpecs = string.Join(", ", specs);
+                var firstSpec = localizeSpec(specs.First());
+                var allSpecs = string.Join(", ", specs.Select(localizeSpec));
 
                 var dataSpecialty = "functional";
                 if (specs.Any(s => s.Contains("Strength", StringComparison.OrdinalIgnoreCase))) dataSpecialty = "strength";
@@ -333,7 +352,7 @@
                             </div>
                             <h6 class="card-subtitle trainer-specs mb-3 small">@allSpecs</h6>
                             <p class="card-text trainer-about small line-clamp-3">
-                                @(profile?.About ?? "Dedicated fitness professional ready to help you achieve your goals.")
+                                @(profile?.About ?? Localizer["AboutFallback"].Value)
                             </p>
                             <div class="mt-auto pt-3 trainer-actions d-flex gap-2">
                                 <a asp-controller="Schedule" asp-action="Index" class="btn btn-sm tp-btn tp-btn-outline flex-fill">@Localizer["ScheduleBtn"]</a>

@@ -64,7 +64,7 @@
                             <div class="text-right">
                                 <!-- Status Badge -->
                                 <span class="status-badge rounded-md px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-widest @statusClass" data-status="@review.ModerationStatus">
-                                    @review.ModerationStatus
+                                    @Localizer["Status." + review.ModerationStatus]
                                 </span>
                                 <p class="mt-2 text-sm font-bold text-yellow-300">
                                     @for (var i = 1; i <= 5; i++)
@@ -119,6 +119,14 @@
         const confirmDeleteText = '@Localizer["ConfirmDeleteScript"]';
         const deletedToastText = '@Localizer["ReviewDeletedScript"]';
         const netErrorText = '@Localizer["NetworkErrorScript"]';
+
+        const statusLabels = @Html.Raw(Json.Serialize(new Dictionary<string, string> {
+            ["Pending"] = Localizer["Status.Pending"].Value,
+            ["Approved"] = Localizer["Status.Approved"].Value,
+            ["Published"] = Localizer["Status.Published"].Value,
+            ["Hidden"] = Localizer["Status.Hidden"].Value
+        }));
+        const statusLabel = function (value) { return statusLabels[value] || value; };
 
         function showToast(msg, isError = false) {
             toastText.textContent = msg;
@@ -188,7 +196,7 @@
                         if (newStatus === 'Hidden') countHid.textContent = parseInt(countHid.textContent) + 1;
 
                         // Update DOM
-                        badge.textContent = newStatus;
+                        badge.textContent = statusLabel(newStatus);
                         badge.dataset.status = newStatus;
 
                         // Reset badge colors
@@ -208,7 +216,7 @@
                         showToast(data.message);
                     }
                 } else {
-                    showToast(data.message || 'Action failed.', true);
+                    showToast(data.message || '@Localizer["ActionFailedScript"]', true);
                 }
             } catch (err) {
                 showToast(netErrorText, true);

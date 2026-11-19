@@ -10,6 +10,7 @@
 (function () {
     'use strict';
     var SH = window.SH;
+    var L = window.SH_LOC || {};
 
     var URLS = {
         list: '/Admin/GetProductList',
@@ -84,8 +85,8 @@
             ? '<img src="' + SH.esc(p.photo) + '" alt="' + SH.esc(p.name) + '" />'
             : SH.icon.box('sh-ico-lg');
         var attrs = p.photo
-            ? ' data-act="lightbox" aria-label="View photo of ' + SH.esc(p.name) + '"'
-            : ' data-act="lightbox" disabled aria-label="No photo for ' + SH.esc(p.name) + '"';
+            ? ' data-act="lightbox" aria-label="' + SH.esc((L.viewPhoto || 'View photo of {0}').replace('{0}', p.name)) + '"'
+            : ' data-act="lightbox" disabled aria-label="' + SH.esc((L.noPhoto || 'No photo for {0}').replace('{0}', p.name)) + '"';
         return '<button type="button" class="sh-photo sh-photo-btn"' + attrs + '>' + inner + '</button>';
     }
 
@@ -94,7 +95,7 @@
         body.innerHTML = products.map(function (p) {
             var desc = p.description
                 ? '<div class="sh-desc-wrap"><span class="sh-desc">' + SH.esc(p.description) + '</span>' +
-                '<span class="sh-desc-toggle" role="button" tabindex="0" data-act="desc" hidden>Read More</span></div>'
+                '<span class="sh-desc-toggle" role="button" tabindex="0" data-act="desc" hidden>' + SH.esc(L.readMore || 'Read More') + '</span></div>'
                 : '';
             return '<tr data-id="' + p.id + '">' +
                 '<td>' + photoCell(p) + '</td>' +
@@ -102,13 +103,13 @@
                 '<td><span class="sh-badge-violet">' + SH.esc(p.category) + '</span></td>' +
                 '<td>$' + Number(p.price).toFixed(2) + '</td>' +
                 '<td><div class="sh-stock">' +
-                '<button type="button" class="sh-stock-btn" data-delta="-1" aria-label="Decrease ' + SH.esc(p.name) + '">' + SH.icon.minus('sh-ico-sm') + '</button>' +
+                '<button type="button" class="sh-stock-btn" data-delta="-1" aria-label="' + SH.esc((L.decreaseStock || 'Decrease {0}').replace('{0}', p.name)) + '">' + SH.icon.minus('sh-ico-sm') + '</button>' +
                 '<span class="sh-stock-qty' + (p.stock < 5 ? ' is-low' : '') + '">' + p.stock + '</span>' +
-                '<button type="button" class="sh-stock-btn" data-delta="1" aria-label="Increase ' + SH.esc(p.name) + '">' + SH.icon.plus('sh-ico-sm') + '</button>' +
+                '<button type="button" class="sh-stock-btn" data-delta="1" aria-label="' + SH.esc((L.increaseStock || 'Increase {0}').replace('{0}', p.name)) + '">' + SH.icon.plus('sh-ico-sm') + '</button>' +
                 '</div></td>' +
                 '<td><div class="sh-actions">' +
-                '<button type="button" class="sh-icon-btn" data-act="edit" aria-label="Edit ' + SH.esc(p.name) + '">' + SH.icon.pencil() + '</button>' +
-                '<button type="button" class="sh-icon-btn sh-danger" data-act="delete" aria-label="Delete ' + SH.esc(p.name) + '">' + SH.icon.trash() + '</button>' +
+                '<button type="button" class="sh-icon-btn" data-act="edit" aria-label="' + SH.esc((L.editLabel || 'Edit: {0}').replace('{0}', p.name)) + '">' + SH.icon.pencil() + '</button>' +
+                '<button type="button" class="sh-icon-btn sh-danger" data-act="delete" aria-label="' + SH.esc((L.deleteLabel || 'Delete: {0}').replace('{0}', p.name)) + '">' + SH.icon.trash() + '</button>' +
                 '</div></td></tr>';
         }).join('');
         markTruncated();
@@ -141,7 +142,7 @@
                 showPreview(editing ? editing.photo : null);
 
                 if (fileNameSpan) {
-                    fileNameSpan.textContent = 'Choose file';
+                    fileNameSpan.textContent = L.chooseFile || 'Choose file';
                     fileNameSpan.style.color = '';
                 }
                 return;
@@ -210,14 +211,14 @@
         }
 
         if (modalTitle) {
-            modalTitle.textContent = product ? 'Edit Product' : 'Add Product';
+            modalTitle.textContent = product ? (L.editProduct || 'Edit Product') : (L.addProduct || 'Add Product');
         }
 
         showPreview(product ? product.photo : null);
 
         var fileNameSpan = document.getElementById('sh-file-chosen');
         if (fileNameSpan) {
-            fileNameSpan.textContent = 'Choose file';
+            fileNameSpan.textContent = L.chooseFile || 'Choose file';
             fileNameSpan.style.color = '';
         }
 
@@ -286,7 +287,7 @@
     function toggleDescription(toggle) {
         var desc = toggle.parentNode.querySelector('.sh-desc');
         var expanded = desc.classList.toggle('is-expanded');
-        toggle.textContent = expanded ? 'Show Less' : 'Read More';
+        toggle.textContent = expanded ? (L.showLess || 'Show Less') : (L.readMore || 'Read More');
     }
 
     if (body) {

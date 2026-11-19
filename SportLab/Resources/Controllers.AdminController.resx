@@ -112,4 +112,46 @@
 	<data name="ReviewHiddenMsg" xml:space="preserve"><value>Review hidden.</value></data>
 	<data name="ReviewDeletedMsg" xml:space="preserve"><value>Review deleted.</value></data>
 	<data name="OrderNotFoundError" xml:space="preserve"><value>Order not found</value></data>
+	<data name="FaqLabel" xml:space="preserve">
+	<value>FAQ</value>
+</data>
+	<data name="ReviewByPrefix" xml:space="preserve">
+	<value>Review by </value>
+</data>
+	<data name="Staff" xml:space="preserve">
+	<value>Staff</value>
+</data>
+	<data name="NoPlan" xml:space="preserve">
+	<value>No Plan</value>
+</data>
+	<data name="ActivityNewOrder" xml:space="preserve">
+	<value>New order #{0} placed (₴{1})</value>
+</data>
+	<data name="ActivitySubscription" xml:space="preserve">
+	<value>{0} bought {1} membership</value>
+</data>
+	<data name="ActivityNewUser" xml:space="preserve">
+	<value>New member registered: {0}</value>
+</data>
+	<data name="ActivityNewBooking" xml:space="preserve">
+	<value>{0} booked {1}</value>
+</data>
+	<data name="TimeMinAgo" xml:space="preserve">
+	<value>{0} min ago</value>
+</data>
+	<data name="TimeHoursAgo" xml:space="preserve">
+	<value>{0} h ago</value>
+</data>
+	<data name="TimeDaysAgo" xml:space="preserve">
+	<value>{0} days ago</value>
+</data>
+	<data name="NotAvailable" xml:space="preserve">
+	<value>N/A</value>
+</data>
+	<data name="UnknownProduct" xml:space="preserve">
+	<value>Unknown Product</value>
+</data>
+	<data name="Unknown" xml:space="preserve">
+	<value>Unknown</value>
+</data>
 </root>

@@ -159,4 +159,43 @@
   <data name="BookSessionBtn" xml:space="preserve">
     <value>Book Session</value>
   </data>
+	<data name="CloseAria" xml:space="preserve">
+	<value>Close</value>
+</data>
+	<data name="FilterBySpecialtyAria" xml:space="preserve">
+	<value>Filter trainers by specialty</value>
+</data>
+	<data name="AboutFallback" xml:space="preserve">
+	<value>Dedicated fitness professional ready to help you achieve your goals.</value>
+</data>
+	<data name="SpecialtyBoxing" xml:space="preserve">
+	<value>Boxing</value>
+</data>
+	<data name="SpecialtyStrength" xml:space="preserve">
+	<value>Strength</value>
+</data>
+	<data name="SpecialtyYoga" xml:space="preserve">
+	<value>Yoga</value>
+</data>
+	<data name="SpecialtyMobility" xml:space="preserve">
+	<value>Mobility</value>
+</data>
+	<data name="SpecialtyCombat" xml:space="preserve">
+	<value>Combat</value>
+</data>
+	<data name="SpecialtyFunctional" xml:space="preserve">
+	<value>Functional</value>
+</data>
+	<data name="SpecialtyPilates" xml:space="preserve">
+	<value>Pilates</value>
+</data>
+	<data name="SpecialtyHIIT" xml:space="preserve">
+	<value>HIIT</value>
+</data>
+	<data name="SpecialtyCycling" xml:space="preserve">
+	<value>Cycling</value>
+</data>
+	<data name="SpecialtyCardio" xml:space="preserve">
+	<value>Cardio</value>
+</data>
 </root>
