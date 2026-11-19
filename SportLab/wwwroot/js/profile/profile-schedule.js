@@ -177,6 +177,13 @@
         });
 
         if (!response.ok) {
+            var contentType = response.headers.get('content-type') || '';
+            // Якщо сервер повертає JSON з помилкою
+            if (contentType.includes('application/json')) {
+                var errorData = await response.json();
+                throw new Error(errorData.message || t('ErrorRequestFailed', 'The request could not be completed.'));
+            }
+            // Якщо сервер повертає звичайний текст
             var message = await response.text();
             throw new Error(message || t('ErrorRequestFailed', 'The request could not be completed.'));
         }
@@ -552,9 +559,15 @@
             if (!data.Date || !data.TimeStart || !data.TimeEnd) {
                 return showFormError(t('ErrorFillAllFields', 'Please complete all date and time fields.'));
             }
-            if (toHour(data.TimeStart) < WINDOW_START || toHour(data.TimeEnd) > WINDOW_END || toHour(data.TimeEnd) <= toHour(data.TimeStart)) {
+
+            // ЖОРСТКА ПЕРЕВІРКА ЧАСУ НА ФРОНТЕНДІ
+            var startHour = toHour(data.TimeStart);
+            var endHour = toHour(data.TimeEnd);
+
+            if (startHour < WINDOW_START || startHour >= WINDOW_END || endHour > WINDOW_END || endHour <= startHour) {
                 return showFormError(t('ErrorTimeRange', 'The workout must be between 08:00 and 20:00, and the end time must be later than the start time.'));
             }
+
             if (!Number.isInteger(Number(data.Capacity)) || Number(data.Capacity) < 1 || Number(data.Capacity) > 1000) {
                 return showFormError(t('ErrorCapacityRange', 'Capacity must be between 1 and 1000.'));
             }

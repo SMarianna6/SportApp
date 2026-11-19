@@ -124,7 +124,7 @@
                             <div class="tariff-price-block">
                                 <span class="tariff-currency">₴</span>
                                 <span class="tariff-amount">@item.Price.ToString("N0")</span>
-                                <span class="tariff-period">@(item.Duration >= 365 ? Localizer["PerYear"].Value : Localizer["PerDays", item.Duration].Value)</span>
+                                <span class="tariff-period">@(item.Duration >= 365 ? Localizer["PerYear"] : Localizer["PerDays", item.Duration])</span>
                             </div>
 
                             <div class="tariff-duration-chip">
@@ -558,11 +558,11 @@
                             modalFormContainer.classList.add("d-none");
                             modalSuccessContainer.classList.remove("d-none");
                         } else {
-                            modalAlert.textContent = data.message || '@Localizer["PurchaseFailed"]';
+                            modalAlert.textContent = data.message || @Html.Raw(Json.Serialize(Localizer["PurchaseFailed"].Value));
                             modalAlert.classList.remove("d-none");
                         }
                     } catch (err) {
-                        modalAlert.textContent = '@Localizer["ServerError"]';
+                        modalAlert.textContent = @Html.Raw(Json.Serialize(Localizer["ServerError"].Value));
                         modalAlert.classList.remove("d-none");
                     } finally {
                         submitBtn.disabled = false;

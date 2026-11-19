@@ -245,7 +245,11 @@
         (function () {
             'use strict';
 
-            var DAYS = ['@Localizer["Day1"]', '@Localizer["Day2"]', '@Localizer["Day3"]', '@Localizer["Day4"]', '@Localizer["Day5"].Value.Replace("'", "\\'")', '@Localizer["Day6"]', '@Localizer["Day7"]'];
+            var DAYS = @Html.Raw(JsonSerializer.Serialize(new[] {
+                Localizer["Day1"].Value, Localizer["Day2"].Value, Localizer["Day3"].Value,
+                Localizer["Day4"].Value, Localizer["Day5"].Value, Localizer["Day6"].Value,
+                Localizer["Day7"].Value
+            }));
 
             var TODAY_STR = '@today.ToString("yyyy-MM-dd")';
             var WEEK_DATES = @Html.Raw(JsonSerializer.Serialize(weekDates.Select(d => d.ToString("yyyy-MM-dd")).ToArray()));
@@ -331,7 +335,7 @@
                         'style="opacity:' + (i <= level ? 1 : 0.25) + '" aria-hidden="true">' +
                         '<path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/></svg>';
                 }
-                return '<span class="inline-flex" role="img" aria-label="@Localizer["IntensityAria"] ' + level + ' @Localizer["IntensityOf"]">' + out + '</span>';
+                return '<span class="inline-flex" role="img" aria-label="' + @Html.Raw(JsonSerializer.Serialize(Localizer["IntensityAria"].Value)) + ' ' + level + ' ' + @Html.Raw(JsonSerializer.Serialize(Localizer["IntensityOf"].Value)) + '">' + out + '</span>';
             }
 
             function showToast(message, type) {
@@ -350,14 +354,14 @@
                 var unavailable = isUnavailable(s);
 
                 var statusText = alreadyBooked
-                    ? '@Localizer["StatusAlreadyBooked"].Value.Replace("'", "\\'")'
+                    ? @Html.Raw(JsonSerializer.Serialize(Localizer["StatusAlreadyBooked"].Value))
                     : s.status === 'Completed'
-                        ? '@Localizer["StatusCompleted"]'
+                        ? @Html.Raw(JsonSerializer.Serialize(Localizer["StatusCompleted"].Value))
                         : past
-                            ? '@Localizer["StatusStarted"]'
+                            ? @Html.Raw(JsonSerializer.Serialize(Localizer["StatusStarted"].Value))
                             : full
-                                ? '@Localizer["StatusFullyBooked"]'
-                                : left(s) + '/' + s.capacity + ' @Localizer["SpotsLeftSuffix"]';
+                                ? @Html.Raw(JsonSerializer.Serialize(Localizer["StatusFullyBooked"].Value))
+                                : left(s) + '/' + s.capacity + ' ' + @Html.Raw(JsonSerializer.Serialize(Localizer["SpotsLeftSuffix"].Value));
 
                 var el = document.createElement('button');
                 el.type = 'button';
@@ -474,18 +478,18 @@
             }
 
             function initFilters() {
-                els.trainer.innerHTML = '<option value="">@Localizer["AllTrainers"]</option>' + TRAINERS.map(function (t) { return '<option value="' + escapeHtml(t) + '">' + escapeHtml(t) + '</option>'; }).join('');
+                els.trainer.innerHTML = '<option value="">' + @Html.Raw(JsonSerializer.Serialize(Localizer["AllTrainers"].Value)) + '</option>' + TRAINERS.map(function (t) { return '<option value="' + escapeHtml(t) + '">' + escapeHtml(t) + '</option>'; }).join('');
                 var allCategories = [];
                 SLOTS.forEach(function (s) { if (allCategories.indexOf(s.category) === -1) allCategories.push(s.category); });
-                els.category.innerHTML = '<option value="">@Localizer["AllCategories"]</option>' + allCategories.map(function (c) { return '<option value="' + escapeHtml(c) + '">' + escapeHtml(catLabel(c)) + '</option>'; }).join('');
+                els.category.innerHTML = '<option value="">' + @Html.Raw(JsonSerializer.Serialize(Localizer["AllCategories"].Value)) + '</option>' + allCategories.map(function (c) { return '<option value="' + escapeHtml(c) + '">' + escapeHtml(catLabel(c)) + '</option>'; }).join('');
 
                 els.legend.innerHTML = Object.keys(CATEGORIES).map(function (cat) {
                     return '<li class="inline-flex items-center gap-1.5"><span class="h-3 w-3 rounded-sm" style="background:' + CATEGORIES[cat].bg + ';box-shadow:inset 0 0 0 1.5px ' + CATEGORIES[cat].fg + '55"></span>' + catLabel(cat) + '</li>';
                 }).join('') +
                 '<li class="ml-auto hidden items-center gap-3 sm:inline-flex">' +
-                    '<span class="inline-flex items-center gap-1"><i class="h-2 w-4 rounded-full" style="background:#7AB800"></i>@Localizer["LegendOpen"]</span>' +
-                    '<span class="inline-flex items-center gap-1"><i class="h-2 w-4 rounded-full" style="background:#F2C94C"></i>@Localizer["LegendFilling"]</span>' +
-                    '<span class="inline-flex items-center gap-1"><i class="h-2 w-4 rounded-full" style="background:#E57373"></i>@Localizer["LegendAlmostFull"]</span>' +
+                    '<span class="inline-flex items-center gap-1"><i class="h-2 w-4 rounded-full" style="background:#7AB800"></i>' + @Html.Raw(JsonSerializer.Serialize(Localizer["LegendOpen"].Value)) + '</span>' +
+                    '<span class="inline-flex items-center gap-1"><i class="h-2 w-4 rounded-full" style="background:#F2C94C"></i>' + @Html.Raw(JsonSerializer.Serialize(Localizer["LegendFilling"].Value)) + '</span>' +
+                    '<span class="inline-flex items-center gap-1"><i class="h-2 w-4 rounded-full" style="background:#E57373"></i>' + @Html.Raw(JsonSerializer.Serialize(Localizer["LegendAlmostFull"].Value)) + '</span>' +
                 '</li>';
 
                 els.trainer.addEventListener('change', render);
@@ -506,7 +510,7 @@
                 $('modal-title').textContent = catLabel(s.category);
 
                 var chip = $('modal-category-chip');
-                chip.textContent = '@Localizer["GroupClass"]';
+                chip.textContent = @Html.Raw(JsonSerializer.Serialize(Localizer["GroupClass"].Value));
                 chip.style.background = c.bg;
                 chip.style.color = c.fg;
 
@@ -514,7 +518,7 @@
                 $('modal-time').textContent    = timeLabel(s);
                 $('modal-trainer').textContent = s.trainer;
                 $('modal-difficulty').innerHTML = fireIcons(s.difficulty, 'h-4 w-4');
-                $('modal-spots').textContent   = s.booked + '/' + s.capacity + ' @Localizer["SpotsBookedSuffix"]';
+                $('modal-spots').textContent   = s.booked + '/' + s.capacity + ' ' + @Html.Raw(JsonSerializer.Serialize(Localizer["SpotsBookedSuffix"].Value));
 
                 var bar = $('modal-bar');
                 bar.style.width = '0%';
@@ -536,9 +540,9 @@
                 els.loginHint.classList.toggle('hidden', !showLogin);
 
                 els.confirm.disabled = false;
-                els.confirm.textContent = '@Localizer["ConfirmBooking"]';
+                els.confirm.textContent = @Html.Raw(JsonSerializer.Serialize(Localizer["ConfirmBooking"].Value));
                 els.cancel.disabled = false;
-                els.cancel.textContent = '@Localizer["CancelBooking"]';
+                els.cancel.textContent = @Html.Raw(JsonSerializer.Serialize(Localizer["CancelBooking"].Value));
 
                 if ((isTrainer || isAdmin) && !isClient) {
                     els.confirm.classList.add('hidden');
@@ -592,7 +596,7 @@
                         els.success.style.color = '#991B1B';
 
                         els.confirm.disabled = false;
-                        els.confirm.textContent = '@Localizer["ConfirmBooking"]';
+                        els.confirm.textContent = @Html.Raw(JsonSerializer.Serialize(Localizer["ConfirmBooking"].Value));
 
                         if (result.requireSubscription) {
                             setTimeout(function() {
@@ -646,7 +650,7 @@
                         els.success.classList.remove('hidden');
                         els.success.style.color = '#991B1B';
                         els.cancel.disabled = false;
-                        els.cancel.textContent = '@Localizer["CancelBooking"]';
+                        els.cancel.textContent = @Html.Raw(JsonSerializer.Serialize(Localizer["CancelBooking"].Value));
                         return;
                     }
 
@@ -663,7 +667,7 @@
 
                 } catch (err) {
                     els.cancel.disabled = false;
-                    els.cancel.textContent = '@Localizer["CancelBooking"]';
+                    els.cancel.textContent = @Html.Raw(JsonSerializer.Serialize(Localizer["CancelBooking"].Value));
                     els.success.textContent = '@Localizer["CouldNotCancelRetry"]';
                     els.success.classList.remove('hidden');
                 }

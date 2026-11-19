@@ -1152,18 +1152,17 @@ namespace SportLab.Controllers
             [FromForm] ProfileScheduleDto dto)
         {
             if (dto == null || !ModelState.IsValid)
-                return BadRequest(_localizer["InvalidScheduleData"].Value);
+                return BadRequest(new { success = false, message = _localizer["InvalidScheduleData"].Value });
 
             if (string.IsNullOrWhiteSpace(dto.Type) ||
                 dto.Type.Trim().Length < 2 ||
                 dto.Type.Trim().Length > 100)
             {
-                return BadRequest(
-                    _localizer["ActivityNameLength"].Value);
+                return BadRequest(new { success = false, message = _localizer["ActivityNameLength"].Value });
             }
 
             if (dto.Capacity < 1 || dto.Capacity > 1000)
-                return BadRequest(_localizer["CapacityRange"].Value);
+                return BadRequest(new { success = false, message = _localizer["CapacityRange"].Value });
 
             if (!DateTime.TryParseExact(
                 dto.Date,
@@ -1172,28 +1171,27 @@ namespace SportLab.Controllers
                 DateTimeStyles.None,
                 out var date))
             {
-                return BadRequest(_localizer["InvalidDate"].Value);
+                return BadRequest(new { success = false, message = _localizer["InvalidDate"].Value });
             }
 
             if (!TimeSpan.TryParse(dto.TimeStart, out var startTime) ||
                 !TimeSpan.TryParse(dto.TimeEnd, out var endTime))
             {
-                return BadRequest(_localizer["InvalidTime"].Value);
+                return BadRequest(new { success = false, message = _localizer["InvalidTime"].Value });
             }
 
             if (startTime < TimeSpan.FromHours(8) ||
                 endTime > TimeSpan.FromHours(20) ||
                 endTime <= startTime)
             {
-                return BadRequest(
-                    _localizer["TimeRange"].Value);
+                return BadRequest(new { success = false, message = _localizer["TimeRange"].Value });
             }
 
             var startDateTime = date.Date.Add(startTime);
             var endDateTime = date.Date.Add(endTime);
 
             if (startDateTime <= DateTime.Now)
-                return BadRequest(_localizer["FutureTimeRequired"].Value);
+                return BadRequest(new { success = false, message = _localizer["FutureTimeRequired"].Value });
 
             int trainerId = CurrentUserId;
 
@@ -1213,15 +1211,13 @@ namespace SportLab.Controllers
 
                 if (slot.Bookings.Any())
                 {
-                    return BadRequest(
-                        _localizer["WorkoutWithBookingsCannotEdit"].Value);
+                    return BadRequest(new { success = false, message = _localizer["WorkoutWithBookingsCannotEdit"].Value });
                 }
 
                 if (slot.Status == "Cancelled" ||
                     slot.Status == "Completed")
                 {
-                    return BadRequest(
-                        _localizer["CancelledOrCompletedCannotEdit"].Value);
+                    return BadRequest(new { success = false, message = _localizer["CancelledOrCompletedCannotEdit"].Value });
                 }
 
                 slot.ActivityName = dto.Type.Trim();
@@ -1265,7 +1261,7 @@ namespace SportLab.Controllers
             [FromForm] int id)
         {
             if (id <= 0)
-                return BadRequest(_localizer["InvalidWorkoutId"].Value);
+                return BadRequest(new { success = false, message = _localizer["InvalidWorkoutId"].Value });
 
             var slot = await _context.WorkoutSlots
                 .Include(w => w.Bookings)
@@ -1278,11 +1274,10 @@ namespace SportLab.Controllers
                 return Forbid();
 
             if (slot.Status == "Cancelled")
-                return BadRequest(_localizer["WorkoutAlreadyCancelled"].Value);
+                return BadRequest(new { success = false, message = _localizer["WorkoutAlreadyCancelled"].Value });
 
             if (slot.Status == "Completed")
-                return BadRequest(
-                    _localizer["CompletedWorkoutCannotCancel"].Value);
+                return BadRequest(new { success = false, message = _localizer["CompletedWorkoutCannotCancel"].Value });
 
             foreach (var booking in slot.Bookings)
             {
@@ -1315,7 +1310,7 @@ namespace SportLab.Controllers
             [FromForm] int id)
         {
             if (id <= 0)
-                return BadRequest(_localizer["InvalidWorkoutId"].Value);
+                return BadRequest(new { success = false, message = _localizer["InvalidWorkoutId"].Value });
 
             var slot = await _context.WorkoutSlots
                 .Include(w => w.Bookings)
@@ -1329,8 +1324,7 @@ namespace SportLab.Controllers
 
             if (slot.Bookings.Any())
             {
-                return BadRequest(
-                    _localizer["WorkoutWithBookingsCannotDelete"].Value);
+                return BadRequest(new { success = false, message = _localizer["WorkoutWithBookingsCannotDelete"].Value });
             }
 
             _context.WorkoutSlots.Remove(slot);
@@ -1343,6 +1337,7 @@ namespace SportLab.Controllers
             });
         }
 
+
         // CLIENT CANCELS OWN BOOKING FROM PROFILE SCHEDULE
 
         [HttpPost]
@@ -1352,7 +1347,7 @@ namespace SportLab.Controllers
             [FromForm] int id)
         {
             if (id <= 0)
-                return BadRequest(_localizer["InvalidWorkoutId"].Value);
+                return BadRequest(new { success = false, message = _localizer["InvalidWorkoutId"].Value });
 
             int userId = CurrentUserId;
 
@@ -1370,15 +1365,13 @@ namespace SportLab.Controllers
 
             if (slot.StartTime <= DateTime.Now)
             {
-                return BadRequest(
-                    _localizer["WorkoutAlreadyStarted"].Value);
+                return BadRequest(new { success = false, message = _localizer["WorkoutAlreadyStarted"].Value });
             }
 
             if (slot.Status == "Cancelled" ||
                 slot.Status == "Completed")
             {
-                return BadRequest(
-                    _localizer["WorkoutNoLongerAvailable"].Value);
+                return BadRequest(new { success = false, message = _localizer["WorkoutNoLongerAvailable"].Value });
             }
 
             _context.WorkoutBookings.Remove(booking);
