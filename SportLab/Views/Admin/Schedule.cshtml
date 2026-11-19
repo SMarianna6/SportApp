@@ -72,14 +72,14 @@
                     <label class="sh-field">
                         @Localizer["StartTimeLabel"]
                         <div class="sh-field-body">
-                            <input class="sh-input" asp-for="StartTime" type="time" min="08:00" max="20:00" step="900" />
+                            <input class="sh-input" asp-for="StartTime" type="time" min="08:00" max="20:00" />
                             <span asp-validation-for="StartTime" style="color: #ff4d4d; font-size: 12px; margin-top: 4px; display: block;"></span>
                         </div>
                     </label>
                     <label class="sh-field">
                         @Localizer["EndTimeLabel"]
                         <div class="sh-field-body">
-                            <input class="sh-input" asp-for="EndTime" type="time" min="08:00" max="20:00" step="900" />
+                            <input class="sh-input" asp-for="EndTime" type="time" min="08:00" max="20:00" />
                             <span asp-validation-for="EndTime" style="color: #ff4d4d; font-size: 12px; margin-top: 4px; display: block;"></span>
                         </div>
                     </label>

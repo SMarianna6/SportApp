@@ -42,25 +42,32 @@
     </div>
 </div>
 
-<script>
-    window.ADMIN_DASH_LOC = {
-        months: @Html.Raw(Json.Serialize(new[] {
-            Localizer["MonthJan"].Value,
-            Localizer["MonthFeb"].Value,
-            Localizer["MonthMar"].Value,
-            Localizer["MonthApr"].Value,
-            Localizer["MonthMay"].Value,
-            Localizer["MonthJun"].Value,
-            Localizer["MonthJul"].Value,
-            Localizer["MonthAug"].Value,
-            Localizer["MonthSep"].Value,
-            Localizer["MonthOct"].Value,
-            Localizer["MonthNov"].Value,
-            Localizer["MonthDec"].Value
-        })),
-        tooltipRevenue: @Html.Raw(Json.Serialize(Localizer["TooltipRevenue"].Value)),
-        tooltipNewUsers: @Html.Raw(Json.Serialize(Localizer["TooltipNewUsers"].Value))
-    };
-</script>
-<script src="~/js/admin/sh-common.js" asp-append-version="true"></script>
-<script src="~/js/admin/sh-dashboard.js" asp-append-version="true"></script>
+@section Scripts {
+    <script>
+        window.ADMIN_DASH_LOC = {
+            months: @Html.Raw(Json.Serialize(new[] {
+                Localizer["MonthJan"].Value,
+                Localizer["MonthFeb"].Value,
+                Localizer["MonthMar"].Value,
+                Localizer["MonthApr"].Value,
+                Localizer["MonthMay"].Value,
+                Localizer["MonthJun"].Value,
+                Localizer["MonthJul"].Value,
+                Localizer["MonthAug"].Value,
+                Localizer["MonthSep"].Value,
+                Localizer["MonthOct"].Value,
+                Localizer["MonthNov"].Value,
+                Localizer["MonthDec"].Value
+            })),
+            tooltipRevenue: @Html.Raw(Json.Serialize(Localizer["TooltipRevenue"].Value)),
+            tooltipNewUsers: @Html.Raw(Json.Serialize(Localizer["TooltipNewUsers"].Value)),
+            statRevenue: @Html.Raw(Json.Serialize(Localizer["Metric.Revenue"].Value)),
+            statActiveMembers: @Html.Raw(Json.Serialize(Localizer["Metric.ActiveMembers"].Value)),
+            statClassBookings: @Html.Raw(Json.Serialize(Localizer["Metric.ClassBookings"].Value)),
+            statShopSales: @Html.Raw(Json.Serialize(Localizer["Metric.ShopSales"].Value)),
+            loadFailed: @Html.Raw(Json.Serialize(Localizer["LoadFailedError"].Value))
+        };
+    </script>
+    <script src="~/js/admin/sh-common.js" asp-append-version="true"></script>
+    <script src="~/js/admin/sh-dashboard.js" asp-append-version="true"></script>
+}

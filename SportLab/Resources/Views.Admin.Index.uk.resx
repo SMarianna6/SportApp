@@ -188,4 +188,16 @@
 	<data name="TooltipNewUsers" xml:space="preserve">
 	<value>Нові користувачі: {0}</value>
 </data>
+	<data name="Metric.Revenue" xml:space="preserve">
+	<value>Дохід</value>
+</data>
+	<data name="Metric.ActiveMembers" xml:space="preserve">
+	<value>Активні члени</value>
+</data>
+	<data name="Metric.ClassBookings" xml:space="preserve">
+	<value>Бронювання занять</value>
+</data>
+	<data name="Metric.ShopSales" xml:space="preserve">
+	<value>Продажі магазину</value>
+</data>
 </root>

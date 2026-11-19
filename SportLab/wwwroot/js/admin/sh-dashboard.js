@@ -30,7 +30,7 @@
         })
         .catch(function (err) {
             console.error("Failed to load dashboard data", err);
-            document.getElementById('sh-stats').innerHTML = '<p style="color:red">' + (L.loadDataFailed || 'Failed to load data.') + '</p>';
+            document.getElementById('sh-stats').innerHTML = '<p style="color:red">' + (L.loadFailed || L.loadDataFailed || 'Failed to load data.') + '</p>';
         });
 
     function renderStats(stats) {

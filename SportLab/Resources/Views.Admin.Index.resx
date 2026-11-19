@@ -153,4 +153,16 @@
 	<data name="TooltipNewUsers" xml:space="preserve">
 	<value>New users: {0}</value>
 </data>
+	<data name="Metric.Revenue" xml:space="preserve">
+	<value>Revenue</value>
+</data>
+	<data name="Metric.ActiveMembers" xml:space="preserve">
+	<value>Active Members</value>
+</data>
+	<data name="Metric.ClassBookings" xml:space="preserve">
+	<value>Class Bookings</value>
+</data>
+	<data name="Metric.ShopSales" xml:space="preserve">
+	<value>Shop Sales</value>
+</data>
 </root>
