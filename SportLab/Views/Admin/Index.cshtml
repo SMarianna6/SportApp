@@ -25,7 +25,6 @@
                 <h2 class="sh-h2">@Localizer["PlatformGrowthHeader"]</h2>
                 <div class="sh-chart-controls">
                     <button type="button" class="sh-select-btn sh-n"><span class="sh-dot sh-dot-n"></span>@Localizer["RevenueBtn"] <svg class="sh-ico sh-ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></button>
-                    <button type="button" class="sh-select-btn sh-v"><span class="sh-dot sh-dot-v"></span>@Localizer["NewUsersBtn"] <svg class="sh-ico sh-ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></button>
                     <button type="button" class="sh-select-btn sh-dim">2026 <svg class="sh-ico sh-ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></button>
                 </div>
             </div>
@@ -60,7 +59,6 @@
                 Localizer["MonthDec"].Value
             })),
             tooltipRevenue: @Html.Raw(Json.Serialize(Localizer["TooltipRevenue"].Value)),
-            tooltipNewUsers: @Html.Raw(Json.Serialize(Localizer["TooltipNewUsers"].Value)),
             statRevenue: @Html.Raw(Json.Serialize(Localizer["Metric.Revenue"].Value)),
             statActiveMembers: @Html.Raw(Json.Serialize(Localizer["Metric.ActiveMembers"].Value)),
             statClassBookings: @Html.Raw(Json.Serialize(Localizer["Metric.ClassBookings"].Value)),

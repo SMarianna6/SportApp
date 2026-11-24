@@ -10,10 +10,8 @@
     var W = 700, H = 220;
 
     var revenue = [];
-    var newUsers = [];
 
     var showRevenue = true;
-    var showUsers = true;
     var currentYear = new Date().getFullYear();
 
     fetch('/Admin/GetDashboardData')
@@ -23,7 +21,6 @@
             renderEvents(data.events);
 
             revenue = data.chart.revenue;
-            newUsers = data.chart.newUsers;
 
             drawChart();
             bindControls();
@@ -103,11 +100,6 @@
         html += '<path d="' + linePath(revenue) + '" fill="none" stroke="#AAFF00" stroke-width="2.5"/>';
         html += '</g>';
 
-        html += '<g id="layer-users" style="display: ' + (showUsers ? 'block' : 'none') + '">';
-        html += '<path d="' + linePath(newUsers) + ' L' + W + ',' + H + ' L0,' + H + 'Z" fill="url(#shGV)"/>';
-        html += '<path d="' + linePath(newUsers) + '" fill="none" stroke="#7D51FE" stroke-width="2.5"/>';
-        html += '</g>';
-
         MONTHS.forEach(function (m, i) {
             var anchor = i === 0 ? 'start' : i === 11 ? 'end' : 'middle';
             html += '<text x="' + x(i) + '" y="' + (H + 18) + '" fill="#fff" fill-opacity=".4" font-size="11" text-anchor="' + anchor + '">' + m + '</text>';
@@ -121,7 +113,6 @@
 
         function show(i) {
             var maxRev = Math.max.apply(null, revenue) || 1;
-            var maxUsr = Math.max.apply(null, newUsers) || 1;
 
             var hoverHtml = '<line x1="' + x(i) + '" x2="' + x(i) + '" y1="0" y2="' + H + '" stroke="#fff" stroke-opacity=".25"/>';
             var tooltipHtml = '<p style="font-weight:700;text-transform:uppercase;color:#f2f2f4">' + MONTHS[i] + '</p>';
@@ -129,10 +120,6 @@
             if (showRevenue) {
                 hoverHtml += '<circle cx="' + x(i) + '" cy="' + (H - revenue[i] * H / maxRev) + '" r="5" fill="#AAFF00"/>';
                 tooltipHtml += '<p style="color:#aaff00">' + (L.tooltipRevenue || 'Revenue: ₴{0}').replace('{0}', revenue[i].toLocaleString()) + '</p>';
-            }
-            if (showUsers) {
-                hoverHtml += '<circle cx="' + x(i) + '" cy="' + (H - newUsers[i] * H / maxUsr) + '" r="5" fill="#7D51FE"/>';
-                tooltipHtml += '<p style="color:#7d51fe">' + (L.tooltipNewUsers || 'New users: {0}').replace('{0}', newUsers[i]) + '</p>';
             }
 
             hoverLayer.innerHTML = hoverHtml;
@@ -158,7 +145,6 @@
 
     function bindControls() {
         var btnRevenue = document.querySelector('.sh-select-btn.sh-n');
-        var btnUsers = document.querySelector('.sh-select-btn.sh-v');
 
         btnRevenue.addEventListener('click', function () {
             showRevenue = !showRevenue;
@@ -168,16 +154,6 @@
 
             var layer = document.getElementById('layer-revenue');
             if (layer) layer.style.display = showRevenue ? 'block' : 'none';
-        });
-
-        btnUsers.addEventListener('click', function () {
-            showUsers = !showUsers;
-
-            this.style.opacity = showUsers ? '1' : '0.5';
-            this.querySelector('.sh-dot-v').style.opacity = showUsers ? '1' : '0.3';
-
-            var layer = document.getElementById('layer-users');
-            if (layer) layer.style.display = showUsers ? 'block' : 'none';
         });
 
         var btnYear = document.querySelector('.sh-select-btn.sh-dim');

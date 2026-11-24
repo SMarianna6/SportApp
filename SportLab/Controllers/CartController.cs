@@ -351,16 +351,6 @@ namespace SportLab.Controllers
             TempData["PaymentMethod"] = model.PaymentMethod;
 
             return RedirectToAction(nameof(OrderSuccess), new { id = order.Id });
-
-            HttpContext.Session.Remove(CartSessionKey);
-
-            TempData["CustomerName"] = model.FullName;
-            TempData["CustomerPhone"] = model.Phone;
-            TempData["DeliveryMethod"] = model.DeliveryMethod;
-            TempData["DeliveryAddress"] = model.Address ?? _localizer["DefaultDeliveryAddress"].Value;
-            TempData["PaymentMethod"] = model.PaymentMethod;
-
-            return RedirectToAction(nameof(OrderSuccess), new { id = order.Id });
         }
 
         [Authorize]

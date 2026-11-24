@@ -115,7 +115,7 @@ namespace SportLab.Controllers
             else // Client
             {
                 var trainerIds = await _context.WorkoutSlots
-                    .Where(w => w.UserId == userId && w.TrainerId != null && w.Status == "Booked")
+                    .Where(w => w.UserId == userId && w.Status == "Booked")
                     .Select(w => w.Trainer!.Id)
                     .Distinct()
                     .ToListAsync();

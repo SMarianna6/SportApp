@@ -710,7 +710,6 @@ namespace SportLab.Controllers
             };
 
             var revenueData = new int[12];
-            var newUsersData = new int[12];
 
             var yearOrders = await _context.Orders
                 .Where(o => o.OrderDate >= startOfYear && o.OrderDate.Year == today.Year)
@@ -731,20 +730,9 @@ namespace SportLab.Controllers
                 revenueData[sub.StartDate.Month - 1] += (int)sub.Plan.Price;
             }
 
-            var usersThisYear = await _context.Users
-                .Where(u => u.Role == Roles.Client)
-                .ToListAsync();
-
-            foreach (var user in usersThisYear)
-            {
-                int monthIndex = (user.Id * 7) % 12;
-                newUsersData[monthIndex]++;
-            }
-
             var chart = new
             {
-                revenue = revenueData,
-                newUsers = newUsersData
+                revenue = revenueData
             };
 
             var events = new List<object>();
@@ -779,22 +767,6 @@ namespace SportLab.Controllers
                 {
                     Text = _localizer["ActivitySubscription", s.UserName, s.PlanName].Value,
                     Date = s.StartDate
-                });
-            }
-
-            var recentUsers = await _context.Users
-                .Where(u => u.Role == Roles.Client)
-                .OrderByDescending(u => u.Id)
-                .Take(2)
-                .Select(u => new { u.Name })
-                .ToListAsync();
-
-            foreach (var u in recentUsers)
-            {
-                events.Add(new
-                {
-                    Text = _localizer["ActivityNewUser", u.Name].Value,
-                    Date = DateTime.Now.AddHours(-2)
                 });
             }
 
