@@ -9,8 +9,7 @@ using System.Globalization;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<SportLabContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("SportLabContext"))
-    .ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning)));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SportLabContext")));
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
