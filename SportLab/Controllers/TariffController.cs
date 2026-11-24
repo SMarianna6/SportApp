@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using SportLab.Data;
 using SportLab.Models;
+using SportLab.Services;
 using System.Security.Claims;
-using System.Net;
-using System.Net.Mail;
+using MimeKit;
 
 namespace SportLab.Controllers
 {
@@ -14,11 +14,13 @@ namespace SportLab.Controllers
     {
         private readonly SportLabContext _context;
         private readonly IStringLocalizer<TariffController> _localizer;
+        private readonly IEmailSender _emailSender;
 
-        public TariffController(SportLabContext context, IStringLocalizer<TariffController> localizer)
+        public TariffController(SportLabContext context, IStringLocalizer<TariffController> localizer, IEmailSender emailSender)
         {
             _context = context;
             _localizer = localizer;
+            _emailSender = emailSender;
         }
 
         [AllowAnonymous]
@@ -115,23 +117,15 @@ namespace SportLab.Controllers
 
             try
             {
-                var smtpClient = new SmtpClient("smtp.gmail.com")
+                var mailMessage = new MimeMessage
                 {
-                    Port = 587,
-                    Credentials = new NetworkCredential("sporthubproject01@gmail.com", "zcfe yyad ezet tirb"),
-                    EnableSsl = true,
+                    Subject = _localizer["EmailSubject", tariff.Name].Value
                 };
 
-                var mailMessage = new MailMessage
-                {
-                    From = new MailAddress("sporthubproject01@gmail.com", _localizer["EmailFromName"].Value),
-                    Subject = _localizer["EmailSubject", tariff.Name].Value,
-                    IsBodyHtml = true,
-                };
+                mailMessage.To.Add(MailboxAddress.Parse(user.Email));
 
-                mailMessage.To.Add(user.Email);
-
-                mailMessage.Body = $@"
+                var bodyBuilder = new BodyBuilder();
+                bodyBuilder.HtmlBody = $@"
                     <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8f9fa; padding: 20px; border-radius: 10px;'>
                         <div style='background: linear-gradient(135deg, #0d6efd, #0dcaf0); padding: 30px; text-align: center; border-radius: 8px 8px 0 0; color: white;'>
                             <h1 style='margin: 0; font-size: 24px;'>{_localizer["EmailWelcomeTitle"]}</h1>
@@ -157,7 +151,9 @@ namespace SportLab.Controllers
                         </div>
                     </div>";
 
-                await smtpClient.SendMailAsync(mailMessage);
+                mailMessage.Body = bodyBuilder.ToMessageBody();
+
+                await _emailSender.SendAsync(mailMessage, _localizer["EmailFromName"].Value);
             }
             catch (Exception ex)
             {

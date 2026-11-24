@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using SportLab.Data;
 using SportLab.Models;
+using SportLab.Services;
 
 namespace SportLab.Controllers
 {
@@ -12,11 +13,13 @@ namespace SportLab.Controllers
         private const string CartSessionKey = "SportLab_Cart_Items";
         private readonly SportLabContext _context;
         private readonly IStringLocalizer<CartController> _localizer;
+        private readonly IEmailSender _emailSender;
 
-        public CartController(SportLabContext context, IStringLocalizer<CartController> localizer)
+        public CartController(SportLabContext context, IStringLocalizer<CartController> localizer, IEmailSender emailSender)
         {
             _context = context;
             _localizer = localizer;
+            _emailSender = emailSender;
         }
 
         public IActionResult Index()
@@ -250,7 +253,6 @@ namespace SportLab.Controllers
             try
             {
                 var emailMessage = new MimeKit.MimeMessage();
-                emailMessage.From.Add(new MimeKit.MailboxAddress(_localizer["EmailFromName"].Value, "sporthubproject01@gmail.com"));
 
                 emailMessage.To.Add(new MimeKit.MailboxAddress(model.FullName, model.Email));
 
@@ -329,13 +331,7 @@ namespace SportLab.Controllers
 
                 emailMessage.Body = builder.ToMessageBody();
 
-                using (var client = new MailKit.Net.Smtp.SmtpClient())
-                {
-                    client.Connect("smtp.gmail.com", 587, false);
-                    client.AuthenticateAsync("sporthubproject01@gmail.com", "zcfe yyad ezet tirb").Wait();
-                    client.Send(emailMessage);
-                    client.Disconnect(true);
-                }
+                await _emailSender.SendAsync(emailMessage, _localizer["EmailFromName"].Value);
             }
             catch
             {

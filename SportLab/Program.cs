@@ -3,6 +3,7 @@ using SportLab.Hubs;
 using Microsoft.EntityFrameworkCore;
 using SportLab.Data;
 using SportLab.Models;
+using SportLab.Services;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
 
@@ -31,6 +32,9 @@ builder.Services.AddAuthorization();
 builder.Services.AddSignalR();
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection(EmailOptions.SectionName));
+builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();

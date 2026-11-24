@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -17,11 +16,13 @@ namespace SportLab.Controllers
     {
         private readonly SportLabContext _context;
         private readonly IStringLocalizer<AccountController> _localizer;
+        private readonly IEmailSender _emailSender;
 
-        public AccountController(SportLabContext context, IStringLocalizer<AccountController> localizer)
+        public AccountController(SportLabContext context, IStringLocalizer<AccountController> localizer, IEmailSender emailSender)
         {
             _context = context;
             _localizer = localizer;
+            _emailSender = emailSender;
         }
 
         [HttpGet]
@@ -233,7 +234,6 @@ namespace SportLab.Controllers
                 try
                 {
                     var message = new MimeMessage();
-                    message.From.Add(new MailboxAddress(_localizer["EmailSenderName"].Value, "sporthubproject01@gmail.com"));
                     message.To.Add(new MailboxAddress("", email));
                     message.Subject = _localizer["EmailSubject"].Value;
 
@@ -242,13 +242,7 @@ namespace SportLab.Controllers
                         Text = _localizer["EmailBody", generatedCode].Value
                     };
 
-                    using (var client = new SmtpClient())
-                    {
-                        client.Connect("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
-                        client.Authenticate("sporthubproject01@gmail.com", "zcfe yyad ezet tirb");
-                        client.Send(message);
-                        client.Disconnect(true);
-                    }
+                    await _emailSender.SendAsync(message, _localizer["EmailSenderName"].Value);
 
                     ViewBag.Message = _localizer["VerificationCodeSent"].Value;
                 }
