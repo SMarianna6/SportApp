@@ -11,6 +11,8 @@ namespace SportLab.Hubs
     [Authorize]
     public class MessagesHub : Hub
     {
+        private const int MaxMessageLength = 2000;
+
         private readonly SportLabContext _context;
 
         public MessagesHub(SportLabContext context)
@@ -38,6 +40,8 @@ namespace SportLab.Hubs
 
             // Send existing messages from the database
             var messageEntities = await _context.Messages
+                .Include(m => m.Sender)
+                .Include(m => m.Receiver)
                 .Where(m =>
                     (m.SenderId == userId && m.ReceiverId == otherUserId) ||
                     (m.SenderId == otherUserId && m.ReceiverId == userId))
@@ -57,21 +61,33 @@ namespace SportLab.Hubs
             await Clients.Caller.SendAsync("ReceiveMessages", conversationId, messages);
         }
 
-        public async Task SendMessage(string receiverId, string text)
+        public async Task<object?> SendMessage(string receiverId, string text)
         {
             var senderId = CurrentUserId();
+            var messageText = (text ?? string.Empty).Trim();
+
+            if (messageText.Length == 0 || messageText.Length > MaxMessageLength)
+            {
+                throw new HubException("Message text is invalid.");
+            }
+
+            var senderName = await _context.Users
+                .Where(u => u.Id == senderId)
+                .Select(u => u.Name)
+                .FirstOrDefaultAsync() ?? "Unknown";
 
             // Admin broadcast: send message to all trainers
             if ((Context.User.IsInRole(Roles.Administrator) || Context.User.IsInRole(Roles.AdminAlias)) &&
                 receiverId == "BROADCAST_TRAINERS")
             {
-                var trainers = await _context.Users
+                var trainerIds = await _context.Users
                     .Where(u => u.Role == Roles.Trainer)
+                    .Select(u => u.Id)
                     .ToListAsync();
 
-                foreach (var trainer in trainers)
+                foreach (var trainerId in trainerIds)
                 {
-                    var broadcastConversationId = ConversationId(senderId, trainer.Id);
+                    var broadcastConversationId = ConversationId(senderId, trainerId);
 
                     if (!IsParticipant(broadcastConversationId, senderId))
                     {
@@ -81,8 +97,8 @@ namespace SportLab.Hubs
                     var broadcastMessage = new Message
                     {
                         SenderId = senderId,
-                        ReceiverId = trainer.Id,
-                        Text = text,
+                        ReceiverId = trainerId,
+                        Text = messageText,
                         SentDate = DateTime.Now
                     };
 
@@ -92,14 +108,16 @@ namespace SportLab.Hubs
                     await Clients.Group(broadcastConversationId).SendAsync("NewMessage", new
                     {
                         Id = broadcastMessage.Id,
-                        SenderName = broadcastMessage.Sender?.Name ?? "Unknown",
+                        ConversationId = broadcastConversationId,
+                        SenderId = broadcastMessage.SenderId,
+                        ReceiverId = broadcastMessage.ReceiverId,
+                        SenderName = senderName,
                         Text = broadcastMessage.Text,
-                        SentDate = broadcastMessage.SentDate,
-                        FromCurrentUser = broadcastMessage.SenderId == senderId
+                        SentDate = broadcastMessage.SentDate
                     });
                 }
 
-                return;
+                return null;
             }
 
             if (!int.TryParse(receiverId, out var receiverIdActual) || receiverIdActual <= 0 ||
@@ -119,22 +137,29 @@ namespace SportLab.Hubs
             {
                 SenderId = senderId,
                 ReceiverId = receiverIdActual,
-                Text = text,
+                Text = messageText,
                 SentDate = DateTime.Now
             };
 
             _context.Messages.Add(message);
             await _context.SaveChangesAsync();
 
-            // Broadcast to the conversation group
-            await Clients.Group(conversationId).SendAsync("NewMessage", new
+            var payload = new
             {
                 Id = message.Id,
-                SenderName = message.Sender?.Name ?? "Unknown",
+                ConversationId = conversationId,
+                SenderId = message.SenderId,
+                ReceiverId = message.ReceiverId,
+                SenderName = senderName,
                 Text = message.Text,
-                SentDate = message.SentDate,
-                FromCurrentUser = message.SenderId == senderId
-            });
+                SentDate = message.SentDate
+            };
+
+            // Broadcast to the conversation group; every client derives its own direction
+            // from SenderId, so a single payload is safe for both participants.
+            await Clients.Group(conversationId).SendAsync("NewMessage", payload);
+
+            return payload;
         }
 
         private int CurrentUserId() =>

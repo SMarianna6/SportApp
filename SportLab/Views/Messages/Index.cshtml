@@ -101,6 +101,7 @@
 </div>
 
 @section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
     <script>
         (function () {
             'use strict';
@@ -116,6 +117,8 @@
             })));
 
             var activeId = CHATS.length > 0 ? CHATS[0].id : null;
+            var MY_ID = '@(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)';
+            var connection = null;
 
             function initials(n) {
                 if (!n) return "?";
@@ -210,7 +213,11 @@
                     renderChat();
                     return;
                 }
-                loadConversation(id);
+                if (connection && connection.state === signalR.HubConnectionState.Connected) {
+                    joinConversation(id);
+                } else {
+                    loadConversation(id);
+                }
             }
 
             function loadConversation(id) {
@@ -226,6 +233,12 @@
                         }
                     })
                     .catch(function (err) { console.error('Failed to load conversation:', err); });
+            }
+
+            function joinConversation(id) {
+                if (!connection || connection.state !== signalR.HubConnectionState.Connected) return;
+                connection.invoke('JoinConversation', parseInt(id, 10))
+                    .catch(function (err) { console.error('Failed to join conversation:', err); });
             }
 
             function showList() {
@@ -251,11 +264,43 @@
                 return ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2);
             }
 
+            function formatTime(value) {
+                var d = value ? new Date(value) : new Date();
+                if (isNaN(d.getTime())) return '';
+                return ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2);
+            }
+
+            function appendOutgoing(text, id) {
+                var c = byId(activeId);
+                if (!c) return;
+                c.msgs = c.msgs || [];
+                var alreadyRendered = id != null && c.msgs.some(function (m) {
+                    return String(m.id) === String(id);
+                });
+                if (!alreadyRendered) {
+                    c.msgs.push({ id: id, from: 'out', text: text, time: now(), read: false });
+                }
+                c.lastText = text;
+                c.time = now();
+                renderList();
+                renderChat();
+            }
+
             function sendMessage(text) {
                 var selectContactAlert = '@Localizer["SelectContactAlertScript"]';
                 var failedSendAlert = '@Localizer["FailedSendAlertScript"]';
                 if (!activeId) {
                     alert(selectContactAlert);
+                    return;
+                }
+
+                if (connection && connection.state === signalR.HubConnectionState.Connected) {
+                    connection.invoke('SendMessage', String(activeId), text)
+                        .then(function (saved) { appendOutgoing(text, saved && saved.id); })
+                        .catch(function (err) {
+                            console.error('Send error:', err);
+                            alert(failedSendAlert);
+                        });
                     return;
                 }
 
@@ -266,15 +311,7 @@
                 })
                 .then(function (res) {
                     if (res.ok) {
-                        var c = byId(activeId);
-                        if (c) {
-                            c.msgs = c.msgs || [];
-                            c.msgs.push({ from: 'out', text: text, time: now(), read: false });
-                            c.lastText = text;
-                            c.time = now();
-                            renderList();
-                            renderChat();
-                        }
+                        appendOutgoing(text);
                     } else {
                         alert(failedSendAlert);
                     }
@@ -296,7 +333,84 @@
                 renderList();
             }
 
+            function startHub() {
+                if (!window.signalR) {
+                    console.warn('SignalR client is unavailable; realtime messaging is disabled.');
+                    return;
+                }
+
+                connection = new signalR.HubConnectionBuilder()
+                    .withUrl('/messagesHub')
+                    .withAutomaticReconnect()
+                    .build();
+
+                connection.on('ReceiveMessages', function (conversationId, messages) {
+                    var contactId = String(conversationId).split('_').filter(function (part) {
+                        return part !== MY_ID;
+                    })[0];
+                    var c = byId(contactId);
+                    if (!c) return;
+
+                    c.msgs = (messages || []).map(function (m) {
+                        return {
+                            id: m.id,
+                            from: m.fromCurrentUser ? 'out' : 'in',
+                            text: m.text,
+                            time: formatTime(m.sentDate),
+                            read: true
+                        };
+                    });
+                    c.unread = 0;
+
+                    if (String(activeId) === String(c.id)) renderChat();
+                    renderList();
+                });
+
+                connection.on('NewMessage', function (m) {
+                    // The hub sends one payload to the whole conversation; each client
+                    // decides the direction by comparing the sender with its own id.
+                    var isMine = String(m.senderId) === String(MY_ID);
+                    var contactId = isMine ? m.receiverId : m.senderId;
+                    var c = byId(contactId);
+                    if (!c) return;
+
+                    c.msgs = c.msgs || [];
+                    if (m.id != null && c.msgs.some(function (existing) { return String(existing.id) === String(m.id); })) {
+                        return;
+                    }
+
+                    c.msgs.push({
+                        id: m.id,
+                        from: isMine ? 'out' : 'in',
+                        text: m.text,
+                        time: formatTime(m.sentDate),
+                        read: isMine
+                    });
+                    c.lastText = m.text;
+                    c.time = formatTime(m.sentDate);
+
+                    if (String(activeId) === String(c.id)) {
+                        c.unread = 0;
+                        renderChat();
+                    } else if (!isMine) {
+                        c.unread = (c.unread || 0) + 1;
+                    }
+                    renderList();
+                });
+
+                connection.onreconnected(function () {
+                    if (activeId && String(activeId) !== 'BROADCAST_TRAINERS') joinConversation(activeId);
+                });
+
+                connection.start()
+                    .then(function () {
+                        if (activeId && String(activeId) !== 'BROADCAST_TRAINERS') joinConversation(activeId);
+                    })
+                    .catch(function (err) { console.error('SignalR connection failed:', err); });
+            }
+
             if (window.matchMedia('(max-width: 1023px)').matches) showList();
+            startHub();
         })();
     </script>
 }
