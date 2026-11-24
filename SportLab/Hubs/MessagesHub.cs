@@ -1,14 +1,14 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using SportLab.Data;
 using SportLab.Models;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace SportLab.Hubs
 {
+    [Authorize]
     public class MessagesHub : Hub
     {
         private readonly SportLabContext _context;
@@ -20,12 +20,19 @@ namespace SportLab.Hubs
 
         public async Task JoinConversation(int otherUserId)
         {
-            var userId = int.Parse(Context.GetHttpContext().User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var userId = CurrentUserId();
 
-            // Add to group named by conversation ID (ordered pair for consistency)
-            var conversationId = otherUserId < userId
-                ? $"{otherUserId}_{userId}"
-                : $"{userId}_{otherUserId}";
+            if (otherUserId <= 0 || !await _context.Users.AnyAsync(u => u.Id == otherUserId))
+            {
+                throw new HubException("Conversation participant was not found.");
+            }
+
+            var conversationId = ConversationId(userId, otherUserId);
+
+            if (!IsParticipant(conversationId, userId))
+            {
+                throw new HubException("You are not a participant of this conversation.");
+            }
 
             await Groups.AddToGroupAsync(Context.ConnectionId, conversationId);
 
@@ -52,8 +59,7 @@ namespace SportLab.Hubs
 
         public async Task SendMessage(string receiverId, string text)
         {
-            var userId = int.Parse(Context.GetHttpContext().User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-            var senderId = userId;
+            var senderId = CurrentUserId();
 
             // Admin broadcast: send message to all trainers
             if ((Context.User.IsInRole(Roles.Administrator) || Context.User.IsInRole(Roles.AdminAlias)) &&
@@ -65,6 +71,13 @@ namespace SportLab.Hubs
 
                 foreach (var trainer in trainers)
                 {
+                    var broadcastConversationId = ConversationId(senderId, trainer.Id);
+
+                    if (!IsParticipant(broadcastConversationId, senderId))
+                    {
+                        throw new HubException("You are not a participant of this conversation.");
+                    }
+
                     var broadcastMessage = new Message
                     {
                         SenderId = senderId,
@@ -75,10 +88,6 @@ namespace SportLab.Hubs
 
                     _context.Messages.Add(broadcastMessage);
                     await _context.SaveChangesAsync();
-
-                    var broadcastConversationId = senderId < trainer.Id
-                        ? $"{senderId}_{trainer.Id}"
-                        : $"{trainer.Id}_{senderId}";
 
                     await Clients.Group(broadcastConversationId).SendAsync("NewMessage", new
                     {
@@ -93,8 +102,18 @@ namespace SportLab.Hubs
                 return;
             }
 
-            // Determine receiver for direct messages
-            var receiverIdActual = int.Parse(receiverId);
+            if (!int.TryParse(receiverId, out var receiverIdActual) || receiverIdActual <= 0 ||
+                !await _context.Users.AnyAsync(u => u.Id == receiverIdActual))
+            {
+                throw new HubException("Message receiver was not found.");
+            }
+
+            var conversationId = ConversationId(senderId, receiverIdActual);
+
+            if (!IsParticipant(conversationId, senderId))
+            {
+                throw new HubException("You are not a participant of this conversation.");
+            }
 
             var message = new Message
             {
@@ -108,11 +127,6 @@ namespace SportLab.Hubs
             await _context.SaveChangesAsync();
 
             // Broadcast to the conversation group
-            var otherUserId = receiverIdActual;
-            var conversationId = otherUserId < senderId
-                ? $"{otherUserId}_{senderId}"
-                : $"{senderId}_{otherUserId}";
-
             await Clients.Group(conversationId).SendAsync("NewMessage", new
             {
                 Id = message.Id,
@@ -121,6 +135,23 @@ namespace SportLab.Hubs
                 SentDate = message.SentDate,
                 FromCurrentUser = message.SenderId == senderId
             });
+        }
+
+        private int CurrentUserId() =>
+            int.Parse(Context.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+        private static string ConversationId(int firstUserId, int secondUserId) =>
+            firstUserId < secondUserId
+                ? $"{firstUserId}_{secondUserId}"
+                : $"{secondUserId}_{firstUserId}";
+
+        private static bool IsParticipant(string conversationId, int userId)
+        {
+            var parts = conversationId.Split('_');
+            return parts.Length == 2 &&
+                   int.TryParse(parts[0], out var firstUserId) &&
+                   int.TryParse(parts[1], out var secondUserId) &&
+                   (firstUserId == userId || secondUserId == userId);
         }
     }
 }
