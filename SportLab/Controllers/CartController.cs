@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using System.Security.Claims;
+using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
@@ -165,6 +167,7 @@ namespace SportLab.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult Checkout()
         {
             var cart = GetCart();
@@ -188,6 +191,7 @@ namespace SportLab.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Checkout(CheckoutViewModel model)
         {
             var cart = GetCart();
@@ -204,51 +208,51 @@ namespace SportLab.Controllers
                 return View(model);
             }
 
-            var user = _context.Users.FirstOrDefault(u => u.Email == model.Email);
-            if (user == null)
+            var productIds = cart.Select(i => i.ProductId).ToList();
+            var products = await _context.Products
+                .Where(p => productIds.Contains(p.Id))
+                .ToDictionaryAsync(p => p.Id);
+
+            foreach (var item in cart)
             {
-                user = new User
+                if (!products.TryGetValue(item.ProductId, out var product) || product.StockQuantity < item.Quantity)
                 {
-                    Name = string.IsNullOrWhiteSpace(model.FullName) ? _localizer["DefaultClientName"].Value : model.FullName.Trim(),
-                    Email = string.IsNullOrWhiteSpace(model.Email) ? $"guest_{Guid.NewGuid().ToString()[..8]}@sportlab.ua" : model.Email.Trim(),
-                    Password = "UserPass123!",
-                    Role = "Client",
-                    IsBlocked = false
-                };
-                _context.Users.Add(user);
-                _context.SaveChanges();
+                    TempData["ErrorMessage"] = _localizer["OutOfStock"].Value;
+                    return RedirectToAction(nameof(Index));
+                }
             }
 
             var totalAmount = cart.Sum(i => i.Subtotal);
 
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+
             var order = new Order
             {
-                UserId = user.Id,
+                UserId = CurrentUserId(),
                 OrderDate = DateTime.UtcNow,
                 TotalAmount = totalAmount,
                 Status = "Confirmed"
             };
 
             _context.Orders.Add(order);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             foreach (var item in cart)
             {
                 var orderDetail = new OrderDetail
                 {
                     OrderId = order.Id,
-                    ProductId = item.ProductId
+                    ProductId = item.ProductId,
+                    Quantity = item.Quantity,
+                    UnitPrice = item.UnitPrice
                 };
                 _context.OrderDetails.Add(orderDetail);
 
-                var product = _context.Products.Find(item.ProductId);
-                if (product != null)
-                {
-                    product.StockQuantity = Math.Max(0, product.StockQuantity - item.Quantity);
-                }
+                products[item.ProductId].StockQuantity -= item.Quantity;
             }
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
 
             try
             {
@@ -404,6 +408,9 @@ namespace SportLab.Controllers
             var json = JsonSerializer.Serialize(cart);
             HttpContext.Session.SetString(CartSessionKey, json);
         }
+
+        private int CurrentUserId() =>
+            int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
     }
 
     public class CartItem
