@@ -215,6 +215,7 @@
 </div>
 
 @section Scripts {
+    <script src="~/js/admin/sh-common.js" asp-append-version="true"></script>
     <script>
         (function () {
             'use strict';
@@ -547,10 +548,10 @@
                     return '<li>' +
                         '<button type="button" data-id="' + s.id + '" class="slot-btn group relative flex w-full items-center gap-3 overflow-hidden rounded-xl border border-white/5 bg-shell py-3.5 pl-5 pr-3.5 text-left transition-colors duration-200 hover:border-white/20 hover:bg-black focus:outline-none focus-visible:ring-2 focus-visible:ring-neon sm:gap-4">' +
                         '<span aria-hidden="true" class="absolute inset-y-3 left-0 w-1 rounded-r-full" style="background:' + accent + '"></span>' +
-                        '<span class="flex min-w-[3.25rem] shrink-0 flex-col whitespace-nowrap tabular-nums"><span class="text-lg font-black leading-none tracking-tight text-white">' + s.startTime + '</span><span class="mt-1.5 text-[11px] font-semibold leading-none text-mono/50">' + locStrings.to + ' ' + s.endTime + '</span></span>' +
+                        '<span class="flex min-w-[3.25rem] shrink-0 flex-col whitespace-nowrap tabular-nums"><span class="text-lg font-black leading-none tracking-tight text-white">' + SH.esc(s.startTime) + '</span><span class="mt-1.5 text-[11px] font-semibold leading-none text-mono/50">' + locStrings.to + ' ' + SH.esc(s.endTime) + '</span></span>' +
                         '<span aria-hidden="true" class="hidden h-9 w-px shrink-0 bg-white/10 sm:block"></span>' +
                         '<span class="hidden h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-white/5 bg-card sm:flex" style="color:' + accent + '"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + icons[iconKey] + '</svg></span>' +
-                        '<span class="min-w-0 flex-1"><span class="block break-words text-sm font-extrabold leading-snug text-white">' + localizedActivityName + '</span>' +
+                        '<span class="min-w-0 flex-1"><span class="block break-words text-sm font-extrabold leading-snug text-white">' + SH.esc(localizedActivityName) + '</span>' +
                         '<span class="mt-2 flex items-center gap-2"><span aria-hidden="true" class="h-1 w-16 overflow-hidden rounded-full bg-white/10"><span class="block h-full rounded-full" style="width:' + fill + '%;background:' + accent + '"></span></span><span class="shrink-0 whitespace-nowrap text-[11px] font-semibold tabular-nums text-mono/60">' + s.booked + '/' + s.capacity + ' ' + locStrings.booked + '</span></span></span>' +
                         '<span class="ml-auto inline-flex shrink-0 items-center gap-1.5 rounded-md border border-white/10 px-2.5 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.14em] text-mono/60 transition-colors duration-200 group-hover:border-[#FF5252]/40 group-hover:bg-[#FF5252]/10 group-hover:text-[#FF5252] group-focus-visible:border-[#FF5252]/40 group-focus-visible:text-[#FF5252]"><svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>' + locStrings.cancelBtn + '</span></button></li>';
                 }).join('');
@@ -678,8 +679,8 @@
                     var deltaVal = c.weights && c.weights.length > 0 ? (c.weights[c.weights.length - 1] - c.weights[0]).toFixed(1) : '0.0';
                     
                     return '<article class="flex flex-col gap-4 rounded-lg bg-shell p-4 transition-transform duration-200 hover:-translate-y-0.5">' +
-                        '<div class="flex items-center gap-3"><div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-sm font-extrabold ' + (colors[idx % colors.length] === '#AAFF00' ? 'bg-neon text-shell' : 'bg-violet text-white') + '">' + initials(c.name) + '</div>' +
-                        '<div class="min-w-0"><h4 class="truncate text-base font-extrabold tracking-tight">' + c.name + '</h4><p class="text-xs text-mono/50">' + locStrings.weight + ' ' + (deltaVal > 0 ? '+' : '') + deltaVal + ' ' + locStrings.kg + '</p></div></div>' +
+                        '<div class="flex items-center gap-3"><div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-sm font-extrabold ' + (colors[idx % colors.length] === '#AAFF00' ? 'bg-neon text-shell' : 'bg-violet text-white') + '">' + SH.esc(initials(c.name)) + '</div>' +
+                        '<div class="min-w-0"><h4 class="truncate text-base font-extrabold tracking-tight">' + SH.esc(c.name) + '</h4><p class="text-xs text-mono/50">' + locStrings.weight + ' ' + (deltaVal > 0 ? '+' : '') + deltaVal + ' ' + locStrings.kg + '</p></div></div>' +
                         '<div class="rounded-md bg-card px-3 py-2">' + spark(c.weights || []) + '</div>' +
                         '<div class="flex items-center justify-between">' +
                             '<p class="text-sm text-mono">' + locStrings.sessions + ' <span class="font-extrabold text-neon">' + (c.workouts || 0) + '</span></p>' +
