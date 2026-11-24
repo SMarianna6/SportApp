@@ -363,6 +363,7 @@ namespace SportLab.Controllers
             return RedirectToAction(nameof(OrderSuccess), new { id = order.Id });
         }
 
+        [Authorize]
         public IActionResult OrderSuccess(int id)
         {
             var order = _context.Orders
@@ -374,6 +375,11 @@ namespace SportLab.Controllers
             if (order == null)
             {
                 return RedirectToAction("Index", "Shop");
+            }
+
+            if (!User.IsAdmin() && order.UserId != CurrentUserId())
+            {
+                return Forbid();
             }
 
             ViewBag.CustomerName = TempData["CustomerName"] as string ?? order.User?.Name ?? _localizer["CustomerFallback"].Value;

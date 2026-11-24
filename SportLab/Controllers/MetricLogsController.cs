@@ -51,6 +51,11 @@ namespace SportLab.Controllers
                 return NotFound();
             }
 
+            if (!User.IsAdmin() && metricLog.UserId != CurrentUserId())
+            {
+                return Forbid();
+            }
+
             return View(metricLog);
         }
 
