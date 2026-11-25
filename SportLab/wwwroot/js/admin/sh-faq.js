@@ -125,7 +125,7 @@
 
         await fetch(URLS.order, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': SH.csrf() },
             body: JSON.stringify([
                 { Id: current.id, SortOrder: current.sortOrder },
                 { Id: other.id, SortOrder: other.sortOrder }
@@ -160,7 +160,7 @@
                 render();
                 await fetch(URLS.save, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': SH.csrf() },
                     body: JSON.stringify({ Id: faq.id, Question: faq.question, Answer: faq.answer, IsActive: faq.isActive, SortOrder: faq.sortOrder })
                 });
                 loadFaqs();
@@ -168,7 +168,7 @@
 
             if (act === 'delete') {
                 if (confirm(L.deleteFaqConfirm || 'Are you sure you want to delete this FAQ?')) {
-                    await fetch(URLS.remove + '?id=' + id, { method: 'POST' });
+                    await fetch(URLS.remove + '?id=' + id, { method: 'POST', headers: { 'RequestVerificationToken': SH.csrf() } });
                     loadFaqs();
                 }
             }
@@ -201,7 +201,7 @@
 
             await fetch(URLS.save, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': SH.csrf() },
                 body: JSON.stringify(data)
             });
 

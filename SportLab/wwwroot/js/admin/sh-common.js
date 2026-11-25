@@ -9,6 +9,11 @@
         });
     };
 
+    SH.csrf = function () {
+        var input = document.querySelector('input[name="__RequestVerificationToken"]');
+        return input ? input.value : '';
+    };
+
     function svg(paths, cls) {
         return '<svg class="sh-ico ' + (cls || '') + '" viewBox="0 0 24 24" aria-hidden="true">' + paths + '</svg>';
     }

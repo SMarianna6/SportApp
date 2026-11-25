@@ -15,6 +15,8 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <link rel="stylesheet" href="~/css/shop.css" asp-append-version="true" />
 
+@Html.AntiForgeryToken()
+
 <div class="container my-4">
     <!-- Breadcrumb -->
     <nav aria-label="@Localizer["Aria.Breadcrumb"]" class="mb-4">
@@ -207,6 +209,7 @@
             const btnMinus = document.getElementById("btnQtyMinus");
             const btnPlus = document.getElementById("btnQtyPlus");
             const maxStock = @Model.StockQuantity;
+            const csrfToken = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
 
             if (btnMinus && btnPlus) {
                 btnMinus.addEventListener("click", function () {
@@ -232,7 +235,10 @@
             async function addToCart(qty) {
                 const response = await fetch('/Cart/AddToCart', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'RequestVerificationToken': csrfToken
+                    },
                     body: new URLSearchParams({
                         'productId': @Model.Id,
                         'quantity': qty

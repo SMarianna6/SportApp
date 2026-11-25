@@ -144,12 +144,12 @@
         if (act === 'edit') openForm(user);
         if (act === 'delete') {
             if (confirm(L.deleteUserConfirm || 'Are you sure you want to delete this user?')) {
-                await fetch('/Admin/DeleteUserApi?id=' + id, { method: 'POST' });
+                await fetch('/Admin/DeleteUserApi?id=' + id, { method: 'POST', headers: { 'RequestVerificationToken': SH.csrf() } });
                 loadUsers();
             }
         }
         if (act === 'toggle') {
-            await fetch('/Admin/ToggleUserApi?id=' + id, { method: 'POST' });
+            await fetch('/Admin/ToggleUserApi?id=' + id, { method: 'POST', headers: { 'RequestVerificationToken': SH.csrf() } });
             loadUsers();
         }
     });
@@ -176,7 +176,7 @@
 
             await fetch('/Admin/SaveUserApi', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': SH.csrf() },
                 body: JSON.stringify(userData)
             });
 

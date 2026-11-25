@@ -125,7 +125,7 @@
 
             if (act === 'delete') {
                 if (confirm(L.deleteTariffConfirm || 'Are you sure you want to delete this tariff?')) {
-                    await fetch(URLS.remove + '?id=' + id, { method: 'POST' });
+                    await fetch(URLS.remove + '?id=' + id, { method: 'POST', headers: { 'RequestVerificationToken': SH.csrf() } });
                     loadTariffs();
                 }
             }
@@ -154,7 +154,7 @@
 
             await fetch(URLS.save, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': SH.csrf() },
                 body: JSON.stringify(data)
             });
 

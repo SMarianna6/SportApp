@@ -9,6 +9,8 @@
     bool isTrainer = User.IsInRole(Roles.Trainer);
 }
 
+@Html.AntiForgeryToken()
+
 <style>
     .typing-dot { animation: blink 1.2s infinite both; }
     .typing-dot:nth-child(2) { animation-delay: .2s; }
@@ -306,7 +308,10 @@
 
                 fetch('/Messages/SendMessage', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                    },
                     body: 'receiverId=' + encodeURIComponent(activeId) + '&text=' + encodeURIComponent(text)
                 })
                 .then(function (res) {

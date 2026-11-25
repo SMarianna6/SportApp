@@ -265,7 +265,7 @@
             try {
                 const response = await fetch(URLS.save, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': SH.csrf() },
                     body: JSON.stringify(data)
                 });
 
@@ -297,7 +297,7 @@
             try {
                 const response = await fetch(URLS.remove, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': SH.csrf() },
                     body: JSON.stringify({ id: editing.id })
                 });
 
