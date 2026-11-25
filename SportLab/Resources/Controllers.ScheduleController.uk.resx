@@ -137,4 +137,7 @@
 	<data name="BookingCancelled" xml:space="preserve">
     <value>Ваше бронювання скасовано.</value>
   </data>
+	<data name="BookingError" xml:space="preserve">
+    <value>Не вдалося зберегти бронювання. Спробуйте ще раз.</value>
+  </data>
 </root>

@@ -180,8 +180,21 @@ namespace SportLab.Controllers
             {
                 slot.Booked = current;
                 slot.Status = "Booked";
-                await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (DbUpdateException)
+                {
+                    return StatusCode(StatusCodes.Status409Conflict, new
+                    {
+                        success = false,
+                        message = _localizer["BookingError"].Value
+                    });
+                }
+
                 return BadRequest(new { success = false, message = _localizer["FullyBooked"].Value });
             }
 
@@ -196,8 +209,19 @@ namespace SportLab.Controllers
             slot.Booked = updated;
             slot.Status = updated >= slot.Capacity ? "Booked" : "Available";
 
-            await _context.SaveChangesAsync();
-            await transaction.CommitAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (DbUpdateException)
+            {
+                return StatusCode(StatusCodes.Status409Conflict, new
+                {
+                    success = false,
+                    message = _localizer["BookingError"].Value
+                });
+            }
 
             return Json(new
             {
@@ -246,8 +270,19 @@ namespace SportLab.Controllers
             slot.Booked = remaining;
             slot.Status = remaining >= slot.Capacity ? "Booked" : "Available";
 
-            await _context.SaveChangesAsync();
-            await transaction.CommitAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (DbUpdateException)
+            {
+                return StatusCode(StatusCodes.Status409Conflict, new
+                {
+                    success = false,
+                    message = _localizer["BookingError"].Value
+                });
+            }
 
             return Json(new
             {
