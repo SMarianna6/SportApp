@@ -33,6 +33,8 @@ namespace SportLab.Models
                 return Client;
             }
 
+            role = role.Trim();
+
             if (role.Equals(Administrator, StringComparison.OrdinalIgnoreCase) ||
                 role.Equals(AdminAlias, StringComparison.OrdinalIgnoreCase))
             {
